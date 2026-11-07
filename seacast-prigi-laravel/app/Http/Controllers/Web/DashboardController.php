@@ -44,6 +44,7 @@ class DashboardController extends Controller
                 'all' => 'Semua Spesies (Komposit HSI)',
                 'cakalang' => 'Cakalang (Katsuwonus pelamis)',
                 'madidihang' => 'Madidihang (Thunnus albacares)',
+                'tongkol' => 'Tongkol (Euthynnus spp.)',
                 'albakor' => 'Albakor (Thunnus alalunga)',
             ],
             'domZones' => [

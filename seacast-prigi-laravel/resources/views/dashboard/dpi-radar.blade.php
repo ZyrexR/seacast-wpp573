@@ -763,8 +763,9 @@
                         // Default: Species HSI Gradient
                         const hsiProp = this.selectedSpecies === 'cakalang' ? p.hsi_cakalang :
                                        this.selectedSpecies === 'madidihang' ? p.hsi_madidihang :
+                                       this.selectedSpecies === 'tongkol' ? (p.hsi_tongkol ?? p.hsi_albakor) :
                                        this.selectedSpecies === 'albakor' ? p.hsi_albakor :
-                                       ((p.hsi_cakalang + p.hsi_madidihang + p.hsi_albakor) / 3);
+                                       ((p.hsi_cakalang + p.hsi_madidihang + (p.hsi_tongkol ?? p.hsi_albakor)) / 3);
                         const v = parseFloat(hsiProp) || 0;
                         if (v >= 0.70) return '#ef4444'; // Hotspot Red
                         if (v >= 0.55) return '#eab308'; // Amber
@@ -777,12 +778,13 @@
                 styleFeature(feature) {
                     const isHotspot = feature.properties.is_hotspot;
                     const color = this.getFeatureColor(feature.properties);
-                    const op = typeof this.layerOpacity === 'number' ? this.layerOpacity : 0.75;
+                    const op = typeof this.layerOpacity === 'number' ? this.layerOpacity : 0.82;
                     return {
                         fillColor: color,
-                        weight: isHotspot ? 1.5 : 0.6,
-                        opacity: Math.min(1.0, op + 0.15),
-                        color: isHotspot ? '#fde047' : '#1e293b',
+                        stroke: false,
+                        weight: 0,
+                        opacity: 0,
+                        color: 'transparent',
                         fillOpacity: op
                     };
                 },
@@ -814,22 +816,37 @@
                     layer.on('click', (e) => {
                         this.selectedCell = p;
 
+                        const hsiVal = (this.selectedSpecies === 'cakalang' ? p.hsi_cakalang : 
+                                       (this.selectedSpecies === 'madidihang' ? p.hsi_madidihang : 
+                                       (this.selectedSpecies === 'tongkol' ? (p.hsi_tongkol ?? p.hsi_albakor) : p.hsi_albakor)));
+
+                        const waypointStr = p.waypoint_dms || `${Math.abs(p.center_lat).toFixed(4)}°S, ${p.center_lon.toFixed(4)}°E`;
+                        const jalurStr = p.jalur_penangkapan || (p.dist_port_nm <= 12 ? 'Jalur II (4-12 NM)' : 'Jalur III (>12 NM)');
+
                         const popupHtml = `
-                            <div class="p-3 min-w-[220px] bg-slate-950 text-slate-200 rounded-xl border border-cyan-500/40 shadow-2xl font-sans">
-                                <div class="flex items-center justify-between border-b border-slate-800 pb-1.5 mb-2">
-                                    <span class="font-bold text-xs font-mono text-cyan-400">${p.cell_id}</span>
-                                    <span class="px-1.5 py-0.5 rounded text-[10px] font-mono bg-slate-800 text-slate-300">${p.dom_zone}</span>
+                            <div class="p-3.5 min-w-[260px] bg-slate-950 text-slate-200 rounded-xl border border-cyan-500/40 shadow-2xl font-sans">
+                                <div class="flex items-center justify-between border-b border-slate-800 pb-2 mb-2">
+                                    <div>
+                                        <span class="font-bold text-xs font-mono text-cyan-400 block">${p.cell_id}</span>
+                                        <span class="text-[10px] text-slate-400 font-mono">${waypointStr}</span>
+                                    </div>
+                                    <span class="px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-cyan-950 border border-cyan-700/50 text-cyan-300">${jalurStr}</span>
                                 </div>
-                                <div class="grid grid-cols-2 gap-1 text-[11px] font-mono text-slate-300">
+                                <div class="grid grid-cols-2 gap-1.5 text-[11px] font-mono text-slate-300">
                                     <div>Kedalaman: <span class="text-white">${p.depth_m} m</span></div>
-                                    <div>Jarak: <span class="text-white">${p.dist_port_nm} NM</span></div>
-                                    <div>Suhu: <span class="text-white">${p.sst_c} °C</span></div>
-                                    <div>Klorofil: <span class="text-white">${p.chla_mg_m3}</span></div>
+                                    <div>Jarak Tolak: <span class="text-white">${p.dist_port_nm} NM</span></div>
+                                    <div>Suhu Laut: <span class="text-white">${p.sst_c} °C</span></div>
+                                    <div>Klorofil-a: <span class="text-white">${p.chla_mg_m3} mg/m³</span></div>
                                 </div>
-                                <div class="mt-2 pt-1.5 border-t border-slate-800 flex items-center justify-between text-xs font-semibold">
-                                    <span class="text-slate-400">HSI ${this.selectedSpecies.toUpperCase()}:</span>
-                                    <span class="text-cyan-400 font-mono font-bold">${(this.selectedSpecies === 'cakalang' ? p.hsi_cakalang : (this.selectedSpecies === 'madidihang' ? p.hsi_madidihang : p.hsi_albakor))}</span>
+                                <div class="mt-2.5 pt-2 border-t border-slate-800 flex items-center justify-between text-xs font-semibold">
+                                    <span class="text-slate-400">Skor HSI ${this.selectedSpecies.toUpperCase()}:</span>
+                                    <span class="text-cyan-400 font-mono font-bold text-sm">${hsiVal}</span>
                                 </div>
+                                <a href="/dashboard/trip-planner?lat=${p.center_lat}&lon=${p.center_lon}&hsi=${hsiVal}&species=${this.selectedSpecies}&cell_id=${p.cell_id}" 
+                                   class="mt-3 w-full py-1.5 px-3 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs rounded-lg flex items-center justify-center gap-1.5 transition active:scale-95 shadow">
+                                    <span>Rencanakan Melaut</span>
+                                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                                </a>
                             </div>
                         `;
                         layer.bindPopup(popupHtml, { className: 'mapcn-dark-popup custom-leaflet-popup' }).openPopup();
@@ -865,8 +882,9 @@
 
                         const hsiVal = this.selectedSpecies === 'cakalang' ? p.hsi_cakalang :
                                        this.selectedSpecies === 'madidihang' ? p.hsi_madidihang :
+                                       this.selectedSpecies === 'tongkol' ? (p.hsi_tongkol ?? p.hsi_albakor) :
                                        this.selectedSpecies === 'albakor' ? p.hsi_albakor :
-                                       ((p.hsi_cakalang + p.hsi_madidihang + p.hsi_albakor) / 3);
+                                       ((p.hsi_cakalang + p.hsi_madidihang + (p.hsi_tongkol ?? p.hsi_albakor)) / 3);
                         sumHsi += hsiVal;
                     });
 

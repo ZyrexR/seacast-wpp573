@@ -111,7 +111,7 @@ class PostGisScientificDataRepository implements ScientificDataRepositoryInterfa
                 cg.cell_id, cg.cell_class, cg.center_lon, cg.center_lat, 
                 cg.depth_m, cg.dist_port_km, cg.dist_port_nm,
                 cg.is_shelf_break, cg.is_prigi_inshore, cg.is_prigi_offshore, cg.sector,
-                dp.prediction_date, dp.hsi_cakalang, dp.hsi_madidihang, dp.hsi_albakor,
+                dp.prediction_date, dp.hsi_cakalang, dp.hsi_madidihang, dp.hsi_albakor, dp.hsi_tongkol,
                 dp.is_hotspot, dp.dom_zone, dp.bycatch_traffic_light,
                 dp.sst_c, dp.chla_mg_m3, dp.current_velocity_ms, dp.wave_height_m, dp.wind_speed_ms,
                 dp.safety_advisory,
@@ -147,6 +147,7 @@ class PostGisScientificDataRepository implements ScientificDataRepositoryInterfa
                 'cakalang' => 'dp.hsi_cakalang',
                 'madidihang' => 'dp.hsi_madidihang',
                 'albakor' => 'dp.hsi_albakor',
+                'tongkol' => 'dp.hsi_tongkol',
                 default => null,
             };
             if ($col) {
@@ -191,6 +192,18 @@ class PostGisScientificDataRepository implements ScientificDataRepositoryInterfa
                     'hsi_cakalang' => (float)$row->hsi_cakalang,
                     'hsi_madidihang' => (float)$row->hsi_madidihang,
                     'hsi_albakor' => (float)$row->hsi_albakor,
+                    'hsi_tongkol' => (float)($row->hsi_tongkol ?? 0.0),
+                    'waypoint_dms' => sprintf(
+                        "%02d°%02d'%02d\"S, %03d°%02d'%02d\"E",
+                        floor(abs((float)$row->center_lat)),
+                        floor((abs((float)$row->center_lat) - floor(abs((float)$row->center_lat))) * 60),
+                        round(((abs((float)$row->center_lat) - floor(abs((float)$row->center_lat))) * 60 - floor((abs((float)$row->center_lat) - floor(abs((float)$row->center_lat))) * 60)) * 60),
+                        floor((float)$row->center_lon),
+                        floor(((float)$row->center_lon - floor((float)$row->center_lon)) * 60),
+                        round((((float)$row->center_lon - floor((float)$row->center_lon)) * 60 - floor(((float)$row->center_lon - floor((float)$row->center_lon)) * 60)) * 60)
+                    ),
+                    'is_within_12nm' => ((float)$row->dist_port_nm <= 12.0),
+                    'jalur_penangkapan' => ((float)$row->dist_port_nm <= 4.0 ? 'Jalur I (0-4 NM)' : ((float)$row->dist_port_nm <= 12.0 ? 'Jalur II (4-12 NM)' : 'Jalur III (>12 NM / ZEE)')),
                     'is_hotspot' => (bool)$row->is_hotspot,
                     'dom_zone' => $row->dom_zone,
                     'bycatch_traffic_light' => $row->bycatch_traffic_light,

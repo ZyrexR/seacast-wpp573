@@ -25,7 +25,7 @@ class PredictionApiController extends Controller
             'date' => 'nullable|date_format:Y-m-d',
             'format' => 'nullable|in:geojson,json,summary',
             'summary_only' => 'nullable|in:true,false,1,0',
-            'species' => 'nullable|in:cakalang,madidihang,albakor,all',
+            'species' => 'nullable|in:cakalang,madidihang,albakor,tongkol,all',
             'min_hsi' => 'nullable|numeric|between:0,1',
             'dom_zone' => 'nullable|string',
             'bycatch' => 'nullable|in:GREEN,YELLOW,RED',
