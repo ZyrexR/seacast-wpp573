@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Web;
 use App\Http\Controllers\Controller;
 use App\Domain\Trip\Services\TripPlanningService;
 use App\Models\TripPlan;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -145,6 +146,18 @@ class TripPlannerController extends Controller
 
     public function downloadPdf(string $id)
     {
-        return response()->json(['status' => 'OK', 'trip_id' => $id]);
+        $trip = TripPlan::where('reference_no', $id)
+            ->orWhere('id', $id)
+            ->firstOrFail();
+
+        $pdf = Pdf::loadView('pdf.sailing-advisory', [
+            'trip' => $trip,
+        ]);
+
+        $pdf->setPaper('a4', 'portrait');
+
+        $filename = "Sailing-Advisory-{$trip->reference_no}.pdf";
+
+        return $pdf->stream($filename);
     }
 }
