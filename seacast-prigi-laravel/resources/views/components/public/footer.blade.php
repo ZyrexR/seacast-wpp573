@@ -4,11 +4,11 @@
             <div class="md:col-span-2 space-y-3">
                 <x-ui.brand-logo size="sm" :withText="true" :withLink="true" />
                 <p class="text-xs text-slate-600 dark:text-slate-400 max-w-md leading-relaxed">
-                    Platform Intelijen Oseanografi dan Prediksi Kesesuaian Daerah Penangkapan Ikan Pelagis (Cakalang, Madidihang, Albakor) berbasiskan 8.129 sel kanonikal WPPNRI 573 dengan rujukan Pelabuhan Perikanan Nusantara (PPN) Prigi, Trenggalek.
+                    Platform Intelijen Oseanografi dan Prediksi Kesesuaian Daerah Penangkapan Ikan Pelagis (Tongkol, Cakalang, Madidihang) berbasiskan 8.129 sel kanonikal WPPNRI 573.
                 </p>
                 <div class="flex items-center gap-2 text-floor text-slate-500 font-mono">
                     <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-                    <span>PostGIS 3.6 Kanonik &bull; 8.129 Poligon EPSG:4326</span>
+                    <span>PostGIS 17 Kanonik &bull; 8.129 Poligon EPSG:4326</span>
                 </div>
             </div>
 
@@ -16,9 +16,10 @@
                 <h5 class="text-xs font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wider mb-3">Portal Informasi</h5>
                 <ul class="space-y-2 text-xs text-slate-600 dark:text-slate-400">
                     <li><a href="{{ route('home') }}" class="hover:text-cyan-500 transition-colors">Beranda Utama</a></li>
+                    <li><a href="{{ route('science') }}" class="hover:text-cyan-500 transition-colors">Sains & Model</a></li>
+                    <li><a href="{{ route('ocean-data') }}" class="hover:text-cyan-500 transition-colors">Data Oseanografi</a></li>
+                    <li><a href="{{ route('documentation') }}" class="hover:text-cyan-500 transition-colors">Dokumentasi</a></li>
                     <li><a href="{{ route('about') }}" class="hover:text-cyan-500 transition-colors">Tentang SEACAST</a></li>
-                    <li><a href="{{ route('science') }}" class="hover:text-cyan-500 transition-colors">Sains & Metodologi</a></li>
-                    <li><a href="{{ route('documentation') }}" class="hover:text-cyan-500 transition-colors">Data & Dokumentasi</a></li>
                 </ul>
             </div>
 

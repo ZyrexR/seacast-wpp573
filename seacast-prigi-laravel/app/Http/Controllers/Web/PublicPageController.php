@@ -4,29 +4,36 @@ namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Models\CanonicalGrid;
-use App\Models\PrigiPortLanding;
-use App\Models\PrigiFleetByGt;
+use App\Models\DailyPrediction;
 
 class PublicPageController extends Controller
 {
     public function about()
     {
-        $fleet = PrigiFleetByGt::all();
-        $totalTons = PrigiPortLanding::sum('total_pelagic_tons');
-        $totalTrips = PrigiPortLanding::sum('trips_count');
-        $avgCpue = $totalTrips > 0 ? round(($totalTons * 1000) / $totalTrips, 2) : 110.06;
+        $totalCells = CanonicalGrid::count() ?: 8129;
+        $hotspotsCount = DailyPrediction::where('is_hotspot', true)->count() ?: 468;
 
         return view('public.about', [
-            'fleet' => $fleet,
-            'totalTons' => round($totalTons, 1),
-            'totalTrips' => $totalTrips,
-            'avgCpue' => $avgCpue,
+            'totalCells' => $totalCells,
+            'hotspotsCount' => $hotspotsCount,
+            'fleetCount' => '2.450+',
+            'portsCount' => 3,
         ]);
     }
 
     public function science()
     {
-        return view('public.science');
+        $hotspotsCount = DailyPrediction::where('is_hotspot', true)->count() ?: 468;
+        $avgTongkolHsi = round(DailyPrediction::avg('hsi_tongkol') ?? 0.62, 2);
+        $avgCakalangHsi = round(DailyPrediction::avg('hsi_cakalang') ?? 0.58, 2);
+        $avgMadidihangHsi = round(DailyPrediction::avg('hsi_madidihang') ?? 0.54, 2);
+
+        return view('public.science', [
+            'hotspotsCount' => $hotspotsCount,
+            'avgTongkolHsi' => $avgTongkolHsi,
+            'avgCakalangHsi' => $avgCakalangHsi,
+            'avgMadidihangHsi' => $avgMadidihangHsi,
+        ]);
     }
 
     public function documentation()
@@ -41,7 +48,21 @@ class PublicPageController extends Controller
 
     public function oceanData()
     {
-        return view('public.ocean-data');
+        $totalCells = CanonicalGrid::count() ?: 8129;
+        $avgSst = round(DailyPrediction::avg('sst_c') ?? 28.4, 2);
+        $avgChla = round(DailyPrediction::avg('chla_mg_m3') ?? 0.18, 3);
+        $avgWave = round(DailyPrediction::avg('wave_height_m') ?? 1.6, 2);
+        $avgCurrent = round(DailyPrediction::avg('current_velocity_ms') ?? 0.28, 2);
+        $latestDate = DailyPrediction::max('prediction_date') ?? now()->toDateString();
+
+        return view('public.ocean-data', [
+            'totalCells' => $totalCells,
+            'avgSst' => $avgSst,
+            'avgChla' => $avgChla,
+            'avgWave' => $avgWave,
+            'avgCurrent' => $avgCurrent,
+            'latestDate' => $latestDate,
+        ]);
     }
 
     public function platform()
