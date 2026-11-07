@@ -12,20 +12,29 @@ Selain itu, Hero section di Beranda Publik diubah dari tampilan polosan/peta men
 1. **Cakupan Wilayah & Portofolio Pelabuhan:**
    - Beranda mencakup seluruh wilayah pengelolaan perikanan **WPPNRI 573 (Samudera Hindia Selatan Jawa)**.
    - Pelabuhan pangkalan aktif: **PPN Prigi (Jatim)**, **PPS Cilacap (Jateng)**, dan **PPN Palabuhanratu (Jabar)**.
-2. **Tata Letak Hero Beranda Publik (`home.blade.php`):**
+
+2. **Pembersihan Total Breadcrumb & Disclaimer Redundant (Seluruh Web):**
+   - Hapus teks breadcrumb kaku seperti `WPPNRI 573 / Executive Overview — SEACAST` dari `topbar.blade.php`.
+   - Hapus seluruh breadcrumb teks berulang di dalam body halaman (`SEACAST / WPPNRI 573 / ...` di `trip-planner`, `fleet-analytics`, dll.).
+   - Hapus pill internal database `DB Active: 8.129 Sel` di topbar.
+   - Bersihkan seluruh banner disclaimer akademis/teknis yang kaku (`Pelabelan Ilmiah Mandatori`, `Simulasi BMKG Terkalibrasi (Fallback Lokal)`, `Scientific Caveats Alert Banner`) agar antarmuka terlihat profesional, modern, dan siap pakai bagi nelayan & syahbandar.
+
+3. **Tata Letak Hero Beranda Publik (`home.blade.php`):**
    - **Layout:** Satu Kolom Terpusat (*Centered Cinematic*).
    - **Latar Belakang:** Citra sinematik kapal penangkap ikan & samudera lepas (*deep sea pelagic fisheries*) dengan overlay gradien gelap (`bg-[#071B2B]/85` ke `#091F30`) dan ambient glow cyan.
    - **Peta Preview:** Peta Leaflet di hero section publik **dihapus** agar tampilan hero lega, bersih (*clear*), dan berdampak visual kuat.
    - **Metrik Strip:** Menampilkan "Armada WPPNRI 573 Terintegrasi" (gabungan armada resmi) dilengkapi pill rincian per pelabuhan.
-3. **Kartu Spesies Pelagis Unggulan (Species Habitat Dossiers):**
+
+4. **Kartu Spesies Pelagis Unggulan (Species Habitat Dossiers):**
    - Menampilkan **3 Komoditas Terbanyak WPPNRI 573** secara seimbang:
      1. **Tongkol Lisong / Krai (*Auxis thazard / Euthynnus* spp.)** — Menggantikan Albakor sesuai statistik pendaratan empiris terbanyak.
      2. **Cakalang (*Katsuwonus pelamis*)** — Tuna permukaan cepat.
      3. **Madidihang (*Thunnus albacares*)** — Tuna epipelagis bernilai ekonomi tinggi.
-4. **Beranda Dashboard Eksekutif (`overview.blade.php`):**
-   - Teks header & subtitle beralih dari eksklusif PPN Prigi menjadi **WPPNRI 573 Multi-Pelabuhan**.
-   - Peta Leaflet dipertahankan di dashboard, namun dipusatkan ke seluruh WPPNRI 573 (`center: [110.5, -8.8], zoom: 6.8`) dengan 3 marker pelabuhan pangkalan (Prigi, Cilacap, Palabuhanratu) yang interaktif.
-   - Kartu KPI Albakor diganti dengan **Kesesuaian Habitat Tongkol (*Auxis thazard*)**.
+
+5. **Restrukturisasi Tata Letak Dashboard Eksekutif (`overview.blade.php`):**
+   - **Header Bersih & Lapang:** Judul "Ruang Kendali Operasional" dengan subtitle ringkas tanpa badge/disclaimer berulang.
+   - **Visual Peta Proporsional:** Peta Leaflet berpusat penuh di WPPNRI 573 (`center: [110.5, -8.8], zoom: 6.8`) dengan 3 marker pelabuhan pangkalan (Prigi, Cilacap, Palabuhanratu) yang interaktif diletakkan di porsi utama secara elegan.
+   - **Kartu Metrik & Aksi:** Kartu KPI Albakor diganti dengan **Kesesuaian Habitat Tongkol (*Auxis thazard*)**, diikuti tautan navigasi langsung ke 3 Pilar Operasional (Radar DPI, Rencana Melaut, Analitik Armada).
 
 ---
 
@@ -93,3 +102,4 @@ Peta: Samudera Hindia Selatan Jawa (WPP 573) dengan Pin Marker: PPN Prigi, PPS C
    - Menyediakan background image maritim beresolusi tinggi di `public/images/hero-marine-bg.webp` (atau SVG gradient-mesh atmosferik berkualitas tinggi).
 6. **Pengujian:**
    - Jalankan `php ./vendor/bin/phpunit` dan pastikan seluruh tes regresi tetap hijau (170+ passed).
+
