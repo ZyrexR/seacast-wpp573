@@ -78,15 +78,9 @@ class ProductionSecurityHardeningTest extends TestCase
         $routes = [
             '/dashboard',
             '/dashboard/dpi-radar',
-            '/dashboard/dom-management',
-            '/dashboard/bycatch-safety',
+            '/dashboard/trip-planner',
             '/dashboard/fleet-analytics',
             '/dashboard/cpue-analysis',
-            '/dashboard/species-models',
-            '/dashboard/oceanographic-explorer',
-            '/dashboard/time-machine',
-            '/dashboard/what-if-simulator',
-            '/dashboard/data-monitoring',
             '/dashboard/system-status',
         ];
 
@@ -120,14 +114,8 @@ class ProductionSecurityHardeningTest extends TestCase
         $operationalRoutes = [
             '/dashboard',
             '/dashboard/dpi-radar',
-            '/dashboard/dom-management',
-            '/dashboard/bycatch-safety',
+            '/dashboard/trip-planner',
             '/dashboard/fleet-analytics',
-            '/dashboard/species-models',
-            '/dashboard/oceanographic-explorer',
-            '/dashboard/time-machine',
-            '/dashboard/what-if-simulator',
-            '/dashboard/data-monitoring',
         ];
 
         // Verify Nelayan can access operational routes

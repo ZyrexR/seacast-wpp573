@@ -318,19 +318,21 @@ class DashboardController extends Controller
     }
 
     /**
-     * What-If Vessel Route Economics & Climate Perturbation Simulator Desk
+     * Rencana Operasional Melaut & Kalkulator (Trip Planner)
      */
-    public function whatIfSimulator()
+    public function tripPlanner()
     {
-        $specs = [
-            '< 10 GT' => ['speed_knots' => 7.5, 'fuel_liters_per_nm' => 1.5, 'max_range_nm' => 12.0, 'base_catch_kg' => 180],
-            '10 - 20 GT' => ['speed_knots' => 9.0, 'fuel_liters_per_nm' => 2.8, 'max_range_nm' => 30.0, 'base_catch_kg' => 450],
-            '20 - 30 GT' => ['speed_knots' => 11.0, 'fuel_liters_per_nm' => 4.5, 'max_range_nm' => 60.0, 'base_catch_kg' => 1200],
+        $ports = [
+            'PPN_PRIGI' => ['name' => 'PPN Prigi (Jawa Timur)', 'lat' => -8.2833, 'lon' => 111.7275],
+            'PPS_CILACAP' => ['name' => 'PPS Cilacap (Jawa Tengah)', 'lat' => -7.7472, 'lon' => 109.0139],
+            'PPN_PALABUHANRATU' => ['name' => 'PPN Palabuhanratu (Jawa Barat)', 'lat' => -6.9856, 'lon' => 106.5414],
         ];
 
-        return view('dashboard.what-if-simulator', [
-            'specs' => $specs,
-            'defaultSolarPrice' => 6800,
+        $latestDate = DailyPrediction::max('prediction_date') ?? '2026-11-03';
+
+        return view('dashboard.trip-planner', [
+            'ports' => $ports,
+            'latestDate' => $latestDate,
         ]);
     }
 

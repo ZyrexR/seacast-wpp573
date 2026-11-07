@@ -42,17 +42,13 @@ Route::middleware('auth')->prefix('dashboard')->name('dashboard')->group(functio
     Route::get('/', [DashboardController::class, 'index']);
     Route::get('/system-status', [DashboardController::class, 'systemStatus'])->name('.system-status')->middleware('role:admin');
 
-    // Core Radar Engine & Dynamic Filter (Phase 2 Active Production Route)
+    // 1. Radar Geospasial Terpadu WPPNRI 573
     Route::get('/dpi-radar', [DashboardController::class, 'dpiRadar'])->name('.dpi-radar');
-    Route::get('/dom-management', [DashboardController::class, 'domManagement'])->name('.dom-management');
-    Route::get('/bycatch-safety', [DashboardController::class, 'bycatchSafety'])->name('.bycatch-safety');
-    // Fleet & Port Landing Analytics (Phase 3.3 Active Route)
+
+    // 2. Kalkulator Rencana Melaut & Trip Planner
+    Route::get('/trip-planner', [DashboardController::class, 'tripPlanner'])->name('.trip-planner');
+
+    // 3. Analitik Armada & Pendaratan Multi-Pelabuhan
     Route::get('/fleet-analytics', [FleetAnalyticsController::class, 'index'])->name('.fleet-analytics');
     Route::get('/cpue-analysis', [FleetAnalyticsController::class, 'index'])->name('.cpue-analysis');
-    // Scientific Analytics Suite (Phase 4 Active Routes)
-    Route::get('/species-models', [DashboardController::class, 'speciesModels'])->name('.species-models');
-    Route::get('/oceanographic-explorer', [DashboardController::class, 'oceanographicExplorer'])->name('.oceanographic-explorer');
-    Route::get('/time-machine', [DashboardController::class, 'timeMachine'])->name('.time-machine');
-    Route::get('/what-if-simulator', [DashboardController::class, 'whatIfSimulator'])->name('.what-if-simulator');
-    Route::get('/data-monitoring', [DashboardController::class, 'dataMonitoring'])->name('.data-monitoring');
 });

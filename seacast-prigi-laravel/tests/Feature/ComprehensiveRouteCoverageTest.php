@@ -50,27 +50,37 @@ class ComprehensiveRouteCoverageTest extends TestCase
         }
     }
 
-    public function test_all_twelve_dashboard_operational_routes_render_200_ok_for_admin(): void
+    public function test_streamlined_dashboard_operational_routes_render_200_ok_for_admin(): void
     {
         $dashboardRoutes = [
             '/dashboard' => 'Ruang Kendali Eksekutif',
-            '/dashboard/system-status' => 'Spesifikasi Arsitektur Runtime Target',
             '/dashboard/dpi-radar' => 'DPI Radar Spasial',
-            '/dashboard/dom-management' => 'Dynamic Ocean Management (DOM)',
-            '/dashboard/bycatch-safety' => 'Bycatch Traffic Light',
+            '/dashboard/trip-planner' => 'Rencana Operasional Melaut',
             '/dashboard/fleet-analytics' => 'Analitik Armada',
-            '/dashboard/cpue-analysis' => 'Analitik Armada',
-            '/dashboard/species-models' => 'Diagnostik Model Spesies Ensemble',
-            '/dashboard/oceanographic-explorer' => 'Katalog Sensor Satelit',
-            '/dashboard/time-machine' => 'Time Machine 2025',
-            '/dashboard/what-if-simulator' => 'What-If Simulator',
-            '/dashboard/data-monitoring' => 'Monitoring Pipeline',
+            '/dashboard/system-status' => 'Spesifikasi Arsitektur Runtime Target',
         ];
 
         foreach ($dashboardRoutes as $uri => $expectedText) {
             $response = $this->actingAs($this->adminUser)->get($uri);
             $response->assertStatus(200);
             $response->assertSee($expectedText);
+        }
+    }
+
+    public function test_pruned_obsolete_dashboard_routes_return_404(): void
+    {
+        $obsoleteRoutes = [
+            '/dashboard/species-models',
+            '/dashboard/oceanographic-explorer',
+            '/dashboard/time-machine',
+            '/dashboard/dom-management',
+            '/dashboard/bycatch-safety',
+            '/dashboard/data-monitoring',
+        ];
+
+        foreach ($obsoleteRoutes as $uri) {
+            $response = $this->actingAs($this->adminUser)->get($uri);
+            $response->assertStatus(404);
         }
     }
 
