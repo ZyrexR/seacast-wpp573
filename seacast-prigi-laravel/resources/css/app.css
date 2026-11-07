@@ -1,0 +1,134 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../views/**/*.blade.php';
+@source '../js/**/*.js';
+
+@theme {
+    --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+    /* Primary Ocean Palette */
+    --color-ocean-950: #020b14;
+    --color-ocean-900: #061524;
+    --color-ocean-850: #071b2b;
+    --color-ocean-800: #0a2540;
+    --color-ocean-750: #0d2b3e;
+    --color-ocean-700: #12364a;
+    --color-ocean-600: #1a4d7a;
+    --color-ocean-500: #25679e;
+
+    /* Cyan Scientific Accents */
+    --color-cyan-400: #22d3ee;
+    --color-cyan-500: #06b6d4;
+    --color-cyan-600: #0891b2;
+    --color-cyan-700: #0e7490;
+
+    /* Scientific Status Signals */
+    --color-emerald-400: #34d399;
+    --color-emerald-500: #10b981;
+    --color-emerald-600: #059669;
+
+    --color-amber-400: #fbbf24;
+    --color-amber-500: #f59e0b;
+    --color-amber-600: #d97706;
+
+    --color-rose-400: #fb7185;
+    --color-rose-500: #f43f5e;
+    --color-rose-600: #e11d48;
+}
+
+@layer base {
+    /* Public Light Theme (Editorial Scientific) */
+    :root {
+        --theme-bg: #F6F9FB;
+        --theme-surface: #FFFFFF;
+        --theme-elevated: #FFFFFF;
+        --theme-border: #DCE6EC;
+        --theme-text: #102A3A;
+        --theme-muted: #607585;
+        --theme-primary: #0D8195;
+        --theme-primary-hover: #0b6d7e;
+        --theme-ring: rgba(13, 129, 149, 0.25);
+    }
+
+    /* Operational Dashboard Dedicated Dark Theme */
+    [data-theme="dashboard"],
+    .theme-dashboard {
+        --theme-bg: #071B2B;
+        --theme-sidebar: #091F30;
+        --theme-surface: #0D2B3E;
+        --theme-elevated: #12364A;
+        --theme-border: #244456;
+        --theme-text: #E7F0F5;
+        --theme-muted: #A4BAC8;
+        --theme-primary: #13B8C8;
+        --theme-primary-hover: #10A1B0;
+        --theme-ring: rgba(19, 184, 200, 0.35);
+    }
+
+    html, body {
+        font-size: 14px;
+        min-height: 100%;
+        background-color: var(--theme-bg);
+        color: var(--theme-text);
+        font-family: var(--font-sans);
+        text-rendering: optimizeLegibility;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    /* WCAG Minimum Floor rule: Never smaller than 12px */
+    .text-floor {
+        font-size: 12px;
+        line-height: 1.33;
+    }
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: #244456;
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #13B8C8;
+}
+
+/* Pulse Beacon Animation */
+@keyframes pulse-slow {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.65; transform: scale(1.1); }
+}
+.pulse-beacon {
+    animation: pulse-slow 2.4s infinite ease-in-out;
+}
+
+/* Leaflet Dark Popups & Controls */
+.leaflet-popup-content-wrapper,
+.mapcn-dark-popup .leaflet-popup-content-wrapper {
+    background: #0D2B3E !important;
+    color: #E7F0F5 !important;
+    border: 1px solid #244456 !important;
+    border-radius: 12px !important;
+    padding: 0 !important;
+    box-shadow: 0 12px 30px -5px rgba(0, 0, 0, 0.6) !important;
+    font-size: 12px !important;
+}
+
+.leaflet-popup-tip,
+.mapcn-dark-popup .leaflet-popup-tip {
+    background-color: #0D2B3E !important;
+    border: 1px solid #244456 !important;
+}
+
+.leaflet-popup-content {
+    margin: 0 !important;
+    line-height: inherit !important;
+}

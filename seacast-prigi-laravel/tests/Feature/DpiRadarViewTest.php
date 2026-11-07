@@ -1,0 +1,36 @@
+<?php
+
+namespace Tests\Feature;
+
+use Tests\TestCase;
+use App\Models\User;
+
+class DpiRadarViewTest extends TestCase
+{
+    public function test_guest_is_redirected_from_radar_to_login(): void
+    {
+        $response = $this->get('/dashboard/dpi-radar');
+        $response->assertRedirect('/login');
+    }
+
+    public function test_authenticated_user_can_access_interactive_radar_dashboard(): void
+    {
+        $user = User::factory()->make([
+            'id' => 1,
+            'name' => 'Operator Radar',
+            'email' => 'operator@seacast.id',
+            'role' => 'user',
+        ]);
+
+        $response = $this->actingAs($user)->get('/dashboard/dpi-radar');
+
+        $response->assertStatus(200);
+        $response->assertSee('DPI Radar Spasial WPPNRI 573');
+        $response->assertSee('2026-11-03');
+        $response->assertSee('Simulasi Oseanografi Musiman BMKG Terkalibrasi (Fallback Lokal)');
+        $response->assertSee('Zonasi DOM (Dynamic Ocean Management)');
+        $response->assertSee('Tingkat Risiko Bycatch');
+        $response->assertSee('Ambang Batas HSI Minimum');
+        $response->assertSee('Homeport PPN Prigi');
+    }
+}

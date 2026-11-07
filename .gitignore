@@ -1,0 +1,6 @@
+seacast-prigi-laravel/vendor/
+seacast-prigi-laravel/node_modules/
+.superpowers/sdd/
+*.pyc
+__pycache__/
+.env
