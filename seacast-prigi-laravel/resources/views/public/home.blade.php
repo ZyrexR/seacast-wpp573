@@ -1,54 +1,61 @@
 <x-layouts.public title="SEACAST — Scientific Ocean Intelligence & Fisheries Decision Support">
-    <!-- Hero Section with Centered Cinematic Marine Atmosphere -->
-    <section class="relative overflow-hidden bg-gradient-to-b from-[#071B2B] via-[#091F30] to-[#0D2B3E] text-white pt-20 pb-24 border-b border-[#244456]">
-        <!-- Background Ambient Glow & Grid -->
+    <!-- Hero Section with Centered Cinematic Marine Atmosphere & Fit-to-Screen Proportion -->
+    <section class="relative overflow-hidden text-white min-h-[calc(100vh-4.25rem)] flex flex-col justify-between py-6 sm:py-8 lg:py-8 border-b border-[#244456] bg-cover bg-center bg-no-repeat"
+             style="background-image: url('{{ asset('images/hero-marine.jpg') }}');">
+        <!-- Dark Atmospheric Multi-Layer Overlays for Contrast & Readability -->
+        <div class="absolute inset-0 bg-gradient-to-b from-[#071B2B]/92 via-[#071B2B]/85 to-[#071B2B]/96 pointer-events-none"></div>
         <div class="absolute inset-0 opacity-15 pointer-events-none" style="background-image: radial-gradient(#13B8C8 1px, transparent 1px); background-size: 32px 32px;"></div>
-        <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[350px] bg-cyan-500/15 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] h-[300px] bg-cyan-500/15 rounded-full blur-3xl pointer-events-none"></div>
 
-        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+        <!-- Spacer for vertical balance -->
+        <div></div>
+
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center my-auto">
             <!-- Verified PostGIS Pill -->
-            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#12364A]/90 border border-[#244456] text-xs font-mono text-cyan-300 shadow-lg mb-6">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#12364A]/90 border border-[#244456] text-[11px] sm:text-xs font-mono text-cyan-300 shadow-lg mb-3">
                 <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
                 <span>PostGIS 17 Kanonikal &bull; 8.129 Sel &bull; WPPNRI 573</span>
             </div>
 
             <!-- Main Cinematic Headline -->
-            <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight text-white mb-6">
+            <h1 class="text-2xl sm:text-4xl lg:text-[2.65rem] font-black tracking-tight leading-tight text-white mb-3 sm:mb-4">
                 Kecerdasan Oseanografi & Prediksi Presisi <br class="hidden sm:inline">
                 <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-teal-300 to-[#13B8C8]">Pelagis Samudera Hindia (WPP 573)</span>
             </h1>
 
             <!-- Descriptive Subtitle with Multi-Port Coverage -->
-            <p class="text-sm sm:text-base text-slate-300 leading-relaxed max-w-3xl mx-auto mb-8">
+            <p class="text-xs sm:text-sm lg:text-[15px] text-slate-300 leading-relaxed max-w-2xl mx-auto mb-5 sm:mb-6">
                 Platform intelijen maritim terpadu untuk efisiensi bahan bakar nelayan, keselamatan pelayaran, dan kepatuhan zonasi Permen KP No. 59/2020 di <strong class="text-cyan-300">PPN Prigi</strong>, <strong class="text-cyan-300">PPS Cilacap</strong>, dan <strong class="text-cyan-300">PPN Palabuhanratu</strong>.
             </p>
 
             <!-- Dual CTA Action Buttons -->
-            <div class="flex flex-wrap items-center justify-center gap-4 mb-12">
-                <x-ui.button href="{{ route('dashboard') }}" variant="primary" size="lg" class="shadow-xl shadow-cyan-500/25 px-8">
+            <div class="flex flex-wrap items-center justify-center gap-3.5 mb-6 sm:mb-7">
+                <x-ui.button href="{{ route('dashboard') }}" variant="primary" size="md" class="shadow-xl shadow-cyan-500/25 px-6 font-bold">
                     Masuk Ruang Kendali
                 </x-ui.button>
-                <x-ui.button href="{{ route('dashboard.trip-planner') }}" variant="outline" size="lg" class="border-[#244456] text-slate-200 hover:bg-[#12364A] hover:text-white px-8">
+                <x-ui.button href="{{ route('dashboard.trip-planner') }}" variant="outline" size="md" class="border-[#244456] bg-[#071B2B]/60 text-slate-200 hover:bg-[#12364A] hover:text-white px-6 font-semibold">
                     Rencanakan Melaut
                 </x-ui.button>
             </div>
+        </div>
 
-            <!-- Integrated Multi-Port Metrics Strip -->
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-4xl mx-auto pt-8 border-t border-[#244456]/70">
-                <div class="p-4 rounded-2xl bg-[#091F30]/80 border border-[#244456] backdrop-blur-sm">
-                    <span class="block text-2xl font-black font-mono text-cyan-400">{{ number_format($totalCells) }}</span>
-                    <span class="text-xs font-semibold text-slate-300">Sel Kanonik 0,10°</span>
-                    <p class="text-[11px] text-slate-400 mt-1">Grid PostGIS WPPNRI 573</p>
+        <!-- Integrated Multi-Port Metrics Strip (Bottom Fold - Always In-View) -->
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full pt-4 border-t border-[#244456]/70">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+                <div class="p-3 sm:p-3.5 rounded-2xl bg-[#091F30]/85 border border-[#244456] backdrop-blur-md shadow-lg text-center">
+                    <span class="block text-xl sm:text-2xl font-black font-mono text-cyan-400">{{ number_format($totalCells) }}</span>
+                    <span class="text-xs font-semibold text-slate-200">Sel Kanonik 0,10°</span>
+                    <p class="text-[11px] text-slate-400 mt-0.5">Grid PostGIS WPPNRI 573</p>
                 </div>
-                <div class="p-4 rounded-2xl bg-[#091F30]/80 border border-[#244456] backdrop-blur-sm">
-                    <span class="block text-2xl font-black font-mono text-emerald-400">{{ $hotspotsCount }} Sel</span>
-                    <span class="text-xs font-semibold text-slate-300">Hotspot Tangkap Hari Ini</span>
-                    <p class="text-[11px] text-slate-400 mt-1">Kesesuaian HSI &ge; 0,70</p>
+                <div class="p-3 sm:p-3.5 rounded-2xl bg-[#091F30]/85 border border-[#244456] backdrop-blur-md shadow-lg text-center">
+                    <span class="block text-xl sm:text-2xl font-black font-mono text-emerald-400">{{ $hotspotsCount }} Sel</span>
+                    <span class="text-xs font-semibold text-slate-200">Hotspot Tangkap Hari Ini</span>
+                    <p class="text-[11px] text-slate-400 mt-0.5">Kesesuaian HSI &ge; 0,70</p>
                 </div>
-                <div class="p-4 rounded-2xl bg-[#091F30]/80 border border-[#244456] backdrop-blur-sm">
-                    <span class="block text-2xl font-black font-mono text-cyan-300">2.450+ Kapal</span>
-                    <span class="text-xs font-semibold text-slate-300">Armada WPPNRI 573 Terintegrasi</span>
-                    <div class="flex items-center justify-center gap-1.5 mt-1.5 text-[10px] font-mono text-slate-400">
+                <div class="p-3 sm:p-3.5 rounded-2xl bg-[#091F30]/85 border border-[#244456] backdrop-blur-md shadow-lg text-center">
+                    <span class="block text-xl sm:text-2xl font-black font-mono text-cyan-300">2.450+ Kapal</span>
+                    <span class="text-xs font-semibold text-slate-200">Armada WPP 573 Terintegrasi</span>
+                    <div class="flex items-center justify-center gap-1.5 mt-1 text-[10px] font-mono text-slate-400">
                         <span class="px-1.5 py-0.5 rounded bg-[#12364A] text-cyan-300">Prigi</span>
                         <span>&bull;</span>
                         <span class="px-1.5 py-0.5 rounded bg-[#12364A] text-cyan-300">Cilacap</span>

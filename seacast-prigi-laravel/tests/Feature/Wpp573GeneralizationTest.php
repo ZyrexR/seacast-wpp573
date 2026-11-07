@@ -47,6 +47,15 @@ class Wpp573GeneralizationTest extends TestCase
 
         // Preview map in hero should be removed
         $response->assertDontSee('Radar WPPNRI 573 (PPN Prigi)');
+
+        // Navbar new streamlined links
+        $response->assertSee('Sains & Model', false);
+        $response->assertSee('Data Oseanografi');
+        $response->assertSee('Dokumentasi');
+        $response->assertSee('Tentang SEACAST');
+
+        // Cinematic background image
+        $response->assertSee('hero-marine.jpg');
     }
 
     public function test_dashboard_overview_and_topbar_are_decluttered(): void
@@ -83,3 +92,4 @@ class Wpp573GeneralizationTest extends TestCase
         $plannerResponse->assertDontSee('SEACAST / WPPNRI 573 / Rencana Operasional Melaut');
     }
 }
+
