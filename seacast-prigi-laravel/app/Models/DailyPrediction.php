@@ -24,6 +24,7 @@ class DailyPrediction extends Model
         'hsi_cakalang' => 'float',
         'hsi_madidihang' => 'float',
         'hsi_albakor' => 'float',
+        'hsi_tongkol' => 'float',
         'is_hotspot' => 'boolean',
         'sst_c' => 'float',
         'chla_mg_m3' => 'float',

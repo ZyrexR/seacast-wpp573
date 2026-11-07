@@ -131,6 +131,13 @@ def run_inference(target_date=None):
         hsi_norm = (raw_hsi - min_v) / (max_v - min_v) if max_v > min_v else raw_hsi
         df_daily[f"hsi_{sp}"] = np.round(hsi_norm, 3)
     
+    # Tongkol (Euthynnus spp. / Auxis thazard) Coastal/Neritic AMM Model
+    si_sst_tongkol = np.exp(-((df_daily['sst'] - 28.75) / ((30.5 - 27.0) / 1.5)) ** 2)
+    si_chla_tongkol = np.exp(-((df_daily['chla'] - 0.35) / ((0.50 - 0.20) / 1.5)) ** 2)
+    si_depth_tongkol = np.where(df_daily['depth'] <= 150.0, 1.0, np.exp(-((df_daily['depth'] - 150.0) / 150.0) ** 2))
+    hsi_tongkol = (0.45 * si_sst_tongkol) + (0.40 * si_chla_tongkol) + (0.15 * si_depth_tongkol)
+    df_daily['hsi_tongkol'] = np.round(np.clip(hsi_tongkol, 0.0, 1.0), 3)
+    
     # Hotspot threshold
     df_daily['is_hotspot'] = (df_daily['hsi_cakalang'] >= 0.70) | (df_daily['hsi_madidihang'] >= 0.70)
     
@@ -176,7 +183,7 @@ def run_inference(target_date=None):
     
     # 7. Export Compact JSON for Frontend Web Instant Load
     export_cols = [
-        "cell_id", "hsi_cakalang", "hsi_madidihang", "hsi_albakor",
+        "cell_id", "hsi_cakalang", "hsi_madidihang", "hsi_albakor", "hsi_tongkol",
         "is_hotspot", "dom_zone", "bycatch_traffic_light", "wave_height_m",
         "safety_advisory", "sector", "sst", "chla", "depth", "dist_port_nm"
     ]
