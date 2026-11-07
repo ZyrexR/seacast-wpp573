@@ -6,6 +6,7 @@ use App\Http\Controllers\Web\PublicPageController;
 use App\Http\Controllers\Web\AuthController;
 use App\Http\Controllers\Web\DashboardController;
 use App\Http\Controllers\Web\FleetAnalyticsController;
+use App\Http\Controllers\Web\TripPlannerController;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,8 +46,11 @@ Route::middleware('auth')->prefix('dashboard')->name('dashboard')->group(functio
     // 1. Radar Geospasial Terpadu WPPNRI 573
     Route::get('/dpi-radar', [DashboardController::class, 'dpiRadar'])->name('.dpi-radar');
 
-    // 2. Kalkulator Rencana Melaut & Trip Planner
-    Route::get('/trip-planner', [DashboardController::class, 'tripPlanner'])->name('.trip-planner');
+    // 2. Rencana Melaut & Trip Planner
+    Route::get('/trip-planner', [TripPlannerController::class, 'index'])->name('.trip-planner');
+    Route::post('/trip-planner/calculate', [TripPlannerController::class, 'calculate'])->name('.trip-planner.calculate');
+    Route::post('/trip-planner', [TripPlannerController::class, 'store'])->name('.trip-planner.store');
+    Route::get('/trip-planner/{id}/pdf', [TripPlannerController::class, 'downloadPdf'])->name('.trip-planner.pdf');
 
     // 3. Analitik Armada & Pendaratan Multi-Pelabuhan
     Route::get('/fleet-analytics', [FleetAnalyticsController::class, 'index'])->name('.fleet-analytics');
