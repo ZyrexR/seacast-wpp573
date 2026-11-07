@@ -3,9 +3,8 @@
         <!-- Header & Live Timestamp -->
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#244456]">
             <div>
-                <h1 class="text-xl sm:text-2xl font-black text-white tracking-tight flex items-center gap-2.5">
+                <h1 class="text-xl sm:text-2xl font-black text-white tracking-tight">
                     Ruang Kendali Eksekutif Oseanografi
-                    <x-ui.badge variant="cyan" :dot="true" :pulse="true">Live WPPNRI 573</x-ui.badge>
                 </h1>
                 <p class="text-xs text-slate-400 mt-1">
                     Telemetri harian per tanggal <span class="font-mono font-bold text-cyan-400">{{ $latestDate }}</span> &bull; WPPNRI 573 (PPN Prigi, PPS Cilacap, PPN Palabuhanratu)

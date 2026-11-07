@@ -10,12 +10,6 @@
         <div></div>
 
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center my-auto">
-            <!-- Verified PostGIS Pill -->
-            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#071B2B]/85 border border-cyan-500/30 text-[11px] sm:text-xs font-mono text-cyan-300 shadow-xl backdrop-blur-md mb-3">
-                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                <span>PostGIS 17 Kanonikal &bull; 8.129 Sel &bull; WPPNRI 573</span>
-            </div>
-
             <!-- Main Cinematic Headline with Drop Shadow -->
             <h1 class="text-2xl sm:text-4xl lg:text-[2.65rem] font-black tracking-tight leading-tight text-white mb-3 sm:mb-4 drop-shadow-[0_4px_16px_rgba(0,0,0,0.85)]">
                 Kecerdasan Oseanografi & Prediksi Presisi <br class="hidden sm:inline">
@@ -44,7 +38,7 @@
                 <div class="p-3 sm:p-3.5 rounded-2xl bg-[#071B2B]/85 border border-[#244456] backdrop-blur-md shadow-xl text-center">
                     <span class="block text-xl sm:text-2xl font-black font-mono text-cyan-400">{{ number_format($totalCells) }}</span>
                     <span class="text-xs font-semibold text-slate-200">Sel Kanonik 0,10°</span>
-                    <p class="text-[11px] text-slate-300 mt-0.5">Grid PostGIS WPPNRI 573</p>
+                    <p class="text-[11px] text-slate-300 mt-0.5">Wilayah Samudera Hindia</p>
                 </div>
                 <div class="p-3 sm:p-3.5 rounded-2xl bg-[#071B2B]/85 border border-[#244456] backdrop-blur-md shadow-xl text-center">
                     <span class="block text-xl sm:text-2xl font-black font-mono text-emerald-400">{{ $hotspotsCount }} Sel</span>

@@ -13,7 +13,6 @@
                 <h1 class="text-2xl font-black text-white tracking-tight flex items-center gap-2.5">
                     <span class="inline-block w-2.5 h-6 bg-cyan-500 rounded-full"></span>
                     Rencana Operasional Melaut
-                    <x-ui.badge variant="cyan" :dot="true">Kalkulator Maritim Terpadu</x-ui.badge>
                 </h1>
                 <p class="text-xs text-slate-400 mt-1">
                     Kalkulator Terpadu Efisiensi Bahan Bakar, Keselamatan Maritim & Kepatuhan Zonasi Permen KP 59/2020
