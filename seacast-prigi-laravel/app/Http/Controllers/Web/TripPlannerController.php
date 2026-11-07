@@ -47,7 +47,7 @@ class TripPlannerController extends Controller
         // Port Admin / Syahbandar Logbook (Review Focus 5: Port-scoped admin access)
         $adminLogbook = null;
         if ($user->isAdmin() || $user->hasRole('syahbandar') || $user->hasRole('peneliti')) {
-            $logQuery = TripPlan::with('user')->orderBy('departure_date', 'desc')->take(20);
+            $logQuery = TripPlan::with('user')->orderBy('departure_date', 'desc')->orderBy('id', 'desc');
 
             // If user has specific port affiliation
             if ($user->hasRole('syahbandar') && str_contains(strtolower($user->name . $user->email), 'cilacap')) {
@@ -56,7 +56,7 @@ class TripPlannerController extends Controller
                 $logQuery->where('port_code', 'PPN_PRIGI');
             }
 
-            $adminLogbook = $logQuery->get();
+            $adminLogbook = $logQuery->take(100)->get();
         }
 
         return view('dashboard.trip-planner', [

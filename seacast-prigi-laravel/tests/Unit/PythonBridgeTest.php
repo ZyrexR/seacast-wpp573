@@ -42,7 +42,7 @@ class PythonBridgeTest extends TestCase
 
     public function test_can_execute_whitelisted_script_and_receive_valid_json(): void
     {
-        $result = $this->bridge->runInference('2026-11-03');
+        $result = $this->bridge->runInference('2026-11-03', ['limit' => 20]);
         $this->assertInstanceOf(PythonComputationResult::class, $result);
         $this->assertEquals('SUCCESS', $result->status);
         $this->assertNotEmpty($result->modelVersion);
