@@ -10,20 +10,19 @@
             </svg>
         </button>
 
-        <!-- Current Context / Breadcrumbs -->
-        <div class="flex items-center gap-2 text-xs font-semibold text-slate-300">
-            <span class="text-cyan-400 font-mono">WPPNRI 573</span>
-            <span class="text-slate-600">/</span>
-            <span class="text-slate-100">{{ $title ?? 'Operational Deck' }}</span>
+        <!-- Current Page Title -->
+        <div class="flex items-center gap-2 text-xs sm:text-sm font-bold text-slate-100">
+            <span class="w-2 h-2 rounded-full bg-cyan-400"></span>
+            <span>{{ $title ?? 'Ruang Kendali Operasional' }}</span>
         </div>
     </div>
 
     <!-- Right Controls -->
     <div class="flex items-center gap-3">
-        <!-- Database Health Pulse -->
+        <!-- System Live Status -->
         <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#0D2B3E] border border-[#244456] text-floor text-slate-300">
             <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span class="font-mono">DB Active: 8.129 Sel</span>
+            <span class="font-mono text-emerald-400">Sistem Aktif</span>
         </div>
 
         <!-- User Persona / Session -->

@@ -10,13 +10,6 @@
         <!-- Top Header & Context -->
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-[#244456] pb-5">
             <div>
-                <div class="flex items-center gap-2 text-xs font-mono text-cyan-400 mb-1">
-                    <span>SEACAST</span>
-                    <span>/</span>
-                    <span>WPPNRI 573</span>
-                    <span>/</span>
-                    <span class="text-slate-300">Rencana Operasional Melaut</span>
-                </div>
                 <h1 class="text-2xl font-black text-white tracking-tight flex items-center gap-2.5">
                     <span class="inline-block w-2.5 h-6 bg-cyan-500 rounded-full"></span>
                     Rencana Operasional Melaut

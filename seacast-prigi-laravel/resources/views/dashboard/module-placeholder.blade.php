@@ -46,7 +46,7 @@
 
             <div class="pt-4 flex items-center justify-center gap-4">
                 <x-ui.button href="{{ route('dashboard') }}" variant="primary" size="md">
-                    Kembali ke Executive Overview
+                    Kembali ke Ruang Kendali
                 </x-ui.button>
                 <x-ui.button href="{{ route('dashboard.system-status') }}" variant="secondary" size="md">
                     Periksa Status PostGIS

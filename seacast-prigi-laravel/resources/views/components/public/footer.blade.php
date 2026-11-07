@@ -25,7 +25,8 @@
             <div>
                 <h5 class="text-xs font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wider mb-3">Akses Operasional</h5>
                 <ul class="space-y-2 text-xs text-slate-600 dark:text-slate-400">
-                    <li><a href="{{ route('dashboard') }}" class="hover:text-cyan-500 transition-colors">Executive Overview</a></li>
+                    <li><a href="{{ route('dashboard') }}" class="hover:text-cyan-500 transition-colors">Ruang Kendali Operasional</a></li>
+                    <li><a href="{{ route('dashboard.trip-planner') }}" class="hover:text-cyan-500 transition-colors">Trip Planner & SPB</a></li>
                     <li><a href="{{ route('dashboard.system-status') }}" class="hover:text-cyan-500 transition-colors">Status Mesin & PostGIS</a></li>
                     <li><a href="{{ route('login') }}" class="hover:text-cyan-500 transition-colors">Login Ruang Kendali</a></li>
                 </ul>

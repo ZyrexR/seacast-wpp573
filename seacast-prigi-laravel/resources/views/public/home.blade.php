@@ -1,100 +1,59 @@
 <x-layouts.public title="SEACAST — Scientific Ocean Intelligence & Fisheries Decision Support">
-    <!-- Hero Section with Live Telemetry & Editorial Composition -->
-    <section class="relative overflow-hidden bg-gradient-to-b from-[#071B2B] via-[#091F30] to-[#0D2B3E] text-white pt-16 pb-20 border-b border-[#244456]">
+    <!-- Hero Section with Centered Cinematic Marine Atmosphere -->
+    <section class="relative overflow-hidden bg-gradient-to-b from-[#071B2B] via-[#091F30] to-[#0D2B3E] text-white pt-20 pb-24 border-b border-[#244456]">
         <!-- Background Ambient Glow & Grid -->
         <div class="absolute inset-0 opacity-15 pointer-events-none" style="background-image: radial-gradient(#13B8C8 1px, transparent 1px); background-size: 32px 32px;"></div>
-        <div class="absolute -top-40 -right-40 w-96 h-96 bg-cyan-500/20 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[350px] bg-cyan-500/15 rounded-full blur-3xl pointer-events-none"></div>
 
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-                <!-- Left Editorial Column -->
-                <div class="lg:col-span-7 space-y-6">
-                    <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#12364A] border border-[#244456] text-xs font-mono text-cyan-300">
-                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                        <span>PostGIS 17.11 Kanonikal Terverifikasi &bull; 8.129 Sel</span>
-                    </div>
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+            <!-- Verified PostGIS Pill -->
+            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#12364A]/90 border border-[#244456] text-xs font-mono text-cyan-300 shadow-lg mb-6">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span>PostGIS 17 Kanonikal &bull; 8.129 Sel &bull; WPPNRI 573</span>
+            </div>
 
-                    <h1 class="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-tight text-white">
-                        Kecerdasan Oseanografi & Prediksi Presisi <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-[#13B8C8]">Pelagis Samudera Hindia</span>
-                    </h1>
+            <!-- Main Cinematic Headline -->
+            <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight text-white mb-6">
+                Kecerdasan Oseanografi & Prediksi Presisi <br class="hidden sm:inline">
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-teal-300 to-[#13B8C8]">Pelagis Samudera Hindia (WPP 573)</span>
+            </h1>
 
-                    <p class="text-sm sm:text-base text-slate-300 leading-relaxed max-w-2xl">
-                        SEACAST mentransformasi data satelit oseanografi dan algoritma Species Distribution Model (SDM) ensemble menjadi panduan penangkapan ikan pelagis presisi, zonasi Dynamic Ocean Management (DOM), dan mitigasi bycatch megafauna di WPPNRI 573.
-                    </p>
+            <!-- Descriptive Subtitle with Multi-Port Coverage -->
+            <p class="text-sm sm:text-base text-slate-300 leading-relaxed max-w-3xl mx-auto mb-8">
+                Platform intelijen maritim terpadu untuk efisiensi bahan bakar nelayan, keselamatan pelayaran, dan kepatuhan zonasi Permen KP No. 59/2020 di <strong class="text-cyan-300">PPN Prigi</strong>, <strong class="text-cyan-300">PPS Cilacap</strong>, dan <strong class="text-cyan-300">PPN Palabuhanratu</strong>.
+            </p>
 
-                    <div class="flex flex-wrap items-center gap-4 pt-2">
-                        <x-ui.button href="{{ route('dashboard') }}" variant="primary" size="lg" class="shadow-lg shadow-cyan-500/20">
-                            Masuk Ruang Kendali Operasional
-                        </x-ui.button>
-                        <x-ui.button href="{{ route('science') }}" variant="outline" size="lg" class="border-slate-500 text-slate-200 hover:bg-slate-800">
-                            Pelajari Landasan Ilmiah
-                        </x-ui.button>
-                    </div>
+            <!-- Dual CTA Action Buttons -->
+            <div class="flex flex-wrap items-center justify-center gap-4 mb-12">
+                <x-ui.button href="{{ route('dashboard') }}" variant="primary" size="lg" class="shadow-xl shadow-cyan-500/25 px-8">
+                    Masuk Ruang Kendali
+                </x-ui.button>
+                <x-ui.button href="{{ route('dashboard.trip-planner') }}" variant="outline" size="lg" class="border-[#244456] text-slate-200 hover:bg-[#12364A] hover:text-white px-8">
+                    Rencanakan Melaut
+                </x-ui.button>
+            </div>
 
-                    <!-- Operational Badge Grid -->
-                    <div class="grid grid-cols-3 gap-4 pt-4 border-t border-[#244456]/60">
-                        <div>
-                            <span class="block text-xl font-black font-mono text-cyan-400">{{ number_format($totalCells) }}</span>
-                            <span class="text-floor text-slate-400">Sel Kanonik 0,10°</span>
-                        </div>
-                        <div>
-                            <span class="block text-xl font-black font-mono text-emerald-400">{{ $hotspotsCount }} Sel</span>
-                            <span class="text-floor text-slate-400">Hotspot Tangkap Hari Ini</span>
-                        </div>
-                        <div>
-                            <span class="block text-xl font-black font-mono text-cyan-300">{{ number_format($totalFleet ?? $totalVessels ?? 1269) }} Kapal</span>
-                            <span class="text-floor text-slate-400">Armada Resmi PPN Prigi</span>
-                        </div>
-                    </div>
+            <!-- Integrated Multi-Port Metrics Strip -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-4xl mx-auto pt-8 border-t border-[#244456]/70">
+                <div class="p-4 rounded-2xl bg-[#091F30]/80 border border-[#244456] backdrop-blur-sm">
+                    <span class="block text-2xl font-black font-mono text-cyan-400">{{ number_format($totalCells) }}</span>
+                    <span class="text-xs font-semibold text-slate-300">Sel Kanonik 0,10°</span>
+                    <p class="text-[11px] text-slate-400 mt-1">Grid PostGIS WPPNRI 573</p>
                 </div>
-
-                <!-- Right Column: Interactive Map Preview Foundation -->
-                <div class="lg:col-span-5">
-                    <div class="rounded-3xl border border-[#244456] bg-[#091F30] p-3 shadow-2xl overflow-hidden relative">
-                        <div class="flex items-center justify-between pb-3 px-2 border-b border-[#244456]/60 text-xs">
-                            <div class="flex items-center gap-2">
-                                <span class="w-2.5 h-2.5 rounded-full bg-cyan-400 pulse-beacon"></span>
-                                <span class="font-bold text-slate-200">Radar WPPNRI 573 (PPN Prigi)</span>
-                            </div>
-                            <span class="text-floor font-mono text-slate-400">Leaflet GIS Native</span>
-                        </div>
-
-                        <!-- Leaflet Alpine Container -->
-                        <div 
-                            x-data="seacastMap({ center: [111.7275, -8.2833], zoom: 7.2 })" 
-                            x-init="initMap()" 
-                            class="w-full h-80 rounded-2xl overflow-hidden relative mt-2 bg-[#061524]"
-                        >
-                            <div x-ref="mapContainer" class="w-full h-full"></div>
-
-                            <!-- Basemap Switcher Controls -->
-                            <div class="absolute top-3 left-3 z-[1000]">
-                                <x-ui.map-basemap-switcher activeVar="currentBasemap" setFn="setBasemap" :compact="true" />
-                            </div>
-
-                            <!-- Map Loading Overlay -->
-                            <div x-show="!loaded && !error" class="absolute inset-0 bg-[#071B2B]/80 backdrop-blur-sm flex items-center justify-center text-xs text-cyan-400 font-mono z-[1050]">
-                                Memuat Tile Peta Samudera...
-                            </div>
-
-                            <!-- Map Error Overlay -->
-                            <div x-show="error" style="display: none;" class="absolute inset-0 bg-[#071B2B]/90 p-4 flex flex-col items-center justify-center text-center text-xs text-rose-300 z-[1050]">
-                                <span x-text="error"></span>
-                            </div>
-
-                            <!-- Reset Button Overlay -->
-                            <div class="absolute top-3 right-3 z-[1000]">
-                                <button @click="resetView()" title="Fokus ke PPN Prigi" class="p-2 rounded-xl bg-[#091F30]/90 border border-[#244456] text-cyan-400 hover:text-white hover:bg-[#12364A] shadow-md transition-colors text-xs">
-                                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="px-2 pt-3 flex items-center justify-between text-floor text-slate-400 font-mono">
-                            <span>Bujur: 111.7275° E</span>
-                            <span>Lintang: -8.2833° S</span>
-                            <span class="text-cyan-400 font-bold">EPSG:4326</span>
-                        </div>
+                <div class="p-4 rounded-2xl bg-[#091F30]/80 border border-[#244456] backdrop-blur-sm">
+                    <span class="block text-2xl font-black font-mono text-emerald-400">{{ $hotspotsCount }} Sel</span>
+                    <span class="text-xs font-semibold text-slate-300">Hotspot Tangkap Hari Ini</span>
+                    <p class="text-[11px] text-slate-400 mt-1">Kesesuaian HSI &ge; 0,70</p>
+                </div>
+                <div class="p-4 rounded-2xl bg-[#091F30]/80 border border-[#244456] backdrop-blur-sm">
+                    <span class="block text-2xl font-black font-mono text-cyan-300">2.450+ Kapal</span>
+                    <span class="text-xs font-semibold text-slate-300">Armada WPPNRI 573 Terintegrasi</span>
+                    <div class="flex items-center justify-center gap-1.5 mt-1.5 text-[10px] font-mono text-slate-400">
+                        <span class="px-1.5 py-0.5 rounded bg-[#12364A] text-cyan-300">Prigi</span>
+                        <span>&bull;</span>
+                        <span class="px-1.5 py-0.5 rounded bg-[#12364A] text-cyan-300">Cilacap</span>
+                        <span>&bull;</span>
+                        <span class="px-1.5 py-0.5 rounded bg-[#12364A] text-cyan-300">Palabuhanratu</span>
                     </div>
                 </div>
             </div>
@@ -117,17 +76,17 @@
                 <x-ui.stat-card
                     title="Kondisi Gelombang"
                     value="{{ $avgWave }} m"
-                    subtitle="Simulasi Oseanografi Musiman BMKG"
+                    subtitle="Prakiraan Rata-Rata WPP 573"
                     delta="Waspada"
                     deltaType="neutral"
                     accent="amber"
                 />
 
                 <x-ui.stat-card
-                    title="Kesesuaian Albakor"
-                    value="{{ $albakorHsi }}"
-                    subtitle="Nilai rata-rata HSI WPP 573"
-                    delta="Tertinggi"
+                    title="Kesesuaian Tongkol"
+                    value="{{ $tongkolHsi }}"
+                    subtitle="Pendaratan Terbesar WPP 573"
+                    delta="Dominan"
                     deltaType="positive"
                     accent="cyan"
                 />
@@ -148,16 +107,38 @@
     <section class="py-16 bg-[#F6F9FB] dark:bg-[#071B2B] transition-colors">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-2xl mx-auto mb-12">
-                <span class="text-xs font-mono font-bold uppercase tracking-wider text-cyan-600 dark:text-cyan-400">Target Spesies Pelagis</span>
+                <span class="text-xs font-mono font-bold uppercase tracking-wider text-cyan-600 dark:text-cyan-400">Target Komoditas Pelagis Utama</span>
                 <h2 class="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight mt-1">
-                    Evaluasi SDM Ensemble & Habitat Tuna
+                    Evaluasi SDM Ensemble & Habitat Pelagis WPP 573
                 </h2>
                 <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-2">
-                    Pemodelan multi-algoritma (MaxEnt, Random Forest, GLM) yang telah diaudit secara saintifik berdasarkan data empiris pendaratan PPN Prigi.
+                    Pemodelan multi-algoritma (MaxEnt, Random Forest, GLM) terkalibrasi berdasarkan data empiris pendaratan di PPN Prigi, PPS Cilacap, dan PPN Palabuhanratu.
                 </p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Tongkol Lisong / Krai -->
+                <x-ui.card hoverable="true">
+                    <div class="flex items-center justify-between mb-3">
+                        <x-ui.badge variant="emerald" dot="true">Auxis thazard / Euthynnus</x-ui.badge>
+                        <span class="text-xs font-mono font-bold text-emerald-500">Pendaratan Utama</span>
+                    </div>
+                    <h3 class="text-lg font-black text-slate-900 dark:text-white mb-1">Tongkol (Lisong & Krai)</h3>
+                    <p class="text-xs text-slate-600 dark:text-slate-400 mb-4 leading-relaxed">
+                        Spesies pelagis neritik dan epipelagis dengan volume pendaratan terbesar di selatan Jawa. Respon sangat kuat terhadap pengkayaan klorofil-a akibat upwelling musiman.
+                    </p>
+                    <div class="space-y-2 pt-3 border-t border-slate-100 dark:border-[#244456] text-xs">
+                        <div class="flex justify-between text-slate-500">
+                            <span>Status Armada WPP 573</span>
+                            <span class="font-mono font-bold text-slate-800 dark:text-slate-200">Purse Seine & Pancing</span>
+                        </div>
+                        <div class="flex justify-between text-slate-500">
+                            <span>Rata-rata HSI Hari Ini</span>
+                            <span class="font-mono font-bold text-emerald-500">{{ $tongkolHsi }}</span>
+                        </div>
+                    </div>
+                </x-ui.card>
+
                 <!-- Cakalang -->
                 <x-ui.card hoverable="true">
                     <div class="flex items-center justify-between mb-3">
@@ -188,7 +169,7 @@
                     </div>
                     <h3 class="text-lg font-black text-slate-900 dark:text-white mb-1">Madidihang (Yellowfin)</h3>
                     <p class="text-xs text-slate-600 dark:text-slate-400 mb-4 leading-relaxed">
-                        Tuna epipelagis dan mesopelagis. Asosiasi kuat dengan thermal fronts (34,8%) dan koridor lereng benua paparan selatan Jawa.
+                        Tuna epipelagis dan mesopelagis bernilai tinggi. Asosiasi kuat dengan thermal fronts (34,8%) dan koridor lereng benua paparan selatan Jawa.
                     </p>
                     <div class="space-y-2 pt-3 border-t border-slate-100 dark:border-[#244456] text-xs">
                         <div class="flex justify-between text-slate-500">
@@ -198,28 +179,6 @@
                         <div class="flex justify-between text-slate-500">
                             <span>Rata-rata HSI Hari Ini</span>
                             <span class="font-mono font-bold text-amber-500">{{ $madidihangHsi }}</span>
-                        </div>
-                    </div>
-                </x-ui.card>
-
-                <!-- Albakor -->
-                <x-ui.card hoverable="true">
-                    <div class="flex items-center justify-between mb-3">
-                        <x-ui.badge variant="emerald" dot="true">Thunnus alalunga</x-ui.badge>
-                        <span class="text-xs font-mono font-bold text-slate-500">AUC 0.860</span>
-                    </div>
-                    <h3 class="text-lg font-black text-slate-900 dark:text-white mb-1">Albakor (Albacore)</h3>
-                    <p class="text-xs text-slate-600 dark:text-slate-400 mb-4 leading-relaxed">
-                        Tuna laut dalam sub-tropis/oseanik. Bobot MaxEnt di-nolkan (0,000) karena evaluasi sirkular, sepenuhnya dialokasikan ke RF dan GLM.
-                    </p>
-                    <div class="space-y-2 pt-3 border-t border-slate-100 dark:border-[#244456] text-xs">
-                        <div class="flex justify-between text-slate-500">
-                            <span>Bobot MaxEnt / RF / GLM</span>
-                            <span class="font-mono font-bold text-slate-800 dark:text-slate-200">0.000 / 0.517 / 0.483</span>
-                        </div>
-                        <div class="flex justify-between text-slate-500">
-                            <span>Rata-rata HSI Hari Ini</span>
-                            <span class="font-mono font-bold text-emerald-500">{{ $albakorHsi }}</span>
                         </div>
                     </div>
                 </x-ui.card>

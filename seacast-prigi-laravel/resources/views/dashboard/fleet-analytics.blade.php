@@ -2,18 +2,9 @@
     
     <div class="space-y-6 max-w-7xl mx-auto pb-12">
         
-        <!-- Header & Breadcrumbs -->
+        <!-- Header -->
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-[#244456] pb-5">
             <div>
-                <div class="flex items-center gap-2 text-xs font-mono text-cyan-400 mb-1">
-                    <span>SEACAST</span>
-                    <span>/</span>
-                    <span class="uppercase">{{ $currentPortMeta['name'] }}</span>
-                    <span>/</span>
-                    <span class="text-slate-400">{{ $currentPortMeta['province'] }}</span>
-                    <span>/</span>
-                    <span class="text-slate-400">{{ $currentPortMeta['wpp'] }}</span>
-                </div>
                 <h1 class="text-2xl font-black text-white tracking-tight flex items-center gap-2.5">
                     Analitik Armada & Pendaratan Multi-Pelabuhan
                     <x-ui.badge variant="cyan">{{ $currentPortMeta['name'] }}</x-ui.badge>
@@ -49,23 +40,6 @@
             <div class="flex items-center gap-2 text-xs font-mono text-slate-400">
                 <span>Cakupan Observasi:</span>
                 <span class="text-cyan-400 font-bold">{{ $currentPortMeta['years_range'] }}</span>
-            </div>
-        </div>
-
-        <!-- Scientific Caveats Alert Banner -->
-        <div class="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-200">
-            <div class="flex items-start gap-3">
-                <svg class="w-5 h-5 text-amber-400 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                </svg>
-                <div class="space-y-1 text-xs">
-                    <h4 class="font-bold text-amber-300 uppercase tracking-wider text-[11px]">{{ $caveats['disclaimer_title'] }}</h4>
-                    <ul class="list-disc list-inside space-y-0.5 text-slate-300">
-                        @foreach ($caveats['statements'] as $statement)
-                            <li>{{ $statement }}</li>
-                        @endforeach
-                    </ul>
-                </div>
             </div>
         </div>
 
