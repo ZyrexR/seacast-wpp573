@@ -161,7 +161,7 @@ def seed_daily_predictions(conn):
         cell_id = str(row['cell_id'])
         hsi_cak = float(row.get('hsi_cakalang', 0.5))
         hsi_mad = float(row.get('hsi_madidihang', 0.5))
-        hsi_alb = float(row.get('hsi_albakor', 0.3))
+        hsi_tongkol = float(row.get('hsi_tongkol', 0.3))
         is_hotspot = bool(row.get('is_hotspot', False))
         dom_zone = str(row.get('dom_zone', 'GENERAL_OCEANIC'))
         bycatch = str(row.get('bycatch_traffic_light', 'GREEN'))
@@ -176,13 +176,13 @@ def seed_daily_predictions(conn):
         safety = "AMAN" if wave_h < 1.8 else ("WASPADA_KAPAL_KECIL" if wave_h < 2.5 else "BAHAYA_GELOMBANG_TINGGI")
 
         records.append((
-            "2026-11-03", cell_id, hsi_cak, hsi_mad, hsi_alb, is_hotspot,
+            "2026-11-03", cell_id, hsi_cak, hsi_mad, hsi_tongkol, is_hotspot,
             dom_zone, bycatch, sst, chla, curr, wave_h, wind, safety
         ))
 
     insert_sql = """
     INSERT INTO daily_predictions (
-        prediction_date, cell_id, hsi_cakalang, hsi_madidihang, hsi_albakor,
+        prediction_date, cell_id, hsi_cakalang, hsi_madidihang, hsi_tongkol,
         is_hotspot, dom_zone, bycatch_traffic_light, sst_c, chla_mg_m3,
         current_velocity_ms, wave_height_m, wind_speed_ms, safety_advisory
     ) VALUES (

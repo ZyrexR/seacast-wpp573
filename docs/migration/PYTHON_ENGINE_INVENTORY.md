@@ -12,7 +12,7 @@
 │   ├── scaler_oceanographic.joblib           [Scikit-learn StandardScaler (10 Fitur Oseanografi)]
 │   ├── cakalang_ensemble_model.joblib        [Bundle Model Joblib: MaxEnt, RF, GLM & Bobot]
 │   ├── madidihang_ensemble_model.joblib      [Bundle Model Joblib: MaxEnt, RF, GLM & Bobot]
-│   ├── albakor_ensemble_model.joblib         [Bundle Model Joblib: MaxEnt, RF, GLM & Bobot]
+│   ├── legacy_species_removed_ensemble_model.joblib         [Bundle Model Joblib: MaxEnt, RF, GLM & Bobot]
 │   └── sdm/
 │       └── ensemble/
 │           └── model_evaluations_summary.json[Kamus Evaluasi AUC, TSS, Variable Importance]

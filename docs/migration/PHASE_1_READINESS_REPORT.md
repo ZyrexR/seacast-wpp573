@@ -109,7 +109,7 @@ Kualitas migrasi diuji melalui 4 lapisan verifikasi:
 │    - Verifikasi query Bounding Box via ST_MakeEnvelope      │
 ├─────────────────────────────────────────────────────────────┤
 │ 3. Scientific Logic & Zonation Unit Tests                   │
-│    - Verifikasi bobot SDM (Albakor MaxEnt = 0.000)          │
+│    - Verifikasi bobot SDM (Legacy species removed from TCT scope MaxEnt = 0.000)          │
 │    - Verifikasi aturan hierarki DOM: Z4 > Z5 > Z3 > Z1 > Z2 │
 ├─────────────────────────────────────────────────────────────┤
 │ 4. Visual & Responsive UI Verification                      │
@@ -127,7 +127,7 @@ Kualitas migrasi diuji melalui 4 lapisan verifikasi:
 | **1. Database** | PostgreSQL 17.11 terkoneksi, data 132 bulan pendaratan & armada 1.269 kapal utuh | Lulus audit kueri SQL live | **PASS** |
 | **2. PostGIS** | PostGIS 3.6.2 aktif, 8.129 sel kanonikal 100% valid, indeks GiST terverifikasi | Lulus pengujian geometri & indeks | **PASS** |
 | **3. API Parity** | 7 endpoint API (termasuk `/api/monitoring`) memiliki kontrak JSON & skema baku | Skema terkunci tanpa deviasi | **PASS** |
-| **4. Scientific Integrity** | Formula HSI, bobot Albakor MaxEnt 0.000, 5 zona DOM, pelabelan CPUE nominal terkunci | Patuh 100% pada PRD v2.3.2 | **PASS** |
+| **4. Scientific Integrity** | Formula HSI, bobot Legacy species removed from TCT scope MaxEnt 0.000, 5 zona DOM, pelabelan CPUE nominal terkunci | Patuh 100% pada PRD v2.3.2 | **PASS** |
 | **5. Frontend Inventory** | 24 rute halaman, 2 layout terpisah, 16 base UI, 7 seksi homepage terpetakan | Terpetakan dalam inventaris | **PASS** |
 | **6. Target Architecture** | Laravel 13 + Livewire 4 + Alpine.js + MapLibre GL JS siap menggantikan Next.js | Arsitektur disetujui | **PASS** |
 | **7. Python Integration** | Script Python siap diorkestrasi melalui Process Facade dan Laravel Scheduler | Tersedia di folder `scripts/` | **PASS** |

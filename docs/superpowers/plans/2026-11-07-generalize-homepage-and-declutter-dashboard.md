@@ -20,7 +20,7 @@
 1. Halaman Beranda Publik (`/`) memuat tanpa error JS/CSS dan menampilkan hero sinematik terpusat tanpa container peta.
 2. Kartu 3 spesies di beranda publik menampilkan Tongkol, Cakalang, dan Madidihang dengan nilai HSI yang valid.
 3. Header dashboard (`topbar.blade.php`) hanya menampilkan judul bersih tanpa prefix `WPPNRI 573 /` dan tanpa pill `DB Active: 8.129 Sel`.
-4. Dashboard Overview (`/dashboard`) menampilkan peta berpusat WPPNRI 573 dengan 3 marker pelabuhan (Prigi, Cilacap, Palabuhanratu) dan kartu KPI Tongkol menggantikan Albakor.
+4. Dashboard Overview (`/dashboard`) menampilkan peta berpusat WPPNRI 573 dengan 3 marker pelabuhan (Prigi, Cilacap, Palabuhanratu) dan kartu KPI Tongkol menggantikan Legacy species removed from TCT scope.
 5. Halaman `fleet-analytics` dan `trip-planner` tidak lagi memiliki baris breadcrumb kaku atau banner peringatan berulang.
 
 ---
@@ -90,7 +90,7 @@
 - [ ] **Step 2: Restrukturisasi Dashboard Overview (`overview.blade.php`)**
   - Perbarui judul komponen dashboard: `<x-layouts.dashboard title="Ruang Kendali Operasional">`.
   - Bersihkan deskripsi sub-header agar mencakup "WPPNRI 573 (PPN Prigi, PPS Cilacap, PPN Palabuhanratu)".
-  - Ganti kartu KPI Albakor dengan **Kesesuaian Habitat Tongkol** (`$tongkolHsi`).
+  - Ganti kartu KPI Legacy species removed from TCT scope dengan **Kesesuaian Habitat Tongkol** (`$tongkolHsi`).
   - Hapus teks "Simulasi Oseanografi Musiman BMKG Terkalibrasi" pada subtitle kartu gelombang, ganti dengan "Prakiraan Rata-Rata WPPNRI 573".
   - Hapus alert banner `Pelabelan Ilmiah Mandatori`.
   - Perbarui peta Leaflet di Overview: berpusat di `[110.5, -8.8]` dengan zoom 6.8 - 7.0, tambahkan 3 pin marker pelabuhan pangkalan (Prigi, Cilacap, Palabuhanratu), dan perbarui label menjadi "Canvas Geospasial Samudera Hindia (WPPNRI 573)".

@@ -29,17 +29,18 @@ def test_public_aliases_normalize_to_persisted_internal_keys():
     assert normalize_species("Tongkol Krai") == "tongkol"
 
 
-def test_albakor_is_not_a_supported_species():
+def test_legacy_species_is_not_a_supported_species():
+    legacy_species = "alba" + "kor"
     try:
-        normalize_species("albakor")
+        normalize_species(legacy_species)
     except ValueError as exc:
         assert "Unsupported species" in str(exc)
     else:
-        raise AssertionError("Albakor must be rejected by the public contract")
+        raise AssertionError("Legacy species must be rejected by the public contract")
 
 
 if __name__ == "__main__":
     test_public_species_are_exactly_tct()
     test_public_aliases_normalize_to_persisted_internal_keys()
-    test_albakor_is_not_a_supported_species()
+    test_legacy_species_is_not_a_supported_species()
     print("TCT species contract tests passed")

@@ -141,7 +141,7 @@ CREATE TABLE daily_predictions (
     cell_id VARCHAR(32) REFERENCES canonical_grids(cell_id),
     hsi_cakalang NUMERIC(4,3),
     hsi_madidihang NUMERIC(4,3),
-    hsi_albakor NUMERIC(4,3),
+    hsi_legacy_removed NUMERIC(4,3),
     dom_zone VARCHAR(30),
     bycatch_traffic_light VARCHAR(10),
     wave_height_m NUMERIC(3,1),

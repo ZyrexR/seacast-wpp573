@@ -33,7 +33,7 @@ Berdasarkan mandat pemeriksaan keterampilan (Skill Discovery) pada workspace `.a
 | `Geospatial Analysis & PostGIS` | *Workspace internal / Builtin* | Operasi spasial PostGIS dan optimasi GiST index | Phase 2.1, 2.3, 2.6 | **SKILL NOT AVAILABLE** (Dijalankan via OGC Standards & PostGIS 3.6 Geodesic SQL) |
 | `GIS and Spatial Database Engineering` | *Workspace internal / Builtin* | Rekayasa skema geospasial | Phase 2.1, 2.6 | **SKILL NOT AVAILABLE** (Dijalankan via PostGIS Architecture Standards) |
 | `Remote Sensing & Oceanographic Data` | *Workspace internal / Builtin* | Pengolahan variabel oseanografi fisik | Phase 2.3, 2.6, 2.7 | **SKILL NOT AVAILABLE** (Dijalankan via Baseline Audit & PRD SEACAST PRIGI V2.3.2) |
-| `Machine Learning & Ensemble Modeling` | *Workspace internal / Builtin* | Inferensi model habitat Cakalang, Madidihang, Albakor | Phase 2.4, 2.5 | **SKILL NOT AVAILABLE** (Dijalankan via Model Evaluation Summary & Baseline Weights) |
+| `Machine Learning & Ensemble Modeling` | *Workspace internal / Builtin* | Inferensi model habitat Cakalang, Madidihang, Legacy species removed from TCT scope | Phase 2.4, 2.5 | **SKILL NOT AVAILABLE** (Dijalankan via Model Evaluation Summary & Baseline Weights) |
 | `Security & Application Architecture` | *Workspace internal / Builtin* | Audit keamanan command injection, role enforcement | Phase 2.1, 2.2, 2.9 | **SKILL NOT AVAILABLE** (Dijalankan via OWASP Top 10 & Laravel Security Best Practices) |
 
 ---

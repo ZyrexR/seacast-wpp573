@@ -31,7 +31,7 @@
 #### 1.4. Engine Spesies & Habitat Suitability Index (`App\Domain\Species`)
 - [`app/Domain/Species/DTO/EnsembleWeights.php`](file:///C:/Users/ThinkPad/.gemini/antigravity/scratch/prigi-pelagis/seacast-prigi-laravel/app/Domain/Species/DTO/EnsembleWeights.php): DTO bobot ensemble tiga spesies.
 - [`app/Domain/Species/DTO/SpeciesPrediction.php`](file:///C:/Users/ThinkPad/.gemini/antigravity/scratch/prigi-pelagis/seacast-prigi-laravel/app/Domain/Species/DTO/SpeciesPrediction.php): DTO prediksi habitat.
-- [`app/Domain/Species/Services/SpeciesPredictionService.php`](file:///C:/Users/ThinkPad/.gemini/antigravity/scratch/prigi-pelagis/seacast-prigi-laravel/app/Domain/Species/Services/SpeciesPredictionService.php): Penegak bobot baseline ilmiah terkunci (Albakor MaxEnt = 0.000).
+- [`app/Domain/Species/Services/SpeciesPredictionService.php`](file:///C:/Users/ThinkPad/.gemini/antigravity/scratch/prigi-pelagis/seacast-prigi-laravel/app/Domain/Species/Services/SpeciesPredictionService.php): Penegak bobot baseline ilmiah terkunci (Legacy species removed from TCT scope MaxEnt = 0.000).
 - [`app/Domain/Species/Services/HabitatSuitabilityIndexService.php`](file:///C:/Users/ThinkPad/.gemini/antigravity/scratch/prigi-pelagis/seacast-prigi-laravel/app/Domain/Species/Services/HabitatSuitabilityIndexService.php): Komputasi formula ensemble HSI, normalisasi skala $0.000-1.000$, dan evaluasi hotspot ($\ge 0.70$).
 
 #### 1.5. Engine DOM & Bycatch (`App\Domain\DynamicOceanManagement` & `App\Domain\Bycatch`)

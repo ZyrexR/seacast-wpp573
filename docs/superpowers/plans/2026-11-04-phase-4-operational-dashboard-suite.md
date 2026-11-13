@@ -69,7 +69,7 @@
 ### Task 4: Subphase 4.4 — Scientific Diagnostics & Sensor Infrastructure (`species-models`, `oceanographic-explorer`, `data-monitoring`)
 - [ ] Implement `speciesModels()`, `oceanographicExplorer()`, and `dataMonitoring()` in `DashboardController.php`.
 - [ ] Build `resources/views/dashboard/species-models.blade.php`:
-  - Species selector (Cakalang, Madidihang, Albakor).
+  - Species selector (Cakalang, Madidihang, Legacy species removed from TCT scope).
   - Ensemble model weight diagnostics (MaxEnt, Random Forest, GLM).
   - AUC (0.784 – 0.892) and TSS (0.606 – 0.712) model evaluation scorecards.
   - Environmental variable contribution bars (SST, Chl-a, thermal front, bathymetry, slope).

@@ -42,8 +42,8 @@ Every single one of the 8,129 canonical cells in PostGIS was analyzed for topolo
 ### 3.1. Ensemble SDM Weights Normalization
 - **Cakalang (Katsuwonus pelamis):** MaxEnt (0.320) + RF (0.355) + GLM (0.325) = **1.000** ($\Delta = 0.000$).
 - **Madidihang (Thunnus albacares):** MaxEnt (0.295) + RF (0.365) + GLM (0.340) = **1.000** ($\Delta = 0.000$).
-- **Albakor (Thunnus alalunga):** MaxEnt (0.000) + RF (0.517) + GLM (0.483) = **1.000** ($\Delta = 0.000$).
-- **Albakor Invariant:** MaxEnt weight strictly forced to 0.000 due to uninformative circular proxy AUC (0.507).
+- **Legacy species removed from TCT scope (Current TCT scope exclusion):** MaxEnt (0.000) + RF (0.517) + GLM (0.483) = **1.000** ($\Delta = 0.000$).
+- **Legacy species removed from TCT scope Invariant:** MaxEnt weight strictly forced to 0.000 due to uninformative circular proxy AUC (0.507).
 
 ### 3.2. HSI Normalization & Edge Case Clamping
 - Evaluated min-max normalization across extreme environmental bounds.

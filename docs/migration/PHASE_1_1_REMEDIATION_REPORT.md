@@ -20,7 +20,7 @@ Mandat Phase 1.1 untuk melakukan remediasi keamanan secara bedah (*surgical reme
 3. **Akun Demo Dikunci dari Lingkungan Produksi**: Diterapkan pengaman ganda pada `DatabaseSeeder.php` dan `AuthController.php` yang secara otomatis memblokir penggunaan kata sandi demo bawaan (`seacast2026`) ketika `app.env = production`.
 4. **Otorisasi Berbasis Peran (RBAC) Diterapkan**: Menambahkan kolom `role` pada pengguna internal dan mengimplementasikan middleware `EnsureUserHasRole` (`role:admin`). Pengguna dengan peran `nelayan` terbukti ditolak (`403 Forbidden`) saat mencoba membuka halaman diagnostik `/dashboard/system-status`.
 5. **Endpoint Monitoring Diamankan**: Endpoint publik `/api/monitoring` telah disanitasi dari kebocoran path direktori Windows host (`C:\Users\...`) dan rahasia database. Endpoint diagnostik sensitif dipisahkan ke `/api/monitoring/diagnostics` dan dilindungi autentikasi admin.
-6. **Baseline Ilmiah Direkonsiliasi**: Menegaskan status 8.129 sel kanonikal WPPNRI 573 (EPSG:4326), pemodelan GLM (bukan GAM), justifikasi ilmiah bobot MaxEnt Albakor = 0,000, 3 baris armada mewakili 1.269 kapal terdaftar, dan pelabelan proksi CPUE nominal serta fallback BMKG lokal.
+6. **Baseline Ilmiah Direkonsiliasi**: Menegaskan status 8.129 sel kanonikal WPPNRI 573 (EPSG:4326), pemodelan GLM (bukan GAM), justifikasi ilmiah bobot MaxEnt Legacy species removed from TCT scope = 0,000, 3 baris armada mewakili 1.269 kapal terdaftar, dan pelabelan proksi CPUE nominal serta fallback BMKG lokal.
 7. **Pengujian Regresi Lulus Penuh**: Rangkaian tes otomatis melonjak dari 17 tests (167 assertions) menjadi **28 tests (208 assertions)** dan seluruhnya lulus **100% PASS** dalam 8,61 detik.
 
 ---

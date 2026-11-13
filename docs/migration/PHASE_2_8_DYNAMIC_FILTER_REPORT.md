@@ -23,7 +23,7 @@ Struktur file implementasi:
 
 | Kategori Filter | Parameter Input | Nilai / Opsi yang Didukung | Perilaku Backend & Dampak Spasial |
 |---|---|---|---|
-| **A. Spesies Target** | `species` | `all`, `cakalang`, `madidihang`, `albakor` | Memilih kolom kesesuaian habitat target (`hsi_cakalang`, `hsi_madidihang`, `hsi_albakor`) atau komposit rata-rata. |
+| **A. Spesies Target** | `species` | `all`, `cakalang`, `madidihang`, `legacy_species_removed` | Memilih kolom kesesuaian habitat target (`hsi_cakalang`, `hsi_madidihang`, `hsi_legacy_removed`) atau komposit rata-rata. |
 | **B. Ambang Batas HSI** | `min_hsi` | Slider kontinu $0.00 - 0.85$ (step 0.05) | Menyaring sel poligon secara server-side: `WHERE dp.hsi_{species} >= ?`. Mendukung debounce 300ms untuk kelancaran interaksi. |
 | **C. Zonasi DOM** | `dom_zone` | `Z1_PFG_INSHORE`, `Z2_PFG_OFFSHORE`, `Z3_FEEDING_CORE`, `Z4_NURSERY_GROUND`, `Z5_BYCATCH_SCREENING`, `GENERAL_OCEANIC` | Memfilter hasil berdasarkan matriks tata ruang bergerak 5-zona plus kelas umum. |
 | **D. Risiko Bycatch** | `bycatch` | `ALL`, `GREEN`, `YELLOW`, `RED` | Memfilter sel poligon berdasarkan kriteria batimetri lereng benua dan front termal IOTC. |

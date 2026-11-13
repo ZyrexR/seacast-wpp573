@@ -33,7 +33,7 @@ Every automated test case passed cleanly without failures, errors, skipped tests
 | Test Class | Tests | Assertions | Focus Area | Status |
 |:---|:---:|:---:|:---|:---:|
 | `Tests\Unit\OceanographicEngineTest` | 14 | 382 | HSI formulas, DOM waterfall priority, Bycatch screening thresholds, seasonal BMKG lookup | **PASS** |
-| `Tests\Unit\SpeciesPredictionServiceTest` | 12 | 416 | Python bridge invocation, feature order, model weight enforcement, Albakor MaxEnt zero-weight | **PASS** |
+| `Tests\Unit\SpeciesPredictionServiceTest` | 12 | 416 | Python bridge invocation, feature order, model weight enforcement, Legacy species removed from TCT scope MaxEnt zero-weight | **PASS** |
 | `Tests\Unit\ScientificFormulasTest` | 8 | 194 | Math bounding, coordinate distance Haversine formula, SST gradient, EKE calculations | **PASS** |
 
 ### 2.2 Feature Tests (Endpoints, Middleware & Visual Components)

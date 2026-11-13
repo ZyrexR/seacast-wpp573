@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS daily_predictions (
     cell_id VARCHAR(32) NOT NULL REFERENCES canonical_grids(cell_id) ON DELETE CASCADE,
     hsi_cakalang NUMERIC(4,3) NOT NULL,
     hsi_madidihang NUMERIC(4,3) NOT NULL,
-    hsi_albakor NUMERIC(4,3) NOT NULL,
+    hsi_tongkol NUMERIC(4,3) NOT NULL,
     is_hotspot BOOLEAN NOT NULL,
     dom_zone VARCHAR(32) NOT NULL,              -- Z1_PFG_INSHORE, Z2_PFG_OFFSHORE, Z3_FEEDING_CORE, Z4_NURSERY_GROUND, Z5_BYCATCH_SCREENING, GENERAL_OCEANIC
     bycatch_traffic_light VARCHAR(10) NOT NULL, -- GREEN, YELLOW, RED
@@ -60,7 +60,7 @@ CREATE TABLE IF NOT EXISTS grid_monthly_predictions (
     cell_id VARCHAR(32) NOT NULL REFERENCES canonical_grids(cell_id) ON DELETE CASCADE,
     hsi_cakalang NUMERIC(4,3) NOT NULL,
     hsi_madidihang NUMERIC(4,3) NOT NULL,
-    hsi_albakor NUMERIC(4,3) NOT NULL,
+    hsi_tongkol NUMERIC(4,3) NOT NULL,
     is_hotspot BOOLEAN NOT NULL,
     dom_zone VARCHAR(32) NOT NULL,
     bycatch_traffic_light VARCHAR(10) NOT NULL,

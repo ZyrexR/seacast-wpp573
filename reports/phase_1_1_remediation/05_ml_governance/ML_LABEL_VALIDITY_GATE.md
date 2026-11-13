@@ -18,7 +18,7 @@ Tim audit AI/ML data governance menetapkan keputusan mutlak:
 |---|---|---|---|---|---|
 | **Cakalang** | *Katsuwonus pelamis* | `166240` | **TIDAK TERSEDIA (0 titik)** | **`SPECIES_MODEL_NOT_READY`** | **DILARANG DILATIH (LOCKED)** |
 | **Madidihang** | *Thunnus albacares* | `166277` | **TIDAK TERSEDIA (0 titik)** | **`SPECIES_MODEL_NOT_READY`** | **DILARANG DILATIH (LOCKED)** |
-| **Albakor** | *Thunnus alalunga* | `166278` | **TIDAK TERSEDIA (0 titik)** | **`SPECIES_MODEL_NOT_READY`** | **DILARANG DILATIH (LOCKED)** |
+| **Legacy species removed from TCT scope** | *Current TCT scope exclusion* | `166278` | **TIDAK TERSEDIA (0 titik)** | **`SPECIES_MODEL_NOT_READY`** | **DILARANG DILATIH (LOCKED)** |
 
 ---
 

@@ -19,7 +19,7 @@ prigi-pelagis/
 ├── models/                             # Model Machine Learning (.joblib)
 │   ├── cakalang_ensemble_model.joblib
 │   ├── madidihang_ensemble_model.joblib
-│   ├── albakor_ensemble_model.joblib
+│   ├── legacy_species_removed_ensemble_model.joblib
 │   └── scaler_oceanographic.joblib
 ├── database/                           # Skema DDL & Skrip Ingest PostGIS
 │   ├── schema.sql
@@ -138,7 +138,7 @@ prigi-pelagis/
 Berdasarkan pengujian Spatial 5-Fold Cross-Validation pada Google Colab (`sdm_evaluation_metrics.json`):
 - **Cakalang (*Katsuwonus pelamis*):** Ensemble AUC = **0.7552** (Random Forest: 0.7683) $\rightarrow$ Status: `GOOD (> 0.75)`.
 - **Madidihang (*Thunnus albacares*):** Ensemble AUC = **0.7019** (Random Forest: 0.7081) $\rightarrow$ Status: `ACCEPTABLE (> 0.70)`.
-- **Albakor (*Thunnus alalunga*):** Ensemble AUC = **0.6779** (Random Forest: 0.6843) $\rightarrow$ Status: `FAIR`.
+- **Legacy species removed from TCT scope (*Current TCT scope exclusion*):** Ensemble AUC = **0.6779** (Random Forest: 0.6843) $\rightarrow$ Status: `FAIR`.
 - **Validasi Makroskopis:** Korelasi Pearson positif terhadap riwayat pendaratan ikan riil PPN Prigi 168 bulan (`master.csv`).
 
 ---

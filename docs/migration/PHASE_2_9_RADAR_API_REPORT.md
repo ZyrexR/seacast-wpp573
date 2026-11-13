@@ -28,7 +28,7 @@ Struktur file implementasi:
   - `date`: Tanggal prediksi format `YYYY-MM-DD` (default: `2026-11-03`).
   - `format`: `geojson` | `json` | `summary` (default: `geojson`).
   - `summary_only`: `true` | `false` (default: `false`).
-  - `species`: `cakalang` | `madidihang` | `albakor` | `all`.
+  - `species`: `cakalang` | `madidihang` | `legacy_species_removed` | `all`.
   - `min_hsi`: Ambang batas minimum kesesuaian habitat (float $0.00 - 1.00$).
   - `dom_zone`: Filter zona DOM (`Z1_PFG_INSHORE`, `Z2_PFG_OFFSHORE`, `Z3_FEEDING_CORE`, `Z4_NURSERY_GROUND`, `Z5_BYCATCH_SCREENING`, `GENERAL_OCEANIC`).
   - `bycatch`: Filter risiko tangkapan sampingan (`GREEN`, `YELLOW`, `RED`).

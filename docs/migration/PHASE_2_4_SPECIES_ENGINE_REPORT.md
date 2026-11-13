@@ -14,7 +14,7 @@
 Phase 2.4 telah berhasil mengintegrasikan model prediksi habitat untuk tiga spesies target utama di perairan WPPNRI 573:
 1. **Cakalang (*Katsuwonus pelamis*)**
 2. **Madidihang (*Thunnus albacares*)**
-3. **Albakor (*Thunnus alalunga*)**
+3. **Legacy species removed from TCT scope (*Current TCT scope exclusion*)**
 
 Seluruh model dieksekusi secara probabilistik via Python Bridge dengan mematuhi bobot ensemble terkunci yang telah diaudit pada Phase 0.
 
@@ -31,10 +31,10 @@ Struktur file implementasi:
 |---|---:|---:|---:|---:|---:|---:|---|
 | **Cakalang** | **0.320** | **0.355** | **0.325** | 1.000 | 0.795 | 0.630 | Heuristic Proxy Screening |
 | **Madidihang** | **0.295** | **0.365** | **0.340** | 1.000 | 0.784 | 0.606 | Thermal Front Sensitive |
-| **Albakor** | **0.000** | **0.517** | **0.483** | 1.000 | 0.860 | 0.743 | **MaxEnt Dinolkan (AUC 0.507)** |
+| **Legacy species removed from TCT scope** | **0.000** | **0.517** | **0.483** | 1.000 | 0.860 | 0.743 | **MaxEnt Dinolkan (AUC 0.507)** |
 
 > [!CAUTION]
-> Komponen MaxEnt pada spesies Albakor dinolkan secara mutlak (`0.000`) karena skor AUC evaluasi proxy-nya sebesar `0.507` (setara tebakan acak pada pola *cold tongue* yang terfragmentasi). Pembobotan ensemble sepenuhnya ditanggung oleh Random Forest (0.517) dan GLM (0.483).
+> Komponen MaxEnt pada spesies Legacy species removed from TCT scope dinolkan secara mutlak (`0.000`) karena skor AUC evaluasi proxy-nya sebesar `0.507` (setara tebakan acak pada pola *cold tongue* yang terfragmentasi). Pembobotan ensemble sepenuhnya ditanggung oleh Random Forest (0.517) dan GLM (0.483).
 
 ---
 

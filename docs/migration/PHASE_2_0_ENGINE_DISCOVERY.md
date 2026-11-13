@@ -44,14 +44,14 @@ Output probabilities:
 ### 3. Model Habitat & Rekonsiliasi Bobot Ilmiah Terkunci
 
 #### 3.1. Penemuan Krusial (Discrepancy Discovery)
-Dalam file bundle `.joblib` (`cakalang_ensemble_model.joblib`, `madidihang_ensemble_model.joblib`, `albakor_ensemble_model.joblib`), dictionary default internal tersimpan sebagai stub awal: `{'maxent': 0.4, 'rf': 0.35, 'glm': 0.25}`.
+Dalam file bundle `.joblib` (`cakalang_ensemble_model.joblib`, `madidihang_ensemble_model.joblib`, `legacy_species_removed_ensemble_model.joblib`), dictionary default internal tersimpan sebagai stub awal: `{'maxent': 0.4, 'rf': 0.35, 'glm': 0.25}`.
 **Namun**, berdasarkan dokumen baseline ilmiah terkunci (`models/sdm/ensemble/model_evaluations_summary.json`), PRD SEACAST V2.3.2, dan Mandat Phase 0/1, bobot ensemble yang disetujui secara ilmiah adalah:
 
 | Spesies | MaxEnt | Random Forest | GLM | Evaluasi AUC | Evaluasi TSS | Catatan Metodologis |
 |---|---:|---:|---:|---:|---:|---|
 | **Cakalang** (*Katsuwonus pelamis*) | **0.320** | **0.355** | **0.325** | 0.795 | 0.630 | Heuristic Proxy Niche Screening |
 | **Madidihang** (*Thunnus albacares*) | **0.295** | **0.365** | **0.340** | 0.784 | 0.606 | Thermal front dominant sensitivity |
-| **Albakor** (*Thunnus alalunga*) | **0.000** | **0.517** | **0.483** | 0.860 | 0.743 | **MaxEnt dinolkan karena AUC proxy acak (0.507)** |
+| **Legacy species removed from TCT scope** (*Current TCT scope exclusion*) | **0.000** | **0.517** | **0.483** | 0.860 | 0.743 | **MaxEnt dinolkan karena AUC proxy acak (0.507)** |
 
 > [!IMPORTANT]
 > Arsitektur Laravel dan Python Bridge wajib memaksakan (*enforce*) bobot ilmiah baseline di atas (`0.320/0.355/0.325`, `0.295/0.365/0.340`, `0.000/0.517/0.483`) dan menolak penggunaan bobot stub yang belum terkalibrasi.
@@ -90,7 +90,7 @@ Audit langsung melalui PostgreSQL information schema memvalidasi tabel-tabel ber
 #### 4.2. Tabel `daily_predictions` (8.129 Baris Snapshot: 2026-11-03)
 - `prediction_date` (date)
 - `cell_id` (varchar)
-- `hsi_cakalang`, `hsi_madidihang`, `hsi_albakor` (numeric, skala 0.000–1.000)
+- `hsi_cakalang`, `hsi_madidihang`, `hsi_legacy_removed` (numeric, skala 0.000–1.000)
 - `is_hotspot` (boolean, True jika HSI Cakalang >= 0.70 atau Madidihang >= 0.70)
 - `dom_zone` (varchar)
 - `bycatch_traffic_light` (varchar: 'GREEN', 'YELLOW', 'RED')

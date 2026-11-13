@@ -23,7 +23,7 @@ Data pendaratan perikanan PPN Prigi berasal dari pencatatan statistik pelabuhan 
 
 Data pendaratan bulanan PPN Prigi **SAH SECARA ILMIAH DAN DIIZINKAN** untuk:
 1. **Analisis Tren Temporal Regional:**
-   - Menggambarkan fluktuasi musiman volume pendaratan Cakalang, Madidihang, dan Albakor (siklus musiman barat vs musiman timur).
+   - Menggambarkan fluktuasi musiman volume pendaratan Cakalang, Madidihang, dan Legacy species removed from TCT scope (siklus musiman barat vs musiman timur).
    - Analisis tren produksi multi-tahun (2015–2025).
 2. **Karakterisasi Komposisi Spesies:**
    - Menghitung persentase kontribusi masing-masing spesies pelagis terhadap total hasil tangkapan tahunan.

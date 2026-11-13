@@ -8,7 +8,7 @@
 
 ## 1. KEPUTUSAN PENYARINGAN LABEL ML (MODEL BLOCKER)
 
-- **Status Cakalang, Madidihang, Albakor:** **`SPECIES_MODEL_NOT_READY`**.
+- **Status Cakalang, Madidihang, Legacy species removed from TCT scope:** **`SPECIES_MODEL_NOT_READY`**.
 - **Pelatihan Model AI/ML di Google Colab:** **DITOLAK / LOCKED**.
 - **Alasan Ilmiah:** Tidak tersedianya titik koordinat tangkapan GPS independen di laut lepas.
 - **Batasan Data Pendaratan Pelabuhan PPN Prigi:** Hanya diizinkan untuk statistik tren temporal makro dan komposisi spesies pelabuhan. Dilarang keras dijadikan ground truth presensi spasial habitat.

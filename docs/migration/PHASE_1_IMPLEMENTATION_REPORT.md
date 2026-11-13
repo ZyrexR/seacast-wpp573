@@ -158,7 +158,7 @@ Endpoint rekonsiliasi `GET /api/monitoring` telah diimplementasikan penuh via `M
 | 15 | **Dokumentasi Lengkap** | 5 dokumen laporan migrasi di `docs/migration/` | Kelima berkas dokumentasi tersusun lengkap | **PASS** |
 | 16 | **Integritas Aplikasi Legacy** | Direktori `web/` tidak dimodifikasi | Direktori `web/` 100% utuh tanpa modifikasi | **PASS** |
 | 17 | **Integritas Basis Data Spasial** | Tidak ada `migrate:fresh`, data terhapus, atau mutasi | PostGIS `seacast_prigi` 100% utuh tanpa perubahan | **PASS** |
-| 18 | **Penegakan Integritas Ilmiah** | Bobot Albakor MaxEnt = 0.000, 5 zona DOM, disclaimers | Validasi dossier, matriks prioritas, dan label BMKG | **PASS** |
+| 18 | **Penegakan Integritas Ilmiah** | Bobot Legacy species removed from TCT scope MaxEnt = 0.000, 5 zona DOM, disclaimers | Validasi dossier, matriks prioritas, dan label BMKG | **PASS** |
 
 ---
 

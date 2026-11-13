@@ -36,7 +36,7 @@ Lapisan antarmuka geospasial SEACAST PRIGI V3 distandarisasi menggunakan pustaka
 #### 2.3. `<x-ui.map-layers>` (`map-layers.blade.php`)
 - **Fungsi:** Switcher layer spasial horizontal mengambang (*floating layer pills*).
 - **Mode Layer:**
-  - `hsi`: Peta panas kesesuaian habitat tuna (Cakalang, Madidihang, Albakor).
+  - `hsi`: Peta panas kesesuaian habitat tuna (Cakalang, Madidihang, Legacy species removed from TCT scope).
   - `dom`: Zonasi konservasi dinamis Z1–Z5 dan General Oceanic.
   - `bycatch`: Peta risiko tangkapan sampingan (Green, Yellow, Red).
   - `bathymetry`: Kontur kedalaman laut dan lereng batimetri GEBCO.

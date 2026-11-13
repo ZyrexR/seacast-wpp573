@@ -28,8 +28,8 @@
     "species": {
       "cakalang_mean_hsi": 0.209,
       "madidihang_mean_hsi": 0.276,
-      "albakor_mean_hsi": 0.448,
-      "highest_species": "Albakor",
+      "legacy_species_removed_mean_hsi": 0.448,
+      "highest_species": "Legacy species removed from TCT scope",
       "highest_score": 0.448
     },
     "bycatch": {
@@ -52,7 +52,7 @@
 
 ### 1.2. Response Schema: GeoJSON Mode (`format=geojson`)
 - **Tipe:** `FeatureCollection` (8.129 features)
-- **Feature Properties:** `cell_id`, `cell_class`, `center_lon`, `center_lat`, `depth_m`, `dist_port_km`, `dist_port_nm`, `is_shelf_break`, `is_prigi_inshore`, `is_prigi_offshore`, `sector`, `hsi_cakalang`, `hsi_madidihang`, `hsi_albakor`, `is_hotspot`, `dom_zone`, `bycatch_traffic_light`, `sst_c`, `chla_mg_m3`, `wave_height_m`, `safety_advisory`.
+- **Feature Properties:** `cell_id`, `cell_class`, `center_lon`, `center_lat`, `depth_m`, `dist_port_km`, `dist_port_nm`, `is_shelf_break`, `is_prigi_inshore`, `is_prigi_offshore`, `sector`, `hsi_cakalang`, `hsi_madidihang`, `hsi_legacy_removed`, `is_hotspot`, `dom_zone`, `bycatch_traffic_light`, `sst_c`, `chla_mg_m3`, `wave_height_m`, `safety_advisory`.
 - **Geometry:** Polygon koordinat SRID 4326.
 - **HTTP Caching Header:** `Cache-Control: public, max-age=300, stale-while-revalidate=1800`.
 

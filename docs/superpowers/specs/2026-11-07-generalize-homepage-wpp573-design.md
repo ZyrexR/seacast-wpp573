@@ -27,14 +27,14 @@ Selain itu, Hero section di Beranda Publik diubah dari tampilan polosan/peta men
 
 4. **Kartu Spesies Pelagis Unggulan (Species Habitat Dossiers):**
    - Menampilkan **3 Komoditas Terbanyak WPPNRI 573** secara seimbang:
-     1. **Tongkol Lisong / Krai (*Auxis thazard / Euthynnus* spp.)** — Menggantikan Albakor sesuai statistik pendaratan empiris terbanyak.
+     1. **Tongkol Lisong / Krai (*Auxis thazard / Euthynnus* spp.)** — Menggantikan Legacy species removed from TCT scope sesuai statistik pendaratan empiris terbanyak.
      2. **Cakalang (*Katsuwonus pelamis*)** — Tuna permukaan cepat.
      3. **Madidihang (*Thunnus albacares*)** — Tuna epipelagis bernilai ekonomi tinggi.
 
 5. **Restrukturisasi Tata Letak Dashboard Eksekutif (`overview.blade.php`):**
    - **Header Bersih & Lapang:** Judul "Ruang Kendali Operasional" dengan subtitle ringkas tanpa badge/disclaimer berulang.
    - **Visual Peta Proporsional:** Peta Leaflet berpusat penuh di WPPNRI 573 (`center: [110.5, -8.8], zoom: 6.8`) dengan 3 marker pelabuhan pangkalan (Prigi, Cilacap, Palabuhanratu) yang interaktif diletakkan di porsi utama secara elegan.
-   - **Kartu Metrik & Aksi:** Kartu KPI Albakor diganti dengan **Kesesuaian Habitat Tongkol (*Auxis thazard*)**, diikuti tautan navigasi langsung ke 3 Pilar Operasional (Radar DPI, Rencana Melaut, Analitik Armada).
+   - **Kartu Metrik & Aksi:** Kartu KPI Legacy species removed from TCT scope diganti dengan **Kesesuaian Habitat Tongkol (*Auxis thazard*)**, diikuti tautan navigasi langsung ke 3 Pilar Operasional (Radar DPI, Rencana Melaut, Analitik Armada).
 
 ---
 
@@ -77,7 +77,7 @@ Selain itu, Hero section di Beranda Publik diubah dari tampilan polosan/peta men
 Header: Ruang Kendali Eksekutif Oseanografi — WPPNRI 573 (PPN Prigi, PPS Cilacap, PPN Palabuhanratu)
 KPI 1: Hotspot Tangkap Hari Ini (Sel)
 KPI 2: Tinggi Gelombang Signifikan (m)
-KPI 3: Kesesuaian Habitat Tongkol (HSI) [Menggantikan Albakor]
+KPI 3: Kesesuaian Habitat Tongkol (HSI) [Menggantikan Legacy species removed from TCT scope]
 KPI 4: Proteksi Bycatch Megafauna (%)
 Peta: Samudera Hindia Selatan Jawa (WPP 573) dengan Pin Marker: PPN Prigi, PPS Cilacap, PPN Palabuhanratu.
 ```

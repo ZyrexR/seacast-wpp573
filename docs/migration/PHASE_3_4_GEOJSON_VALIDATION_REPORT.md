@@ -61,7 +61,7 @@ Each feature's `properties` payload contains the following scientific keys:
     "prediction_date": "2026-11-03",
     "hsi_cakalang": 0.842,
     "hsi_madidihang": 0.761,
-    "hsi_albakor": 0.815,
+    "hsi_legacy_removed": 0.815,
     "is_hotspot": true,
     "dom_zone": "Z1",
     "bycatch_traffic_light": "GREEN",

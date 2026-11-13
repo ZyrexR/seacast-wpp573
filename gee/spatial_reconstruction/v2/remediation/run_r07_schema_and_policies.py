@@ -167,7 +167,7 @@ species_readiness = [
         "auditor_directive": "STRICTLY FORBIDDEN to train species distribution or habitat suitability models using port landing weight as spatial occurrence label."
     },
     {
-        "species_common": "Madidihang",
+        "species_common": "Tuna Sirip Kuning",
         "scientific_name": "Thunnus albacares",
         "taxonomic_id_itis": "166277",
         "target_fishery": "PPN Prigi / WPPNRI 573",
@@ -180,16 +180,16 @@ species_readiness = [
         "auditor_directive": "STRICTLY FORBIDDEN to train species distribution or habitat suitability models using port landing weight as spatial occurrence label."
     },
     {
-        "species_common": "Albakor",
-        "scientific_name": "Thunnus alalunga",
-        "taxonomic_id_itis": "166278",
+        "species_common": "Tongkol Krai",
+        "scientific_name": "Auxis thazard",
+        "taxonomic_id_itis": "172420",
         "target_fishery": "PPN Prigi / WPPNRI 573",
         "available_landing_data": "Monthly aggregated catch weight (tons) at port",
         "spatial_coordinates_available": "NO (0 catch points with GPS in workspace)",
         "temporal_dates_available": "Monthly only (no trip-level haul timestamps)",
         "sampling_method": "Commercial port unloading record (aggregat non-spasial)",
         "spatial_uncertainty_km": "> 500 km (catch location unknown within WPP 573)",
-        "habitat_model_readiness": "SPECIES_MODEL_NOT_READY",
+        "habitat_model_readiness": "RULE_BASED_SCREENING_ONLY",
         "auditor_directive": "STRICTLY FORBIDDEN to train species distribution or habitat suitability models using port landing weight as spatial occurrence label."
     }
 ]
@@ -225,7 +225,7 @@ Data pendaratan perikanan PPN Prigi berasal dari pencatatan statistik pelabuhan 
 
 Data pendaratan bulanan PPN Prigi **SAH SECARA ILMIAH DAN DIIZINKAN** untuk:
 1. **Analisis Tren Temporal Regional:**
-   - Menggambarkan fluktuasi musiman volume pendaratan Cakalang, Madidihang, dan Albakor (siklus musiman barat vs musiman timur).
+    - Menggambarkan fluktuasi musiman volume pendaratan Cakalang, Tuna Sirip Kuning, dan Tongkol Krai (siklus musiman barat vs musiman timur).
    - Analisis tren produksi multi-tahun (2015–2025).
 2. **Karakterisasi Komposisi Spesies:**
    - Menghitung persentase kontribusi masing-masing spesies pelagis terhadap total hasil tangkapan tahunan.

@@ -163,7 +163,7 @@ $$\text{HSI} = \sum_{i=1}^{n} w_i \times \text{SI}_i \quad \text{atau} \quad \te
     - Wave Height threshold: Safe (< 1.5 m), Caution (1.5–2.5 m), Danger (> 2.5 m).
     - Moon Phase calculation from date (New Moon, Waxing, Full Moon, Waning). Highlight fishing implications (e.g. Full moon scatters pelagic fish and lowers light-lure purse seine efficiency; dark moon concentrates fish around FADs/rumpon).
   - **Catch Projection & Revenue Formula (Scientific HSI-driven):**
-    - Benchmark Market Prices: Cakalang Rp 22.000/kg; Madidihang Rp 45.000/kg; Tongkol/Albakor Rp 28.000/kg.
+    - Benchmark Market Prices: Cakalang Rp 22.000/kg; Madidihang Rp 45.000/kg; Tongkol/Legacy species removed from TCT scope Rp 28.000/kg.
     - `Projected Catch (kg) = Base Capacity (kg) * HSI_Score * Seasonal_Factor`.
     - `Gross Revenue = Projected Catch (kg) * Benchmark Price (Rp/kg)`.
     - `Net Profit = Gross Revenue - Total Fuel Cost`.

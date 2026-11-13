@@ -112,7 +112,7 @@ Website dirancang modular dengan memadukan kebutuhan nelayan lapangan, nakhoda k
   * Pengambilan data cuaca, angin, dan arus BMKG Maritim / INA-OFS setiap hari secara otomatis.
   * Nelayan tinggal membuka website di dermaga sebelum berlayar tanpa perlu menginput data apa pun.
 * **Mode B: Simulator & Kalkulator "What-If" (Input Data Sendiri):**
-  * Form simulasi untuk kapten kapal dan peneliti: Masukkan suhu (°C), angin (knot), dan jarak tempuh $\rightarrow$ model seketika mengeluarkan persentase potensi ikan Cakalang, Madidihang, dan Albakor.
+  * Form simulasi untuk kapten kapal dan peneliti: Masukkan suhu (°C), angin (knot), dan jarak tempuh $\rightarrow$ model seketika mengeluarkan persentase potensi ikan Cakalang, Madidihang, dan Legacy species removed from TCT scope.
 * **Mode C: Unggah Berkas CSV Lapangan (Batch Upload):**
   * Fitur khusus mahasiswa/peneliti untuk mengunggah puluhan titik data survei oseanografi mandiri dan melihat proyeksi habitatnya di peta.
 * **Mode D: Logbook Tangkapan Nelayan Digital (*Continuous Learning*):**
@@ -134,7 +134,7 @@ Seluruh model dibangun menggunakan prinsip ilmiah *Ensemble Ecological Modeling*
                                              │
       ┌──────────────────────┬───────────────┴───────────────┬──────────────────────┐
       ▼                      ▼                               ▼                      ▼
-[Model SDM Cakalang]   [Model SDM Madidihang]          [Model SDM Albakor]     [Model Tata Kelola & CPUE]
+[Model SDM Cakalang]   [Model SDM Madidihang]          [Model SDM Legacy species removed from TCT scope]     [Model Tata Kelola & CPUE]
 • MaxEnt (40%)         • MaxEnt (40%)                  • MaxEnt (40%)          • Effort Bias Surface
 • Random Forest (35%)  • Random Forest (35%)           • Random Forest (35%)   • Klasifikator 5 Zona DOM
 • GLM (25%)            • GLM (25%)                     • GLM (25%)             • Standarisasi CPUE (GAM/GLM)
@@ -144,7 +144,7 @@ Seluruh model dibangun menggunakan prinsip ilmiah *Ensemble Ecological Modeling*
    * Spesialisasi epipelagis (0–100 m), toleransi suhu hangat (26–30°C), front termal tajam, dan batas klorofil.
 2. **Model Ensemble HSI Madidihang (*Thunnus albacares*):**
    * Epipelagis menengah (0–250 m), suhu optimum 24–28°C, sensitif terhadap *Ekman pumping velocity* dan arus gradien.
-3. **Model Ensemble HSI Albakor (*Thunnus alalunga*):**
+3. **Model Ensemble HSI Legacy species removed from TCT scope (*Current TCT scope exclusion*):**
    * Mesopelagis / subtropis (100–400 m), perairan sejuk (18–24°C), palung batimetri dalam (>1.000 m).
 4. **Model Spasial Fishing Effort Bias:**
    * Memodelkan probabilitas jangkauan armada Prigi berdasarkan jarak pelabuhan dan batimetri untuk koreksi bias sampel.

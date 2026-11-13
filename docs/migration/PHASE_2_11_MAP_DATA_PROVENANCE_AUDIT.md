@@ -83,7 +83,7 @@ To maintain strict scientific credibility, all non-satellite/non-live inputs are
 2. **Snapshot Timestamp:**  
    Displays active database prediction snapshot date (`2026-11-03`).
 3. **Sub-header Metadata:**  
-   Displays: `8.129 Poligon PostGIS • Batimetri GEBCO • Ensemble SDM Cakalang, Madidihang & Albakor`.
+   Displays: `8.129 Poligon PostGIS • Batimetri GEBCO • Ensemble SDM Cakalang, Madidihang & Legacy species removed from TCT scope`.
 4. **Interactive Cell Inspector:**  
    Clicking any grid polygon immediately extracts raw oceanographic properties into a dedicated HUD panel (Depth, Distance to Port, SST, Chl-a, Wave Height, Bycatch Alert, Species HSI Breakdown, and DOM Zone).
 

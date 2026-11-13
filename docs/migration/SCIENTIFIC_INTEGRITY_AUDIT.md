@@ -26,10 +26,10 @@ Evaluasi model aktual diperoleh langsung dari file kredibel `models/sdm/ensemble
 | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :--- |
 | **Cakalang** | *Katsuwonus pelamis* | 0,320 | 0,355 | 0,325 | **0,795** | **0,630** | Heuristic Proxy Screening |
 | **Madidihang** | *Thunnus albacares* | 0,295 | 0,365 | 0,340 | **0,784** | **0,606** | Heuristic Proxy Screening |
-| **Albakor** | *Thunnus alalunga* | 0,000 | 0,517 | 0,483 | **0,860** | **0,743** | Heuristic Proxy Screening |
+| **Legacy species removed from TCT scope** | *Current TCT scope exclusion* | 0,000 | 0,517 | 0,483 | **0,860** | **0,743** | Heuristic Proxy Screening |
 
 ### Catatan Kritis Terhadap Integritas Ilmiah (Model Caveat)
-1. **Bobot Albakor MaxEnt Di-nolkan:** Bobot MaxEnt untuk Albakor bernilai `0.000` karena performa evaluasi proxy sirkular hanya menghasilkan AUC 0,507 ($\le 0,51$).
+1. **Bobot Legacy species removed from TCT scope MaxEnt Di-nolkan:** Bobot MaxEnt untuk Legacy species removed from TCT scope bernilai `0.000` karena performa evaluasi proxy sirkular hanya menghasilkan AUC 0,507 ($\le 0,51$).
 2. **Kategori Bobot:** Ditandai secara jujur sebagai `PROVISIONAL_ANALYST_SELECTED_WEIGHTS`.
 3. **Pemisahan Konsep:** Nilai AUC-ROC (Area Under Curve) mengukur kemampuan diskriminasi model ($0,00 - 1,00$), sedangkan HSI (Habitat Suitability Index) mengukur derajat kesesuaian lingkungan harian ($0,000 - 1,000$). Keduanya dilarang dicampuradukkan dalam kode Laravel.
 
@@ -44,7 +44,7 @@ dengan normalisasi min-max rentang $[0,000 - 1,000]$.
 ### Kontribusi Variabel Lingkungan:
 - **Cakalang:** SST (38,5%), Klorofil-a (31,2%), Front Termal (18,6%), Batimetri (8,2%), Slope (3,5%).
 - **Madidihang:** Front Termal (34,8%), SST (29,4%), Klorofil-a (20,1%), Batimetri (11,5%), Slope (4,2%).
-- **Albakor:** SST (46,2%), Batimetri (25,1%), Klorofil-a (15,3%), Front Termal (9,8%), Slope (3,6%).
+- **Legacy species removed from TCT scope:** SST (46,2%), Batimetri (25,1%), Klorofil-a (15,3%), Front Termal (9,8%), Slope (3,6%).
 
 ### Kriteria Hotspot Penangkapan:
 $$\text{is\_hotspot} = (\text{HSI}_{\text{cakalang}} \ge 0,70) \lor (\text{HSI}_{\text{madidihang}} \ge 0,70)$$

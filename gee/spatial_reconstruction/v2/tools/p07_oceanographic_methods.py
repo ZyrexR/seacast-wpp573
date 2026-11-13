@@ -135,10 +135,10 @@ with open(os.path.join(OUT, "DERIVED_VARIABLE_FORMULAS.json"), "w", encoding="ut
 # 2. Generate OCEANOGRAPHIC_INDICATOR_METHODS.md
 with open(os.path.join(OUT, "OCEANOGRAPHIC_INDICATOR_METHODS.md"), "w", encoding="utf-8") as f:
     f.write(r"""# OCEANOGRAPHIC INDICATOR DERIVATION METHODS & MATHEMATICAL SPECIFICATIONS
-**Project:** SEACAST PRIGI — Sistem Intelijen Geospasial Perikanan Pelagis PPN Prigi, WPPNRI 573  
-**Phase:** 0.7 — Scientific Review of Oceanographic Indicators  
-**Domain:** WPPNRI 573 (102.58°–126.50° BT, 6.80°–13.94° LS)  
-**Physics Reference:** Physical Oceanography of the Eastern Indian Ocean (Tomczak & Godfrey, 2003; Sprintall et al., 2009)  
+**Project:** SEACAST PRIGI Ã¢â‚¬â€ Sistem Intelijen Geospasial Perikanan Pelagis PPN Prigi, WPPNRI 573
+**Phase:** 0.7 Ã¢â‚¬â€ Scientific Review of Oceanographic Indicators
+**Domain:** WPPNRI 573 (102.58Ã‚Â°Ã¢â‚¬â€œ126.50Ã‚Â° BT, 6.80Ã‚Â°Ã¢â‚¬â€œ13.94Ã‚Â° LS)
+**Physics Reference:** Physical Oceanography of the Eastern Indian Ocean (Tomczak & Godfrey, 2003; Sprintall et al., 2009)
 
 ---
 
@@ -156,9 +156,9 @@ $$|\nabla SST| = \sqrt{ \left(\frac{\partial SST}{\partial x}\right)^2 + \left(\
 
 ### 1.2 Ambang Batas Deteksi Front Pelagis
 Berdasarkan literatur oseanografi perikanan tropis (Belkin & O'Reilly, 2009; Zainuddin et al., 2008):
-- **Front Lemah:** $|\nabla SST| < 0.03^\circ\text{C}/\text{km}$ ($< 0.3^\circ\text{C} / 10\text{ km}$) — Latar belakang massa air homogen.
-- **Front Sedang (Front Aktif):** $0.03 \le |\nabla SST| < 0.05^\circ\text{C}/\text{km}$ — Indikator pertemuan massa air pesisir dengan Samudera Hindia.
-- **Front Kuat (Thermal Front Signifikan):** $|\nabla SST| \ge 0.05^\circ\text{C}/\text{km}$ ($\ge 0.5^\circ\text{C} / 10\text{ km}$) — Batas upwelling intensif di selatan Jawa-Bali, zona retensi agregasi cakalang (*Katsuwonus pelamis*).
+- **Front Lemah:** $|\nabla SST| < 0.03^\circ\text{C}/\text{km}$ ($< 0.3^\circ\text{C} / 10\text{ km}$) Ã¢â‚¬â€ Latar belakang massa air homogen.
+- **Front Sedang (Front Aktif):** $0.03 \le |\nabla SST| < 0.05^\circ\text{C}/\text{km}$ Ã¢â‚¬â€ Indikator pertemuan massa air pesisir dengan Samudera Hindia.
+- **Front Kuat (Thermal Front Signifikan):** $|\nabla SST| \ge 0.05^\circ\text{C}/\text{km}$ ($\ge 0.5^\circ\text{C} / 10\text{ km}$) Ã¢â‚¬â€ Batas upwelling intensif di selatan Jawa-Bali, zona retensi agregasi cakalang (*Katsuwonus pelamis*).
 
 ---
 
@@ -187,7 +187,7 @@ $$W_E = \frac{1}{\rho_w f} \left( \frac{\partial \tau_y}{\partial x} - \frac{\pa
 di mana $\rho_w = 1.025\text{ kg/m}^3$ dan $\beta = \frac{2\Omega \cos(\phi)}{R}$.
 
 **Konvensi Tanda Belahan Bumi Selatan (BBS):**
-Karena $f < 0$ di BBS, *wind stress curl* siklonik ($\text{curl}(\vec{\tau}) < 0$) menghasilkan **$W_E > 0$ (Upwelling vertikal ke atas)**. Selama monsun tenggara (Juni–Oktober), angin timuran menyusuri pantai selatan Jawa memicu transpor Ekman lepas pantai ($M_{Ey} < 0$), menghasilkan *coastal upwelling* kuat di selatan Prigi.
+Karena $f < 0$ di BBS, *wind stress curl* siklonik ($\text{curl}(\vec{\tau}) < 0$) menghasilkan **$W_E > 0$ (Upwelling vertikal ke atas)**. Selama monsun tenggara (JuniÃ¢â‚¬â€œOktober), angin timuran menyusuri pantai selatan Jawa memicu transpor Ekman lepas pantai ($M_{Ey} < 0$), menghasilkan *coastal upwelling* kuat di selatan Prigi.
 
 ---
 
@@ -205,15 +205,15 @@ Kedalaman riil laut:
 $$Z_{depth} = -\text{bedrock} \quad (\text{meter})$$
 Kemiringan lereng dasar laut (*slope* $\theta$):
 $$\theta = \arctan\left( \sqrt{ \left(\frac{\partial Z}{\partial x}\right)^2 + \left(\frac{\partial Z}{\partial y}\right)^2 } \right) \times \frac{180^\circ}{\pi}$$
-Zona lereng curam ($\theta > 2^\circ$) pada paparan neritik luar (kedalaman 100–500m) di selatan Prigi merupakan jalur migrasi utama madidihang (*Thunnus albacares*) dan albakor (*Thunnus alalunga*).
+Zona lereng curam ($\theta > 2^\circ$) pada paparan neritik luar (kedalaman 100Ã¢â‚¬â€œ500m) di selatan Prigi merupakan jalur migrasi utama Tuna Sirip Kuning (*Thunnus albacares*) dan Tongkol Krai (*Auxis thazard*).
 """)
 
 # 3. Generate SCIENTIFIC_METHOD_REVIEW.md
 with open(os.path.join(OUT, "SCIENTIFIC_METHOD_REVIEW.md"), "w", encoding="utf-8") as f:
     f.write("""# SCIENTIFIC METHODOLOGY AUDIT & PEER-REVIEW REPORT
-**Project:** SEACAST PRIGI — WPPNRI 573  
-**Phase:** 0.7 — Scientific Review  
-**Auditor:** Scientific Model Validation Specialist & Physical Oceanographer  
+**Project:** SEACAST PRIGI Ã¢â‚¬â€ WPPNRI 573
+**Phase:** 0.7 Ã¢â‚¬â€ Scientific Review
+**Auditor:** Scientific Model Validation Specialist & Physical Oceanographer
 
 ---
 

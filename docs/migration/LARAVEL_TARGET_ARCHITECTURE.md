@@ -29,7 +29,7 @@ seacast-laravel/
 │   │   │   ├── Services/SstFrontDetector.php
 │   │   │   └── Services/ChlorophyllIndexer.php
 │   │   ├── Species/
-│   │   │   ├── Enums/TargetSpecies.php (Cakalang, Madidihang, Albakor)
+│   │   │   ├── Enums/TargetSpecies.php (Cakalang, Madidihang, Legacy species removed from TCT scope)
 │   │   │   ├── DTOs/SpeciesEvaluationDto.php
 │   │   │   └── Services/HsiModelRegistry.php
 │   │   ├── DOM/

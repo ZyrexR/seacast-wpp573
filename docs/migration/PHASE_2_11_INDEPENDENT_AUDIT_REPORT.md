@@ -17,7 +17,7 @@ An independent, rigorous, read-only audit of **Phase 2 (Core Radar Engine & Dyna
 ### Key Audit Findings:
 1. **Zero Mock Data in Core Scientific Calculations:** All 8,129 grid cells in `daily_predictions` originate from actual PostGIS canonical polygons joined with oceanographic features (SST, Chl-a, bathymetry, distance to port/shelf) and SDM ensemble inferencing.
 2. **Python Bridge Authenticity:** Inference executes through a genuine subprocess bridge to Python 3.14.7 (`bridge_inference_runner.py`), loading scikit-learn models (`.joblib`) and StandardScaler (`scaler_oceanographic.joblib`). Models calculate predictions via `predict_proba()`.
-3. **Weight Calibration Enforcement:** The Albakor MaxEnt zero-weight rule (`weight = 0.000`) is strictly enforced in code, overriding uncalibrated legacy stubs inside the joblib files. Weights sum to exactly `1.000` for Cakalang (0.320 / 0.355 / 0.325), Madidihang (0.295 / 0.365 / 0.340), and Albakor (0.000 / 0.517 / 0.483).
+3. **Weight Calibration Enforcement:** The Legacy species removed from TCT scope MaxEnt zero-weight rule (`weight = 0.000`) is strictly enforced in code, overriding uncalibrated legacy stubs inside the joblib files. Weights sum to exactly `1.000` for Cakalang (0.320 / 0.355 / 0.325), Madidihang (0.295 / 0.365 / 0.340), and Legacy species removed from TCT scope (0.000 / 0.517 / 0.483).
 4. **PostGIS Integrity:** Database connection for queries operates under read-only user `seacast_readonly`. All 8,129 canonical cells are valid EPSG:4326 polygons matching MD5 checksum `7a500f01fae9ae112f9c921b071eba7f`.
 5. **Regression Test Integrity:** Automated test suite executes 70 tests with 1,828 assertions passing at 100% (36.15s duration).
 6. **Provenance & Caveat Transparency:** Wave height and wind speed parameters are transparently identified in the UI and API metadata as *"Simulasi Oseanografi Musiman BMKG Terkalibrasi (Fallback Lokal)"* due to the absence of live external BMKG API credentials. Bycatch screening is documented as an oceanographic slope heuristic, not yet formally certified by an IOTC observer program.
@@ -30,7 +30,7 @@ An independent, rigorous, read-only audit of **Phase 2 (Core Radar Engine & Dyna
 |:---|:---|:---|:---|:---:|
 | 1 | **Database & PostGIS Integrity** | CLI SQL via `seacast_readonly` | 8,129 polygons, SRID 4326, valid geometries, MD5 `7a500f0...` | **VERIFIED PASS** |
 | 2 | **Python Inference Bridge** | Controlled Python CLI execution | Binary: Python 3.14.7, 9 features, 3 models loaded, scaler matched | **VERIFIED PASS** |
-| 3 | **Model Artifacts & Weights** | SHA256 hashing & inference inspection | Scaler + 3 models verified; Albakor MaxEnt weight = 0.000 enforced | **VERIFIED PASS** |
+| 3 | **Model Artifacts & Weights** | SHA256 hashing & inference inspection | Scaler + 3 models verified; Legacy species removed from TCT scope MaxEnt weight = 0.000 enforced | **VERIFIED PASS** |
 | 4 | **HSI & Normalization Formula** | Unit tests & boundary calculations | Scaled raw values clamp [0.000, 1.000], Hotspot threshold $\ge 0.70$ | **VERIFIED PASS** |
 | 5 | **DOM Zone Priority Hierarchy** | Boundary condition verification script | Z4 > Z5 > Z3 > Z1 > Z2 > GEN exact boundary matching | **VERIFIED PASS** |
 | 6 | **IOTC Bycatch Screening Engine** | Spatial boundary tests (150m, 1200m) | GREEN / YELLOW / RED exact shelf break triggers; IOTC caveat noted | **VERIFIED PASS** |
@@ -46,13 +46,13 @@ An independent, rigorous, read-only audit of **Phase 2 (Core Radar Engine & Dyna
 During forensic examination, two specific nuances between original baseline descriptions and implementation realities were clarified:
 
 ### 1. Joblib Internal Bundle Weights vs Runtime Weights
-- **Claimed Baseline:** Ensemble SDM combines MaxEnt, Random Forest, and GLM models. For Albakor, MaxEnt has 0% weight due to historical convergence issues in WPP 573.
+- **Claimed Baseline:** Ensemble SDM combines MaxEnt, Random Forest, and GLM models. For Legacy species removed from TCT scope, MaxEnt has 0% weight due to historical convergence issues in WPP 573.
 - **Audit Discovery:** The physical `.joblib` model bundles preserved from the legacy project internally contain placeholder metadata `{"maxent": 0.4, "rf": 0.35, "glm": 0.25}` across all three species.
 - **Verification:** Both `bridge_inference_runner.py` and `SpeciesPredictionService.php` explicitly override these legacy placeholders with the audited calibrated weights:
   - Cakalang: `0.320 / 0.355 / 0.325`
   - Madidihang: `0.295 / 0.365 / 0.340`
-  - Albakor: `0.000 / 0.517 / 0.483`
-- **Result:** Controlled inference outputs for Albakor show MaxEnt contribution is strictly `0.0000`. The scientific requirement is **FULLY SATISFIED**.
+  - Legacy species removed from TCT scope: `0.000 / 0.517 / 0.483`
+- **Result:** Controlled inference outputs for Legacy species removed from TCT scope show MaxEnt contribution is strictly `0.0000`. The scientific requirement is **FULLY SATISFIED**.
 
 ### 2. Live BMKG Telemetry vs Seasonal Simulation
 - **Claimed Baseline:** System accounts for wave height and wind speed for safety advisory.

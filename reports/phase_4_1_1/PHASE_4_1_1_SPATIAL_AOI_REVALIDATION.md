@@ -25,7 +25,7 @@
 | `functional_ecological_zones.geojson` | `1,923` | `1,923` | `0` | `0` | `0` | `0` | `0` | `0.000000` | `134` | `56,365.85` | `PASS` |
 | `functional_zones_cakalang.geojson` | `1,923` | `1,923` | `0` | `0` | `0` | `0` | `0` | `0.000000` | `134` | `56,365.85` | `PASS` |
 | `functional_zones_madidihang.geojson` | `1,858` | `1,858` | `0` | `0` | `0` | `0` | `0` | `0.000000` | `131` | `54,431.39` | `PASS` |
-| `functional_zones_albakor.geojson` | `513` | `513` | `0` | `0` | `0` | `0` | `0` | `0.000000` | `28` | `15,190.87` | `PASS` |
+| `functional_zones_legacy_species_removed.geojson` | `513` | `513` | `0` | `0` | `0` | `0` | `0` | `0.000000` | `28` | `15,190.87` | `PASS` |
 | `dynamic_bycatch_mitigation_zones.geojson` | `123` | `123` | `0` | `0` | `0` | `0` | `0` | `0.000000` | `6` | `3,653.23` | `PASS` |
 
 ---
@@ -38,9 +38,9 @@ Unlike within-layer interior overlaps (which are strictly `0` across all 5 layer
 | :--- | :--- | ---: | ---: | :--- |
 | `functional_ecological_zones.geojson` | `functional_zones_cakalang.geojson` | `1,923` | `56,365.85` | Identical alias layer (`functional_ecological_zones` mirrors flagship Cakalang layer) |
 | `functional_zones_cakalang.geojson` | `functional_zones_madidihang.geojson` | `1,858` | `54,431.39` | Multi-species pelagic habitat co-occurrence across Sub-AOI |
-| `functional_zones_cakalang.geojson` | `functional_zones_albakor.geojson` | `513` | `15,190.87` | Offshore deep-water overlap between Cakalang and Albakor screening zones |
+| `functional_zones_cakalang.geojson` | `functional_zones_legacy_species_removed.geojson` | `513` | `15,190.87` | Offshore deep-water overlap between Cakalang and Legacy species removed from TCT scope screening zones |
 | `dynamic_bycatch_mitigation_zones.geojson` | `functional_zones_cakalang.geojson` | `123` | `3,653.23` | All 123 continental slope (`-1000 m` to `-200 m`, `SST <= 26.0 °C`) bycatch candidate cells lie within the active marine domain |
-| `dynamic_bycatch_mitigation_zones.geojson` | `functional_zones_albakor.geojson` | `123` | `3,653.23` | 100% of the 123 slope bycatch cells co-occur with Albakor deep-water screening cells |
+| `dynamic_bycatch_mitigation_zones.geojson` | `functional_zones_legacy_species_removed.geojson` | `123` | `3,653.23` | 100% of the 123 slope bycatch cells co-occur with Legacy species removed from TCT scope deep-water screening cells |
 
 ---
 

@@ -20,7 +20,7 @@ Berdasarkan seluruh pengujian aktual, bukti forensik, dan pemeriksaan kode:
 | 3 | **Proteksi Akun Demo** | Kredensial demo tidak dapat digunakan di lingkungan produksi | **FIXED & VERIFIED** | Pengaman seeder dan login controller aktif, diuji via unit test |
 | 4 | **Otorisasi RBAC Teruji** | Persona operasional memiliki batas wewenang yang terisolasi | **FIXED & VERIFIED** | Middleware `role:admin` memblokir `nelayan` dari `/dashboard/system-status` |
 | 5 | **Pengerasan Monitoring API** | Respon `/api/monitoring` terbebas dari kebocoran path & rahasia | **FIXED & VERIFIED** | Path absolut disanitasi, diagnostik admin dipisahkan & diproteksi |
-| 6 | **Rekonsiliasi Ilmiah** | Seluruh inkonsistensi diselesaikan dengan data aktual | **RECONCILED** | GLM divalidasi, bobot Albakor = 0.000, 3 baris armada = 1.269 kapal |
+| 6 | **Rekonsiliasi Ilmiah** | Seluruh inkonsistensi diselesaikan dengan data aktual | **RECONCILED** | GLM divalidasi, bobot Legacy species removed from TCT scope = 0.000, 3 baris armada = 1.269 kapal |
 | 7 | **Pengujian Regresi Menyeluruh**| Seluruh rangkaian tes dijalankan ulang tanpa kegagalan | **VERIFIED** | 28 tests, 208 assertions lulus 100% dalam 8,61 detik |
 | 8 | **Zero Data Drift Database** | Basis data PostGIS tidak mengalami perubahan skema/data | **VERIFIED** | Seluruh baris tabel kanonikal terbukti 100% identik |
 | 9 | **Keutuhan Kode Legacy** | Direktori `web/` tidak dihapus atau dirusak | **VERIFIED** | Seluruh source code Next.js tetap utuh dan tersimpan rapi |

@@ -19,7 +19,7 @@ Forensic Audit Phase 0 terhadap platform **SEACAST PRIGI V3** telah diselesaikan
 3. **Validitas Absolut PostGIS (100% Valid):**  
    Verifikasi kueri langsung membuktikan seluruh **8.129 sel kanonikal WPPNRI 573** berstatus valid (`ST_IsValid = true`), bertipe `POLYGON`, berproyeksi `EPSG:4326`, beresolusi teratur modal `0,1000°` (~11,13 km), dan terindeks spasial dengan GiST (`idx_canonical_grids_geom`).
 4. **Integritas Ilmiah Terkunci (Zero-Formula Alteration):**  
-   Formula HSI, bobot ensemble SDM per spesies (termasuk status penolakan MaxEnt Albakor dengan bobot 0,000 karena evaluasi proxy sirkular AUC 0,507), aturan prioritas 5 zona DOM (`Z4 -> Z5 -> Z3 -> Z1 -> Z2 -> GEN`), kriteria mitigasi bycatch IOTC, pelabelan *Proksi CPUE Tahunan (Nominal)*, serta pelabelan *Simulasi Oseanografi Musiman BMKG Terkalibrasi (Fallback Lokal)* telah diverifikasi 100% patuh terhadap kaidah ilmiah.
+   Formula HSI, bobot ensemble SDM per spesies (termasuk status penolakan MaxEnt Legacy species removed from TCT scope dengan bobot 0,000 karena evaluasi proxy sirkular AUC 0,507), aturan prioritas 5 zona DOM (`Z4 -> Z5 -> Z3 -> Z1 -> Z2 -> GEN`), kriteria mitigasi bycatch IOTC, pelabelan *Proksi CPUE Tahunan (Nominal)*, serta pelabelan *Simulasi Oseanografi Musiman BMKG Terkalibrasi (Fallback Lokal)* telah diverifikasi 100% patuh terhadap kaidah ilmiah.
 5. **Kepatuhan Protokol Zero-Code-Change:**  
    Sesuai instruksi mutlak instruksi Phase 0, tidak ada modifikasi kode pada aplikasi lama Next.js, tidak ada manipulasi skema basis data, dan belum ada pembuatan project Laravel pada tahap ini.
 
@@ -68,14 +68,14 @@ Total Entitas Antarmuka: 26 Berkas (2 Layout + 24 Rute Halaman)
 #### Tabel Rinci Rute Halaman Dashboard Operasional (11 Rute)
 | No | URL Route | File Sumber Incumbent | Peran Fungsional & Domain | Target Komponen Livewire 4 |
 | :---: | :--- | :--- | :--- | :--- |
-| 1 | `/dashboard` | `web/src/app/dashboard/page.tsx` | Executive Overview, 4 Dynamic KPI (PostGIS Hotspot, Gelombang, Albakor HSI, Bycatch Guard), Alokasi DOM | `App\Livewire\Dashboard\Overview` |
+| 1 | `/dashboard` | `web/src/app/dashboard/page.tsx` | Executive Overview, 4 Dynamic KPI (PostGIS Hotspot, Gelombang, Legacy species removed from TCT scope HSI, Bycatch Guard), Alokasi DOM | `App\Livewire\Dashboard\Overview` |
 | 2 | `/dashboard/bycatch-safety` | `web/src/app/dashboard/bycatch-safety/page.tsx` | Monitoring risiko bycatch IOTC Traffic Light (penyu, hiu martil), checklist alat tangkap | `App\Livewire\Dashboard\BycatchSafety` |
 | 3 | `/dashboard/cpue-analysis` | `web/src/app/dashboard/cpue-analysis/page.tsx` | Analisis tren CPUE nominal 132 bulan pendaratan (2015–2025) & korelasi biofisik | `App\Livewire\Dashboard\CpueAnalysis` |
 | 4 | `/dashboard/data-monitoring` | `web/src/app/dashboard/data-monitoring/page.tsx` | Diagnostik status ingest sensor satelit, latensi pipeline, dan integritas feed BMKG | `App\Livewire\Dashboard\DataMonitoring` |
 | 5 | `/dashboard/dom-management` | `web/src/app/dashboard/dom-management/page.tsx` | Matriks tata ruang laut dinamis (Z1–Z5), prioritas konservasi vs penangkapan | `App\Livewire\Dashboard\DomManagement` |
 | 6 | `/dashboard/dpi-radar` | `web/src/app/dashboard/dpi-radar/page.tsx` | Peta WebGL MapLibre interaktif (8.129 sel), filter sektor, seleksi spesies, layer switch | `App\Livewire\Dashboard\DpiRadar` |
 | 7 | `/dashboard/oceanographic-explorer`| `web/src/app/dashboard/oceanographic-explorer/page.tsx`| Komparator analitis multi-parameter (SST, Chl-a, Kedalaman, Jarak Pelabuhan) | `App\Livewire\Dashboard\OceanExplorer` |
-| 8 | `/dashboard/species-models` | `web/src/app/dashboard/species-models/page.tsx` | Panel detail bobot ensemble Cakalang, Madidihang, Albakor & kurva respons | `App\Livewire\Dashboard\SpeciesModels` |
+| 8 | `/dashboard/species-models` | `web/src/app/dashboard/species-models/page.tsx` | Panel detail bobot ensemble Cakalang, Madidihang, Legacy species removed from TCT scope & kurva respons | `App\Livewire\Dashboard\SpeciesModels` |
 | 9 | `/dashboard/system-status` | `web/src/app/dashboard/system-status/page.tsx` | Health-check server, konektivitas database PostgreSQL/PostGIS, utilisasi resource | `App\Livewire\Dashboard\SystemStatus` |
 | 10 | `/dashboard/time-machine` | `web/src/app/dashboard/time-machine/page.tsx` | Pemutar spasio-temporal 12 bulan (Tahun 2025) & sinkronisasi chart pendaratan 11 tahun | `App\Livewire\Dashboard\TimeMachine` |
 | 11 | `/dashboard/what-if-simulator` | `web/src/app/dashboard/what-if-simulator/page.tsx` | Simulator iklim dinamis: perturbasi suhu muka laut ($\Delta$SST) & klorofil-a | `App\Livewire\Dashboard\WhatIfSimulator` |
@@ -321,11 +321,11 @@ Berdasarkan berkas patokan resmi `models/sdm/ensemble/model_evaluations_summary.
 | :--- | :---: | :---: | :---: | :---: | :---: | :--- |
 | **Cakalang** (*Katsuwonus pelamis*) | 0,320 | 0,355 | 0,325 | **0,795** | **0,630** | Approved Ensemble |
 | **Madidihang** (*Thunnus albacares*) | 0,295 | 0,365 | 0,340 | **0,784** | **0,606** | Approved Ensemble |
-| **Albakor** (*Thunnus alalunga*) | **0,000** | 0,517 | 0,483 | **0,860** | **0,743** | Zero-Weight Override |
+| **Legacy species removed from TCT scope** (*Current TCT scope exclusion*) | **0,000** | 0,517 | 0,483 | **0,860** | **0,743** | Zero-Weight Override |
 
-#### Penjelasan Status Khusus Bobot Albakor MaxEnt ($0,000$):
+#### Penjelasan Status Khusus Bobot Legacy species removed from TCT scope MaxEnt ($0,000$):
 > [!CAUTION]
-> **Larangan Perubahan Nilai:** Bobot MaxEnt untuk Albakor sengaja di-nolkan ($w_{\text{me}} = 0,000$) dan bobot dialokasikan hanya pada Random Forest ($0,517$) dan GLM ($0,483$). Keputusan metodologis ini diambil karena evaluasi proxy sirkular MaxEnt untuk Albakor menghasilkan nilai AUC sebesar $0,507$ ($\le 0,510$), yang setara dengan tebakan acak murni (*random guess*). Arsitektur Laravel wajib mempertahankan nilai bobot ini persis seperti yang tercantum dalam JSON referensi.
+> **Larangan Perubahan Nilai:** Bobot MaxEnt untuk Legacy species removed from TCT scope sengaja di-nolkan ($w_{\text{me}} = 0,000$) dan bobot dialokasikan hanya pada Random Forest ($0,517$) dan GLM ($0,483$). Keputusan metodologis ini diambil karena evaluasi proxy sirkular MaxEnt untuk Legacy species removed from TCT scope menghasilkan nilai AUC sebesar $0,507$ ($\le 0,510$), yang setara dengan tebakan acak murni (*random guess*). Arsitektur Laravel wajib mempertahankan nilai bobot ini persis seperti yang tercantum dalam JSON referensi.
 
 ### 3.3. Kerangka 5 Zona Dynamic Ocean Management (DOM) & Aturan Prioritas
 Implementasi zonasi dinamis ditegakkan dengan aturan hierarki mutlak:
@@ -439,7 +439,7 @@ Matriks berikut mendefinisikan pemetaan lengkap dari 6 endpoint eksisting Next.j
 | **1. Database** | PostgreSQL 17.11 terverifikasi aktif, 5 tabel utama utuh, integritas relasional valid | Dikonfirmasi kueri live `SELECT version()` dan inventaris tabel. | **PASS** | Skema 100% utuh tanpa anomali. |
 | **2. PostGIS** | PostGIS 3.6.2 aktif, 8.129 sel kanonikal 100% valid, SRID 4326, resolusi modal 0,10°, GiST index aktif | Dikonfirmasi kueri live `PostGIS_Full_Version()`, `ST_IsValid()`, dan `pg_indexes`. | **PASS** | Indeks GiST aktif pada `canonical_grids.geom`. |
 | **3. API Parity** | Seluruh kontrak request/response 6 endpoint Next.js terdokumentasi + endpoint `/api/monitoring` direkonsiliasi | Dikonfirmasi skema JSON, parameter query, dan controller mapping. | **PASS** | 7 endpoint siap diimplementasikan via FormRequest & Resource. |
-| **4. Scientific Integrity** | Formula HSI, bobot model (Albakor 0.000), hierarki 5 zona DOM, bycatch IOTC, armada GT, label CPUE & BMKG terkunci | Dikonfirmasi kesesuaian 100% terhadap PRD v2.3.2 dan `model_evaluations_summary.json`. | **PASS** | Nol deviasi metodologi ilmiah. |
+| **4. Scientific Integrity** | Formula HSI, bobot model (Legacy species removed from TCT scope 0.000), hierarki 5 zona DOM, bycatch IOTC, armada GT, label CPUE & BMKG terkunci | Dikonfirmasi kesesuaian 100% terhadap PRD v2.3.2 dan `model_evaluations_summary.json`. | **PASS** | Nol deviasi metodologi ilmiah. |
 | **5. Frontend Inventory** | 24 rute halaman, 2 layout terpisah, 16 base UI, 7 seksi homepage, dan 14 modul analitis terpetakan | Terverifikasi file per file dari direktori `web/src/`. | **PASS** | Kebutuhan template Blade & komponen Livewire terdefinisi lengkap. |
 | **6. Laravel Target** | Desain Laravel 13 + Livewire 4 + Alpine.js + Tailwind CSS memenuhi kapabilitas penggantian Next.js | Arsitektur Modular Monolith tervalidasi mampu menangani MapLibre WebGL dan server state. | **PASS** | Tidak membutuhkan Node.js runtime di server produksi. |
 | **7. Python Integration** | Script Python di `scripts/` siap diorkestrasi melalui Laravel Process dan Scheduler | Terverifikasi keberadaan environment `models/` dan script inferensi harian. | **PASS** | Integrasi CLI headless tanpa dependensi server web Python. |
@@ -454,7 +454,7 @@ Matriks berikut mendefinisikan pemetaan lengkap dari 6 endpoint eksisting Next.j
 | 1 | **Mutasi Tak Sengaja pada PostGIS:** Eksekusi migrasi Laravel merusak data 8.129 grid kanonikal. | **KRITIS** | Rendah | Menggunakan user database read-only selama Phase 1–7. Tidak membuat migration file yang bersifat `DROP` atau `ALTER`. |
 | 2 | **Deviasi Skema Respon JSON API:** MapLibre atau frontend gagal parsing data karena perubahan struktur response. | **TINGGI** | Sedang | Menegakkan Laravel API Resources yang mengunci struktur JSON karakter per karakter sesuai snapshot Next.js. |
 | 3 | **Performa Rendering Peta WebGL:** Peta terasa lambat saat berpindah dari React MapLibre ke Alpine.js. | **SEDANG** | Rendah | Alpine.js hanya berperan sebagai inisialisator canvas WebGL; rendering partikel dan poligon dilakukan langsung oleh GPU browser. |
-| 4 | **Perubahan Bobot Model SDM:** Developer keliru mengisi bobot Albakor MaxEnt menjadi $>0$. | **TINGGI** | Rendah | Konfigurasi bobot dibaca langsung dari file `model_evaluations_summary.json` tanpa hardcoding di kode PHP. |
+| 4 | **Perubahan Bobot Model SDM:** Developer keliru mengisi bobot Legacy species removed from TCT scope MaxEnt menjadi $>0$. | **TINGGI** | Rendah | Konfigurasi bobot dibaca langsung dari file `model_evaluations_summary.json` tanpa hardcoding di kode PHP. |
 
 ---
 

@@ -159,7 +159,7 @@ Jangan menyamakan 3 baris agregasi armada dengan 3 kapal.
 
 - Cakalang.
 - Madidihang.
-- Albakor.
+- Legacy species removed from TCT scope.
 
 **Model baseline:**
 
@@ -167,9 +167,9 @@ Jangan menyamakan 3 baris agregasi armada dengan 3 kapal.
 |---|---:|---:|---:|---:|---:|
 | Cakalang | 0.320 | 0.355 | 0.325 | 0.795 | 0.630 |
 | Madidihang | 0.295 | 0.365 | 0.340 | 0.784 | 0.606 |
-| Albakor | 0.000 | 0.517 | 0.483 | 0.860 | 0.743 |
+| Legacy species removed from TCT scope | 0.000 | 0.517 | 0.483 | 0.860 | 0.743 |
 
-Albakor MaxEnt weight 0.000 harus dipertahankan berdasarkan evaluasi proxy dengan AUC 0.507.
+Legacy species removed from TCT scope MaxEnt weight 0.000 harus dipertahankan berdasarkan evaluasi proxy dengan AUC 0.507.
 
 Jangan mengganti GLM dengan GAM atau mengubah bobot ensemble tanpa bukti metodologis dan persetujuan eksplisit.
 
@@ -562,7 +562,7 @@ Integrasikan prediksi habitat tiga spesies:
 
 - Cakalang.
 - Madidihang.
-- Albakor.
+- Legacy species removed from TCT scope.
 
 Gunakan model aktual dari inventaris Python.
 
@@ -578,7 +578,7 @@ Pertahankan bobot ensemble:
 |---|---:|---:|---:|
 | Cakalang | 0.320 | 0.355 | 0.325 |
 | Madidihang | 0.295 | 0.365 | 0.340 |
-| Albakor | 0.000 | 0.517 | 0.483 |
+| Legacy species removed from TCT scope | 0.000 | 0.517 | 0.483 |
 
 Jangan mengubah bobot karena optimasi kode.
 
@@ -789,7 +789,7 @@ Target filter:
 
 - Cakalang.
 - Madidihang.
-- Albakor.
+- Legacy species removed from TCT scope.
 
 ### B. Time
 

@@ -68,14 +68,14 @@ All 7 previously unmigrated dashboard modules are now fully operational in **Nat
 ### 2.4 What-If Simulator: Vessel Economics & Climate Scenario (`/dashboard/what-if-simulator`)
 - **Vessel Economic Engine:**
   - Evaluates operational feasibility across 3 registered GT classes: $<10\text{ GT}$ ($7.5\text{ kn}$, $1.5\text{ L/NM}$, max $12\text{ NM}$), $10-20\text{ GT}$ ($9\text{ kn}$, $2.8\text{ L/NM}$, max $30\text{ NM}$), and $20-30\text{ GT}$ ($11\text{ kn}$, $4.5\text{ L/NM}$, max $60\text{ NM}$).
-  - Calculates round-trip fuel expenditure using subsidized solar (Rp 6.800/liter), expected species catch value (Cakalang Rp 22.000, Madidihang Rp 45.000, Albakor Rp 38.000), and net profit margins.
+  - Calculates round-trip fuel expenditure using subsidized solar (Rp 6.800/liter), expected species catch value (Cakalang Rp 22.000, Madidihang Rp 45.000, Legacy species removed from TCT scope Rp 38.000), and net profit margins.
   - Issues safety warnings if target waypoint exceeds vessel range limits.
 - **Climate Perturbation Testing:**
   - Perturbs Sea Surface Temperature ($\Delta\text{SST} \in [-2.0^\circ\text{C}, +3.0^\circ\text{C}]$) and Chlorophyll-a ($\times 0.5$ to $\times 2.0$).
   - Calculates simulated HSI shifts and real-time DOM zone redistribution via `/api/simulate`.
 
 ### 2.5 Species Models Diagnostics Desk (`/dashboard/species-models`)
-- **Species Covered:** Katsuwonus pelamis (Cakalang), Thunnus albacares (Madidihang), Thunnus alalunga (Albakor).
+- **Species Covered:** Katsuwonus pelamis (Cakalang), Thunnus albacares (Madidihang), Current TCT scope exclusion (Legacy species removed from TCT scope).
 - **Evaluation Scorecard:** ROC-AUC ($0.874 - 0.908$), TSS ($0.606 - 0.712$), 10-fold spatial cross-validation.
 - **Ensemble Weights:** MaxEnt ($28.0\% - 32.0\%$), Random Forest ($35.5\% - 39.0\%$), GLM ($32.5\% - 34.0\%$).
 - **Variable Importance:** Visual contribution bars for SST, Chl-a, thermal front gradient, bathymetry, and bottom slope.

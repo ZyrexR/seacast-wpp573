@@ -7,7 +7,7 @@
 
 ## 1. Latar Belakang & Tujuan
 Empat halaman portal publik utama di SEACAST saat ini masih bersifat terbatas (*stub*), usang, atau terlalu berorientasi lokal PPN Prigi semata:
-1. `/science` (Sains & Model): Belum memuat spesies dominan **Tongkol** (*Auxis thazard*), masih memuat catatan audit mentah masa lalu (Albakor zero-weight), dan belum merangkum kerangka Dynamic Ocean Management (DOM) 5-zona secara terpadu.
+1. `/science` (Sains & Model): Belum memuat spesies dominan **Tongkol** (*Auxis thazard*), masih memuat catatan audit mentah masa lalu (Legacy species removed from TCT scope zero-weight), dan belum merangkum kerangka Dynamic Ocean Management (DOM) 5-zona secara terpadu.
 2. `/ocean-data` (Data Oseanografi): Hanya berupa 4 kartu statis ringkas tanpa spesifikasi mendalam satelit (*Copernicus, NASA, NOAA, JAXA, BMKG*) dan tanpa data telemetri live dari basis data PostGIS.
 3. `/documentation` (Dokumentasi): Sangat minim (hanya 4 paragraf glosarium ringkas) dan belum memiliki panduan operasional multi-peran (Nelayan, Syahbandar, Peneliti) serta kepatuhan regulasi Permen KP No. 59/2020.
 4. `/about` (Tentang SEACAST): Masih berjudul dan berfokus tunggal pada PPN Prigi, belum merepresentasikan visi konsorsium platform maritim multi-pelabuhan WPPNRI 573 (PPN Prigi, PPS Cilacap, PPN Palabuhanratu).

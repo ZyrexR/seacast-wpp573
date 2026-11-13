@@ -45,7 +45,7 @@ The full migration of SEACAST PRIGI V3 from its legacy Next.js / React prototype
 | :--- | :--- | :--- | :---: |
 | **Option 1 Architecture** | Pure Blade + Alpine.js + Tailwind CSS; 0 React | **ZERO React dependencies** in production runtime | **COMPLIANT** |
 | **Read-Only Database** | Zero mutations to scientific PostGIS tables | All scientific queries execute via `seacast_readonly` | **COMPLIANT** |
-| **Scientific Invariance** | Preserve locked ensemble weights & formulas | Exact weights verified: Cakalang 1.0, Madidihang 1.0, Albakor 1.0 | **COMPLIANT** |
+| **Scientific Invariance** | Preserve locked ensemble weights & formulas | Exact weights verified: Cakalang 1.0, Madidihang 1.0, Legacy species removed from TCT scope 1.0 | **COMPLIANT** |
 | **DOM Waterfall Priority** | $Z4 \to Z5 \to Z3 \to Z1 \to Z2 \to GEN$ | Priority conflict resolution strictly tested | **COMPLIANT** |
 | **Bycatch Safety Screening** | Green/Yellow/Red traffic light with IOTC thresholds | Shelf break (150–1200m) & cold front logic verified | **COMPLIANT** |
 | **BMKG Fallback Disclaimer** | Explicit cloud masking disclaimer required | Displayed on all relevant telemetry views | **COMPLIANT** |

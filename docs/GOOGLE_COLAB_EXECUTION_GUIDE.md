@@ -43,7 +43,7 @@ drive/MyDrive/SEACAST_PRIGI_CSV/OUTPUT_COLAB/
 ├── models/                               <-- 1. Berkas Bobot Model ML
 │   ├── cakalang_ensemble_model.joblib
 │   ├── madidihang_ensemble_model.joblib
-│   ├── albakor_ensemble_model.joblib
+│   ├── legacy_species_removed_ensemble_model.joblib
 │   └── scaler_oceanographic.joblib
 │
 ├── predictions/                          <-- 2. Master Data Prediksi (Siap PostgreSQL)

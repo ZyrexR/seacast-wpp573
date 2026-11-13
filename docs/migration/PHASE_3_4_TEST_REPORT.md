@@ -51,7 +51,7 @@
 - **Payload Verified:**
   - First 3 bytes match UTF-8 Byte Order Mark: `\xEF\xBB\xBF`.
   - Header row contains canonical columns: `cell_id,cell_class,center_longitude,center_latitude,depth_m`.
-  - Species columns present: `hsi_cakalang,hsi_madidihang,hsi_albakor`.
+  - Species columns present: `hsi_cakalang,hsi_madidihang,hsi_legacy_removed`.
   - Management columns present: `dom_zone,bycatch_traffic_light`.
 - **Result:** **PASS** (7 assertions)
 

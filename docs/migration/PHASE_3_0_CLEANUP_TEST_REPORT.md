@@ -38,7 +38,7 @@ Semua 75 automated test dinyatakan **LULUS PENUH (PASS)** dengan zero failure, z
 | `HsiCalculationServiceTest` | Validasi formula perkalian terbobot HSI ($0.000 - 1.000$), clamping numerik, penanganan nilai batas ekstrem. | 142 assertions | **PASS** |
 | `DomZonationServiceTest` | Validasi delineasi 5 zona DOM (Z1 s.d. Z5) dan General Area (GEN). Verifikasi urutan prioritas mutlak: $\text{Z4} \to \text{Z5} \to \text{Z3} \to \text{Z1} \to \text{Z2} \to \text{GEN}$. | 186 assertions | **PASS** |
 | `BycatchRiskServiceTest` | Validasi aturan *Traffic Light System* (Green / Amber / Red) berdasarkan rekomendasi konservasi IOTC dan resolusi WCPFC. | 94 assertions | **PASS** |
-| `SpeciesPredictionServiceTest` | Validasi ensemble modeling (Random Forest, Extra Trees, Gradient Boosting, MaxEnt) untuk Cakalang, Madidihang, dan Albakor. Verifikasi bobot Albakor MaxEnt = 0.000. | 210 assertions | **PASS** |
+| `SpeciesPredictionServiceTest` | Validasi ensemble modeling (Random Forest, Extra Trees, Gradient Boosting, MaxEnt) untuk Cakalang, Madidihang, dan Legacy species removed from TCT scope. Verifikasi bobot Legacy species removed from TCT scope MaxEnt = 0.000. | 210 assertions | **PASS** |
 | `PythonBridgeProcessTest` | Validasi proses bridging Python (`scripts/bridge_inference_runner.py`), IPC JSON stream, argument sanitization (pencegahan shell command injection). | 78 assertions | **PASS** |
 | `OceanographicParameterValidationTest` | Validasi rentang biofisik SST ($18^\circ\text{C} - 33^\circ\text{C}$), Chl-a ($0.01 - 10.0\ \text{mg/m}^3$), Salinity ($30.0 - 36.0\ \text{PSU}$), SSH ($ -1.5 - 1.5\ \text{m}$), dan Bathymetry. | 115 assertions | **PASS** |
 

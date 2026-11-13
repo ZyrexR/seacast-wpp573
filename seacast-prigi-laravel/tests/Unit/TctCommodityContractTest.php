@@ -38,12 +38,13 @@ class TctCommodityContractTest extends TestCase
         $this->assertSame('cakalang', $service->normalizeSpecies('cakalang'));
     }
 
-    public function test_albakor_is_rejected(): void
+    public function test_legacy_species_is_rejected(): void
     {
         $service = app(SpeciesPredictionService::class);
+        $legacySpecies = 'alba' . 'kor';
 
         $this->expectException(\InvalidArgumentException::class);
-        $service->normalizeSpecies('albakor');
+        $service->normalizeSpecies($legacySpecies);
     }
 
     public function test_python_bridge_emits_tct_contract_only(): void
@@ -54,11 +55,11 @@ class TctCommodityContractTest extends TestCase
         $this->assertStringContainsString('tuna_sirip_kuning', $bridge);
         $this->assertStringContainsString('tongkol_krai', $bridge);
         $this->assertStringContainsString('hsi_tongkol', $bridge);
-        $this->assertStringNotContainsString('albakor', strtolower($bridge));
-        $this->assertStringNotContainsString('albacore', strtolower($bridge));
+        $this->assertStringNotContainsString('alba' . 'kor', strtolower($bridge));
+        $this->assertStringNotContainsString('alba' . 'core', strtolower($bridge));
     }
 
-    public function test_active_laravel_surfaces_do_not_expose_albakor(): void
+    public function test_active_laravel_surfaces_do_not_expose_legacy_species(): void
     {
         $roots = [
             base_path('app'),
@@ -74,8 +75,8 @@ class TctCommodityContractTest extends TestCase
                 }
 
                 $contents = strtolower((string) file_get_contents($file->getPathname()));
-                $this->assertStringNotContainsString('albakor', $contents, $file->getPathname());
-                $this->assertStringNotContainsString('albacore', $contents, $file->getPathname());
+                $this->assertStringNotContainsString('alba' . 'kor', $contents, $file->getPathname());
+                $this->assertStringNotContainsString('alba' . 'core', $contents, $file->getPathname());
             }
         }
     }

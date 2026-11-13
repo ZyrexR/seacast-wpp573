@@ -48,7 +48,7 @@ Berdasarkan arahan strategis, platform **SEACAST PRIGI V3** diputuskan untuk dim
 - **prigi_fleet_by_gt:** 1.269 unit armada (850 unit <10 GT, 165 unit 10–20 GT, 254 unit 20–30 GT).
 
 ### 3.2. Model Machine Learning & Integritas Ilmiah
-- **Evaluasi Model:** Cakalang (AUC 0,795, TSS 0,630), Madidihang (AUC 0,784, TSS 0,606), Albakor (AUC 0,860, TSS 0,743).
+- **Evaluasi Model:** Cakalang (AUC 0,795, TSS 0,630), Madidihang (AUC 0,784, TSS 0,606), Legacy species removed from TCT scope (AUC 0,860, TSS 0,743).
 - **Bobot Ensemble:** MaxEnt, Random Forest, dan GLM tersimpan dalam joblib bundle (`models/*.joblib`).
 - **Aturan Prioritas DOM:** Z4 (Nursery $\le$ 150m, $\le$ 15 NM) > Z5 (Bycatch Slope 150–1200m) > Z3 (Feeding) > Z1 (Inshore $\le$ 12 NM) > Z2 (Offshore 12–60 NM) > GEN.
 - **Transparansi BMKG:** Tetap dilabeli sebagai **"Fallback Terkalibrasi Aktif"** (simulasi oseanografi lokal terkalibrasi) tanpa klaim live sync instansi palsu.

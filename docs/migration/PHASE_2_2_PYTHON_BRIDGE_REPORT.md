@@ -45,7 +45,7 @@ Sebelumnya, file bundle `.joblib` memiliki bobot default `{'maxent': 0.4, 'rf': 
 |---|---:|---:|---:|---|
 | **Cakalang** | **0.320** | **0.355** | **0.325** | AUC Heuristik: 0.795, TSS: 0.630 |
 | **Madidihang** | **0.295** | **0.365** | **0.340** | AUC Heuristik: 0.784, TSS: 0.606 |
-| **Albakor** | **0.000** | **0.517** | **0.483** | **MaxEnt dinolkan mutlak (AUC proxy acak 0.507)** |
+| **Legacy species removed from TCT scope** | **0.000** | **0.517** | **0.483** | **MaxEnt dinolkan mutlak (AUC proxy acak 0.507)** |
 
 Output provenance yang dihasilkan menyertakan seluruh bobot yang diterapkan, koordinat homeport Prigi, dan label sumber fallback BMKG.
 
@@ -59,7 +59,7 @@ Setiap keluaran dari `bridge_inference_runner.py` mematuhi struktur standar:
   "status": "SUCCESS",
   "engine": "SEACAST_PRIGI_SDM_ENGINE",
   "model_version": "2.3.2",
-  "species": ["cakalang", "madidihang", "albakor"],
+  "species": ["cakalang", "madidihang", "legacy_species_removed"],
   "generated_at": "2026-11-04T17:25:00.000000",
   "parameters": {
     "prediction_date": "2026-11-03",
@@ -72,7 +72,7 @@ Setiap keluaran dari `bridge_inference_runner.py` mematuhi struktur standar:
     "summary": {
       "mean_hsi_cakalang": 0.209,
       "mean_hsi_madidihang": 0.276,
-      "mean_hsi_albakor": 0.448,
+      "mean_hsi_legacy_removed": 0.448,
       "safe_cells_pct": 0.0,
       "red_bycatch_cells": 0,
       "yellow_bycatch_cells": 1116,

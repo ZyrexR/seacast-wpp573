@@ -17,7 +17,7 @@ Berikut rincian batasan sistem pada Phase 1:
 | **DOM 5-Zone Spatial Engine** | *Placeholder Berinformasi* | Menampilkan matriks prioritas ilmiah (`Z4 -> Z5 -> Z3 -> Z1 -> Z2 -> GEN`). | **Phase 3 (Spatial & DOM Engine)** |
 | **Bycatch Risk Classifier** | *Placeholder Berinformasi* | Menampilkan indikator statis formula ambang batas bathymetry & SST. | **Phase 3 (Spatial & DOM Engine)** |
 | **CPUE Analysis & Fleet Economics** | *Placeholder Berinformasi* | Menampilkan label *Proksi CPUE Tahunan (Nominal)* dan skema agregasi armada. | **Phase 4 (Advanced Analytics)** |
-| **Species Models Dossier** | *Informasional Statis* | Parameter model MaxEnt & GAM terdokumentasi lengkap (Albakor MaxEnt weight = 0.000). Interaktivitas model dinonaktifkan. | **Phase 4 (Advanced Analytics)** |
+| **Species Models Dossier** | *Informasional Statis* | Parameter model MaxEnt & GAM terdokumentasi lengkap (Legacy species removed from TCT scope MaxEnt weight = 0.000). Interaktivitas model dinonaktifkan. | **Phase 4 (Advanced Analytics)** |
 | **Oceanographic Explorer** | *Placeholder Berinformasi* | Kontainer visualisasi geospasial siap pakai dengan basemap CartoDB. Query raster ditunda ke Phase 3. | **Phase 3 (Spatial & DOM Engine)** |
 | **Time Machine (Hindcast)** | *Placeholder Berinformasi* | Menampilkan rentang data 2021–2025 dan pemilih tanggal terkalibrasi. | **Phase 4 (Advanced Analytics)** |
 | **What-If Ocean Simulator** | *Placeholder Berinformasi* | Menampilkan kontrol slider parameter SST/Chla teoritis tanpa eksekusi inferensi. | **Phase 4 (Advanced Analytics)** |

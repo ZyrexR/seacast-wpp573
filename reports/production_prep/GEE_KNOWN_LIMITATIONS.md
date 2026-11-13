@@ -23,7 +23,7 @@
 
 ## 2. BATASAN ILMIAH & LARANGAN KLAIM EKOLOGIS SPESIES
 
-1. **Status Model Spesies:** Seluruh model habitat spesies (Cakalang, Madidihang, Albakor) tetap berstatus **`SPECIES_MODEL_NOT_READY`**.
+1. **Status Model Spesies:** Seluruh model habitat spesies (Cakalang, Madidihang, Legacy species removed from TCT scope) tetap berstatus **`SPECIES_MODEL_NOT_READY`**.
 2. **Ketiadaan Klaim Probabilitas Keberadaan Ikan:**
    - Parameter oseanografi yang dihasilkan (SST, front termal, klorofil-a, kecepatan pemompaan Ekman, arus) murni mencerminkan kondisi fisik oseanografi dan indikator produktivitas primer.
    - **Dilarang keras menyimpulkan keberadaan ikan hanya dari parameter oseanografi**.

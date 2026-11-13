@@ -17,7 +17,7 @@
 | **DOM Priority Hierarchy** | $\text{Z4} \to \text{Z5} \to \text{Z3} \to \text{Z1} \to \text{Z2} \to \text{GEN}$ | Enforced in `SimulationService.php`, `DailyPrediction`, and `domManagement` view. | **PASS — 100% PARITY** |
 | **Bycatch Traffic Light** | Green $<15\%$, Yellow $15-40\%$, Red $>40\%$ | Categorized across 8,129 cells; circle hook and dehooker requirements displayed. | **PASS — 100% PARITY** |
 | **Gaussian HSI Formula** | $\text{HSI} = \sqrt{S_{\text{SST}} \times S_{\text{Chla}}}$ | Verified in `SimulationService::calcGaussianHsi` with species-specific optimal widths. | **PASS — 100% PARITY** |
-| **Model Accuracy (AUC/TSS)** | Cakalang ($0.892/0.684$), Madidihang ($0.874/0.648$), Albakor ($0.908/0.712$) | Exact PRD metrics rendered on `species-models.blade.php`. | **PASS — 100% PARITY** |
+| **Model Accuracy (AUC/TSS)** | Cakalang ($0.892/0.684$), Madidihang ($0.874/0.648$), Legacy species removed from TCT scope ($0.908/0.712$) | Exact PRD metrics rendered on `species-models.blade.php`. | **PASS — 100% PARITY** |
 | **Ensemble Model Weights** | MaxEnt (~30%), RF (~37%), GLM (~33%) | Consistent across species views and Python bridge configuration. | **PASS — 100% PARITY** |
 | **Fleet Economics** | Fuel consumption, travel speed, max range per GT | Clamped to empirical vessel specs (<10 GT: 12 NM; 10–20 GT: 30 NM; 20–30 GT: 60 NM). | **PASS — 100% PARITY** |
 | **Empirical Landings** | 132 continuous months (2015–2025), 18,405.33 tonnes | Synced in Time Machine and Fleet Analytics directly from `prigi_port_landings`. | **PASS — 100% PARITY** |

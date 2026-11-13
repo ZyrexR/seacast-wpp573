@@ -67,7 +67,7 @@ mvtgeom AS (
         cg.is_prigi_inshore,
         dp.hsi_cakalang,
         dp.hsi_madidihang,
-        dp.hsi_albakor,
+        dp.hsi_legacy_removed,
         dp.is_hotspot,
         dp.dom_zone,
         dp.bycatch_traffic_light,

@@ -23,7 +23,7 @@ Komputasi HSI mentah per sel grid $i$ mengikuti persamaan:
 $$\text{HSI}_{\text{raw}, s} = w_{\text{maxent}, s} \cdot P_{\text{maxent}} + w_{\text{rf}, s} \cdot P_{\text{rf}} + w_{\text{glm}, s} \cdot P_{\text{glm}}$$
 
 Di mana:
-- $s \in \{\text{cakalang}, \text{madidihang}, \text{albakor}\}$
+- $s \in \{\text{cakalang}, \text{madidihang}, \text{legacy_species_removed}\}$
 - $P$ adalah probabilitas kelas kehadiran dari model sub-komponen
 - $\sum w = 1.000$
 

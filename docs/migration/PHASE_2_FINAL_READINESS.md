@@ -30,7 +30,7 @@ Suite pengujian komprehensif mengonfirmasi **70 tests, 1.828 assertions, 0 failu
 | 5 | Python Bridge berjalan aman tanpa shell command injection | **PASS** | [`PHASE_2_2_PYTHON_BRIDGE_REPORT.md`](file:///C:/Users/ThinkPad/.gemini/antigravity/scratch/prigi-pelagis/docs/migration/PHASE_2_2_PYTHON_BRIDGE_REPORT.md) |
 | 6 | Oceanographic Data Engine menggunakan sumber terverifikasi | **PASS** | [`PHASE_2_3_OCEANOGRAPHIC_ENGINE_REPORT.md`](file:///C:/Users/ThinkPad/.gemini/antigravity/scratch/prigi-pelagis/docs/migration/PHASE_2_3_OCEANOGRAPHIC_ENGINE_REPORT.md) |
 | 7 | Species Prediction Engine menghasilkan keluaran aktual 3 spesies | **PASS** | [`PHASE_2_4_SPECIES_ENGINE_REPORT.md`](file:///C:/Users/ThinkPad/.gemini/antigravity/scratch/prigi-pelagis/docs/migration/PHASE_2_4_SPECIES_ENGINE_REPORT.md) |
-| 8 | Bobot ensemble sesuai baseline (Albakor MaxEnt = 0.000) | **PASS** | Ditegakkan via `SpeciesPredictionService` & Bridge |
+| 8 | Bobot ensemble sesuai baseline (Legacy species removed from TCT scope MaxEnt = 0.000) | **PASS** | Ditegakkan via `SpeciesPredictionService` & Bridge |
 | 9 | HSI menggunakan formula terverifikasi ($0.000 - 1.000$) | **PASS** | [`PHASE_2_5_HSI_REPORT.md`](file:///C:/Users/ThinkPad/.gemini/antigravity/scratch/prigi-pelagis/docs/migration/PHASE_2_5_HSI_REPORT.md) |
 | 10 | DOM Z1–Z5 dan GEN berjalan sesuai baseline PRD V2.3.2 | **PASS** | [`PHASE_2_6_DOM_ENGINE_REPORT.md`](file:///C:/Users/ThinkPad/.gemini/antigravity/scratch/prigi-pelagis/docs/migration/PHASE_2_6_DOM_ENGINE_REPORT.md) |
 | 11 | Urutan prioritas mutlak DOM ($\text{Z4} \to \text{Z5} \to \text{Z3} \to \text{Z1} \to \text{Z2} \to \text{GEN}$) terbukti | **PASS** | Terverifikasi pada pengujian konflik zona ganda |

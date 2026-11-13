@@ -55,7 +55,7 @@ The export architecture operates under strict read-only constraints, utilizes me
 - Validates query parameters:
   - `date`: Optional ISO 8601 `YYYY-MM-DD` (defaults to latest available observation date `2026-11-03`).
   - `min_hsi`: Numeric float between `0.0` and `1.0`.
-  - `target_species`: In `[cakalang, madidihang, albakor]`.
+  - `target_species`: In `[cakalang, madidihang, legacy_species_removed]`.
   - `dom_zone`: Valid zone code `[Z1, Z2, Z3, Z4, Z5, GEN]`.
   - `bycatch_risk`: Valid screening code `[LOW, MEDIUM, HIGH]`.
   - `hotspots_only`: Boolean flag.
@@ -91,7 +91,7 @@ Coordinate Reference System (CRS): EPSG:4326 (WGS 84 Geodetic Coordinates)
 Model AUC / TSS Baselines:
   - Katsuwonus pelamis (Cakalang): AUC 0.892, TSS 0.684
   - Thunnus albacares (Madidihang): AUC 0.874, TSS 0.648
-  - Thunnus alalunga (Albakor): AUC 0.908, TSS 0.712
+  - Current TCT scope exclusion (Legacy species removed from TCT scope): AUC 0.908, TSS 0.712
 DOM Priority Hierarchy: Z4 (Turtle High) > Z5 (Shark High) > Z3 (Cetacean High) > Z1 (Core Fishing) > Z2 (Buffer) > GEN (General)
 Bycatch Mitigation: Turtle Bycatch Screening & Shark Conservation Buffers Active
 Data Limitations: BMKG / In-situ calibration fallback active when sensor coverage is partial.

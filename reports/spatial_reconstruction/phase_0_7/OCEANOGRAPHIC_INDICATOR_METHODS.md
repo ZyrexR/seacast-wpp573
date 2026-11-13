@@ -69,4 +69,4 @@ Kedalaman riil laut:
 $$Z_{depth} = -\text{bedrock} \quad (\text{meter})$$
 Kemiringan lereng dasar laut (*slope* $\theta$):
 $$\theta = \arctan\left( \sqrt{ \left(\frac{\partial Z}{\partial x}\right)^2 + \left(\frac{\partial Z}{\partial y}\right)^2 } \right) \times \frac{180^\circ}{\pi}$$
-Zona lereng curam ($\theta > 2^\circ$) pada paparan neritik luar (kedalaman 100–500m) di selatan Prigi merupakan jalur migrasi utama madidihang (*Thunnus albacares*) dan albakor (*Thunnus alalunga*).
+Zona lereng curam ($\theta > 2^\circ$) pada paparan neritik luar (kedalaman 100–500m) di selatan Prigi merupakan jalur migrasi utama madidihang (*Thunnus albacares*) dan legacy_species_removed (*Current TCT scope exclusion*).

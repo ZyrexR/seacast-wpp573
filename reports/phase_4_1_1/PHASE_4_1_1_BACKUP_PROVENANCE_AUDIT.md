@@ -53,7 +53,7 @@ Direct inspection of [`backups/phase_4_1_pre_remediation/backup_manifest.json`](
 | 29 | `outputs/sdm/zones/functional_ecological_zones.geojson` | `1,767,591` | `c094876373c60645...` | `sha256_before` | YES | NO |
 | 30 | `outputs/sdm/zones/functional_zones_cakalang.geojson` | `1,787,186` | `13ac24e918ed6982...` | `sha256_before` | YES | NO |
 | 31 | `outputs/sdm/zones/functional_zones_madidihang.geojson` | `1,724,404` | `b84700bfd9a443d6...` | `sha256_before` | YES | NO |
-| 32 | `outputs/sdm/zones/functional_zones_albakor.geojson` | `471,635` | `1d7af819138f3e56...` | `sha256_before` | YES | NO |
+| 32 | `outputs/sdm/zones/functional_zones_legacy_species_removed.geojson` | `471,635` | `1d7af819138f3e56...` | `sha256_before` | YES | NO |
 | 33 | `html/index.html` | `327,030` | `750eded735df1379...` | `sha256_before` | YES | NO |
 | 34 | `html/oceanographic_data.js` | `346,421` | `b6cabc969db160ae...` | `sha256_before` | YES | YES |
 | 35 | `html/sdm_data.js` | `2,009,194` | `722fca24dfd8fba1...` | `sha256_before` | YES | YES |

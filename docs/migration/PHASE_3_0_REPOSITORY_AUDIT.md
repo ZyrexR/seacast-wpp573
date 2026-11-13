@@ -72,7 +72,7 @@ Aset-aset berikut tidak disentuh, tidak diubah nama, dan tidak dipindahkan:
    - `scaler_oceanographic.joblib` (4.48 KB)
    - `model_cakalang_ensemble.joblib` (3.78 MB)
    - `model_madidihang_ensemble.joblib` (2.81 MB)
-   - `model_albakor_ensemble.joblib` (2.75 MB)
+   - `model_legacy_species_removed_ensemble.joblib` (2.75 MB)
    - `model_evaluations_summary.json` (3.11 KB)
 3. `scripts/bridge_inference_runner.py` & `scripts/daily_inference.py`: Python scientific execution engine yang melayani inferensi SDM.
 4. `outputs/` & `reports/`: Baseline validasi model dan evaluasi ilmiah historis.

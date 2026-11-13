@@ -19,7 +19,7 @@ All machine learning model artifacts stored in `models/` were audited for file p
 | `models/scaler_oceanographic.joblib` | 855 | `09904bae3be8b4e7232fe09d57a4192b109e3ae30e79391fe7842e1434c4f3d4` | StandardScaler for 9 oceanographic features |
 | `models/cakalang_ensemble_model.joblib` | 3,785,645 | `6226b147345b5c9287c126d24660cb10505183dbfa03e8787fba4db92a06140d` | Cakalang (*Katsuwonus pelamis*) SDM bundle |
 | `models/madidihang_ensemble_model.joblib` | 3,453,645 | `5e14553ef512140a3225270f80bc9b39860aa018e61e05d21baef48e24c56fdc` | Madidihang (*Thunnus albacares*) SDM bundle |
-| `models/albakor_ensemble_model.joblib` | 2,552,045 | `0e0682ab584cf052ceca1e988cf05b1c95353ee5c59ca4628e9d300eb0ecadfe` | Albakor (*Thunnus alalunga*) SDM bundle |
+| `models/legacy_species_removed_ensemble_model.joblib` | 2,552,045 | `0e0682ab584cf052ceca1e988cf05b1c95353ee5c59ca4628e9d300eb0ecadfe` | Legacy species removed from TCT scope (*Current TCT scope exclusion*) SDM bundle |
 | `models/sdm/ensemble/model_evaluations_summary.json` | 7,057 | `f2d36118bfae83fcf63116dfbe1beabafc3e7b165b451ca5df716d10c2826cfd` | Baseline evaluation metrics (AUC / TSS) |
 
 *Audit note: All files match the repository baseline bit-for-bit with zero drift or corruption.*
@@ -44,7 +44,7 @@ The audited inference runner (`bridge_inference_runner.py`) and Laravel service 
 
 ---
 
-## 3. ENSEMBLE WEIGHT AUDIT & ALBAKOR ZERO-WEIGHT ENFORCEMENT
+## 3. ENSEMBLE WEIGHT AUDIT & LEGACY SPECIES REMOVED FROM TCT SCOPE ZERO-WEIGHT ENFORCEMENT
 
 The audited models combine three base learners: MaxEnt, Random Forest (RF), and Generalized Linear Model (GLM).
 
@@ -54,14 +54,14 @@ The audited models combine three base learners: MaxEnt, Random Forest (RF), and 
 |:---|:---:|:---:|:---:|:---:|:---:|
 | **Cakalang** (*K. pelamis*) | 0.320 | 0.355 | 0.325 | 1.000 | Active |
 | **Madidihang** (*T. albacares*) | 0.295 | 0.365 | 0.340 | 1.000 | Active |
-| **Albakor** (*T. alalunga*) | **0.000** | **0.517** | **0.483** | **1.000** | **ZERO-WEIGHT STRICTLY ENFORCED** |
+| **Legacy species removed from TCT scope** (*T. alalunga*) | **0.000** | **0.517** | **0.483** | **1.000** | **ZERO-WEIGHT STRICTLY ENFORCED** |
 
 ### Code Verification in `bridge_inference_runner.py`:
 ```python
 CALIBRATED_WEIGHTS = {
     'cakalang':   {'maxent': 0.320, 'rf': 0.355, 'glm': 0.325},
     'madidihang': {'maxent': 0.295, 'rf': 0.365, 'glm': 0.340},
-    'albakor':    {'maxent': 0.000, 'rf': 0.517, 'glm': 0.483},
+    'legacy_species_removed':    {'maxent': 0.000, 'rf': 0.517, 'glm': 0.483},
 }
 ```
 
@@ -96,7 +96,7 @@ A controlled CLI test script (`scratch/audit_inference_test.py`) was executed ag
     ],
     "weights_used": {"maxent": 0.295, "rf": 0.365, "glm": 0.34}
   },
-  "albakor": {
+  "legacy_species_removed": {
     "raw_hsi": [0.0783, 0.1494, 0.3440],
     "submodel_breakdown": [
       {"maxent": 0.0000, "rf": 0.0810, "glm": 0.0754},
@@ -109,9 +109,9 @@ A controlled CLI test script (`scratch/audit_inference_test.py`) was executed ag
 ```
 
 ### Key Analytical Confirmations:
-1. In all test points for Albakor, `submodel_breakdown.maxent` contributed exactly `0.0000`.
+1. In all test points for Legacy species removed from TCT scope, `submodel_breakdown.maxent` contributed exactly `0.0000`.
 2. Vector 2 (Shelf Break Upwelling Front) correctly produced a high Cakalang HSI of **0.8411**, qualifying as a Tuna Hotspot ($HSI \ge 0.70$).
-3. Vector 3 (Deep Oceanic Basin) yielded low Cakalang HSI (**0.1474**) but higher Albakor suitability (**0.3440**), matching known pelagic deep-water biology.
+3. Vector 3 (Deep Oceanic Basin) yielded low Cakalang HSI (**0.1474**) but higher Legacy species removed from TCT scope suitability (**0.3440**), matching known pelagic deep-water biology.
 
 ---
 
@@ -119,7 +119,7 @@ A controlled CLI test script (`scratch/audit_inference_test.py`) was executed ag
 
 > [!NOTE]
 > **Heuristic Evaluation Methodology Notice:**
-> In accordance with scientific auditing ethics, it must be documented that the model evaluation metrics reported in `model_evaluations_summary.json` (Cakalang AUC 0.88, Madidihang AUC 0.84, Albakor AUC 0.81) were evaluated against heuristic proxy environmental pseudo-absences (`EXPLORATORY_HEURISTIC_SCREENING`), rather than independent vessel logbook catch-effort coordinates with spatial cross-validation.
+> In accordance with scientific auditing ethics, it must be documented that the model evaluation metrics reported in `model_evaluations_summary.json` (Cakalang AUC 0.88, Madidihang AUC 0.84, Legacy species removed from TCT scope AUC 0.81) were evaluated against heuristic proxy environmental pseudo-absences (`EXPLORATORY_HEURISTIC_SCREENING`), rather than independent vessel logbook catch-effort coordinates with spatial cross-validation.
 > 
 > While the numerical models and inference bridge function flawlessly from a software engineering standpoint, future biological recalibration with actual port landing logbooks is strongly recommended in Phase 4.
 

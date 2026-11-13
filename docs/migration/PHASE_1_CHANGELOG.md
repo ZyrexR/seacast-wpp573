@@ -99,7 +99,7 @@ Dokumen ini mencatat seluruh perubahan, penambahan berkas, dan konfigurasi yang 
 - Membuat `App\Http\Controllers\Web\HomeController.php` dan `resources/views/public/home.blade.php`:
   - Hero editorial dengan telemetri aktual PostGIS (8.129 sel, rata-rata SST 29.2°C, gelombang 3.36 m, 1.269 kapal).
   - MapLibre GL JS live container interaktif.
-  - Dossier 3 spesies pelagis (Cakalang, Madidihang, Albakor MaxEnt weight = 0.000).
+  - Dossier 3 spesies pelagis (Cakalang, Madidihang, Legacy species removed from TCT scope MaxEnt weight = 0.000).
   - Matriks hierarki 5 zona DOM (`Z4 -> Z5 -> Z3 -> Z1 -> Z2 -> GEN`).
 - Membuat `App\Http\Controllers\Web\PublicPageController.php` dan views:
   - `resources/views/public/about.blade.php`

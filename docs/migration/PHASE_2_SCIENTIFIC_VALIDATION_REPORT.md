@@ -30,7 +30,7 @@ Validasi ilmiah independen pada Phase 2 dilakukan untuk membuktikan bahwa migras
 | | Disclaimer BMKG | Simulasi Terkalibrasi | Label eksplisit pada UI/API/Provenance | **PASS** | `CoreRadarApiTest` |
 | **C. Model SDM** | Bobot Cakalang | MaxEnt 0.320, RF 0.355, GLM 0.325 | MaxEnt 0.320, RF 0.355, GLM 0.325 | **PASS** | `SpeciesAndHsiEngineTest` |
 | | Bobot Madidihang | MaxEnt 0.295, RF 0.365, GLM 0.340 | MaxEnt 0.295, RF 0.365, GLM 0.340 | **PASS** | `SpeciesAndHsiEngineTest` |
-| | Bobot Albakor | **MaxEnt 0.000**, RF 0.517, GLM 0.483 | **MaxEnt 0.000**, RF 0.517, GLM 0.483 | **PASS** | `PythonBridgeSecurityTest` |
+| | Bobot Legacy species removed from TCT scope | **MaxEnt 0.000**, RF 0.517, GLM 0.483 | **MaxEnt 0.000**, RF 0.517, GLM 0.483 | **PASS** | `PythonBridgeSecurityTest` |
 | | Fitur Input Scaler | 10 variabel terurut | 10 variabel terurut | **PASS** | `bridge_inference_runner.py` |
 | **D. HSI Formula** | Rentang HSI | $0.000 - 1.000$ | $0.000 - 1.000$ (Clamped) | **PASS** | `SpeciesAndHsiEngineTest` |
 | | Ambang Hotspot Tuna | HSI Cakalang $\ge 0.70$ atau Madidihang $\ge 0.70$ | HSI $\ge 0.70$ | **PASS** | `SpeciesAndHsiEngineTest` |
@@ -55,7 +55,7 @@ Validasi ilmiah independen pada Phase 2 dilakukan untuk membuktikan bahwa migras
 
 Sesuai mandat ilmiah:
 1. **Status Validasi Model:**
-   Evaluasi AUC yang tercantum (Cakalang 0.795, Madidihang 0.784, Albakor 0.860) dievaluasi terhadap titik proxy kehadiran lingkungan deterministik (*analytical heuristic response equations*), bukan terhadap data observasi penangkapan kapal empiris independen (*empirical catch coordinates*). Status resmi model adalah `EXPLORATORY_HEURISTIC_SCREENING`.
+   Evaluasi AUC yang tercantum (Cakalang 0.795, Madidihang 0.784, Legacy species removed from TCT scope 0.860) dievaluasi terhadap titik proxy kehadiran lingkungan deterministik (*analytical heuristic response equations*), bukan terhadap data observasi penangkapan kapal empiris independen (*empirical catch coordinates*). Status resmi model adalah `EXPLORATORY_HEURISTIC_SCREENING`.
 2. **Ketiadaan Spatial Cross-Validation:**
    Tidak ada spatial k-fold cross-validation yang dieksekusi dalam kode pelatihan model legacy. Sistem baru mempertahankan pembobotan ini sebagai baseline operasional terkunci hingga validasi lapangan empiris dilakukan pada fase selanjutnya.
 3. **Data Oseanografi:**

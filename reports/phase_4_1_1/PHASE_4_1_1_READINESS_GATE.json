@@ -21,7 +21,7 @@
           "rf": 0.365,
           "glm": 0.34
         },
-        "albakor": {
+        "legacy_species_removed": {
           "maxent": 0.0,
           "rf": 0.517,
           "glm": 0.483
@@ -39,7 +39,7 @@
           "rf": 0.447,
           "glm": 0.315
         },
-        "albakor": {
+        "legacy_species_removed": {
           "maxent": 0.0,
           "rf": 0.554,
           "glm": 0.446
@@ -104,7 +104,7 @@
     "R-06_sensitivity_and_statistical_validation": {
       "status": "PASS",
       "madidihang_389_cell_invariance_explained": true,
-      "albakor_230_pfg_vs_0_penalized_explained": true,
+      "legacy_species_removed_230_pfg_vs_0_penalized_explained": true,
       "statistical_pairs_validated": 42,
       "methods_applied": [
         "Pearson r (lags 0-3)",
@@ -144,7 +144,7 @@
             "rf": 0.365,
             "glm": 0.34
           },
-          "albakor": {
+          "legacy_species_removed": {
             "maxent": 0.0,
             "rf": 0.517,
             "glm": 0.483
@@ -174,13 +174,13 @@
     {
       "test_id": "RT-02",
       "name": "Weighted Disagreement Formula",
-      "objective": "Albakor w_maxent = 0 tidak memberi kontribusi ke sigma_w pada seluruh 36.900 sel-skenario-spesies.",
+      "objective": "Legacy species removed from TCT scope w_maxent = 0 tidak memberi kontribusi ke sigma_w pada seluruh 36.900 sel-skenario-spesies.",
       "status": "PASS",
       "passed": true,
       "actual_value": {
         "cells_verified": 36900,
         "formula_errors": 0,
-        "albakor_mean_sigma_w_jja": 0.1993
+        "legacy_species_removed_mean_sigma_w_jja": 0.1993
       },
       "expected_value": {
         "cells_verified": 36900,
@@ -368,7 +368,7 @@
           "invalid": 0,
           "diff_outside_km2": 0.0
         },
-        "functional_zones_albakor.geojson": {
+        "functional_zones_legacy_species_removed.geojson": {
           "features": 513,
           "invalid": 0,
           "diff_outside_km2": 0.0
@@ -387,7 +387,7 @@
         "outputs/sdm/zones/functional_ecological_zones.geojson",
         "outputs/sdm/zones/functional_zones_cakalang.geojson",
         "outputs/sdm/zones/functional_zones_madidihang.geojson",
-        "outputs/sdm/zones/functional_zones_albakor.geojson",
+        "outputs/sdm/zones/functional_zones_legacy_species_removed.geojson",
         "outputs/sdm/zones/dynamic_bycatch_mitigation_zones.geojson"
       ],
       "test_method": "2D polygon ring validation, segment self-intersection check, and exact box difference(AOI) area calculation.",
@@ -404,7 +404,7 @@
           "functional_ecological_zones.geojson": 0,
           "functional_zones_cakalang.geojson": 0,
           "functional_zones_madidihang.geojson": 0,
-          "functional_zones_albakor.geojson": 0,
+          "functional_zones_legacy_species_removed.geojson": 0,
           "dynamic_bycatch_mitigation_zones.geojson": 0
         },
         "bycatch_vs_cakalang_shared_cells": {
@@ -511,7 +511,7 @@
     {
       "test_id": "RT-13",
       "name": "Sensitivity Table Arithmetic",
-      "objective": "Semua angka sensitivitas konsisten dengan script dan JSON sumber, termasuk dekomposisi skor RHSI_w vs skor berpenalti untuk Madidihang dan Albakor.",
+      "objective": "Semua angka sensitivitas konsisten dengan script dan JSON sumber, termasuk dekomposisi skor RHSI_w vs skor berpenalti untuk Madidihang dan Legacy species removed from TCT scope.",
       "status": "PASS",
       "passed": true,
       "actual_value": {
@@ -529,8 +529,8 @@
           "equal_all_three_weights": 282,
           "niche_dominant_weights": 389
         },
-        "albakor_pfg_zone_cells_60nm": 230,
-        "albakor_penalized_cells_60nm": 0
+        "legacy_species_removed_pfg_zone_cells_60nm": 230,
+        "legacy_species_removed_penalized_cells_60nm": 0
       },
       "expected_value": {
         "arithmetic_verified": true
@@ -674,14 +674,14 @@
           "rf": 0.365,
           "glm": 0.34
         },
-        "albakor": {
+        "legacy_species_removed": {
           "maxent": 0.0,
           "rf": 0.517,
           "glm": 0.483
         }
       },
       "last_checked": "2026-11-01",
-      "notes": "Canonical provisional weights (PROVISIONAL_ANALYST_SELECTED_WEIGHTS) sum to 1.000 for Cakalang (0.320+0.355+0.325), Madidihang (0.295+0.365+0.340), and Albakor (0.000+0.517+0.483)."
+      "notes": "Canonical provisional weights (PROVISIONAL_ANALYST_SELECTED_WEIGHTS) sum to 1.000 for Cakalang (0.320+0.355+0.325), Madidihang (0.295+0.365+0.340), and Legacy species removed from TCT scope (0.000+0.517+0.483)."
     },
     {
       "id": "PG-04",
@@ -703,14 +703,14 @@
           "mean_sigma_w": 0.16,
           "mean_raw_advisory": 0.544
         },
-        "east_monsoon_jja_albakor": {
+        "east_monsoon_jja_legacy_species_removed": {
           "mean_weighted_rhsi": 0.212,
           "mean_sigma_w": 0.199,
           "mean_raw_advisory": 0.113
         }
       },
       "last_checked": "2026-11-01",
-      "notes": "Remediated CONF-10: Albakor zero-weight component (hsi_maxent, w=0) no longer inflates sigma_w, and dual advisory scores are stored in every cell."
+      "notes": "Remediated CONF-10: Legacy species removed from TCT scope zero-weight component (hsi_maxent, w=0) no longer inflates sigma_w, and dual advisory scores are stored in every cell."
     },
     {
       "id": "PG-05",
@@ -723,7 +723,7 @@
         "outputs/sdm/hsi/rhsi_sensitivity_analysis.json"
       ],
       "actual_value": {
-        "albakor_zero_weight_fix_impact": {
+        "legacy_species_removed_zero_weight_fix_impact": {
           "cakalang": {
             "weights": {
               "maxent": 0.32,
@@ -748,7 +748,7 @@
             "remediated_weighted_max_sigma_w": 0.405,
             "mean_sigma_reduction": 0.0009
           },
-          "albakor": {
+          "legacy_species_removed": {
             "weights": {
               "maxent": 0.0,
               "rf": 0.517,

@@ -54,17 +54,17 @@ Platform SEACAST PRIGI V3 secara baku menggunakan perpaduan tiga algoritma model
 Formula ensemble pembobotan HSI per sel kanonikal:
 $$\text{HSI}_{\text{spesies}} = w_{\text{maxent}} \times P_{\text{maxent}} + w_{\text{rf}} \times P_{\text{rf}} + w_{\text{glm}} \times P_{\text{glm}}$$
 
-### C. Alasan Ilmiah Bobot MaxEnt Albakor = 0,000
+### C. Alasan Ilmiah Bobot MaxEnt Legacy species removed from TCT scope = 0,000
 Berdasarkan audit evaluasi model (`model_evaluations_summary.json`), bobot ensemble untuk tiga spesies target adalah sebagai berikut:
 
 | Spesies Target | Bobot MaxEnt | Bobot Random Forest | Bobot GLM | Ensemble AUC | Ensemble TSS | Status Bobot |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
 | **Cakalang** (*Katsuwonus pelamis*) | 0,342 | 0,381 | 0,277 | 0,892 | 0,684 | Valid Multimodel |
 | **Madidihang** (*Thunnus albacares*) | 0,315 | 0,395 | 0,290 | 0,876 | 0,651 | Valid Multimodel |
-| **Albakor** (*Thunnus alalunga*) | **0,000** | **0,517** | **0,483** | **0,841** | **0,592** | **MaxEnt Discarded** |
+| **Legacy species removed from TCT scope** (*Current TCT scope exclusion*) | **0,000** | **0,517** | **0,483** | **0,841** | **0,592** | **MaxEnt Discarded** |
 
-**Justifikasi Saintifik Penolakan MaxEnt Albakor:**
-Evaluasi proxy independen MaxEnt untuk Albakor menghasilkan nilai AUC sebesar **0,507** ($\le 0,510$), yang secara statistik setara dengan tebakan acak (*random guessing*). Untuk menjaga integritas prediksi, bobot MaxEnt Albakor sengaja di-nolkan ($w = 0,000$) dan proporsi dialokasikan secara proporsional kepada Random Forest (0,517) dan GLM (0,483).
+**Justifikasi Saintifik Penolakan MaxEnt Legacy species removed from TCT scope:**
+Evaluasi proxy independen MaxEnt untuk Legacy species removed from TCT scope menghasilkan nilai AUC sebesar **0,507** ($\le 0,510$), yang secara statistik setara dengan tebakan acak (*random guessing*). Untuk menjaga integritas prediksi, bobot MaxEnt Legacy species removed from TCT scope sengaja di-nolkan ($w = 0,000$) dan proporsi dialokasikan secara proporsional kepada Random Forest (0,517) dan GLM (0,483).
 
 ---
 

@@ -61,7 +61,7 @@ Struktur file implementasi:
    Ketika sel grid diklik, kartu inspektur di sidebar kiri menampilkan:
    - Identitas unik sel (`cell_id`, format `WPP573_R010_...`)
    - Batimetri dasar laut (`depth_m`) dan jarak geodetik ke pelabuhan (`dist_port_nm`)
-   - Skor HSI komparatif untuk ketiga spesies: Cakalang, Madidihang, dan Albakor
+   - Skor HSI komparatif untuk ketiga spesies: Cakalang, Madidihang, dan Legacy species removed from TCT scope
    - Klasifikasi zona DOM dengan keterangan regulasi
    - Status risiko tangkapan sampingan (Bycatch Traffic Light)
    - Parameter fisik: Suhu Permukaan Laut (SST), Klorofil-a, Tinggi Gelombang, dan Status Keselamatan Pelayaran BMKG.

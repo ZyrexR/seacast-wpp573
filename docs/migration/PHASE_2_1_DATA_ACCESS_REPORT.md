@@ -27,7 +27,7 @@ Struktur file yang diimplementasikan:
 | Dataset Ilmiah | Hasil Query Aktual | Baseline Audit Terkunci | Status | Keterangan |
 |---|---:|---:|:---:|---|
 | `canonical_grids` | 8.129 baris | 8.129 baris | **VERIFIED** | SRID 4326, Indeks GiST aktif |
-| `daily_predictions` | 8.129 baris (2026-11-03) | 8.129 baris | **VERIFIED** | HSI Cakalang, Madidihang, Albakor, DOM, Bycatch |
+| `daily_predictions` | 8.129 baris (2026-11-03) | 8.129 baris | **VERIFIED** | HSI Cakalang, Madidihang, Legacy species removed from TCT scope, DOM, Bycatch |
 | `grid_monthly_predictions` | 97.548 baris | 97.548 baris | **VERIFIED** | 12 bulan penuh tahun 2025 (`2025_01` s.d. `2025_12`) |
 | `prigi_port_landings` | 132 baris | 132 baris | **VERIFIED** | Periode 2015 s.d. 2025 (132 bulan) |
 | `prigi_fleet_by_gt` | 3 agregasi kelas GT | 3 agregasi kelas GT | **VERIFIED** | Total 1.269 kapal terwakili |

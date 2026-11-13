@@ -63,8 +63,8 @@
 - Create: `seacast-prigi-laravel/tests/Unit/ScientificToleranceRegressionTest.php`
 
 - [x] Step 1: Write `ScientificToleranceRegressionTest.php` testing:
-  - Ensemble SDM species weights sum to 1.000 (Cakalang: 0.320 + 0.355 + 0.325 = 1.000; Madidihang: 0.295 + 0.365 + 0.340 = 1.000; Albakor: 0.000 + 0.517 + 0.483 = 1.000).
-  - Albakor MaxEnt weight is strictly 0.000 (zero contribution).
+  - Ensemble SDM species weights sum to 1.000 (Cakalang: 0.320 + 0.355 + 0.325 = 1.000; Madidihang: 0.295 + 0.365 + 0.340 = 1.000; Legacy species removed from TCT scope: 0.000 + 0.517 + 0.483 = 1.000).
+  - Legacy species removed from TCT scope MaxEnt weight is strictly 0.000 (zero contribution).
   - HSI value normalization is strictly clamped in $[0.000, 1.000]$.
   - DOM waterfall resolution priority order ($Z4 \to Z5 \to Z3 \to Z1 \to Z2 \to GEN$).
   - Bycatch screening criteria and threshold invariance.

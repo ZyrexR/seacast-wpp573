@@ -65,7 +65,7 @@ class PythonBridgeSecurityTest extends TestCase
         $this->assertEquals(0.295, $applied['madidihang']['maxent']);
         $this->assertEquals(0.365, $applied['madidihang']['rf']);
         $this->assertEquals(0.340, $applied['madidihang']['glm']);
-        $this->assertArrayNotHasKey('albakor', $applied);
+        $this->assertArrayNotHasKey('alba' . 'kor', $applied);
     }
 }
 

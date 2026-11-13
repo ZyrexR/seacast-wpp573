@@ -42,7 +42,7 @@ The CSV output structure consists of 23 standardized columns:
 | 12 | `prediction_date` | Date | Snapshot date (`YYYY-MM-DD`) |
 | 13 | `hsi_cakalang` | Float | Katsuwonus pelamis HSI score (`0.000` to `1.000`) |
 | 14 | `hsi_madidihang` | Float | Thunnus albacares HSI score (`0.000` to `1.000`) |
-| 15 | `hsi_albakor` | Float | Thunnus alalunga HSI score (`0.000` to `1.000`) |
+| 15 | `hsi_legacy_removed` | Float | Current TCT scope exclusion HSI score (`0.000` to `1.000`) |
 | 16 | `is_hotspot` | Boolean | Multi-species aggregate hotspot threshold (`true`/`false`) |
 | 17 | `dom_zone` | String | Dynamic Ocean Management zone (`Z1`, `Z2`, `Z3`, `Z4`, `Z5`, `GEN`) |
 | 18 | `bycatch_traffic_light` | String | Bycatch screening level (`GREEN`, `YELLOW`, `RED`) |

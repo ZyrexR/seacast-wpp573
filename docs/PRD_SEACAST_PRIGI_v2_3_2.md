@@ -13,7 +13,7 @@
 
 ## 1. Ringkasan Eksekutif
 
-SEACAST PRIGI adalah platform web operasional untuk memprediksi **Daerah Penangkapan Ikan (DPI)** tuna pelagis (**Cakalang, Madidihang, Albakor**) di WPPNRI 573 berbasis integrasi multi-satelit oseanografi (SST, klorofil-a, arus, angin) dan model *Ensemble Machine Learning* (**MaxEnt + Random Forest + GLM**).
+SEACAST PRIGI adalah platform web operasional untuk memprediksi **Daerah Penangkapan Ikan (DPI)** tuna pelagis (**Cakalang, Madidihang, Legacy species removed from TCT scope**) di WPPNRI 573 berbasis integrasi multi-satelit oseanografi (SST, klorofil-a, arus, angin) dan model *Ensemble Machine Learning* (**MaxEnt + Random Forest + GLM**).
 
 Prediksi disajikan sebagai peta WebGL interaktif (MapLibre GL 60 FPS) dengan **Habitat Suitability Index (HSI)**, klasifikasi **5 Zona Tata Kelola Laut Dinamis (Dynamic Ocean Management / DOM Z1–Z5)**, sistem lampu lalu lintas **risiko bycatch (Hijau/Kuning/Merah)**, dan **integrasi status keselamatan gelombang BMKG**, sehingga nelayan tradisional, armada kapal motor, syahbandar, dan pengelola TPI dapat memutuskan waktu dan lokasi melaut secara efisien, aman, dan berkelanjutan.
 
@@ -54,7 +54,7 @@ Prediksi disajikan sebagai peta WebGL interaktif (MapLibre GL 60 FPS) dengan **H
 | **Ukuran Data** | Master Grid Poligon (GeoJSON) | $< 3.0\text{ MB}$ | **$2.7\text{ MB}$** (8.129 poligon) |
 | **Model Cakalang** | AUC-ROC Ensemble SDM | $> 0.75\text{ (Good)}$ | **$0.7552$** (RF: 0.7683) |
 | **Model Madidihang** | AUC-ROC Ensemble SDM | $> 0.70\text{ (Fair)}$ | **$0.7019$** (RF: 0.7081) |
-| **Model Albakor** | AUC-ROC Ensemble SDM | $> 0.65\text{ (Fair)}$ | **$0.6779$** (RF: 0.6843) |
+| **Model Legacy species removed from TCT scope** | AUC-ROC Ensemble SDM | $> 0.65\text{ (Fair)}$ | **$0.6779$** (RF: 0.6843) |
 | **Keandalan Ingest** | Uptime Pipeline Harian 04:00 WIB | $\ge 98\%$ | Multi-Source Auto-Failover (BMKG ↔ CMEMS) |
 
 ---
@@ -79,7 +79,7 @@ Prediksi disajikan sebagai peta WebGL interaktif (MapLibre GL 60 FPS) dengan **H
 ## 5. Ruang Lingkup Sistem
 
 ### 5.1 In-Scope (v2.3.2 Selesai & Berjalan)
-- **Tiga Spesies Target:** Cakalang (*Katsuwonus pelamis*), Madidihang (*Thunnus albacares*), Albakor (*Thunnus alalunga*).
+- **Tiga Spesies Target:** Cakalang (*Katsuwonus pelamis*), Madidihang (*Thunnus albacares*), Legacy species removed from TCT scope (*Current TCT scope exclusion*).
 - **Cakupan Spasial Penuh:** 8.129 sel poligon WPPNRI 573 ($102.50^\circ\text{ E} - 126.40^\circ\text{ E}$, $-6.90^\circ\text{ S} - -14.00^\circ\text{ S}$).
 - **Basis Data Historis 11 Tahun:** 132 bulan observasi (1.073.028 baris data kanonik) dari Januari 2015 s.d. Desember 2025.
 - **Pipeline Inferensi Harian Otomatis:** Worker Python (`scripts/daily_inference.py`) pukul 04:00 WIB.
@@ -132,7 +132,7 @@ Menyimpan 8.129 poligon master kanonikal satu kali saja (indeks spasial GiST):
 - `cell_id` (PK), `cell_class`, `center_lon`, `center_lat`, `depth_m`, `dist_port_km`, `dist_port_nm`, `is_shelf_break`, `sector`, `geom` (Polygon, SRID 4326).
 
 ### Tabel 2: `daily_predictions` (Partisi Harian)
-- `prediction_date` (PK), `cell_id` (PK, FK), `hsi_cakalang`, `hsi_madidihang`, `hsi_albakor`, `is_hotspot`, `dom_zone`, `bycatch_traffic_light`, `sst_c`, `chla_mg_m3`, `wave_height_m`, `safety_advisory`.
+- `prediction_date` (PK), `cell_id` (PK, FK), `hsi_cakalang`, `hsi_madidihang`, `hsi_legacy_removed`, `is_hotspot`, `dom_zone`, `bycatch_traffic_light`, `sst_c`, `chla_mg_m3`, `wave_height_m`, `safety_advisory`.
 
 ### Berkas Feed Kinerja Tinggi: `daily_latest.json`
 Snapshot siap saji berukuran 3.3 MB yang memuat 8.129 sel data harian aktif untuk rendering seketika di frontend MapLibre GL.
@@ -146,7 +146,7 @@ Snapshot siap saji berukuran 3.3 MB yang memuat 8.129 sel data harian aktif untu
 3. **Resolusi Grid & Waktu:** Grid kanonik $0.10^\circ \times 0.10^\circ$ ($\approx 11.1\text{ km}$); data historis bulanan 11 tahun (132 bulan); data operasional harian (pukul 04:00 WIB).
 4. **Perhitungan BBM:** Menggunakan formula konsumsi kapal Prigi pulang-pergi (3.5 L/NM untuk <10 GT; 7.5 L/NM untuk 20–30 GT) dari titik muara Teluk Prigi.
 5. **Titik Pangkalan Resmi:** PPN Prigi pada koordinat $111.7275^\circ\text{ E}, -8.2833^\circ\text{ S}$.
-6. **Metrik Validasi Model:** Cakalang AUC 0.7552 (Good), Madidihang AUC 0.7019 (Fair), Albakor AUC 0.6779 (Fair); tervalidasi dengan korelasi pendaratan riil pelabuhan (168 bulan).
+6. **Metrik Validasi Model:** Cakalang AUC 0.7552 (Good), Madidihang AUC 0.7019 (Fair), Legacy species removed from TCT scope AUC 0.6779 (Fair); tervalidasi dengan korelasi pendaratan riil pelabuhan (168 bulan).
 7. **Hosting & Jadwal Worker:** Worker harian dijalankan via cron sistem operasi pukul 04:00 WIB; server web Next.js 15 berjalan di port 3000.
 8. **Lokasi Pilot & Stakeholder:** PPN Prigi (Trenggalek) bersama Syahbandar, TPI Prigi, Paguyuban Rukun Nelayan, HNSI, dan DKP Jatim.
 9. **Lisensi & Atribusi Data:** Data CMEMS berlisensi Open Access EU Copernicus; data BMKG adalah layanan publik maritim RI; atribusi dicantumkan lengkap pada antarmuka web dan lembar cetak A4.

@@ -18,7 +18,7 @@ Direct XML parsing of `sheet5.xml` confirms that [`data/master_prigi_all_inclusi
 | 3 | Col E | `madidihang_kg` | Madidihang (Balong) | *Thunnus albacares* | True Oceanic Large Pelagic | `2,933,924` | `15.94%` | `16.24%` |
 | 4 | Col H | `tongkol_como_kg` | Tongkol Como | *Euthynnus affinis* | Neritic Large Pelagic | `2,412,039` | `13.11%` | `13.35%` |
 | 5 | Col G | `tongkol_kenyar_kg` | Tongkol Kenyar | *Sarda orientalis* | Neritic Large Pelagic | `520,888` | `2.83%` | `2.88%` |
-| 6 | Col O | `albakor_kg` | Albakor | *Thunnus alalunga* | True Oceanic Large Pelagic | `316,632` | `1.72%` | `1.75%` |
+| 6 | Col O | `legacy_species_removed_kg` | Legacy species removed from TCT scope | *Current TCT scope exclusion* | True Oceanic Large Pelagic | `316,632` | `1.72%` | `1.75%` |
 | 7 | Col L | `marlin_kg` | Setuhuk / Marlin | *Istiompax indica* | True Oceanic Large Pelagic | `315,281` | `1.71%` | `1.74%` |
 | 8 | Col I | `gulamah_kg` | Gulamah / Awon | *Johnius / Nibea spp.* | **Demersal Exception (Sciaenidae)** | **`207,156`** | **`1.13%`** | *Excluded* |
 | 9 | Col K | `cucut_kg` | Hiu Cucut | *Carcharhinus spp.* | **Elasmobranch Bycatch Exception** | **`127,452`** | **`0.69%`** | *Excluded* |

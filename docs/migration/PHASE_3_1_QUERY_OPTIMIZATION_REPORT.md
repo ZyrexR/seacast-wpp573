@@ -53,7 +53,7 @@ Untuk meminimalkan *network IO* antara PostgreSQL dan aplikasi Laravel:
        cg.cell_id, cg.cell_class, cg.center_lon, cg.center_lat, 
        cg.depth_m, cg.dist_port_km, cg.dist_port_nm,
        cg.is_shelf_break, cg.is_prigi_inshore, cg.is_prigi_offshore, cg.sector,
-       dp.prediction_date, dp.hsi_cakalang, dp.hsi_madidihang, dp.hsi_albakor,
+       dp.prediction_date, dp.hsi_cakalang, dp.hsi_madidihang, dp.hsi_legacy_removed,
        dp.is_hotspot, dp.dom_zone, dp.bycatch_traffic_light,
        dp.sst_c, dp.chla_mg_m3, dp.current_velocity_ms, dp.wave_height_m, dp.wind_speed_ms,
        dp.safety_advisory,

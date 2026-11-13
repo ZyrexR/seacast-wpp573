@@ -1,6 +1,6 @@
 {
   "package_metadata": {
-    "project": "Sistem Intelijen Geospasial Perikanan Pelagis PPN Prigi — WPPNRI 573",
+    "project": "Sistem Intelijen Geospasial Perikanan Pelagis PPN Prigi â€” WPPNRI 573",
     "document": "09_VALIDATION_EVIDENCE_INDEX.json",
     "generated_at": "2026-11-01T11:42:00+07:00",
     "workspace_root": "C:/Users/ThinkPad/.gemini/antigravity/scratch/prigi-pelagis",
@@ -82,7 +82,7 @@
       "requirement_id": "PHASE-3-SDM / BC-01",
       "file_path": "scratch/execute_stage_3_1_to_3_3.js",
       "evidence_type": "PROCESSING_SCRIPT",
-      "relevant_symbol": "presenceCakalang, presenceMadidihang, presenceAlbakor, backgroundPoints",
+      "relevant_symbol": "presenceCakalang, presenceMadidihang, presencelegacy_species_removed, backgroundPoints",
       "line_reference": "L289-L473",
       "verification_status": "VERIFIED",
       "notes": "Proves presence points (405 SKJ, 387 YFT, 189 ALB, 105 Bycatch) are deterministic heuristic proxies filtered from East Monsoon (JJA) predictor grid cells using SST, Chl-a, Front, Depth, and Harbor distance thresholds."
@@ -102,10 +102,10 @@
       "requirement_id": "PG-05",
       "file_path": "models/sdm/ensemble/model_evaluations_summary.json",
       "evidence_type": "MODEL_METADATA_JSON",
-      "relevant_symbol": "cakalang.ensemble.weights, madidihang.ensemble.weights, albakor.ensemble.weights",
+      "relevant_symbol": "cakalang.ensemble.weights, madidihang.ensemble.weights, legacy_species_removed.ensemble.weights",
       "line_reference": "L29-L38, L69-L78, L109-L118",
       "verification_status": "VERIFIED",
-      "notes": "Verifies normalized ensemble weights summing to 1.000: Cakalang (0.326, 0.403, 0.271), Madidihang (0.238, 0.447, 0.315), Albakor (0.000, 0.554, 0.446)."
+      "notes": "Verifies normalized ensemble weights summing to 1.000: Cakalang (0.326, 0.403, 0.271), Madidihang (0.238, 0.447, 0.315), legacy_species_removed (0.000, 0.554, 0.446)."
     },
     {
       "evidence_id": "EVID-011",

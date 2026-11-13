@@ -26,7 +26,7 @@ flowchart LR
     
     subgraph Colab ["Google Colab (AI/ML Modeling Engine)"]
         C1["Feature Engineering & Environmental Matrix Assembly"]
-        C2["Species Habitat Modeling (Cakalang, Madidihang, Albakor)"]
+        C2["Species Habitat Modeling (Cakalang, Madidihang, Legacy species removed from TCT scope)"]
         C3["Validation & Cross-Validation with Prigi Landing Records"]
     end
     

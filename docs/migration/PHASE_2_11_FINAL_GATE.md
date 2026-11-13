@@ -29,7 +29,7 @@ There are **zero blockers** preventing authorization of Phase 3.
 | **Gate 2: Database Access Mode** | Queries executed under `seacast_readonly` with zero DDL/DML | Verified | **PASS** |
 | **Gate 3: Python SDM Runtime** | Python 3.14.7 subprocess bridge executing live scikit-learn models | Verified | **PASS** |
 | **Gate 4: Model Checksum Integrity** | All 4 `.joblib` bundles match repository SHA256 hashes | Verified | **PASS** |
-| **Gate 5: Calibrated Ensemble Weights** | Cakalang, Madidihang, and Albakor (MaxEnt = 0.000) sum to 1.000 | Verified | **PASS** |
+| **Gate 5: Calibrated Ensemble Weights** | Cakalang, Madidihang, and Legacy species removed from TCT scope (MaxEnt = 0.000) sum to 1.000 | Verified | **PASS** |
 | **Gate 6: DOM Waterfall Priority** | Z4 > Z5 > Z3 > Z1 > Z2 > GEN exact boundary behavior verified | Verified | **PASS** |
 | **Gate 7: IOTC Bycatch Screening** | 3-tier traffic light on 150m-1200m shelf break verified | Verified | **PASS** |
 | **Gate 8: Dynamic Radar APIs** | `/api/predictions` and `/api/grid` benchmarked across 11 scenarios | Verified | **PASS** |

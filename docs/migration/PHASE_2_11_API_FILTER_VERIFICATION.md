@@ -38,7 +38,7 @@ All benchmarks were captured directly from the running Laravel 13 kernel with re
 4. **GeoJSON Spec Compliance:** Output adheres strictly to RFC 7946:
    - Root object type is `FeatureCollection`.
    - Each item is a `Feature` with `type: "Polygon"` geometry in EPSG:4326 `[longitude, latitude]`.
-   - Properties contain typed numeric scalars: `hsi_cakalang`, `hsi_madidihang`, `hsi_albakor`, `depth_m`, `dist_port_nm`, `sst_c`, `chla_mg_m3`, `wave_height_m`, `wind_speed_kts`, `bycatch_traffic_light`, `dom_zone`, `safety_advisory`, `is_hotspot`.
+   - Properties contain typed numeric scalars: `hsi_cakalang`, `hsi_madidihang`, `hsi_legacy_removed`, `depth_m`, `dist_port_nm`, `sst_c`, `chla_mg_m3`, `wave_height_m`, `wind_speed_kts`, `bycatch_traffic_light`, `dom_zone`, `safety_advisory`, `is_hotspot`.
 
 ---
 

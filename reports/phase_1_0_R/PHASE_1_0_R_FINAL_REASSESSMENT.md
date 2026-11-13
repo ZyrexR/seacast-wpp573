@@ -152,7 +152,7 @@ Seluruh 6 formulasi fisik diuji melalui analisis dimensi dan unit test numerik:
 - **Status Kesiapan Spesies:**
   - Cakalang (*Katsuwonus pelamis*): **`SPECIES_MODEL_NOT_READY`**
   - Madidihang (*Thunnus albacares*): **`SPECIES_MODEL_NOT_READY`**
-  - Albakor (*Thunnus alalunga*): **`SPECIES_MODEL_NOT_READY`**
+  - Legacy species removed from TCT scope (*Current TCT scope exclusion*): **`SPECIES_MODEL_NOT_READY`**
 - **Alasan Ilmiah:** Tidak tersedianya dataset titik koordinat tangkapan GPS independen ($<10\text{ km}$) di laut lepas.
 - **Kebijakan Pemanfaatan Data Pendaratan PPN Prigi (POL-LAND-01):**
   - Data pendaratan pelabuhan **HANYA DIIZINKAN** untuk analisis tren produksi temporal makro dan komposisi spesies tahunan.

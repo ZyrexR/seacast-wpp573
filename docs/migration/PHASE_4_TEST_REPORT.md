@@ -46,7 +46,7 @@
 - `test_unauthenticated_user_redirected_to_login`: Asserts authentication redirect.
 
 ### 2.5 `Tests\Feature\ScientificDiagnosticsModulesTest` (4 Tests, 32 Assertions)
-- `test_authenticated_user_can_access_species_models`: Asserts HTTP 200 and presence of Cakalang, Madidihang, Albakor model metrics and MaxEnt/RF/GLM weights.
+- `test_authenticated_user_can_access_species_models`: Asserts HTTP 200 and presence of Cakalang, Madidihang, Legacy species removed from TCT scope model metrics and MaxEnt/RF/GLM weights.
 - `test_authenticated_user_can_access_oceanographic_explorer`: Asserts HTTP 200 and presence of SST, Chl-a, current, wave, and wind sensor feeds.
 - `test_authenticated_user_can_access_data_monitoring`: Asserts HTTP 200 and table integrity verification for `canonical_grids`, `daily_predictions`, `grid_monthly_predictions`, `prigi_port_landings`, and `prigi_fleet_by_gt`.
 - `test_unauthenticated_user_redirected_to_login`: Asserts authentication redirects across all diagnostic routes.

@@ -35,7 +35,7 @@ Kinerja modul Core Radar Engine, query spasial PostGIS, Python bridge, dan endpo
 | Jenis Beban Komputasi | Jumlah Sel | Durasi Eksekusi | Penggunaan Memori (RAM) | Status |
 |---|:---:|:---:|:---:|:---:|
 | Inferensi Preview Cepat (`--limit 10`) | 10 sel | **$1.85\text{ s}$** | ~85 MB | **PASS** |
-| Inferensi Spasial Penuh 3 Spesies (Cakalang, Madidihang, Albakor) | 8.129 sel | **$9.86\text{ s}$** | ~135 MB | **PASS** |
+| Inferensi Spasial Penuh 3 Spesies (Cakalang, Madidihang, Legacy species removed from TCT scope) | 8.129 sel | **$9.86\text{ s}$** | ~135 MB | **PASS** |
 | Validasi Karakter Injeksi & Whitelist Security Check | N/A | **$< 0.5\text{ ms}$** | Negligible | **PASS** |
 
 - **Timeout Safety Margin:** Timeout default dikonfigurasi sebesar 60 detik (atau 120 detik untuk komputasi masif), memberikan margin keamanan $>6\times$ lipat di atas durasi aktual 9.86 detik.

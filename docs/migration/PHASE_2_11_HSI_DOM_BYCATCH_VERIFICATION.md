@@ -13,17 +13,17 @@
 The Habitat Suitability Index (HSI) quantifies pelagic fish presence probability on a normalized scale $[0.000, 1.000]$.
 
 ### 1.1 Species Ensemble Formula
-For species $s \in \{\text{cakalang}, \text{madidihang}, \text{albakor}\}$:
+For species $s \in \{\text{cakalang}, \text{madidihang}, \text{legacy_species_removed}\}$:
 $$\text{HSI}_s = \text{clamp}\Big( w_{\text{maxent}, s} \cdot P_{\text{maxent}} + w_{\text{rf}, s} \cdot P_{\text{rf}} + w_{\text{glm}, s} \cdot P_{\text{glm}}, \; 0.0, \; 1.0 \Big)$$
 
 Where weights satisfy $\sum w_i = 1.000$:
 - **Cakalang:** $0.320 \cdot P_{\text{maxent}} + 0.355 \cdot P_{\text{rf}} + 0.325 \cdot P_{\text{glm}}$
 - **Madidihang:** $0.295 \cdot P_{\text{maxent}} + 0.365 \cdot P_{\text{rf}} + 0.340 \cdot P_{\text{glm}}$
-- **Albakor:** $0.000 \cdot P_{\text{maxent}} + 0.517 \cdot P_{\text{rf}} + 0.483 \cdot P_{\text{glm}}$
+- **Legacy species removed from TCT scope:** $0.000 \cdot P_{\text{maxent}} + 0.517 \cdot P_{\text{rf}} + 0.483 \cdot P_{\text{glm}}$
 
 ### 1.2 Composite Multispecies HSI Formula
 When the user selects `"all"` species, the composite HSI is computed as an unweighted arithmetic mean:
-$$\text{HSI}_{\text{composite}} = \frac{\text{HSI}_{\text{cakalang}} + \text{HSI}_{\text{madidihang}} + \text{HSI}_{\text{albakor}}}{3}$$
+$$\text{HSI}_{\text{composite}} = \frac{\text{HSI}_{\text{cakalang}} + \text{HSI}_{\text{madidihang}} + \text{HSI}_{\text{legacy_species_removed}}}{3}$$
 
 ### 1.3 Scientific Classification Thresholds
 - **Tuna Hotspot:** $\text{HSI} \ge 0.700$

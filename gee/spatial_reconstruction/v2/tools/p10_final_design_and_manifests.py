@@ -104,8 +104,8 @@ design_json = {
     },
     "target_pelagic_species": [
         {"common_name": "Cakalang", "scientific_name": "Katsuwonus pelamis"},
-        {"common_name": "Madidihang", "scientific_name": "Thunnus albacares"},
-        {"common_name": "Albakor", "scientific_name": "Thunnus alalunga"}
+        {"common_name": "Tuna Sirip Kuning", "scientific_name": "Thunnus albacares"},
+        {"common_name": "Tongkol Krai", "scientific_name": "Auxis thazard"}
     ],
     "research_policy": {
         "oceanographic_proxy_rule": "Oceanographic indicators represent environmental habitats and upwelling retention zones, NOT claims of verified fish presence or actual catch locations.",
@@ -146,7 +146,7 @@ flowchart LR
     
     subgraph Colab ["Google Colab (AI/ML Modeling Engine)"]
         C1["Feature Engineering & Environmental Matrix Assembly"]
-        C2["Species Habitat Modeling (Cakalang, Madidihang, Albakor)"]
+        C2["Species Habitat Modeling (Cakalang, Tuna Sirip Kuning, Tongkol Krai)"]
         C3["Validation & Cross-Validation with Prigi Landing Records"]
     end
     
