@@ -25,7 +25,7 @@ class PythonComputationResult
             status: $payload['status'] ?? 'SUCCESS',
             engine: $payload['engine'] ?? 'SEACAST_SDM_ENGINE',
             modelVersion: $payload['model_version'] ?? '2.3.2',
-            species: $payload['species'] ?? ['cakalang', 'madidihang', 'albakor'],
+            species: $payload['species'] ?? ['tuna_sirip_kuning', 'cakalang', 'tongkol_krai'],
             generatedAt: $payload['generated_at'] ?? now()->toIso8601String(),
             parameters: $payload['parameters'] ?? [],
             totalCells: (int)($payload['total_cells'] ?? count($payload['data'] ?? [])),

@@ -7,6 +7,24 @@ use App\Domain\Species\DTO\SpeciesPrediction;
 
 class SpeciesPredictionService
 {
+    protected array $publicSpecies = [
+        'tuna_sirip_kuning' => 'Tuna Sirip Kuning',
+        'cakalang' => 'Cakalang',
+        'tongkol_krai' => 'Tongkol Krai',
+    ];
+
+    protected array $speciesAliases = [
+        'tuna_sirip_kuning' => 'madidihang',
+        'tuna sirip kuning' => 'madidihang',
+        'yellowfin' => 'madidihang',
+        'yellowfin tuna' => 'madidihang',
+        'madidihang' => 'madidihang',
+        'cakalang' => 'cakalang',
+        'tongkol_krai' => 'tongkol',
+        'tongkol krai' => 'tongkol',
+        'tongkol' => 'tongkol',
+    ];
+
     protected array $lockedWeights = [
         'cakalang' => [
             'maxent' => 0.320,
@@ -17,11 +35,6 @@ class SpeciesPredictionService
             'maxent' => 0.295,
             'rf' => 0.365,
             'glm' => 0.340,
-        ],
-        'albakor' => [
-            'maxent' => 0.000, // Strictly 0.000 due to circular proxy AUC = 0.507
-            'rf' => 0.517,
-            'glm' => 0.483,
         ],
     ];
 
@@ -39,7 +52,7 @@ class SpeciesPredictionService
             'caveat' => 'Component scores evaluated via analytical heuristic response equations against deterministic presence proxies. No statistical ML fitting executed in code.'
         ],
         'madidihang' => [
-            'species_name' => 'Madidihang (Thunnus albacares)',
+            'species_name' => 'Tuna Sirip Kuning (Thunnus albacares)',
             'auc' => 0.784,
             'tss' => 0.606,
             'status' => 'EXPLORATORY_HEURISTIC_SCREENING',
@@ -50,25 +63,21 @@ class SpeciesPredictionService
             ],
             'caveat' => 'Thermal front and SST dominant proxy discrimination.'
         ],
-        'albakor' => [
-            'species_name' => 'Albakor (Thunnus alalunga)',
-            'auc' => 0.860,
-            'tss' => 0.743,
-            'status' => 'EXPLORATORY_HEURISTIC_SCREENING',
-            'components' => [
-                'maxent' => ['auc' => 0.507, 'tss' => 0.143, 'weight' => 0.000, 'note' => 'MaxEnt zeroed because circular proxy AUC = 0.507 is random guessing level'],
-                'rf' => ['auc' => 0.862, 'tss' => 0.723, 'weight' => 0.517],
-                'glm' => ['auc' => 0.825, 'tss' => 0.000, 'weight' => 0.483],
-            ],
-            'caveat' => 'MaxEnt component completely excluded (0.000) from prediction.'
+        'tongkol' => [
+            'species_name' => 'Tongkol Krai (Auxis thazard)',
+            'auc' => null,
+            'tss' => null,
+            'status' => 'RULE_BASED_SCIENTIFIC_SCREENING',
+            'components' => [],
+            'caveat' => 'HSI rule-based dari SST, klorofil-a, dan kedalaman neritik; belum menggunakan ensemble .joblib.'
         ],
     ];
 
     public function getEnsembleWeights(string $species): EnsembleWeights
     {
-        $key = strtolower($species);
+        $key = $this->normalizeSpecies($species);
         if (!isset($this->lockedWeights[$key])) {
-            throw new \InvalidArgumentException("Unknown species: '{$species}'. Approved: cakalang, madidihang, albakor.");
+            throw new \InvalidArgumentException("Species '{$species}' does not use a locked ensemble model. Tongkol Krai uses its rule-based HSI.");
         }
 
         $w = $this->lockedWeights[$key];
@@ -77,7 +86,7 @@ class SpeciesPredictionService
 
     public function getModelEvaluationSummary(string $species): array
     {
-        $key = strtolower($species);
+        $key = $this->normalizeSpecies($species);
         if (!isset($this->evaluationSummaries[$key])) {
             throw new \InvalidArgumentException("Unknown species: '{$species}'.");
         }
@@ -87,7 +96,26 @@ class SpeciesPredictionService
 
     public function getAllSpecies(): array
     {
-        return array_keys($this->lockedWeights);
+        return array_keys($this->publicSpecies);
+    }
+
+    public function getPublicSpecies(): array
+    {
+        return $this->publicSpecies;
+    }
+
+    public function normalizeSpecies(string $species): string
+    {
+        $key = strtolower(trim(str_replace('-', '_', $species)));
+        $key = preg_replace('/\s+/', ' ', $key) ?? $key;
+
+        if (isset($this->speciesAliases[$key])) {
+            return $this->speciesAliases[$key];
+        }
+
+        throw new \InvalidArgumentException(
+            "Unknown species: '{$species}'. Approved public species: tuna_sirip_kuning, cakalang, tongkol_krai."
+        );
     }
 }
 
