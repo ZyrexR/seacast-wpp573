@@ -1,0 +1,41 @@
+{
+  "gate_id": "Gate A - AOI Approval",
+  "check_status": "PASS",
+  "geometry_valid": true,
+  "validation_explanation": "Valid Geometry",
+  "feature_count": 1,
+  "geometry_type": "MultiPolygon",
+  "is_empty": false,
+  "rings_closed": true,
+  "num_components": 2,
+  "total_vertices": 625698,
+  "bounds": [
+    102.57782959700006,
+    -13.938230691999934,
+    126.49957913200001,
+    -6.80179637599997
+  ],
+  "geodesic_area_km2": 933750.9,
+  "equal_area_epsg6933_km2": 933749.49,
+  "geodesic_perimeter_km": 9553.93,
+  "cross_validation": {
+    "existing_big_geojson": {
+      "path": "data/boundaries/wppnri_573_big.geojson",
+      "size_bytes": 65019505,
+      "area_geodesic_km2": 933750.9,
+      "bounds": [
+        102.57782959700006,
+        -13.938230691999934,
+        126.49957913200001,
+        -6.80179637599997
+      ],
+      "area_diff_percent": 0.0,
+      "identical_geometry": true
+    },
+    "existing_web_geojson": {
+      "path": "data/boundaries/wppnri_573_web.geojson",
+      "note": "Web simplified version geometry parsing error: A linearring requires at least 4 coordinates."
+    }
+  },
+  "recommendation": "APPROVED for master use across Phase 0.1 to Phase 1.5."
+}

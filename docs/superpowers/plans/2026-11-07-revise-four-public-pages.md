@@ -110,3 +110,4 @@
   - Jalankan `php ./vendor/bin/phpunit tests/Feature/PublicPagesComprehensiveTest.php`.
   - Jalankan `npm run build`.
 - [ ] **Step 3: Git Commit seluruh pembaruan**
+

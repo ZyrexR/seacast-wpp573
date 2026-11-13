@@ -1,0 +1,5 @@
+concentration_stratum,sample_points,modis_mean_mg_m3,gcomc_scaled_mean_mg_m3,pearson_r,spearman_rho,log_rmse_dex,mae_dex,mean_bias_dex,regression_slope,regression_intercept
+Oligotrophic (< 0.10 mg/m3),14200,0.082,0.079,0.894,0.881,0.084,0.059,-0.016,0.965,0.012
+Mesotrophic (0.10 - 0.50 mg/m3),38500,0.245,0.241,0.938,0.925,0.071,0.048,-0.007,0.988,0.008
+Eutrophic / Coastal Upwelling (> 0.50 mg/m3),8900,1.15,1.12,0.912,0.901,0.092,0.065,-0.012,0.972,0.021
+All Combined Overlap (2018 - 2024),61600,0.338,0.331,0.924,0.908,0.078,0.052,-0.009,0.982,0.014

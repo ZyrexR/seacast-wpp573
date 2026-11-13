@@ -82,4 +82,20 @@ class MonitoringApiController extends Controller
             'Cache-Control' => 'no-cache, private',
         ]);
     }
+
+    /**
+     * Live BMKG Maritim Weather & Oceanographic Endpoint
+     */
+    public function bmkgLive(Request $request, \App\Services\BmkgMaritimService $bmkgService): JsonResponse
+    {
+        $hub = $request->query('hub') ?? $request->query('port') ?? 'prigi';
+        $overview = $bmkgService->getMaritimeOverview($hub);
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $overview,
+        ], 200, [
+            'Cache-Control' => 'public, max-age=300',
+        ]);
+    }
 }

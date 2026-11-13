@@ -1,0 +1,92 @@
+{
+  "phase": "PHASE 1 \u2014 Data Audit and Spatial Readiness (REVISED & OFFICIALLY INTEGRATED)",
+  "status": "COMPLETED, REVISED & FULLY VERIFIED",
+  "revision_timestamp": "2026-10-31T08:10:33.491Z",
+  "readiness_score": "10.0 / 10.0 (Ready to proceed to Phase 2)",
+  "data_audit_reconciliation": {
+    "workbook_name": "DATA STATISTIK - PPN PRIGI 2015 2025.xlsx",
+    "total_months_catch_audited": 132,
+    "total_months_trips_audited": 168,
+    "total_years_fleet_audited": 11,
+    "production_reconciliation": {
+      "verified_actual_grand_total_kg": 18405261,
+      "preliminary_report_table_sum_kg": 18827401,
+      "discrepancy_resolved_kg": 422140,
+      "root_cause": "Preliminary report table utilized early manual aggregations for Tongkol Krai, Como, Kenyar, Tenggiri, and Marlin. Cell-by-cell re-audit of all 132 rows in Sheet 5 verified exact total of 18,405,261 kg with 0 remaining discrepancy.",
+      "species_composition_exact": {
+        "cakalang_kg": 8294092,
+        "tongkol_krai_kg": 3094621,
+        "madidihang_yft_kg": 2933924,
+        "tongkol_como_kg": 2412039,
+        "tongkol_kenyar_kg": 520888,
+        "albakor_kg": 316632,
+        "marlin_setuhuk_hitam_kg": 315281,
+        "gulamah_kg": 207156,
+        "hiu_cucut_lanyam_kg": 127452,
+        "julung_julung_kg": 68906,
+        "tuna_mata_besar_kg": 63135,
+        "tenggiri_kg": 51135
+      }
+    },
+    "fleet_reconciliation": {
+      "year_2025_verified_total_vessels": 443,
+      "preliminary_report_number": 387,
+      "discrepancy_explanation": "387 was the sum of only two classes (<10 GT: 296 + 20-30 GT: 91). True total of all four GT classes in Sheet 2 for 2025 is 443 (<10 GT: 296, 10-<20 GT: 53, 20-<30 GT: 91, >30 GT: 3).",
+      "classes_2025": {
+        "lt_10_gt": 296,
+        "gt_10_20": 53,
+        "gt_20_30": 91,
+        "gt_gt_30": 3
+      }
+    },
+    "trips_reconciliation": {
+      "sheet_3_gear_trips_14y": 249257,
+      "sheet_4_gt_trips_14y": 229151,
+      "discrepancy_trips": 20106,
+      "root_cause": "Sheet 4 (GT trips) copied the 2014 monthly values (14,802 trips) into 2018, 2019, and 2020. Sheet 3 (Gear trips) recorded actual operational trip fluctuations (18,863; 21,074; 24,575 trips). Sheet 3 is confirmed as the primary operational effort dataset."
+    }
+  },
+  "spatial_architecture_revision": {
+    "primary_aoi": {
+      "name": "WPPNRI 573",
+      "source": "Badan Informasi Geospasial (BIG) - Layer 21 REST Service",
+      "format": "GeoJSON MultiPolygon",
+      "file_canonical": "data/boundaries/wppnri_573_big.geojson",
+      "file_web": "data/boundaries/wppnri_573_web.geojson",
+      "bounding_box": "West=102.5778, South=-13.9382, East=126.4996, North=-6.8018",
+      "total_vertices_canonical": 625698,
+      "status": "Official Legal Fisheries Management Area Boundary"
+    },
+    "secondary_aoi": {
+      "name": "Prigi Regional Study Area (Sub-AOI Prigi)",
+      "bounding_box": "West=111.0, South=-10.45, East=113.0, North=-8.0",
+      "grid_centers_count": 2050,
+      "grid_dimensions": "50 x 41 = 2,050 grid centers (0.05 deg nominal resolution)",
+      "equal_area_km2": 59550.43,
+      "status": "Localized Analysis Window; NOT the official WPPNRI boundary"
+    },
+    "tertiary_aoi": {
+      "name": "Fleet Accessibility Scenarios",
+      "scenarios_nm": [
+        12,
+        60
+      ],
+      "status": "Scenario-based simulation; NOT verified track boundaries"
+    },
+    "crs_strategy": {
+      "display_crs": "EPSG:4326 (WGS 84)",
+      "local_analysis_crs": "EPSG:32749 (WGS 84 / UTM Zone 49S)",
+      "regional_area_crs": "EPSG:6933 (Cylindrical Equal-Area for WPPNRI 573 wide metrics)"
+    }
+  },
+  "ecological_and_taxonomy_revision": {
+    "taxa_validated": 12,
+    "genus_level_caution_applied": "Carcharhinus spp. and Hemiramphus spp. labeled as Genus Complex; no false species-level IUCN code assigned",
+    "non_pelagic_exceptions_classified": "Gulamah (Demersal) and Julung-julung (Small surface pelagic) rigorously distinguished",
+    "ecological_assumptions_provenance_matrix_created": true,
+    "nursery_ground_status": "Strictly labeled as Potential Nursery Habitat Proxy based on neritic retention; no false claims of verified spawning/nursery grounds"
+  },
+  "temporal_framework_revision": {
+    "cross_year_monsoon_notation": "Musim Barat designated as YYYY/YYYY+1 (e.g. Musim Barat 2015/2016 for Nov 2015 - Feb 2016)"
+  }
+}

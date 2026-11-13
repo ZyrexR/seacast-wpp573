@@ -26,11 +26,26 @@ class DpiRadarViewTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertSee('DPI Radar Spasial WPPNRI 573');
-        $response->assertSee('2026-11-03');
-        $response->assertSee('Simulasi Oseanografi Musiman BMKG Terkalibrasi (Fallback Lokal)');
+        
+        // Assert Dual-Hub Corridor buttons are present (Task 2.3)
+        $response->assertSee('PPN Prigi');
+        $response->assertSee('PPS Cilacap');
+
+        // Assert Live BMKG Widget is present (Task 2.4)
+        $response->assertSee('BMKG Live:');
+        $response->assertSee('Buletin BMKG Maritim Live');
+
+        // Assert Ocean Current 60 FPS Toggle is present (Task 2.1)
+        $response->assertSee('Arus Laut 60 FPS');
+
+        // Assert Seasonal Time-Slider Playback Bar is present (Task 2.2)
+        $response->assertSee('Playback Musiman');
+        $response->assertSee('toggleSeasonalPlayback');
+        $response->assertSee('selectSeasonMonth');
+
+        // Assert DOM and Bycatch filters remain intact
         $response->assertSee('Zonasi DOM (Dynamic Ocean Management)');
         $response->assertSee('Tingkat Risiko Bycatch');
         $response->assertSee('Ambang Batas HSI Minimum');
-        $response->assertSee('Homeport PPN Prigi');
     }
 }

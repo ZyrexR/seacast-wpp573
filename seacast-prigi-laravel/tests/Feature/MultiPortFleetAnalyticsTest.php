@@ -45,3 +45,4 @@ class MultiPortFleetAnalyticsTest extends TestCase
         $response->assertSee('Jawa Tengah');
     }
 }
+

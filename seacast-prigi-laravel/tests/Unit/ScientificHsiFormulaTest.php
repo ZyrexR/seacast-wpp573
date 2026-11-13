@@ -72,3 +72,4 @@ class ScientificHsiFormulaTest extends TestCase
         $this->assertLessThan(0.40, $subOptimalHsi);
     }
 }
+

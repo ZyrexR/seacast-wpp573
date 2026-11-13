@@ -1,0 +1,123 @@
+{
+  "project": "SEACAST PRIGI",
+  "target_system": "Sistem Intelijen Geospasial Perikanan Pelagis PPN Prigi",
+  "version": "2.0.0-PROD-CANDIDATE",
+  "generated_at_utc": "2026-11-02T07:20:14.563980+00:00",
+  "study_area": {
+    "aoi_name": "Official WPPNRI 573",
+    "provenance": "Badan Informasi Geospasial (BIG) REST MapServer Layer 21",
+    "master_geojson": "data/aoi/processed/AOI_WPP573_MASTER.geojson",
+    "simplified_gee_geojson": "data/spatial_reconstruction/aoi_qc/AOI_WPP573_SIMPLIFIED_0p01deg_FOR_GEE.geojson",
+    "bounding_box": [
+      102.57783,
+      -13.938231,
+      126.499579,
+      -6.801796
+    ],
+    "geodesic_area_km2": 933750.9,
+    "planar_ease2_area_km2": 933749.49,
+    "vertex_count": 625698,
+    "sub_aoi_prigi": {
+      "name": "PPN Prigi Fleet Operation Zone",
+      "bbox": [
+        111.0,
+        -10.45,
+        113.0,
+        -8.0
+      ],
+      "area_km2": 52366.1
+    }
+  },
+  "study_period": {
+    "start_date": "2015-01-01",
+    "end_date": "2025-12-31",
+    "duration_months": 132,
+    "temporal_cadence": "Monthly"
+  },
+  "grid_architecture": {
+    "type": "HYBRID_NESTED",
+    "levels": {
+      "macro_regional": {
+        "grid_id": "GRID_010",
+        "resolution_deg": 0.1,
+        "resolution_km": 11.0,
+        "cols": 240,
+        "rows": 72,
+        "total_active_cells": 8249,
+        "pure_ocean_cells": 7381,
+        "boundary_cells": 868
+      },
+      "local_prigi": {
+        "grid_id": "GRID_005_PRIGI",
+        "resolution_deg": 0.05,
+        "resolution_km": 5.5,
+        "cols": 40,
+        "rows": 49,
+        "total_active_cells": 1724,
+        "pure_ocean_cells": 1663,
+        "boundary_cells": 61
+      }
+    }
+  },
+  "data_sources": {
+    "sst": {
+      "collection": "NOAA/CDR/OISST/V2_1",
+      "variable": "sst, anom",
+      "native_res_m": 27830,
+      "status": "APPROVED_PRIMARY"
+    },
+    "chlor_a": {
+      "collection": "NASA/OCEANDATA/MODIS-Aqua/L3SMI",
+      "variable": "chlor_a",
+      "native_res_m": 9260,
+      "fallback_collection": "JAXA/GCOM-C/L3/OCEAN/CHLA/V3",
+      "status": "APPROVED_WITH_QA_FALLBACK"
+    },
+    "wind": {
+      "collection": "NOAA/CFSV2/FOR6H_HARMONIZED",
+      "variables": [
+        "u-component_of_wind_height_above_ground",
+        "v-component_of_wind_height_above_ground"
+      ],
+      "native_res_m": 22264,
+      "qa_filter": "|u|, |v| <= 35.0 m/s",
+      "status": "APPROVED_WITH_PHYSICAL_CLAMP"
+    },
+    "currents": {
+      "collection": "HYCOM/sea_water_velocity",
+      "variables": [
+        "velocity_u_0",
+        "velocity_v_0"
+      ],
+      "native_res_m": 8905,
+      "temporal_coverage": "2015-01..2024-08 in GEE (CMEMS fallback for 2024-09..2025-12)",
+      "status": "APPROVED_DUAL_MODE"
+    },
+    "bathymetry": {
+      "image": "NOAA/NGDC/ETOPO1",
+      "variables": [
+        "bedrock"
+      ],
+      "native_res_m": 1855,
+      "status": "APPROVED_PRIMARY"
+    }
+  },
+  "target_pelagic_species": [
+    {
+      "common_name": "Cakalang",
+      "scientific_name": "Katsuwonus pelamis"
+    },
+    {
+      "common_name": "Madidihang",
+      "scientific_name": "Thunnus albacares"
+    },
+    {
+      "common_name": "Albakor",
+      "scientific_name": "Thunnus alalunga"
+    }
+  ],
+  "research_policy": {
+    "oceanographic_proxy_rule": "Oceanographic indicators represent environmental habitats and upwelling retention zones, NOT claims of verified fish presence or actual catch locations.",
+    "baseline_preservation_rule": "All Phase 1-4.1.1 baseline outputs, canonical weights, and fisheries metrics are strictly preserved without modification."
+  }
+}

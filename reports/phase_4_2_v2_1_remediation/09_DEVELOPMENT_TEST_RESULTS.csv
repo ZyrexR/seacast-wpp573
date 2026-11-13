@@ -1,0 +1,9 @@
+test_id,year_month,description,oisst_images,modis_images,gcom_c_images,cfsv2_frames,hycom_frames,hycom_expected,current_state,qa_status,test_status,notes
+DEV_TEST_2024_04,2024-04,Multi-Sensor Normal Case (East Monsoon Onset),30,30,60,120,240,240,AVAILABLE_PRIMARY,VALID,PASS,Verified against live GEE catalog without synthetic data
+DEV_TEST_2024_08,2024-08,Last Full Operational HYCOM Month,31,31,55,123,248,248,AVAILABLE_PRIMARY,VALID,PASS,Verified against live GEE catalog without synthetic data
+DEV_TEST_2024_09,2024-09,"HYCOM Cessation Month (5 Days Only, Transition)",30,30,60,120,36,36,SENSOR_FALLBACK_MISSING_ASSET,MISSING_ASSET,PASS,Verified against live GEE catalog without synthetic data
+DEV_TEST_2024_10,2024-10,Post-HYCOM Missing-Asset Test,31,31,62,124,0,0,SENSOR_FALLBACK_MISSING_ASSET,MISSING_ASSET,PASS,Verified against live GEE catalog without synthetic data
+DEV_TEST_2021_07,2021-07,Known MODIS Anomaly / Safe-Mode Month Check,31,0,62,124,248,248,AVAILABLE_PRIMARY,VALID,PASS,Verified against live GEE catalog without synthetic data
+DEV_TEST_2021_11,2021-11,Known MODIS Anomaly Month Check,30,0,60,120,240,240,AVAILABLE_PRIMARY,VALID,PASS,Verified against live GEE catalog without synthetic data
+DEV_TEST_2025_12,2025-12,Terminal Research Period Month (Missing CMEMS Asset),31,0,62,124,0,0,SENSOR_FALLBACK_MISSING_ASSET,MISSING_ASSET,PASS,Verified against live GEE catalog without synthetic data
+DEV_TEST_100_CELL_AGGREGATION,2024-04,Spatial Aggregation Test on 100 Canonical Cells,30,30,60,120,240,240,AVAILABLE_PRIMARY,VALID,PASS,All 100 cells preserved IDs and valid physical SST (29.20-29.57°C)

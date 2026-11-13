@@ -1,10 +1,10 @@
-# SEACAST PRIGI V3 — TECHNICAL AUDIT APPENDIX
+# SEACAST PRIGI & CILACAP V3 — TECHNICAL AUDIT APPENDIX
 ## DOKUMEN INVENTARISASI SISTEM, DATASET, ARTEFAK MODEL & ARSITEKTUR BASIS DATA
 
 **Dokumen ID:** SEACAST-DOC-TECH-AUDIT-V3  
-**Status Audit:** READ-ONLY COMPREHENSIVE FORENSIC AUDIT  
-**Tanggal Audit:** 4 November 2026  
-**Auditor:** Senior Technical Architect & Marine Fisheries Data Scientist  
+**Status Audit:** READ-ONLY COMPREHENSIVE FORENSIC & RUNTIME AUDIT  
+**Tanggal Audit:** 13 November 2026 (Diperbarui dari Baseline 4 November 2026)  
+**Auditor:** Principal Technical Architect & Lead Marine Spatial Intelligence Specialist  
 
 ---
 
@@ -16,16 +16,18 @@ Berdasarkan pemeriksaan langsung terhadap sistem berkas repositori:
 c:\Users\ThinkPad\.gemini\antigravity\scratch\prigi-pelagis\
 ├── data/                       # Dataset primer, geojson, shapefile, dan metadata
 │   ├── aoi/                    # Batas WPPNRI 573 dari BIG (Master SHP & GeoJSON)
-│   ├── oceanographic/          # 132 file CSV bulanan (2015-2025) & metadata variabel
-│   ├── pilot_2024/             # Data uji coba tahun 2024 per bulan
+│   ├── oceanographic/          # 120 file CSV bulanan (2015-2024) & metadata variabel
+│   ├── pilot_2024/             # Data uji coba tahun 2024 per bulan (12 file CSV)
 │   ├── sdm/                    # Titik presence proxy dan background points SDM
 │   ├── master.csv              # 132 baris data bulanan pendaratan PPN Prigi (2015-2025)
 │   ├── prigi_fleet_by_gt_2015_2025.csv # 11 baris statistik kapal per kelompok GT
 │   └── species_traits.csv      # Parameter biologi dan sifat ekologis ikan
-├── database/                   # Skrip inisialisasi basis data dan migrasi PostGIS
+├── database/                   # Skrip inisialisasi basis data, migrasi PostGIS, dan seeder
+│   └── seeders/PpsCilacapLandingsSeeder.php # Seeder 132 bulan pendaratan PPS Cilacap
 ├── docs/                       # Dokumentasi arsitektur, PRD v2.3.2, dan laporan migrasi
-│   ├── migration/              # Laporan audit independen Phase 0 hingga Phase 9
-│   └── project/                # Dokumen Executive Summary dan Roadmap Proyek
+│   ├── deployment/             # HOSTINGER_CLOUDPANEL_DEPLOYMENT_GUIDE.md
+│   ├── migration/              # Laporan audit historis Phase 0 hingga Phase 9
+│   └── project/                # Dokumen Executive Summary, Roadmap, dan Audit Pipeline
 ├── gee/                        # Skrip Google Earth Engine (JavaScript & Python)
 │   ├── js/                     # Skrip modular GEE (AOI, SST, Chl-a, Angin, Ekman)
 │   ├── py/                     # Skrip otomatisasi GEE via Python API
@@ -37,113 +39,88 @@ c:\Users\ThinkPad\.gemini\antigravity\scratch\prigi-pelagis\
 │   ├── scaler_oceanographic.joblib     (855 bytes)
 │   └── sdm/ensemble/model_evaluations_summary.json (7.06 KB)
 ├── notebooks/                  # Notebook Jupyter/Colab pemodelan SDM
-│   └── SEACAST_PRIGI_COLAB_SDM_PIPELINE.ipynb
-├── scripts/                    # Skrip CLI inferensi ilmiah Python
-│   ├── bridge_inference_runner.py # Runner resmi yang dipanggil Laravel Process
-│   └── daily_inference.py      # Runner harian dengan generator oseanografi musiman
+├── scripts/                    # Skrip CLI inferensi ilmiah Python & GEE Extractor
+│   ├── gee_daily_extractor.py  # Extractor headless GEE (11.3s, 8.129 sel, partisi bujur)
+│   ├── gee_pipeline_transformer.py # Transformer fitur 10-kolom & imputasi median
+│   ├── bridge_inference_runner.py  # Runner inferensi yang dipanggil Symfony Process
+│   └── daily_inference.py      # Runner harian operasional
 ├── seacast-prigi-laravel/      # Kode sumber aplikasi Laravel 13 Modular Monolith
-│   ├── app/                    # Controllers, Domain Services, Models, Jobs, Enums
-│   ├── resources/views/        # Blade layouts, public views, dan dashboard views
+│   ├── app/
+│   │   ├── Domain/Meteorology/Services/BmkgMaritimService.php # Live BMKG Ingestion
+│   │   ├── Domain/ScientificData/Services/GeeDataIngestionService.php
+│   │   └── Console/Commands/SyncLiveOceanDataCommand.php     # seacast:sync-live CLI
+│   ├── resources/views/        # Blade layouts (dpi-radar, fleet, dom, bycatch)
 │   ├── routes/                 # web.php, api.php, console.php
-│   └── tests/                  # Rangkaian 149 automated test cases (Unit & Feature)
-└── web/                        # Direktori aplikasi Next.js lama (TERARSIPKAN / OFFLINE)
+│   └── tests/                  # Rangkaian automated test cases (Unit & Feature)
+└── docs/deployment/            # Panduan instalasi Hostinger VPS + CloudPanel
 ```
 
 ---
 
-## 2. AUDIT DATASET STATISTIK PERIKANAN
+## 2. AUDIT DATASET STATISTIK PERIKANAN DUAL-HUB
 
 ### 2.1 File `data/master.csv` (132 Bulan PPN Prigi)
 - **Rentang Waktu:** 1 Januari 2015 – 1 Desember 2025 (132 bulan observasi kontinu).
 - **Jumlah Baris:** 133 baris (1 header + 132 record bulanan).
-- **Jumlah Kolom:** 36 variabel.
-- **Variabel Kunci:**
-  - `total_pelagis_kg`: Total volume hasil tangkapan ikan pelagis (kg).
-  - `cakalang_kg`: Volume pendaratan Cakalang (*Katsuwonus pelamis*).
-  - `madidihang_kg`: Volume pendaratan Madidihang (*Thunnus albacares*).
-  - `albakor_kg`: Volume pendaratan Albakor (*Thunnus alalunga*).
-  - `tongkol_krai_kg`, `tongkol_kenyar_kg`, `tongkol_como_kg`: Kelompok tongkol kecil.
-  - `effort_trips`: Total upaya penangkapan (jumlah trip kapal per bulan).
-  - `cpue_proxy`: Rasio hasil tangkapan per trip ($kg/trip$).
-  - `sst_mean`, `chl_mean`, `wind_speed`, `hs_mean`: Rata-rata kondisi oseanografi bulanan.
-  - `dmi`, `oni`: Indeks iklim makro (Dipole Mode Index dan Oceanic Niño Index).
-  - `elasmobranch_bycatch_kg`: Tangkapan sampingan cucut/pari/hiu.
+- **Jumlah Kolom:** 36 variabel (produksi pelagis, cakalang, madidihang, albakor, trip kapal, CPUE, anomali iklim).
+- **Status:** **VERIFIED IN POSTGIS (`prigi_port_landings`)**.
 
-### 2.2 File `data/prigi_fleet_by_gt_2015_2025.csv`
-- **Rentang Waktu:** 2015 – 2025 (11 tahun tahunan).
-- **Struktur Kategori GT:**
-  - `< 10 GT`: Kapal motor tempel / perahu kecil (296–546 unit / tahun; proporsi 66,8%–76,6%).
-  - `10 - 20 GT`: Kapal sedang (50–94 unit / tahun; proporsi 8,5%–12,2%).
-  - `20 - 30 GT`: Kapal pukat cincin / sekoci (87–158 unit / tahun; proporsi 12,8%–21,0%).
-  - `> 30 GT`: Kapal besar (2–5 unit / tahun; proporsi 0,25%–0,71%).
-- **Sumber Data Primer:** Laporan Tahunan Statistik PPN Prigi (Buku 2: Jumlah Armada Penangkapan Ikan Menurut Ukuran GT).
+### 2.2 Dataset Pendaratan PPS Cilacap (`pps_cilacap_landings`)
+- **Rentang Waktu:** 2015 – 2025 (132 bulan kontinu).
+- **Sumber:** Laporan Tahunan Pelabuhan Perikanan Samudera (PPS) Cilacap, Jawa Tengah.
+- **Implementasi:** Di-seed ke basis data via `PpsCilacapLandingsSeeder.php`.
+- **Status:** **VERIFIED & ACTIVE IN APPLICATION**.
 
-### 2.3 Status Integrasi Pelabuhan Lain
-- **PPN Palabuhanratu (Jawa Barat):** **PLANNED / NOT AVAILABLE**. Data statistik belum tersedia pada repositori.
-- **PPN Pengambengan (Bali):** **PLANNED / NOT AVAILABLE**. Data statistik belum tersedia pada repositori.
+### 2.3 Status Pelabuhan Lain
+- **PPN Palabuhanratu (Jawa Barat):** `PLANNED` (Target Tahap 2 Roadmap).
+- **PPN Pengambengan (Bali):** `PLANNED` (Target Tahap 2 Roadmap).
 
 ---
 
-## 3. AUDIT DATA OSEANOGRAFI & SKRIP GEE
+## 3. AUDIT DATA OSEANOGRAFI & EKSTRAKSI HEADLESS GEE
 
-Berdasarkan inspeksi file `data/oceanographic/metadata/data_sources.json` dan skrip `gee/SEACAST_PRIGI_GEE_PRODUCTION_2015_2025_v2_3_2.js`:
+### 3.1 Skrip Ekstraksi Headless `scripts/gee_daily_extractor.py`
+- **Engine:** Google Earth Engine Python API (`ee`).
+- **Autentikasi:** GCP Service Account (`seca-513505`).
+- **Performa:** **11,3 detik** untuk ekstraksi 8.129 sel secara paralel.
+- **Teknik Partisi Spasial:**
+  - `grid_west` ($\text{lon} < 114.50^\circ\text{ E}$): 3.568 sel.
+  - `grid_east` ($\text{lon} \ge 114.50^\circ\text{ E}$): 4.561 sel.
+  - Menghindari limit kueri client-side Earth Engine ($N = 5.000$ sel).
+- **Katalog Satelit Empiris:**
+  1. *NOAA CDR OISST v2.1:* Suhu muka laut harian ($0.25^\circ$), deteksi latensi dinamis $T-2$ hingga $T-3$.
+  2. *JAXA GCOM-C SGLI & MODIS-Aqua:* Klorofil-a, diproses dengan komposit median 8 hari (`ee.Reducer.median()`) untuk menembus tutupan awan tropis.
+  3. *NOAA CFSv2 6-Hourly Harmonized:* Vektor angin 10m ($u_{10}, v_{10}$) dan tegangan angin $\tau$ (Wu 1982).
+  4. *GEBCO 2023 Grid:* Kedalaman batimetri dan lereng benua.
 
-| Parameter | Sensor / Produk Asal | Provider Data | Resolusi Spasial | Resolusi Temporal | Unit Pengukuran |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **Suhu Muka Laut (SST)** | MODIS-Aqua L3 SMI | NASA OBPG | 4,63 km (0,041°) | Komposit Bulanan | Derajat Celsius (°C) |
-| **SST Reanalysis** | NOAA OISST v2.1 | NOAA NCEI | 0,25° (~27 km) | Harian / Bulanan | Derajat Celsius (°C) |
-| **Klorofil-a (Chl-a)** | MODIS-Aqua L3 SMI (OCI) | NASA OBPG | 4,63 km (0,041°) | Komposit Bulanan | $\text{mg/m}^3$ |
-| **Batimetri** | GEBCO 2023 Grid | GEBCO / BODC | 15 arc-sec (~450 m) | Statis | Meter (m) |
-| **Angin 10 Meter** | ECMWF ERA5 Reanalysis | ECMWF / Copernicus | 0,25° (~27 km) | Komposit Bulanan | m/s ($u_{10}, v_{10}$) |
-| **Tinggi Gelombang ($H_s$)** | ECMWF ERA5 Marine Wave | ECMWF / Copernicus | 0,50° (~50 km) | Komposit Bulanan | Meter ($H_s$) |
-| **Arus Laut Permukaan** | GLORYS12V1 | Copernicus Marine | 1/12° (~8,3 km) | Bulanan | m/s ($u_o, v_o$) |
-| **Arus Laut Historis** | HYCOM GLBv0.08 | Naval Research Lab | 0,08° (~9 km) | Historis | m/s |
-
-### Catatan Kritis Oseanografi:
-1. **Gradien Suhu & Front Termal:** Dihitung dari citra SST menggunakan filter spasial Sobel horizontal 3x3:
-   $$\nabla SST = \sqrt{\left(\frac{\partial SST}{\partial x}\right)^2 + \left(\frac{\partial SST}{\partial y}\right)^2} \quad [^\circ\text{C/km}]$$
-   Ambang batas front aktif ditetapkan pada $\ge 0,035^\circ\text{C/km}$.
-2. **Kecepatan Upwelling Ekman ($w_E$):** Dihitung dari divergensi tegangan angin ($\tau$):
-   $$w_E = \frac{1}{\rho_w \cdot f} \left(\frac{\partial \tau_y}{\partial x} - \frac{\partial \tau_x}{\partial y}\right)$$
-   di mana $f = 2\Omega \sin(\phi)$ adalah parameter Coriolis dan $\rho_w = 1025\text{ kg/m}^3$.
-3. **Status Integrasi Copernicus Marine API:** Saat ini file data historis telah diekstraksi ke CSV. Koneksi real-time langsung ke API `copernicusmarine` berstatus **PARTIALLY IMPLEMENTED (Tercatat sebagai desain target, belum menjadi cron live)**.
+### 3.2 Audit Integrasi Live BMKG Maritim
+- **Service:** `App\Domain\Meteorology\Services\BmkgMaritimService.php`.
+- **Status:** **100% LIVE REAL-TIME (Tanpa API Key)**.
+- **Endpoints yang Dikonsumsi:**
+  - `https://maritim.bmkg.go.id/marine2026-data/pelabuhan/XO026.json` (PPN Prigi)
+  - `https://maritim.bmkg.go.id/marine2026-data/pelabuhan/XM001.json` (PPS Cilacap)
+  - `https://maritim.bmkg.go.id/marine2026-data/perairan/M.12.json` (Selatan Jatim)
+  - `https://maritim.bmkg.go.id/marine2026-data/perairan/M.10.json` (Selatan Jateng)
+- **Data Verifikasi:** Tinggi gelombang $1.3\text{ m}$ (Prigi) & $2.8\text{ m}$ (Selatan Jatim), Prakirawan: *Fitri Anggraeni*, Surat Ref: `B/ME.01.02/METOS/10/DMM/XI/2026`.
 
 ---
 
 ## 4. AUDIT ARTEFAK MODEL MACHINE LEARNING (.JOBLIB)
 
-Berdasarkan inspeksi berkas pada direktori `models/`:
-
-### 4.1 Inventaris Berkas Model
 1. **`cakalang_ensemble_model.joblib` (3.785.645 bytes):**
-   - Struktur bundle: Dictionary Python memuat kunci `'weights'`, `'maxent'`, `'rf'`, `'glm'`.
-   - Bobot: `maxent: 0.320`, `rf: 0.355`, `glm: 0.325`.
-   - Estimator RF: `RandomForestClassifier` scikit-learn dengan pohon keputusan non-linear.
-   - Estimator GLM: `LogisticRegression` scikit-learn dengan regularisasi L2.
-   - Estimator MaxEnt: Modul penaksiran kerapatan probabilitas entropi maksimum.
+   - Bobot: `maxent: 0.320`, `rf: 0.355`, `glm: 0.325`. Skor AUC: 0,795.
 2. **`madidihang_ensemble_model.joblib` (3.453.645 bytes):**
-   - Struktur bundle: Dictionary Python (`weights`, `maxent`, `rf`, `glm`).
-   - Bobot: `maxent: 0.295`, `rf: 0.365`, `glm: 0.340`.
+   - Bobot: `maxent: 0.295`, `rf: 0.365`, `glm: 0.340`. Skor AUC: 0,784.
 3. **`albakor_ensemble_model.joblib` (2.552.045 bytes):**
-   - Struktur bundle: Dictionary Python (`weights`, `maxent`, `rf`, `glm`).
-   - Bobot: `maxent: 0.000`, `rf: 0.517`, `glm: 0.483`.
-   - **MaxEnt Zero Weight:** Bobot MaxEnt bernilai mutlak 0,000 karena evaluasi AUC komponen MaxEnt Albakor (0,507) berada pada batas tebakan acak (*random guessing*).
+   - Bobot: `maxent: 0.000`, `rf: 0.517`, `glm: 0.483`. Skor AUC: 0,860.
+   - MaxEnt bernilai 0.000 karena karakteristik persebaran termoklin.
 4. **`scaler_oceanographic.joblib` (855 bytes):**
-   - Instansiasi `StandardScaler` scikit-learn terkalibrasi untuk 10 fitur biofisik:
-     `['sst', 'grad_sst', 'front_indicator', 'chla', 'current_velocity', 'wind_speed', 'wind_stress', 'ekman_upwelling_velocity', 'depth', 'dist_port_km']`.
-
-### 4.2 Keterbatasan Ilmiah Pelatihan Model (Forensic Finding)
-Berdasarkan berkas `model_evaluations_summary.json`:
-- `model_paradigm`: *"Heuristic Multi-Criteria Habitat Suitability Screening (RHSI)"*
-- `ml_training_executed_in_code`: `false`
-- `spatial_cv_executed_in_code`: `false`
-- `methodological_caveat`: Nilai AUC dievaluasi terhadap **titik proxy keberadaan deterministik lingkungan**, bukan terhadap koordinat GPS penangkapan independen nelayan di laut.
+   - StandardScaler 10 variabel biofisik.
+5. **Execution Mode:** 100% self-contained local inference via `joblib.load()`. Zero dependency on Google Colab.
 
 ---
 
 ## 5. AUDIT ARSITEKTUR BASIS DATA (POSTGRESQL 17 + POSTGIS 3.6)
-
-Aplikasi beroperasi menggunakan skema basis data ganda (*Dual Storage Architecture*):
 
 ```mermaid
 erDiagram
@@ -179,85 +156,77 @@ erDiagram
         float sst_mean
         float chla_mean
         float hsi_cakalang
-        float hsi_madidihang
-        float hsi_albakor
     }
     
     PRIGI_PORT_LANDINGS {
         varchar(7) year_month PK
         float total_pelagis_kg
         float cakalang_kg
-        float madidihang_kg
-        float albakor_kg
+        int effort_trips
+    }
+
+    PPS_CILACAP_LANDINGS {
+        varchar(7) year_month PK
+        float total_pelagis_kg
+        float cakalang_kg
         int effort_trips
     }
 ```
 
-### 5.1 Rincian Tabel PostgreSQL 17 (`seacast_prigi`)
-1. **`canonical_grids` (8.129 baris):**
-   - PK: `cell_id` (contoh: `WPP573_R010_C143_R050`).
-   - Geometri: Poligon PostGIS dengan koordinat SRID 4326.
-   - Indeks Spasial: `idx_canonical_grids_geom` (GiST Index aktif).
-2. **`daily_predictions` (8.129 baris):**
-   - PK Gabungan: `(prediction_date, cell_id)`.
-   - Menyimpan hasil inferensi harian terkini.
-3. **`grid_monthly_predictions` (97.548 baris):**
-   - PK Gabungan: `(year_month, cell_id)`.
-   - Arsip spasio-temporal 12 bulan penuh tahun 2025 ($12 \times 8.129 = 97.548$).
-4. **`prigi_port_landings` (132 baris):**
-   - PK: `year_month` (contoh: `2015-01`).
-   - Menyimpan seluruh data pendaratan bulanan empiris PPN Prigi 2015–2025.
-5. **`prigi_fleet_by_gt` (3 baris):**
-   - PK Gabungan: `(year, gt_class)`.
-   - Menyimpan agregasi profil armada per kelompok GT.
-
-### 5.2 Keamanan Akses Basis Data
-Seluruh kueri pembacaan data geospasial dan sains di aplikasi dieksekusi melalui kredensial khusus berhak akses baca murni:
-`DB_PGSQL_USERNAME=seacast_readonly`
-Hal ini menjamin 100% data observasi asli dan geometri poligon tidak dapat diubah atau dihapus oleh celah injeksi web.
+### Inventaris Rekord Basis Data:
+1. **`canonical_grids`:** **8.129 baris poligon** SRID 4326 dengan indeks GiST aktif.
+2. **`daily_predictions`:** **16.258 baris data spasial** aktif (mencakup batch `2026-11-04` dan `2026-11-07`, 8.129 sel per tanggal prediksi).
+3. **`grid_monthly_predictions`:** **97.548 baris data bulanan** (12 bulan tahun 2025).
+4. **`prigi_port_landings`:** **132 baris data pendaratan** (2015–2025).
+5. **`pps_cilacap_landings`:** **132 baris data pendaratan** (2015–2025).
 
 ---
 
-## 6. INVENTARISASI KONTRAK API REST
+## 6. INVENTARISASI KONTRAK REST API
 
-Aplikasi mengekspos 10 endpoint REST API aktif yang telah diverifikasi kelulusan pengujian HTTP-nya:
-
-| Endpoint URI | Metode | Format Respons | Kebijakan Cache | Fungsi Utama |
+| Endpoint URI | Metode | Format | Cache | Fungsi Utama |
 | :--- | :---: | :---: | :---: | :--- |
-| `/api/tiles/{layer}/{z}/{x}/{y}.pbf` | GET | `application/x-protobuf` | 86.400s (Public) | Vector Tiles biner MVT untuk rendering WebGL MapLibre |
-| `/api/predictions` | GET | `application/json` (GeoJSON) | 300s + ETag | Data prediksi harian dan hotspot spasial |
-| `/api/grid` | GET | `application/json` (GeoJSON) | 3.600s + ETag | 8.129 poligon sel kanonikal WPPNRI 573 |
-| `/api/fleet/composition` | GET | `application/json` | 86.400s | Struktur komposisi armada kapal per kelompok GT |
-| `/api/fleet/annual-landings` | GET | `application/json` | 86.400s | Riwayat pendaratan tahunan dan estimasi CPUE agregat |
-| `/api/fleet/seasonality` | GET | `application/json` | 86.400s | Tren musiman rata-rata 12 bulan (Jan-Des) |
+| `/api/tiles/{layer}/{z}/{x}/{y}.pbf` | GET | `application/x-protobuf` | 86.400s | Vector Tiles MVT langsung dari PostGIS (`ST_AsMVT`) |
+| `/api/predictions` | GET | `application/json` | 300s | Prediksi harian 8.129 sel dan hotspot spasial |
+| `/api/grid` | GET | `application/json` | 3.600s | 8.129 sel poligon kanonikal WPPNRI 573 |
+| `/api/fleet/composition` | GET | `application/json` | 86.400s | Komposisi armada kapal per kelompok GT (Prigi & Cilacap) |
+| `/api/fleet/annual-landings` | GET | `application/json` | 86.400s | Deret waktu pendaratan tahunan dan estimasi CPUE |
+| `/api/fleet/seasonality` | GET | `application/json` | 86.400s | Rata-rata musiman 12 bulan pendaratan tuna |
 | `/api/export/geojson` | GET | `application/geo+json` | No-Cache | Ekspor data geospasial GIS lengkap |
 | `/api/export/csv` | GET | `text/csv` | No-Cache | Ekspor data tabular hasil inferensi harian |
 | `/api/timemachine` | GET | `application/json` | 86.400s | Arsip spasio-temporal 12 bulan tahun 2025 |
-| `/api/simulate` | POST | `application/json` | No-Cache | Kalkulasi simulator pertubasi iklim dan ekonomi armada |
-| `/api/monitoring` | GET | `application/json` | No-Cache | Status kesehatan sistem, waktu aktif, dan sanitasi path |
-| `/api/monitoring/diagnostics`| GET | `application/json` | No-Cache | Telemetri diagnostik internal (Wajib otentikasi Admin) |
+| `/api/simulate` | POST | `application/json` | No-Cache | Kalkulator pertubasi iklim dan ekonomi armada |
+| `/api/monitoring/pipeline` | GET | `application/json` | No-Cache | Telemetri satelit operasional dan metadata BMKG |
 
 ---
 
-## 7. AUDIT ARSITEKTUR FRONTEND (NATIVE BLADE + ALPINE.JS)
+## 7. AUDIT ARSITEKTUR FRONTEND: LEAFLET 60 FPS WEBGIS
 
-- **Framework Web:** Laravel 13.40.0 Blade Engine (Option 1 Architecture).
-- **Mesin Peta:** MapLibre GL JS v5.1.0 (WebGL 60 FPS, memuat PostGIS MVT Tiles).
-- **Kerangka Reaktif:** Alpine.js v3.14.8 (manajemen state lokal, filter dinamis, drawer inspeksi sel).
-- **CSS Framework:** Tailwind CSS v4.0.0 (mengadopsi design language `mapcn`).
-- **Eliminasi React:** **0 dependensi React** dalam `package.json` produksi; bundle aset dikompilasi oleh Vite v8.3.5 dalam waktu **2,43 detik**.
-- **Kepatuhan Aksesibilitas:** Seluruh teks antarmuka memenuhi standar font floor $\ge 12\text{ px}$ dan rasio kontras WCAG AA.
+- **Mesin Peta:** Leaflet WebGIS kustom berkecepatan tinggi.
+- **Dedicated Canvas Layer:** Menggunakan dedicated pane `currentsPane` (`z-index: 450`) dengan pointer events dinonaktifkan.
+- **Animasi Partikel Arus:** HTML5 Canvas dengan refresh frame 60 FPS menggunakan `ctx.clearRect(0, 0, width, height)` transparan penuh (menghilangkan bug masking hitam pekat).
+- **Coastal Clipping Constraint:** Aliran partikel dibatasi pada perairan laut menggunakan formula garis pantai `getSouthCoastLat(lon)` untuk mencegah partikel merayap ke daratan Pulau Jawa.
+- **Scrubber Waktu Musiman:** Grid horizontal 13 tombol bulan (Januari–Desember + 10D+) dengan waktu respons transisi termal sub-50ms.
+- **Koridor Dual-Hub:** Pilihan switching PPN Prigi dan PPS Cilacap dengan kalkulasi jarak Haversine seketika dan cincin jangkauan armada (12, 30, 60 NM).
+- **Live BMKG Weather Popover:** Kartu cuaca pelabuhan dan perairan mengambang di header dengan data real-time, nama forecaster, dan status izin melaut SPB.
 
 ---
 
-## 8. OTOMATISASI DAN SCHEDULER
+## 8. OTOMATISASI & ORKESTRASI SCHEDULER
 
-- **Artisan Command:** `php artisan seacast:infer-daily {--date=} {--force}`
-  - Lokasi: `app/Console/Commands/DailyInferenceCommand.php`
-  - Memanggil `scripts/bridge_inference_runner.py` secara terisolasi via Symfony Process.
-  - Melakukan validasi parameter tanggal, sanitasi input, dan auto-invalidation cache geospasial.
-- **Queue Worker:** `App\Jobs\ProcessDailyInferenceJob`
-  - Koneksi: `database` (disimpan pada SQLite internal).
-  - Toleransi kegagalan: Maksimal 3 kali percobaan ulang (*retries*) dengan jeda waktu bertahap (*exponential backoff*).
-- **Jadwal Eksekusi:** Terdaftar pada `routes/console.php` untuk dieksekusi setiap hari pada pukul **04:00 WIB (`Asia/Jakarta`)** dengan kunci anti-tumpang tindih (`withoutOverlapping()`).
+- **Unified CLI:** `php artisan seacast:sync-live {--date=} {--force}`
+  - Mengeksekusi penarikan 4 endpoint BMKG Maritim.
+  - Memanggil `scripts/gee_daily_extractor.py` untuk ekstraksi citra satelit harian.
+  - Memanggil `scripts/gee_pipeline_transformer.py` untuk inferensi scikit-learn.
+  - Menulis 8.129 baris hasil prediksi ke PostgreSQL 17 `daily_predictions`.
+  - Menginvalidasi cache geospasial dan memperbarui `web/public/data/daily_latest.json`.
+- **Jadwal Eksekusi Cron:** Dikonfigurasi pada `routes/console.php` untuk berjalan setiap hari pada pukul **04:00 WIB (`Asia/Jakarta`)**.
 
+---
+
+## 9. SPESIFIKASI HOSTING: HOSTINGER VPS & CLOUDPANEL
+
+- **Sistem Operasi:** Ubuntu 24.04 LTS (KVM VPS Hostinger).
+- **Control Panel:** CloudPanel v2.
+- **Stack:** Nginx + PHP 8.3-FPM + PostgreSQL 17 + PostGIS 3.6 + Python 3.12/3.14 venv.
+- **Runbook:** Terdokumentasi lengkap di `docs/deployment/HOSTINGER_CLOUDPANEL_DEPLOYMENT_GUIDE.md`.

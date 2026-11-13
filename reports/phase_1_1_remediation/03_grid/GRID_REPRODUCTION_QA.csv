@@ -1,0 +1,4 @@
+grid_id,resolution_deg,cols,rows,total_bbox_cells,pure_ocean_cells,coastal_boundary_cells,outer_aoi_boundary_cells,active_marine_cells,land_excluded_cells,outside_cells,sum_intersection_area_km2,sum_ocean_area_km2,master_baseline_ease6933_km2,area_discrepancy_vs_master_km2
+025,0.25,96,29,2784,1039,173,175,1387,0,1397,933749.49,933749.49,933749.49,0.0
+R010,0.1,240,72,17280,7166,501,462,8129,0,9151,933749.49,933749.49,933749.49,0.0
+PRIGI005,0.05,40,49,1960,1654,72,0,1726,0,234,51510.49,51510.49,933749.49,-882239.0

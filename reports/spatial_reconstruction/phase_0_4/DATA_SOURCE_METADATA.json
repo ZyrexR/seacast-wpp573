@@ -1,0 +1,1702 @@
+{
+  "project": "seca-513505",
+  "ee_version": "1.7.50",
+  "executed_at_utc": "2026-11-02T07:08:28.671049+00:00",
+  "aoi_geometry_used": "data/spatial_reconstruction/aoi_qc/AOI_WPP573_SIMPLIFIED_0p01deg_FOR_GEE.geojson",
+  "datasets": {
+    "oisst": {
+      "collection_id": "NOAA/CDR/OISST/V2_1",
+      "basic": {
+        "band_types": {
+          "anom": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "err": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "ice": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "sst": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          }
+        },
+        "bands": [
+          "sst",
+          "anom",
+          "ice",
+          "err"
+        ],
+        "crs_band0": "EPSG:4326",
+        "first": "1981-09-01T00:00",
+        "first_image_properties_keys": [
+          "system:time_start",
+          "anom_scale",
+          "system:footprint",
+          "system:time_end",
+          "sst_scale",
+          "system:version",
+          "system:id",
+          "err_scale",
+          "system:asset_size",
+          "status",
+          "system:index",
+          "system:bands",
+          "system:band_names"
+        ],
+        "last": "2026-10-29T00:00",
+        "nominal_scale_m_band0": 27829.87269831839,
+        "study_period_images": 4017
+      },
+      "monthly_counts": {
+        "counts": {
+          "2015-01": 31,
+          "2015-02": 28,
+          "2015-03": 31,
+          "2015-04": 30,
+          "2015-05": 31,
+          "2015-06": 30,
+          "2015-07": 31,
+          "2015-08": 31,
+          "2015-09": 30,
+          "2015-10": 31,
+          "2015-11": 30,
+          "2015-12": 31,
+          "2016-01": 31,
+          "2016-02": 29,
+          "2016-03": 31,
+          "2016-04": 30,
+          "2016-05": 31,
+          "2016-06": 30,
+          "2016-07": 31,
+          "2016-08": 31,
+          "2016-09": 30,
+          "2016-10": 31,
+          "2016-11": 30,
+          "2016-12": 31,
+          "2017-01": 31,
+          "2017-02": 28,
+          "2017-03": 31,
+          "2017-04": 30,
+          "2017-05": 31,
+          "2017-06": 30,
+          "2017-07": 31,
+          "2017-08": 31,
+          "2017-09": 30,
+          "2017-10": 31,
+          "2017-11": 30,
+          "2017-12": 31,
+          "2018-01": 31,
+          "2018-02": 28,
+          "2018-03": 31,
+          "2018-04": 30,
+          "2018-05": 31,
+          "2018-06": 30,
+          "2018-07": 31,
+          "2018-08": 31,
+          "2018-09": 30,
+          "2018-10": 31,
+          "2018-11": 30,
+          "2018-12": 31,
+          "2019-01": 31,
+          "2019-02": 28,
+          "2019-03": 31,
+          "2019-04": 30,
+          "2019-05": 31,
+          "2019-06": 30,
+          "2019-07": 31,
+          "2019-08": 31,
+          "2019-09": 30,
+          "2019-10": 31,
+          "2019-11": 30,
+          "2019-12": 31,
+          "2020-01": 31,
+          "2020-02": 29,
+          "2020-03": 31,
+          "2020-04": 30,
+          "2020-05": 31,
+          "2020-06": 30,
+          "2020-07": 31,
+          "2020-08": 31,
+          "2020-09": 30,
+          "2020-10": 31,
+          "2020-11": 30,
+          "2020-12": 31,
+          "2021-01": 31,
+          "2021-02": 28,
+          "2021-03": 31,
+          "2021-04": 30,
+          "2021-05": 31,
+          "2021-06": 30,
+          "2021-07": 31,
+          "2021-08": 31,
+          "2021-09": 30,
+          "2021-10": 31,
+          "2021-11": 30,
+          "2021-12": 31,
+          "2022-01": 31,
+          "2022-02": 28,
+          "2022-03": 31,
+          "2022-04": 30,
+          "2022-05": 31,
+          "2022-06": 30,
+          "2022-07": 31,
+          "2022-08": 31,
+          "2022-09": 30,
+          "2022-10": 31,
+          "2022-11": 30,
+          "2022-12": 31,
+          "2023-01": 31,
+          "2023-02": 28,
+          "2023-03": 31,
+          "2023-04": 30,
+          "2023-05": 31,
+          "2023-06": 30,
+          "2023-07": 31,
+          "2023-08": 31,
+          "2023-09": 30,
+          "2023-10": 31,
+          "2023-11": 30,
+          "2023-12": 31,
+          "2024-01": 31,
+          "2024-02": 29,
+          "2024-03": 31,
+          "2024-04": 30,
+          "2024-05": 31,
+          "2024-06": 30,
+          "2024-07": 31,
+          "2024-08": 31,
+          "2024-09": 30,
+          "2024-10": 31,
+          "2024-11": 30,
+          "2024-12": 31,
+          "2025-01": 30,
+          "2025-02": 28,
+          "2025-03": 31,
+          "2025-04": 30,
+          "2025-05": 31,
+          "2025-06": 30,
+          "2025-07": 31,
+          "2025-08": 31,
+          "2025-09": 30,
+          "2025-10": 31,
+          "2025-11": 30,
+          "2025-12": 31
+        },
+        "months_with_zero_images": [],
+        "min": 28,
+        "max": 31,
+        "total": 4017
+      },
+      "raw_sample_2020-07-15_sst_anom_err": {
+        "sst": {
+          "sst_max": 2910,
+          "sst_mean": 2718.3821690668183,
+          "sst_min": 2608
+        },
+        "anom": {
+          "anom_max": 194,
+          "anom_mean": 30.393747636134794,
+          "anom_min": -83
+        },
+        "err": {
+          "err_max": 31,
+          "err_mean": 14.156833517145369,
+          "err_min": 12
+        },
+        "ice": {
+          "ice_max": null,
+          "ice_mean": null,
+          "ice_min": null
+        }
+      },
+      "valid_fraction_sst_2020-07-15_at_27830m": 0.9865639443367888,
+      "_elapsed_s": 10.087809
+    },
+    "era5land": {
+      "collection_id": "ECMWF/ERA5_LAND/MONTHLY_AGGR",
+      "basic": {
+        "bands": [
+          "u_component_of_wind_10m",
+          "v_component_of_wind_10m",
+          "u_component_of_wind_10m_min",
+          "u_component_of_wind_10m_max",
+          "v_component_of_wind_10m_min",
+          "v_component_of_wind_10m_max",
+          "..."
+        ],
+        "crs_band0": "EPSG:4326",
+        "first": "1950-02-01T00:00",
+        "first_image_properties_keys": [
+          "system:version",
+          "system:id",
+          "system:time_start",
+          "month",
+          "year",
+          "system:footprint",
+          "system:time_end",
+          "system:asset_size",
+          "system:index",
+          "system:bands",
+          "system:band_names"
+        ],
+        "last": "2026-09-01T00:00",
+        "nominal_scale_m_band0": 11131.949079327358,
+        "study_period_images": 132
+      },
+      "valid_fraction_u10_over_marine_AOI_2020-07_at_11132m": 0.018987144925340652,
+      "alternative_ECMWF/ERA5/MONTHLY": {
+        "last": "2020-06-01"
+      },
+      "alternative_ECMWF/ERA5/DAILY": {
+        "last": "2020-07-09"
+      },
+      "_elapsed_s": 6.686236
+    },
+    "hycom": {
+      "collection_id": "HYCOM/sea_water_velocity",
+      "basic": {
+        "band_types": {
+          "velocity_u_0": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_u_10": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_u_100": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_u_1000": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_u_12": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_u_125": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_u_1250": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_u_15": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_u_150": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_u_1500": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_u_2": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_u_20": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_u_200": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_u_2000": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_u_25": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_u_250": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_u_2500": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_u_30": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_u_300": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_u_3000": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_u_35": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_u_350": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_u_4": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_u_40": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_u_400": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_u_4000": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_u_45": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_u_50": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_u_500": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_u_5000": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_u_6": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_u_60": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_u_600": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_u_70": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_u_700": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_u_8": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_u_80": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_u_800": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_u_90": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_u_900": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_v_0": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_v_10": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_v_100": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_v_1000": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_v_12": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_v_125": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_v_1250": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_v_15": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_v_150": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_v_1500": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_v_2": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_v_20": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_v_200": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_v_2000": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_v_25": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_v_250": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_v_2500": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_v_30": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_v_300": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_v_3000": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_v_35": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_v_350": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_v_4": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_v_40": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_v_400": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_v_4000": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_v_45": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_v_50": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_v_500": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_v_5000": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_v_6": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_v_60": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_v_600": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_v_70": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_v_700": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_v_8": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_v_80": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_v_800": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_v_90": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          },
+          "velocity_v_900": {
+            "type": "PixelType",
+            "precision": "int",
+            "min": -32768,
+            "max": 32767
+          }
+        },
+        "bands": [
+          "velocity_u_0",
+          "velocity_v_0",
+          "velocity_u_2",
+          "velocity_v_2",
+          "velocity_u_4",
+          "velocity_v_4",
+          "velocity_u_6",
+          "velocity_v_6",
+          "velocity_u_8",
+          "velocity_v_8",
+          "velocity_u_10",
+          "velocity_v_10",
+          "velocity_u_12",
+          "velocity_v_12",
+          "velocity_u_15",
+          "velocity_v_15",
+          "velocity_u_20",
+          "velocity_v_20",
+          "velocity_u_25",
+          "velocity_v_25",
+          "velocity_u_30",
+          "velocity_v_30",
+          "velocity_u_35",
+          "velocity_v_35",
+          "velocity_u_40",
+          "velocity_v_40",
+          "velocity_u_45",
+          "velocity_v_45",
+          "velocity_u_50",
+          "velocity_v_50",
+          "velocity_u_60",
+          "velocity_v_60",
+          "velocity_u_70",
+          "velocity_v_70",
+          "velocity_u_80",
+          "velocity_v_80",
+          "velocity_u_90",
+          "velocity_v_90",
+          "velocity_u_100",
+          "velocity_v_100",
+          "velocity_u_125",
+          "velocity_v_125",
+          "velocity_u_150",
+          "velocity_v_150",
+          "velocity_u_200",
+          "velocity_v_200",
+          "velocity_u_250",
+          "velocity_v_250",
+          "velocity_u_300",
+          "velocity_v_300",
+          "velocity_u_350",
+          "velocity_v_350",
+          "velocity_u_400",
+          "velocity_v_400",
+          "velocity_u_500",
+          "velocity_v_500",
+          "velocity_u_600",
+          "velocity_v_600",
+          "velocity_u_700",
+          "velocity_v_700",
+          "velocity_u_800",
+          "velocity_v_800",
+          "velocity_u_900",
+          "velocity_v_900",
+          "velocity_u_1000",
+          "velocity_v_1000",
+          "velocity_u_1250",
+          "velocity_v_1250",
+          "velocity_u_1500",
+          "velocity_v_1500",
+          "velocity_u_2000",
+          "velocity_v_2000",
+          "velocity_u_2500",
+          "velocity_v_2500",
+          "velocity_u_3000",
+          "velocity_v_3000",
+          "velocity_u_4000",
+          "velocity_v_4000",
+          "velocity_u_5000",
+          "velocity_v_5000"
+        ],
+        "crs_band0": "EPSG:4326",
+        "first": "1992-10-02T00:00",
+        "first_image_properties_keys": [
+          "system:time_start",
+          "experiment",
+          "system:footprint",
+          "system:time_end",
+          "system:version",
+          "system:id",
+          "system:asset_size",
+          "system:index",
+          "system:bands",
+          "system:band_names"
+        ],
+        "last": "2024-09-05T09:00",
+        "nominal_scale_m_band0": 8905.559807134887,
+        "study_period_images": 18938
+      },
+      "monthly_counts": {
+        "counts": {
+          "2015-01": 30,
+          "2015-02": 28,
+          "2015-03": 29,
+          "2015-04": 30,
+          "2015-05": 31,
+          "2015-06": 30,
+          "2015-07": 31,
+          "2015-08": 31,
+          "2015-09": 29,
+          "2015-10": 31,
+          "2015-11": 30,
+          "2015-12": 31,
+          "2016-01": 31,
+          "2016-02": 29,
+          "2016-03": 31,
+          "2016-04": 30,
+          "2016-05": 31,
+          "2016-06": 30,
+          "2016-07": 30,
+          "2016-08": 31,
+          "2016-09": 28,
+          "2016-10": 29,
+          "2016-11": 30,
+          "2016-12": 30,
+          "2017-01": 31,
+          "2017-02": 55,
+          "2017-03": 60,
+          "2017-04": 55,
+          "2017-05": 57,
+          "2017-06": 60,
+          "2017-07": 60,
+          "2017-08": 53,
+          "2017-09": 54,
+          "2017-10": 42,
+          "2017-11": 29,
+          "2017-12": 31,
+          "2018-01": 31,
+          "2018-02": 28,
+          "2018-03": 28,
+          "2018-04": 29,
+          "2018-05": 30,
+          "2018-06": 30,
+          "2018-07": 31,
+          "2018-08": 31,
+          "2018-09": 111,
+          "2018-10": 228,
+          "2018-11": 216,
+          "2018-12": 248,
+          "2019-01": 247,
+          "2019-02": 224,
+          "2019-03": 248,
+          "2019-04": 239,
+          "2019-05": 247,
+          "2019-06": 239,
+          "2019-07": 248,
+          "2019-08": 248,
+          "2019-09": 240,
+          "2019-10": 248,
+          "2019-11": 240,
+          "2019-12": 248,
+          "2020-01": 248,
+          "2020-02": 232,
+          "2020-03": 248,
+          "2020-04": 240,
+          "2020-05": 248,
+          "2020-06": 240,
+          "2020-07": 248,
+          "2020-08": 248,
+          "2020-09": 240,
+          "2020-10": 245,
+          "2020-11": 240,
+          "2020-12": 248,
+          "2021-01": 248,
+          "2021-02": 224,
+          "2021-03": 248,
+          "2021-04": 240,
+          "2021-05": 248,
+          "2021-06": 240,
+          "2021-07": 248,
+          "2021-08": 248,
+          "2021-09": 240,
+          "2021-10": 248,
+          "2021-11": 240,
+          "2021-12": 248,
+          "2022-01": 248,
+          "2022-02": 224,
+          "2022-03": 248,
+          "2022-04": 240,
+          "2022-05": 248,
+          "2022-06": 240,
+          "2022-07": 248,
+          "2022-08": 248,
+          "2022-09": 240,
+          "2022-10": 248,
+          "2022-11": 240,
+          "2022-12": 248,
+          "2023-01": 248,
+          "2023-02": 224,
+          "2023-03": 248,
+          "2023-04": 240,
+          "2023-05": 248,
+          "2023-06": 240,
+          "2023-07": 248,
+          "2023-08": 248,
+          "2023-09": 240,
+          "2023-10": 248,
+          "2023-11": 240,
+          "2023-12": 248,
+          "2024-01": 248,
+          "2024-02": 232,
+          "2024-03": 248,
+          "2024-04": 240,
+          "2024-05": 248,
+          "2024-06": 240,
+          "2024-07": 248,
+          "2024-08": 248,
+          "2024-09": 36,
+          "2024-10": 0,
+          "2024-11": 0,
+          "2024-12": 0,
+          "2025-01": 0,
+          "2025-02": 0,
+          "2025-03": 0,
+          "2025-04": 0,
+          "2025-05": 0,
+          "2025-06": 0,
+          "2025-07": 0,
+          "2025-08": 0,
+          "2025-09": 0,
+          "2025-10": 0,
+          "2025-11": 0,
+          "2025-12": 0
+        },
+        "months_with_zero_images": [
+          "2024-10",
+          "2024-11",
+          "2024-12",
+          "2025-01",
+          "2025-02",
+          "2025-03",
+          "2025-04",
+          "2025-05",
+          "2025-06",
+          "2025-07",
+          "2025-08",
+          "2025-09",
+          "2025-10",
+          "2025-11",
+          "2025-12"
+        ],
+        "min": 0,
+        "max": 248,
+        "total": 18938
+      },
+      "raw_sample_2020-07-15_surface": {
+        "velocity_u_0": {
+          "velocity_u_0_max": 422,
+          "velocity_u_0_mean": -290.897706844028,
+          "velocity_u_0_min": -1399
+        },
+        "velocity_v_0": {
+          "velocity_v_0_max": 547,
+          "velocity_v_0_mean": -69.42932081085084,
+          "velocity_v_0_min": -1407
+        }
+      },
+      "valid_fraction_band0_2020-07-15_at_8905m": 0.972793836770725,
+      "_elapsed_s": 46.71747
+    },
+    "etopo": {
+      "collection_id": "NOAA/NGDC/ETOPO1",
+      "bands": [
+        "bedrock",
+        "ice_surface"
+      ],
+      "band_types": {
+        "bedrock": {
+          "type": "PixelType",
+          "precision": "int",
+          "min": -32768,
+          "max": 32767
+        },
+        "ice_surface": {
+          "type": "PixelType",
+          "precision": "int",
+          "min": -32768,
+          "max": 32767
+        }
+      },
+      "nominal_scale_m": 1855.3248465545594,
+      "sign_convention_samples_bedrock_m": {
+        "Semeru_summit_112.922E_8.108S": 3027,
+        "Java_Trench_110.5E_10.6S": -5858,
+        "Prigi_Bay_111.73E_8.30S": 2,
+        "Open_ocean_115E_12S": -5223
+      },
+      "aoi_bedrock_stats_m": {
+        "bedrock_max": 1025,
+        "bedrock_mean": -3103.0265214111573,
+        "bedrock_min": -7226
+      },
+      "_elapsed_s": 5.298271
+    },
+    "cfsv2": {
+      "collection_id": "NOAA/CFSV2/FOR6H_HARMONIZED",
+      "basic": {
+        "bands": [
+          "u-component_of_wind_height_above_ground",
+          "v-component_of_wind_height_above_ground",
+          "... 22 bands total"
+        ],
+        "crs_band0": "EPSG:4326",
+        "first": "1979-01-01T00:00",
+        "first_image_properties_keys": [
+          "system:version",
+          "system:id",
+          "system:index",
+          "system:time_start",
+          "system:footprint",
+          "start_hour",
+          "system:time_end",
+          "end_hour",
+          "system:asset_size",
+          "system:bands",
+          "system:band_names"
+        ],
+        "last": "2026-11-01T06:00",
+        "nominal_scale_m_band0": 34771.29356168821,
+        "study_period_images": 16061
+      },
+      "monthly_counts": {
+        "counts": {
+          "2015-01": 124,
+          "2015-02": 112,
+          "2015-03": 124,
+          "2015-04": 120,
+          "2015-05": 124,
+          "2015-06": 120,
+          "2015-07": 124,
+          "2015-08": 124,
+          "2015-09": 120,
+          "2015-10": 124,
+          "2015-11": 120,
+          "2015-12": 124,
+          "2016-01": 124,
+          "2016-02": 116,
+          "2016-03": 124,
+          "2016-04": 120,
+          "2016-05": 124,
+          "2016-06": 120,
+          "2016-07": 124,
+          "2016-08": 124,
+          "2016-09": 120,
+          "2016-10": 124,
+          "2016-11": 120,
+          "2016-12": 124,
+          "2017-01": 124,
+          "2017-02": 112,
+          "2017-03": 124,
+          "2017-04": 120,
+          "2017-05": 124,
+          "2017-06": 120,
+          "2017-07": 124,
+          "2017-08": 124,
+          "2017-09": 120,
+          "2017-10": 124,
+          "2017-11": 120,
+          "2017-12": 124,
+          "2018-01": 124,
+          "2018-02": 112,
+          "2018-03": 124,
+          "2018-04": 120,
+          "2018-05": 124,
+          "2018-06": 120,
+          "2018-07": 124,
+          "2018-08": 124,
+          "2018-09": 120,
+          "2018-10": 124,
+          "2018-11": 120,
+          "2018-12": 124,
+          "2019-01": 124,
+          "2019-02": 112,
+          "2019-03": 124,
+          "2019-04": 120,
+          "2019-05": 124,
+          "2019-06": 120,
+          "2019-07": 124,
+          "2019-08": 124,
+          "2019-09": 120,
+          "2019-10": 124,
+          "2019-11": 120,
+          "2019-12": 124,
+          "2020-01": 124,
+          "2020-02": 116,
+          "2020-03": 124,
+          "2020-04": 120,
+          "2020-05": 124,
+          "2020-06": 120,
+          "2020-07": 124,
+          "2020-08": 124,
+          "2020-09": 120,
+          "2020-10": 124,
+          "2020-11": 120,
+          "2020-12": 124,
+          "2021-01": 124,
+          "2021-02": 112,
+          "2021-03": 124,
+          "2021-04": 120,
+          "2021-05": 124,
+          "2021-06": 120,
+          "2021-07": 124,
+          "2021-08": 124,
+          "2021-09": 120,
+          "2021-10": 124,
+          "2021-11": 120,
+          "2021-12": 124,
+          "2022-01": 124,
+          "2022-02": 112,
+          "2022-03": 124,
+          "2022-04": 120,
+          "2022-05": 124,
+          "2022-06": 120,
+          "2022-07": 124,
+          "2022-08": 124,
+          "2022-09": 120,
+          "2022-10": 124,
+          "2022-11": 120,
+          "2022-12": 124,
+          "2023-01": 124,
+          "2023-02": 112,
+          "2023-03": 124,
+          "2023-04": 120,
+          "2023-05": 124,
+          "2023-06": 120,
+          "2023-07": 124,
+          "2023-08": 124,
+          "2023-09": 120,
+          "2023-10": 124,
+          "2023-11": 120,
+          "2023-12": 124,
+          "2024-01": 124,
+          "2024-02": 116,
+          "2024-03": 124,
+          "2024-04": 120,
+          "2024-05": 124,
+          "2024-06": 120,
+          "2024-07": 124,
+          "2024-08": 123,
+          "2024-09": 120,
+          "2024-10": 124,
+          "2024-11": 120,
+          "2024-12": 122,
+          "2025-01": 123,
+          "2025-02": 112,
+          "2025-03": 124,
+          "2025-04": 114,
+          "2025-05": 124,
+          "2025-06": 120,
+          "2025-07": 124,
+          "2025-08": 124,
+          "2025-09": 120,
+          "2025-10": 124,
+          "2025-11": 119,
+          "2025-12": 124
+        },
+        "months_with_zero_images": [],
+        "min": 112,
+        "max": 124,
+        "total": 16061
+      },
+      "wind_band_types": {
+        "u-component_of_wind_height_above_ground": {
+          "type": "PixelType",
+          "precision": "float"
+        },
+        "v-component_of_wind_height_above_ground": {
+          "type": "PixelType",
+          "precision": "float"
+        }
+      },
+      "raw_sample_2020-07-15T00_u_v": {
+        "u-component_of_wind_height_above_ground": {
+          "u-component_of_wind_height_above_ground_max": 6.239999771118164,
+          "u-component_of_wind_height_above_ground_mean": -6.827003387760129,
+          "u-component_of_wind_height_above_ground_min": -9.579999923706055
+        },
+        "v-component_of_wind_height_above_ground": {
+          "v-component_of_wind_height_above_ground_max": 7.699999809265137,
+          "v-component_of_wind_height_above_ground_mean": 2.1938925585462057,
+          "v-component_of_wind_height_above_ground_min": -5.059999942779541
+        }
+      },
+      "study_period_min_wind_components_m_s": {
+        "u-component_of_wind_height_above_ground_min": -23.280000686645508,
+        "v-component_of_wind_height_above_ground_min": -29.850000381469727
+      },
+      "study_period_max_wind_components_m_s": {
+        "u-component_of_wind_height_above_ground_max": 465.2599792480469,
+        "v-component_of_wind_height_above_ground_max": 458.2699890136719
+      },
+      "_elapsed_s": 80.185298
+    },
+    "modis": {
+      "collection_id": "NASA/OCEANDATA/MODIS-Aqua/L3SMI",
+      "basic": {
+        "band_types": {
+          "Rrs_412": {
+            "type": "PixelType",
+            "precision": "float"
+          },
+          "Rrs_443": {
+            "type": "PixelType",
+            "precision": "float"
+          },
+          "Rrs_469": {
+            "type": "PixelType",
+            "precision": "float"
+          },
+          "Rrs_488": {
+            "type": "PixelType",
+            "precision": "float"
+          },
+          "Rrs_531": {
+            "type": "PixelType",
+            "precision": "float"
+          },
+          "Rrs_547": {
+            "type": "PixelType",
+            "precision": "float"
+          },
+          "Rrs_555": {
+            "type": "PixelType",
+            "precision": "float"
+          },
+          "Rrs_645": {
+            "type": "PixelType",
+            "precision": "float"
+          },
+          "Rrs_667": {
+            "type": "PixelType",
+            "precision": "float"
+          },
+          "Rrs_678": {
+            "type": "PixelType",
+            "precision": "float"
+          },
+          "chlor_a": {
+            "type": "PixelType",
+            "precision": "float"
+          },
+          "nflh": {
+            "type": "PixelType",
+            "precision": "float"
+          },
+          "poc": {
+            "type": "PixelType",
+            "precision": "float"
+          },
+          "sst": {
+            "type": "PixelType",
+            "precision": "float"
+          }
+        },
+        "bands": [
+          "chlor_a",
+          "nflh",
+          "poc",
+          "Rrs_412",
+          "Rrs_443",
+          "Rrs_469",
+          "Rrs_488",
+          "Rrs_531",
+          "Rrs_547",
+          "Rrs_555",
+          "Rrs_645",
+          "Rrs_667",
+          "Rrs_678",
+          "sst"
+        ],
+        "crs_band0": "EPSG:4326",
+        "first": "2002-07-03T23:40",
+        "first_image_properties_keys": [
+          "Rrs_488_software_name",
+          "Rrs_667_offset",
+          "nflh_lastModified",
+          "Rrs_547_lastModified",
+          "Rrs_469_lastModified",
+          "Rrs_488_lastModified",
+          "chlor_a_software_version",
+          "nflh_scale",
+          "poc_lastModified",
+          "Rrs_412_software_name",
+          "Rrs_667_software_version",
+          "system:id",
+          "Rrs_531_offset",
+          "Rrs_469_scale",
+          "Rrs_645_scale",
+          "Rrs_547_software_version",
+          "system:footprint",
+          "Rrs_547_scale",
+          "poc_software_name",
+          "system:version",
+          "Rrs_555_software_version",
+          "Rrs_412_scale",
+          "Rrs_555_offset",
+          "Rrs_531_lastModified",
+          "Rrs_678_software_name",
+          "Rrs_443_scale",
+          "Rrs_555_lastModified",
+          "Rrs_443_software_version",
+          "poc_software_version",
+          "system:time_end",
+          "Rrs_443_offset",
+          "Rrs_469_software_version",
+          "chlor_a_software_name",
+          "Rrs_678_scale",
+          "chlor_a_offset",
+          "Rrs_667_lastModified",
+          "Rrs_667_software_name",
+          "sst_lastModified",
+          "system:time_start",
+          "Rrs_469_offset",
+          "poc_scale",
+          "Rrs_645_software_version",
+          "sst_software_version",
+          "Rrs_443_lastModified",
+          "Rrs_667_scale",
+          "Rrs_547_software_name",
+          "Rrs_555_software_name",
+          "Rrs_412_lastModified",
+          "Rrs_488_software_version",
+          "nflh_software_name",
+          "Rrs_645_software_name",
+          "Rrs_469_software_name",
+          "Rrs_678_lastModified",
+          "Rrs_678_offset",
+          "Rrs_547_offset",
+          "nflh_software_version",
+          "Rrs_555_scale",
+          "Rrs_412_offset",
+          "Rrs_412_software_version",
+          "Rrs_645_lastModified",
+          "Rrs_488_scale",
+          "poc_offset",
+          "Rrs_531_software_version",
+          "Rrs_678_software_version",
+          "Rrs_443_software_name",
+          "sst_software_name",
+          "Rrs_488_offset",
+          "Rrs_531_software_name",
+          "nflh_offset",
+          "chlor_a_scale",
+          "Rrs_531_scale",
+          "chlor_a_lastModified",
+          "system:asset_size",
+          "Rrs_645_offset",
+          "system:index",
+          "system:bands",
+          "system:band_names"
+        ],
+        "last": "2025-11-30T00:35",
+        "nominal_scale_m_band0": 4638.312264812386,
+        "study_period_images": 3879
+      },
+      "monthly_counts": {
+        "counts": {
+          "2015-01": 31,
+          "2015-02": 28,
+          "2015-03": 31,
+          "2015-04": 30,
+          "2015-05": 31,
+          "2015-06": 30,
+          "2015-07": 31,
+          "2015-08": 31,
+          "2015-09": 30,
+          "2015-10": 31,
+          "2015-11": 30,
+          "2015-12": 31,
+          "2016-01": 31,
+          "2016-02": 29,
+          "2016-03": 31,
+          "2016-04": 30,
+          "2016-05": 31,
+          "2016-06": 30,
+          "2016-07": 31,
+          "2016-08": 31,
+          "2016-09": 30,
+          "2016-10": 31,
+          "2016-11": 30,
+          "2016-12": 31,
+          "2017-01": 31,
+          "2017-02": 28,
+          "2017-03": 31,
+          "2017-04": 30,
+          "2017-05": 31,
+          "2017-06": 30,
+          "2017-07": 31,
+          "2017-08": 31,
+          "2017-09": 30,
+          "2017-10": 31,
+          "2017-11": 30,
+          "2017-12": 31,
+          "2018-01": 31,
+          "2018-02": 28,
+          "2018-03": 31,
+          "2018-04": 30,
+          "2018-05": 31,
+          "2018-06": 30,
+          "2018-07": 31,
+          "2018-08": 31,
+          "2018-09": 30,
+          "2018-10": 31,
+          "2018-11": 30,
+          "2018-12": 31,
+          "2019-01": 31,
+          "2019-02": 28,
+          "2019-03": 31,
+          "2019-04": 30,
+          "2019-05": 31,
+          "2019-06": 30,
+          "2019-07": 31,
+          "2019-08": 31,
+          "2019-09": 30,
+          "2019-10": 31,
+          "2019-11": 30,
+          "2019-12": 31,
+          "2020-01": 31,
+          "2020-02": 29,
+          "2020-03": 31,
+          "2020-04": 30,
+          "2020-05": 31,
+          "2020-06": 30,
+          "2020-07": 31,
+          "2020-08": 31,
+          "2020-09": 30,
+          "2020-10": 31,
+          "2020-11": 30,
+          "2020-12": 31,
+          "2021-01": 31,
+          "2021-02": 28,
+          "2021-03": 31,
+          "2021-04": 30,
+          "2021-05": 31,
+          "2021-06": 30,
+          "2021-07": 0,
+          "2021-08": 7,
+          "2021-09": 30,
+          "2021-10": 31,
+          "2021-11": 0,
+          "2021-12": 26,
+          "2022-01": 31,
+          "2022-02": 28,
+          "2022-03": 31,
+          "2022-04": 16,
+          "2022-05": 31,
+          "2022-06": 30,
+          "2022-07": 31,
+          "2022-08": 31,
+          "2022-09": 30,
+          "2022-10": 31,
+          "2022-11": 30,
+          "2022-12": 31,
+          "2023-01": 31,
+          "2023-02": 28,
+          "2023-03": 31,
+          "2023-04": 30,
+          "2023-05": 31,
+          "2023-06": 30,
+          "2023-07": 31,
+          "2023-08": 31,
+          "2023-09": 30,
+          "2023-10": 31,
+          "2023-11": 30,
+          "2023-12": 31,
+          "2024-01": 31,
+          "2024-02": 29,
+          "2024-03": 31,
+          "2024-04": 30,
+          "2024-05": 31,
+          "2024-06": 30,
+          "2024-07": 31,
+          "2024-08": 31,
+          "2024-09": 30,
+          "2024-10": 31,
+          "2024-11": 30,
+          "2024-12": 31,
+          "2025-01": 30,
+          "2025-02": 28,
+          "2025-03": 31,
+          "2025-04": 30,
+          "2025-05": 31,
+          "2025-06": 30,
+          "2025-07": 31,
+          "2025-08": 31,
+          "2025-09": 30,
+          "2025-10": 30,
+          "2025-11": 28,
+          "2025-12": 0
+        },
+        "months_with_zero_images": [
+          "2021-07",
+          "2021-11",
+          "2025-12"
+        ],
+        "min": 0,
+        "max": 31,
+        "total": 3879
+      },
+      "raw_sample_2020-07_median": {
+        "chlor_a": {
+          "chlor_a_max": 35.46719741821289,
+          "chlor_a_mean": 0.38574754241084347,
+          "chlor_a_min": 0.10083335638046265
+        },
+        "sst": {
+          "sst_max": 31.31999969482422,
+          "sst_mean": 27.09389396001645,
+          "sst_min": 25.40999984741211
+        }
+      },
+      "seasonal_sample_composite_valid_fraction_chlor_a": {
+        "2015-01": 0.9132129295748228,
+        "2015-07": 0.9837082402403827,
+        "2016-01": 0.9590196708858683,
+        "2016-07": 0.9756183755238332,
+        "2017-01": 0.7829845061147613,
+        "2017-07": 0.9815122636774914,
+        "2018-01": 0.4886608004065884,
+        "2018-07": 0.9829868742354846,
+        "2019-01": 0.9391301892583869,
+        "2019-07": 0.9830169311523549,
+        "2020-01": 0.9690796298809475,
+        "2020-07": 0.97821693260966,
+        "2021-01": 0.6773827165441472,
+        "2021-07": 0,
+        "2022-01": 0.7915079190867801,
+        "2022-07": 0.9873178027118631,
+        "2023-01": 0.9746428919490275,
+        "2023-07": 0.988459965552952,
+        "2024-01": 0.9699895347280353,
+        "2024-07": 0.9878059999070969,
+        "2025-01": 0.8273439613376969,
+        "2025-07": 0.9873633434950003
+      },
+      "daily_valid_fraction_examples": {
+        "2020-01-15": 0.10776758810905737,
+        "2020-07-15": 0.19356848513996525,
+        "2023-01-15": 0.046357223795001824,
+        "2023-07-15": 0.5174933779298335
+      },
+      "_elapsed_s": 30.894961
+    }
+  },
+  "probes": {
+    "NASA/OCEANDATA/VIIRS-SNPP/L3SMI": {
+      "found": false,
+      "error": "ImageCollection.load: ImageCollection asset 'NASA/OCEANDATA/VIIRS-SNPP/L3SMI' not found (does not exist or caller does not have access)."
+    },
+    "NASA/OCEANDATA/SNPP-VIIRS/L3SMI": {
+      "found": false,
+      "error": "ImageCollection.load: ImageCollection asset 'NASA/OCEANDATA/SNPP-VIIRS/L3SMI' not found (does not exist or caller does not have access)."
+    },
+    "NASA/OCEANDATA/VIIRS/L3SMI": {
+      "found": false,
+      "error": "ImageCollection.load: ImageCollection asset 'NASA/OCEANDATA/VIIRS/L3SMI' not found (does not exist or caller does not have access)."
+    },
+    "NASA/OCEANDATA/NOAA20-VIIRS/L3SMI": {
+      "found": false,
+      "error": "ImageCollection.load: ImageCollection asset 'NASA/OCEANDATA/NOAA20-VIIRS/L3SMI' not found (does not exist or caller does not have access)."
+    },
+    "JAXA/GCOM-C/L3/OCEAN/CHLA/V3": {
+      "found": true,
+      "kind": "ImageCollection",
+      "size": 6404,
+      "first": "2018-01-01",
+      "last": "2026-10-14",
+      "bands": [
+        "CHLA_AVE",
+        "CHLA_QA_flag"
+      ]
+    },
+    "JAXA/GCOM-C/L3/OCEAN/CHLA/V2": {
+      "found": true,
+      "kind": "ImageCollection",
+      "size": 2853,
+      "first": "2018-01-01",
+      "last": "2021-11-28",
+      "bands": [
+        "CHLA_AVE",
+        "CHLA_QA_flag"
+      ]
+    },
+    "HYCOM/sea_temp_salinity": {
+      "found": true,
+      "kind": "ImageCollection",
+      "size": 27098,
+      "first": "1992-10-02",
+      "last": "2024-09-05",
+      "bands": [
+        "water_temp_0",
+        "salinity_0",
+        "water_temp_2",
+        "salinity_2",
+        "water_temp_4",
+        "salinity_4",
+        "water_temp_6",
+        "salinity_6",
+        "water_temp_8",
+        "salinity_8",
+        "water_temp_10",
+        "salinity_10"
+      ]
+    },
+    "projects/sat-io/open-datasets/gebco/gebco_grid": {
+      "found": false,
+      "error": "Date: Parameter 'value' is required and may not be null."
+    },
+    "projects/sat-io/open-datasets/GEBCO/GEBCO_2023": {
+      "found": false,
+      "error": "ImageCollection.load: ImageCollection asset 'projects/sat-io/open-datasets/GEBCO/GEBCO_2023' not found (does not exist or caller does not have access)."
+    },
+    "ECMWF/ERA5/HOURLY": {
+      "found": true,
+      "kind": "ImageCollection",
+      "size": 726955,
+      "first": "1943-03-31",
+      "last": "2026-10-27",
+      "bands": [
+        "dewpoint_temperature_2m",
+        "temperature_2m",
+        "ice_temperature_layer_1",
+        "ice_temperature_layer_2",
+        "ice_temperature_layer_3",
+        "ice_temperature_layer_4",
+        "mean_sea_level_pressure",
+        "sea_surface_temperature",
+        "skin_temperature",
+        "surface_pressure",
+        "u_component_of_wind_100m",
+        "v_component_of_wind_100m"
+      ]
+    },
+    "NOAA/NWW3/GLOBAL": {
+      "found": false,
+      "error": "ImageCollection.load: ImageCollection asset 'NOAA/NWW3/GLOBAL' not found (does not exist or caller does not have access)."
+    }
+  }
+}

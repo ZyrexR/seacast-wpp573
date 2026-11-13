@@ -1,0 +1,37 @@
+{
+  "dataset_name": "AOI_WPP573_MASTER",
+  "official_designation": "Wilayah Pengelolaan Perikanan Negara Republik Indonesia (WPPNRI) 573",
+  "authority": "Badan Informasi Geospasial (BIG)",
+  "service_url": "https://kspservices.big.go.id/satupeta/rest/services/PUBLIK/SUMBER_DAYA_ALAM_DAN_LINGKUNGAN/MapServer/21",
+  "layer_id": 21,
+  "objectid": 5,
+  "target_attribute_query": "namobj = 'WPP-RI 573'",
+  "acquisition_timestamp": "2026-11-02T06:25:29.865176+00:00",
+  "crs_storage": "EPSG:4326 (WGS 84 Geographic 2D)",
+  "crs_equal_area_evaluation": "EPSG:6933 (EASE-Grid 2.0 Global)",
+  "geometry_metrics": {
+    "geometry_type": "MultiPolygon",
+    "is_valid": true,
+    "validity_explanation": "Valid Geometry",
+    "component_count": 2,
+    "interior_rings_count": 1400,
+    "total_vertices": 625698,
+    "rings_closed": true,
+    "bounding_box": {
+      "min_longitude": 102.57783,
+      "min_latitude": -13.938231,
+      "max_longitude": 126.499579,
+      "max_latitude": -6.801796
+    },
+    "area_metrics": {
+      "geodesic_wgs84_km2": 933750.9,
+      "equal_area_epsg6933_km2": 933749.49,
+      "geodesic_perimeter_km": 9553.93
+    }
+  },
+  "regulatory_context": "Permen-KP No. 18 Tahun 2014 & Perubahannya tentang Wilayah Pengelolaan Perikanan Negara Republik Indonesia",
+  "provenance_hashes": {
+    "raw_geojson_sha256": "4e2b16197b0d48f350a488ad0a9c076691cf757e78ae855ae117d63d0e53c669",
+    "master_geojson_sha256": "fad138ee3dab333d93ac94a416bccd7b73c308313b328e8f0b4f743cd17e7545"
+  }
+}

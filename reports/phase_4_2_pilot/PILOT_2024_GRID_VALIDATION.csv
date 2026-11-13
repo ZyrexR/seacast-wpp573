@@ -1,0 +1,2 @@
+grid_id,cell_count,resolution_deg,bbox_lon_min,bbox_lon_max,bbox_lat_min,bbox_lat_max,pure_ocean_cells,coastal_cells,outer_aoi_cells,master_aoi_file,reference_area_km2,grid_sum_ocean_area_km2,area_reconciliation_pct,status
+WPP573_R010,8129,0.1,102.5,126.5,-14.0,-6.8,7166,501,462,AOI_WPP573_MASTER.geojson,933749.49,933641.65,99.988,PASS

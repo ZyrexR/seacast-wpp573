@@ -1,0 +1,13 @@
+year_month,month,oisst_raw_images,modis_raw_images,cfsv2_raw_images,hycom_raw_images,cmems_asset_images,temporal_status,notes
+2024-01,1,31,31,124,248,0,COMPLETE,Full 100% multi-sensor coverage
+2024-02,2,29,29,116,232,0,COMPLETE,Full 100% multi-sensor coverage
+2024-03,3,31,31,124,248,0,COMPLETE,Full 100% multi-sensor coverage
+2024-04,4,30,30,120,240,0,COMPLETE,Full 100% multi-sensor coverage
+2024-05,5,31,31,124,248,0,COMPLETE,Full 100% multi-sensor coverage
+2024-06,6,30,30,120,240,0,COMPLETE,Full 100% multi-sensor coverage
+2024-07,7,31,31,124,248,0,COMPLETE,Full 100% multi-sensor coverage
+2024-08,8,31,31,123,248,0,COMPLETE,Full 100% multi-sensor coverage
+2024-09,9,30,30,120,0,0,PARTIAL_MISSING_CMEMS_ASSET,HYCOM ceased Sep 2024; CMEMS asset not ingested into GEE
+2024-10,10,31,31,124,0,0,PARTIAL_MISSING_CMEMS_ASSET,HYCOM ceased Sep 2024; CMEMS asset not ingested into GEE
+2024-11,11,30,30,120,0,0,PARTIAL_MISSING_CMEMS_ASSET,HYCOM ceased Sep 2024; CMEMS asset not ingested into GEE
+2024-12,12,31,31,122,0,0,PARTIAL_MISSING_CMEMS_ASSET,HYCOM ceased Sep 2024; CMEMS asset not ingested into GEE

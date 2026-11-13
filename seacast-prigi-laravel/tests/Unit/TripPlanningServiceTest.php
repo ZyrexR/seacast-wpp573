@@ -109,3 +109,4 @@ class TripPlanningServiceTest extends TestCase
         $this->assertTrue($plan['wave_safety']['is_safe_to_sail']);
     }
 }
+

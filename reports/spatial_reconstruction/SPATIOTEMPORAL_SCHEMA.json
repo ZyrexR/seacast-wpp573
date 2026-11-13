@@ -1,0 +1,201 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "SEACAST_PRIGI_WPP573_Spatiotemporal_Oceanographic_Observation",
+  "type": "object",
+  "description": "Schema for monthly gridded oceanographic intelligence across WPPNRI 573 (2015-2025)",
+  "required": [
+    "grid_id",
+    "longitude",
+    "latitude",
+    "area_km2",
+    "year",
+    "month",
+    "date"
+  ],
+  "properties": {
+    "grid_id": {
+      "type": "integer",
+      "description": "Unique identifier of grid cell within WPPNRI 573 master grid"
+    },
+    "longitude": {
+      "type": "number",
+      "minimum": 102.5,
+      "maximum": 126.6,
+      "description": "Centroid Longitude in WGS84 (EPSG:4326)"
+    },
+    "latitude": {
+      "type": "number",
+      "minimum": -14.0,
+      "maximum": -6.7,
+      "description": "Centroid Latitude in WGS84 (EPSG:4326)"
+    },
+    "area_km2": {
+      "type": "number",
+      "description": "Geodesic cell area inside WPPNRI 573 (km2)"
+    },
+    "aoi_intersection_fraction": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 1.0,
+      "description": "Fraction of cell intersecting official WPPNRI 573 boundary"
+    },
+    "year": {
+      "type": "integer",
+      "minimum": 2015,
+      "maximum": 2025
+    },
+    "month": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 12
+    },
+    "date": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}$",
+      "description": "YYYY-MM format"
+    },
+    "sst": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "description": "Sea Surface Temperature in deg C (Sensor fused MODIS/OISST)"
+    },
+    "sst_anomaly": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "description": "SST Anomaly relative to OISST v2.1 1981-2010 climatological baseline in deg C"
+    },
+    "chlor_a": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "description": "Chlorophyll-a surface concentration in mg/m3 (MODIS-Aqua L3SMI)"
+    },
+    "log10_chla": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "description": "Log10-transformed chlorophyll-a concentration"
+    },
+    "wind_u10": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "description": "10-meter eastward surface wind component in m/s (NOAA CFSv2 Harmonized)"
+    },
+    "wind_v10": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "description": "10-meter northward surface wind component in m/s (NOAA CFSv2 Harmonized)"
+    },
+    "wind_speed": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "description": "Surface wind speed in m/s"
+    },
+    "wind_stress_tau": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "description": "Magnitude of surface wind stress in Pa"
+    },
+    "current_u": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "description": "Eastward ocean current velocity at 0m surface in m/s (HYCOM)"
+    },
+    "current_v": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "description": "Northward ocean current velocity at 0m surface in m/s (HYCOM)"
+    },
+    "current_speed": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "description": "Surface current speed in m/s"
+    },
+    "sla": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "description": "Sea Level Anomaly in meters (Copernicus CMEMS L4)"
+    },
+    "thermal_front_gradient": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "description": "SST spatial gradient magnitude in deg C/km via spherical metric Sobel"
+    },
+    "ekman_transport_u": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "description": "Zonal Ekman transport component in m2/s"
+    },
+    "ekman_transport_v": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "description": "Meridional Ekman transport component in m2/s (negative values denote offshore transport in S. Hemisphere)"
+    },
+    "bathymetry": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "description": "Bedrock bathymetric depth in meters from ETOPO1/GEBCO (negative for ocean depths)"
+    },
+    "bathymetric_slope": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "description": "Seafloor slope angle in degrees"
+    },
+    "dist_to_200m_isobath_km": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "description": "Euclidean geodesic distance to -200m continental shelf-break in km"
+    },
+    "data_coverage": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 1.0,
+      "description": "Fraction of valid unclouded sensor pixels contributing to monthly composite"
+    },
+    "quality_flag": {
+      "type": "string",
+      "enum": [
+        "OBSERVED_RAW",
+        "SENSOR_FUSED",
+        "GAP_FILLED",
+        "MODEL_ESTIMATE",
+        "MASKED_LAND",
+        "INVALID"
+      ]
+    }
+  }
+}

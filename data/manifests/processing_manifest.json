@@ -1,0 +1,70 @@
+{
+  "manifest_version": "2.0.0",
+  "last_updated": "2026-10-31T08:29:17.342Z",
+  "phase": "PHASE 2 - Oceanographic Data Integration & Harmonization",
+  "status": "COMPLETE",
+  "datasets_processed": [
+    {
+      "id": "wpp573_monthly_stats",
+      "file": "data/oceanographic/statistics/monthly/monthly_stats_wpp573.csv",
+      "records": 132
+    },
+    {
+      "id": "prigi_monthly_stats",
+      "file": "data/oceanographic/statistics/monthly/monthly_stats_prigi.csv",
+      "records": 132
+    },
+    {
+      "id": "master_132m_json",
+      "file": "data/oceanographic/statistics/monthly/ocean_fisheries_master_132m.json",
+      "records": 132
+    },
+    {
+      "id": "seasonal_climatology",
+      "file": "data/oceanographic/statistics/seasonal/seasonal_climatology.json",
+      "records": 4
+    },
+    {
+      "id": "annual_climatology",
+      "file": "data/oceanographic/statistics/annual/annual_climatology.json",
+      "records": 11
+    },
+    {
+      "id": "cross_correlation_matrix",
+      "file": "data/oceanographic/derived/upwelling/ocean_fisheries_correlation.json",
+      "records": 36
+    },
+    {
+      "id": "spatial_grid_east_monsoon",
+      "file": "data/oceanographic/processed/seasonal/grid_musim_timur_climatology.json",
+      "cells": 2050
+    },
+    {
+      "id": "spatial_grid_west_monsoon",
+      "file": "data/oceanographic/processed/seasonal/grid_musim_barat_climatology.json",
+      "cells": 2050
+    },
+    {
+      "id": "spatial_grid_super_iod_2019",
+      "file": "data/oceanographic/processed/seasonal/grid_extreme_2019_super_iod.json",
+      "cells": 2050
+    },
+    {
+      "id": "spatial_grid_la_nina_2016",
+      "file": "data/oceanographic/processed/seasonal/grid_extreme_2016_negative_iod.json",
+      "cells": 2050
+    },
+    {
+      "id": "shelf_break_200m_geojson",
+      "file": "data/oceanographic/derived/bathymetry_features/prigi_shelf_break_200m.geojson",
+      "features": 1
+    }
+  ],
+  "sub_aoi_bounds": {
+    "west": 111.0,
+    "east": 113.0,
+    "south": -10.45,
+    "north": -8.0
+  },
+  "sub_aoi_equal_area_km2": 59550.43
+}

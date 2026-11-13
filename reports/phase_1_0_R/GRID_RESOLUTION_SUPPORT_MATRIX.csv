@@ -1,0 +1,10 @@
+Variable_Name,Native_Source,Native_Resolution_m,Native_Resolution_deg,Storage_Grid_deg,Resampling_Method,Effective_Information_Resolution_km,Information_Limitation_Note
+SST,NOAA/CDR/OISST/V2_1,27830,0.25,0.1,Bilinear Interpolation,27.8,Storage on 0.10 deg does NOT create new fine-scale SST features; represents smooth 27.8km background.
+SST_Gradient,Derived from OISST & MODIS,9260,0.083,0.1,Spherical Sobel Convolution,11.0,Thermal front resolution limited to ~11km on regional grid; 5.5km on Sub-AOI.
+Chlorophyll_a,NASA MODIS-Aqua L3SMI,9260,0.083,0.1,Area-Weighted Mean,9.3,Well-matched to 0.10 deg storage grid; near 1:1 information fidelity.
+Chlorophyll_a_Fallback,JAXA GCOM-C SGLI,4630,0.041,0.1,Area-Weighted Mean,4.6,Native resolution is finer than storage grid; aggregated cleanly.
+Wind_10m_u_v,NOAA CFSv2 FOR6H,22264,0.2,0.1,Bilinear Interpolation,22.2,Regional synoptic wind field smoothly interpolated to 0.10 deg.
+Wind_Stress_tau,Derived from CFSv2,22264,0.2,0.1,Quadratic Drag Function,22.2,Physical information limited by 0.20 deg atmospheric grid.
+Ekman_Pumping_w_e,Derived from Wind Stress,22264,0.2,0.1,Spatial Curl Operator,22.2,Pumping velocity reflects mesoscale atmospheric wind stress curl.
+Current_Velocity_u_v,HYCOM sea_water_velocity,8905,0.08,0.1,Bilinear Interpolation,8.9,Well-matched with 0.10 deg regional grid (1:1.2 ratio).
+Bathymetry_Bedrock,NOAA ETOPO1,1855,0.016,0.1,Cell Mean & Gradient,1.8,Sub-grid bathymetry averaged; seafloor slope computed at native resolution before averaging.

@@ -9,11 +9,18 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote');
 
 /**
- * Automated Scientific Python Ensemble SDM Daily Ingestion & Inference
- * Executes every morning at 04:00 WIB (Asia/Jakarta)
+ * Automated Live Zero-Dummy Data Synchronization & Ensemble SDM Inference Pipeline
+ * Orchestrates: Live BMKG Maritim APIs + GEE Satellite Extraction + Model Inference + Cache Warming
+ * Executes automatically every morning at 04:00 WIB (Asia/Jakarta)
  */
-Schedule::command('seacast:infer-daily')
+Schedule::command('seacast:sync-live')
     ->dailyAt('04:00')
+    ->timezone('Asia/Jakarta')
+    ->withoutOverlapping()
+    ->appendOutputTo(storage_path('logs/seacast_sync_live.log'));
+
+Schedule::command('seacast:infer-daily')
+    ->dailyAt('04:30')
     ->timezone('Asia/Jakarta')
     ->withoutOverlapping()
     ->appendOutputTo(storage_path('logs/daily_inference.log'));

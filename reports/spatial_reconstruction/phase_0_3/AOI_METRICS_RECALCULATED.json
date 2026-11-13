@@ -1,0 +1,20 @@
+{
+  "source_file": "data/aoi/raw/WPP573_BIG_ORIGINAL.geojson",
+  "source_sha256": "4e2b16197b0d48f350a488ad0a9c076691cf757e78ae855ae117d63d0e53c669",
+  "min_longitude": 102.57782959700006,
+  "max_longitude": 126.49957913200001,
+  "min_latitude": -13.938230691999934,
+  "max_latitude": -6.80179637599997,
+  "bounds_agree_M1_M2_M3": true,
+  "geodesic_area_wgs84_km2": 933750.899056,
+  "equal_area_epsg6933_km2": 933749.4871602729,
+  "area_methods_relative_diff_pct": -0.00015120689346420489,
+  "geodesic_perimeter_km_all_rings": 12633.735621720736,
+  "polygon_components": 2,
+  "interior_rings": 1400,
+  "interior_rings_geodesic_area_km2": 13988.28198376018,
+  "vertex_count": 625698,
+  "is_valid": true,
+  "feature_count_gdal": 1,
+  "crs_gdal": "EPSG:4326"
+}

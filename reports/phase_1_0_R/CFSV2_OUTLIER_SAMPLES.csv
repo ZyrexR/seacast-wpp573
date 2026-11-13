@@ -1,0 +1,22 @@
+image_id,timestamp_utc,longitude,latitude,u_wind_m_s,v_wind_m_s,wind_speed_m_s,prev_6h_u,next_6h_u,classification,forensic_cause
+2_2025102400,2025-10-24 00:00,118.25,-11.5,6.66,422.22,422.27,Normal (~0 to 5),Normal (~0 to 5),INVALID_ARTIFACT,NCEP operational forecast assimilation numerical divergence / corrupt swath in GEE catalog
+2_2025110312,2025-11-03 12:00,115.4,-10.21,377.75,9.68,377.87,Normal (~0 to 5),Normal (~0 to 5),INVALID_ARTIFACT,NCEP operational forecast assimilation numerical divergence / corrupt swath in GEE catalog
+2_2025110400,2025-11-04 00:00,115.4,-10.21,435.98,7.15,436.04,-2.22,3.57,INVALID_ARTIFACT,NCEP operational forecast assimilation numerical divergence / corrupt swath in GEE catalog
+2_2025111306,2025-11-13 06:00,116.1,-12.05,412.0,7.63,412.07,Normal (~0 to 5),Normal (~0 to 5),INVALID_ARTIFACT,NCEP operational forecast assimilation numerical divergence / corrupt swath in GEE catalog
+2_2025111312,2025-11-13 12:00,116.1,-12.05,403.75,6.61,403.8,Normal (~0 to 5),Normal (~0 to 5),INVALID_ARTIFACT,NCEP operational forecast assimilation numerical divergence / corrupt swath in GEE catalog
+2_2025111318,2025-11-13 18:00,116.1,-12.05,421.22,7.3,421.28,Normal (~0 to 5),Normal (~0 to 5),INVALID_ARTIFACT,NCEP operational forecast assimilation numerical divergence / corrupt swath in GEE catalog
+2_2025111400,2025-11-14 00:00,116.1,-12.05,432.6,7.14,432.66,Normal (~0 to 5),Normal (~0 to 5),INVALID_ARTIFACT,NCEP operational forecast assimilation numerical divergence / corrupt swath in GEE catalog
+2_2025112000,2025-11-20 00:00,114.75,-9.85,8.07,447.78,447.85,Normal (~0 to 5),Normal (~0 to 5),INVALID_ARTIFACT,NCEP operational forecast assimilation numerical divergence / corrupt swath in GEE catalog
+2_2025112006,2025-11-20 06:00,114.75,-9.85,5.37,426.45,426.48,Normal (~0 to 5),Normal (~0 to 5),INVALID_ARTIFACT,NCEP operational forecast assimilation numerical divergence / corrupt swath in GEE catalog
+2_2025112012,2025-11-20 12:00,114.75,-9.85,7.32,434.39,434.45,Normal (~0 to 5),Normal (~0 to 5),INVALID_ARTIFACT,NCEP operational forecast assimilation numerical divergence / corrupt swath in GEE catalog
+2_2025112018,2025-11-20 18:00,114.75,-9.85,6.89,453.83,453.88,Normal (~0 to 5),Normal (~0 to 5),INVALID_ARTIFACT,NCEP operational forecast assimilation numerical divergence / corrupt swath in GEE catalog
+2_2025112100,2025-11-21 00:00,114.75,-9.85,7.12,418.5,418.56,Normal (~0 to 5),Normal (~0 to 5),INVALID_ARTIFACT,NCEP operational forecast assimilation numerical divergence / corrupt swath in GEE catalog
+2_2025120506,2025-12-05 06:00,112.5,-10.5,428.47,8.11,428.55,Normal (~0 to 5),Normal (~0 to 5),INVALID_ARTIFACT,NCEP operational forecast assimilation numerical divergence / corrupt swath in GEE catalog
+2_2025120512,2025-12-05 12:00,112.5,-10.5,415.2,7.85,415.27,Normal (~0 to 5),Normal (~0 to 5),INVALID_ARTIFACT,NCEP operational forecast assimilation numerical divergence / corrupt swath in GEE catalog
+2_2025121100,2025-12-11 00:00,113.8,-11.2,5.45,413.17,413.21,Normal (~0 to 5),Normal (~0 to 5),INVALID_ARTIFACT,NCEP operational forecast assimilation numerical divergence / corrupt swath in GEE catalog
+2_2025121106,2025-12-11 06:00,113.8,-11.2,6.01,398.6,398.65,Normal (~0 to 5),Normal (~0 to 5),INVALID_ARTIFACT,NCEP operational forecast assimilation numerical divergence / corrupt swath in GEE catalog
+2_2025121812,2025-12-18 12:00,117.2,-12.5,395.1,5.9,395.14,Normal (~0 to 5),Normal (~0 to 5),INVALID_ARTIFACT,NCEP operational forecast assimilation numerical divergence / corrupt swath in GEE catalog
+2_2025121818,2025-12-18 18:00,117.2,-12.5,408.35,6.22,408.4,Normal (~0 to 5),Normal (~0 to 5),INVALID_ARTIFACT,NCEP operational forecast assimilation numerical divergence / corrupt swath in GEE catalog
+2_2025122400,2025-12-24 00:00,115.0,-10.8,7.4,405.8,405.87,Normal (~0 to 5),Normal (~0 to 5),INVALID_ARTIFACT,NCEP operational forecast assimilation numerical divergence / corrupt swath in GEE catalog
+2_2025122406,2025-12-24 06:00,115.0,-10.8,6.95,412.3,412.36,Normal (~0 to 5),Normal (~0 to 5),INVALID_ARTIFACT,NCEP operational forecast assimilation numerical divergence / corrupt swath in GEE catalog
+2_2025122412,2025-12-24 12:00,115.0,-10.8,8.15,399.75,399.83,Normal (~0 to 5),Normal (~0 to 5),INVALID_ARTIFACT,NCEP operational forecast assimilation numerical divergence / corrupt swath in GEE catalog

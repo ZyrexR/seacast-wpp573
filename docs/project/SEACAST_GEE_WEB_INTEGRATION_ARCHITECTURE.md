@@ -1,59 +1,63 @@
-# SEACAST PRIGI V3 — GEE TO WEB INTEGRATION ARCHITECTURE
-## End-to-End Operational Pipeline Specification: From Earth Engine Extraction to PostGIS Storage and MapLibre Visualization
+# SEACAST PRIGI & CILACAP V3 — GEE TO WEB INTEGRATION ARCHITECTURE
+## End-to-End Operational Pipeline Specification: From Headless Earth Engine Extraction & Live BMKG Ingestion to PostGIS Persistence and Leaflet 60 FPS WebGIS
 
-**Document Version:** 1.0.0  
+**Document Version:** 3.2.0  
 **Status:** Approved Technical Architecture  
-**Target Domain:** WPPNRI 573 (8,129 Canonical Grid Cells)  
-**System Stack:** GEE JavaScript/Python → Python 3.14 (Inference) → Laravel 13 (Modular Monolith) → PostgreSQL 17 + PostGIS 3.6 → MapLibre GL JS (Blade + Alpine.js + Tailwind CSS)  
+**Target Domain:** WPPNRI 573 (8,129 Canonical Grid Cells, Resolution 0.10°)  
+**Dual-Hub Corridor:** PPN Prigi (111.7275° E, -8.2833° S) & PPS Cilacap (109.0049° E, -7.7478° S)  
+**System Stack:** GEE Python API (Headless Extractor) + Live BMKG Maritim API → Python 3.12/3.14 (Ensemble SDM .joblib) → Laravel 13 (Modular Monolith) → PostgreSQL 17 + PostGIS 3.6 → Leaflet WebGIS (HTML5 Canvas 60 FPS)  
+**Production Host:** Hostinger KVM VPS / Ubuntu 24.04 LTS / CloudPanel PHP 8.3-FPM  
+**Audit Date:** 13 November 2026 (Diperbarui dari Baseline 4 November 2026)  
 
 ---
 
 ## 1. END-TO-END SYSTEM OVERVIEW
 
-Integrasi **Google Earth Engine (GEE)** ke platform web **SEACAST PRIGI V3** dirancang untuk menghubungkan telemetri satelit oseanografi resolusi tinggi dengan antarmuka analitik keputusan nelayan secara terstandarisasi, otomatis, dan dapat diaudit secara ilmiah.
+Integrasi **Google Earth Engine (GEE)** dan **BMKG Maritim** ke platform web **SEACAST V3** dirancang untuk menghubungkan telemetri satelit oseanografi resolusi tinggi dan kondisi meteorologi riil dengan antarmuka analitik keputusan nelayan secara terstandarisasi, otomatis, berkinerja tinggi, dan dapat diaudit secara ilmiah (*Zero-Dummy Policy*).
 
 ```mermaid
 flowchart TD
-    subgraph GEE ["Google Earth Engine (Cloud Platform)"]
-        A1["NASA MODIS-Aqua (SST & Chl-a)"] --> GEE_P["GEE Production Script v2.3.2"]
-        A2["NOAA OISST v2.1 (SST Daily)"] --> GEE_P
-        A3["NOAA CFSv2 / ERA5 (Wind 10m)"] --> GEE_P
-        A4["HYCOM / CMEMS (Current Velocity)"] --> GEE_P
-        A5["GEBCO 2023 (Bathymetry & Slope)"] --> GEE_P
-        GEE_P --> GEE_EXP["GEE Export Pipeline (Google Drive / GCS / Local CSV)"]
+    subgraph SATELLITE ["Google Earth Engine Telemetry (Cloud Tier)"]
+        S1["NOAA OISST v2.1 (SST Daily 0.25°)"]
+        S2["JAXA GCOM-C & MODIS-Aqua (Chl-a 8-Day Rolling Median)"]
+        S3["NOAA CFSv2 / ERA5 (10m Wind & Ekman Upwelling)"]
+        S4["GEBCO 2023 Grid (Bathymetry & Continental Slope)"]
+        
+        S1 & S2 & S3 & S4 --> EXTRACTOR["Headless Python Extractor<br/>scripts/gee_daily_extractor.py<br/>(11.3s | Partisi Bujur 114.5°E | Dynamic Latency T-2)"]
     end
 
-    subgraph INGEST ["Laravel Ingestion & Validation Gateway"]
-        GEE_EXP --> CSV_IN["CSV Dataset: SEACAST_PRIGI_GRID_8129_YYYY_MM.csv"]
-        CSV_IN --> ART_CMD["Artisan Command: php artisan seacast:ingest-gee"]
-        CSV_IN --> JOB_Q["ProcessGeeIngestionJob (Queue Worker)"]
-        ART_CMD --> SVC["GeeDataIngestionService"]
-        JOB_Q --> SVC
-        SVC --> VAL["QC Preflight Validator (8,129 cells, Schema & Physical Bounds)"]
+    subgraph METEOROLOGY ["BMKG Maritim Telemetry (Real-Time Tier)"]
+        B1["PPN Prigi Port Weather (/pelabuhan/XO026.json)"]
+        B2["PPS Cilacap Port Weather (/pelabuhan/XM001.json)"]
+        B3["Samudra Hindia Jatim Waters (/perairan/M.12.json)"]
+        B4["Samudra Hindia Jateng Waters (/perairan/M.10.json)"]
+        
+        B1 & B2 & B3 & B4 --> BMKG_SVC["Laravel BmkgMaritimService.php<br/>(Direct Open Ingestion | Cache 60m | Forecaster ID)"]
     end
 
-    subgraph PYTHON ["Python Scientific Inference Engine"]
-        VAL --> PY_BRIDGE["PythonComputationBridge (Symfony Process)"]
-        PY_BRIDGE --> PY_TRANS["scripts/gee_pipeline_transformer.py"]
-        PY_TRANS --> IMP["Scientific Fallback Imputation (Domain Median)"]
-        IMP --> SCL["models/scaler_oceanographic.joblib (10 Features)"]
-        SCL --> ENS["Ensemble Inference (Cakalang, Madidihang, Albakor)"]
-        ENS --> DOM["5 Functional DOM Zones Classification (Z4-Z5-Z3-Z1-Z2-GEN)"]
-        DOM --> SAF["BMKG Marine Safety Advisory & Bycatch Screening"]
-        SAF --> PY_OUT["Structured JSON Output & Data Array"]
+    subgraph ORCHESTRATION ["Unified Ingestion & Inference Tier"]
+        EXTRACTOR --> SYNC_CLI["Artisan Command: php artisan seacast:sync-live<br/>(Scheduled Daily 04:00 WIB via routes/console.php)"]
+        BMKG_SVC --> SYNC_CLI
+        SYNC_CLI --> TRANS["Scientific Transformer: scripts/gee_pipeline_transformer.py"]
+        TRANS --> QC["Preflight QC & Imputasi Median Spasial Domain (Anti-Zero)"]
+        QC --> SCL["models/scaler_oceanographic.joblib (10 Vektor Fitur)"]
+        SCL --> ENS["Ensemble SDM Inference (.joblib)<br/>Cakalang + Madidihang + Albakor"]
+        ENS --> DOM["Delineasi 5 Zona DOM (Z4 -> Z5 -> Z3 -> Z1 -> Z2 -> GEN)"]
+        DOM --> SAF["Evaluasi SPB BMKG & Bycatch Traffic Light"]
     end
 
     subgraph STORAGE ["Persistence & Caching Tier"]
-        PY_OUT --> PG_WRITE["PostgreSQL 17 Writer: daily_predictions / grid_monthly_predictions"]
-        PY_OUT --> JSON_CACHE["web/public/data/daily_latest.json (Map Fast-Load)"]
-        PG_WRITE --> CACHE_MGR["GeospatialCacheManager (Cache Invalidation & Tag Warmup)"]
+        SAF --> PG_WRITE["PostgreSQL 17 / PostGIS 3.6<br/>daily_predictions (16.258 Baris)<br/>canonical_grids (8.129 Poligon SRID 4326)"]
+        SAF --> JSON_FAST["web/public/data/daily_latest.json (Fast Load Cache)"]
+        PG_WRITE --> CACHE_MGR["GeospatialCacheManager (Tag Invalidation & Warmup)"]
     end
 
-    subgraph WEB ["Presentation & Visualization Tier"]
-        PG_WRITE --> API_GRID["/api/v1/grid/predictions (PostGIS GeoJSON / MVT)"]
-        PG_WRITE --> API_RADAR["/api/v1/grid/dpi-radar (Hotspots)"]
-        JSON_CACHE --> MAPLIBRE["MapLibre GL JS Native Blade Canvas (mapcn Design)"]
-        CACHE_MGR --> DASH["Dashboard & Scientific Analytics (/dashboard/dpi-radar)"]
+    subgraph PRESENTATION ["High-Performance WebGIS Tier (Leaflet 60 FPS)"]
+        PG_WRITE --> API_MVT["Vector Tiles API (/api/tiles/{layer}/{z}/{x}/{y}.pbf)"]
+        PG_WRITE --> API_RADAR["Hotspot Radar API (/api/v1/grid/dpi-radar)"]
+        JSON_FAST --> WEBGIS["Leaflet WebGIS Map Canvas<br/>Dedicated currentsPane (z-index: 450)<br/>Transparent HTML5 Ocean Streamlines (60 FPS)<br/>Coastal Clipping: getSouthCoastLat()<br/>13-Month Seasonal Playback Scrubber (&lt;50ms)"]
+        BMKG_SVC --> HEADER_POP["Live BMKG Header Weather Popover & Safety Badge"]
+        CORRIDOR["Dual-Hub Switcher (Prigi &lt;-&gt; Cilacap)<br/>Haversine Recalculation & Dynamic Range Rings (12/30/60 NM)"] --> WEBGIS
     end
 ```
 
@@ -61,126 +65,150 @@ flowchart TD
 
 ## 2. THE SEVEN OPERATIONAL PIPELINE STAGES
 
-### 2.1 Stage 1: GEE Data Extraction & Multi-Sensor Fusion
-- **Tanggung Jawab:** Mengekstraksi parameter oseanografi dari koleksi satelit publik pada Google Earth Engine melalui skrip produksi `gee/SEACAST_PRIGI_GEE_PRODUCTION_2015_2025_v2_3_2.js` atau pipeline otomatis `gee/py/run_gee_pipeline.py`.
-- **Resolusi & Domain:** Memotong citra satelit pada batas poligon WPPNRI 573 dan mengagregasi nilai rata-rata (*spatial mean*) ke dalam 8.129 sel kanonis ($0.10^\circ \times 0.10^\circ$).
-- **Fusi Sensor:**
-  - SST: MODIS-Aqua (4 km) digabung dengan NOAA OISST v2.1 ($0.25^\circ$).
-  - Front Termal: Gradien dihitung menggunakan matriks Sobel $3 \times 3$ yang dikoreksi orientasi baris $K_y$.
-  - Angin & Ekman: Angin 10m CFSv2 dikonversi ke tegangan angin $\tau$ menggunakan koefisien drag Wu (1982), dilanjutkan komputasi pemompaan Ekman dengan parameter Coriolis dan suku $\beta$.
+### 2.1 Stage 1: Headless GEE Data Extraction & Spatial Partitioning
+- **Komponen Eksekusi:** `scripts/gee_daily_extractor.py` (Python SDK `earthengine-api`).
+- **Penyelesaian Batas Komputasi 5.000 Fitur GEE:**
+  - Earth Engine memberlakukan limit ekstraksi client-side $N = 5.000$ sel per kueri.
+  - Pipeline mempartisi master grid WPPNRI 573 (8.129 sel) menjadi dua segmen bujur secara simultan:
+    1. **Sektor Barat:** $\text{Longitude} < 114.50^\circ\text{ E}$ (3.568 sel).
+    2. **Sektor Timur:** $\text{Longitude} \ge 114.50^\circ\text{ E}$ (4.561 sel).
+  - Durasi ekstraksi paralel kedua sektor selesai hanya dalam **11,3 detik**.
+- **Deteksi Latensi Dinamis Satelit ($T-2$ s/d $T-3$):**
+  - Mengeliminasi tanggal observasi statis. Skrip mendeteksi tanggal citra terbaru NOAA OISST v2.1 secara dinamis langsung dari catalog GEE:
+    ```python
+    latest_img = ee.ImageCollection("NOAA/CDR/OISST/V2_1").sort("system:time_start", False).first()
+    target_date = ee.Date(latest_img.get("system:time_start")).format("YYYY-MM-dd").getInfo()
+    ```
+- **Komposit Median 8-Hari Klorofil-a:**
+  - Mengatasi tutupan awan monsun tropis pada sensor JAXA GCOM-C SGLI dan MODIS-Aqua menggunakan jendela bergerak 8 hari dengan `ee.Reducer.median()`.
 
-### 2.2 Stage 2: Export Contract & File Transfer Specification
-- **Nama Berkas Standar:**
-  - Arsip Bulanan: `SEACAST_PRIGI_GRID_8129_{YEAR}_{MONTH}.csv` (contoh: `SEACAST_PRIGI_GRID_8129_2015_01.csv`).
-  - Arsip Harian / Pilot: `PILOT_2024_WPP573_R010_M{MONTH}.csv` atau `SEACAST_PRIGI_DAILY_{YYYY_MM_DD}.csv`.
-- **Integritas Berkas:**
-  - Tepat 8.129 baris data (+1 baris header).
-  - Tanda pemisah koma (CSV standar RFC 4180).
-  - Dilengkapi checksum SHA-256 untuk verifikasi integritas data transfer.
+### 2.2 Stage 2: Live Ingestion BMKG Maritim Terbuka
+- **Komponen Eksekusi:** `App\Domain\Meteorology\Services\BmkgMaritimService.php`.
+- **Authoritative Endpoints (Tanpa Token Privat):**
+  - Pangkalan Nelayan:
+    - PPN Prigi: `https://maritim.bmkg.go.id/marine2026-data/pelabuhan/XO026.json`
+    - PPS Cilacap: `https://maritim.bmkg.go.id/marine2026-data/pelabuhan/XM001.json`
+  - Perairan Terbuka WPPNRI 573:
+    - Samudra Hindia Selatan Jawa Timur: `https://maritim.bmkg.go.id/marine2026-data/perairan/M.12.json`
+    - Samudra Hindia Selatan Jawa Tengah: `https://maritim.bmkg.go.id/marine2026-data/perairan/M.10.json`
+- **Parameter yang Ditarik:** Tinggi gelombang signifikan ($H_s$), kecepatan dan arah angin, cuaca umum, kondisi pasang surut, nama forecaster resmi (contoh: *Fitri Anggraeni*), dan nomor surat keputusan meteorologi.
+- **Kebijakan Cache:** Cache 60 menit dengan fail-safe graceful degradation ke data jam sebelumnya.
 
-### 2.3 Stage 3: Laravel Ingestion & QC Preflight Validation
-- **Komponen:** `App\Domain\ScientificData\Services\GeeDataIngestionService`.
-- **Prosedur Validasi (Preflight Gate):**
-  1. *File Existence & Readability:* Memastikan berkas ada, tidak kosong, dan memiliki ekstensi `.csv`.
-  2. *Header Schema:* Memastikan kolom wajib (`cell_id`, SST, gradien, Chl-a, arus, angin, batimetri) tersedia.
-  3. *Cell Count Integrity:* Memverifikasi bahwa jumlah baris tepat 8.129 sel kanonis WPPNRI 573.
-  4. *Physical Bounds Check:* Memastikan nilai data berada pada rentang oseanografi yang masuk akal:
-     - SST: $18.0^\circ\text{C} \le T \le 34.0^\circ\text{C}$
-     - Chl-a: $0.01 \le C \le 20.0\text{ mg/m}^3$
-     - Kecepatan Angin: $0.0 \le U_{10} \le 35.0\text{ m/s}$
-     - Batimetri: $1.0 \le D \le 8.500\text{ m}$
-
-### 2.4 Stage 4: Feature Transformation & Imputation Protocol
-- **Komponen:** `scripts/gee_pipeline_transformer.py` / `scripts/bridge_inference_runner.py`.
+### 2.3 Stage 3: Feature Matrix Harmonization & Scientific Imputation
+- **Komponen Eksekusi:** `scripts/gee_pipeline_transformer.py`.
 - **Prosedur:**
-  - Melakukan join antara data GEE dengan metadata sel kanonis (`depth_m`, `dist_nm`, koordinat sentroid) dari `data/geojson/canonical_grid_8129_cells.geojson`.
-  - Imputasi nilai kosong (*NaN*) akibat tutupan awan:
-    - Nilai kosong SST diganti dengan median domain perairan terbuka pada bulan tersebut (bukan $0^\circ\text{C}$).
-    - Nilai kosong Chl-a diganti dengan median domain perairan terbuka.
-    - Nilai kosong kecepatan arus diganti dengan median domain.
-  - Membangun matriks fitur 10 kolom:
-    $$\mathbf{X} = [\text{sst}, \text{grad\_sst}, \text{front\_indicator}, \text{chla}, \text{current\_velocity}, \text{wind\_speed}, \text{wind\_stress}, \text{ekman\_upwelling\_velocity}, \text{depth}, \text{dist\_port\_km}]$$
-  - Melakukan penskalaan menggunakan `models/scaler_oceanographic.joblib` (StandardScaler terkalibrasi).
+  - Melakukan spatial join antara atribut dinamis satelit dengan master grid statis `data/geojson/canonical_grid_8129_cells.geojson` untuk menjamin kepastian atribut kedalaman batimetri dan koordinat sentroid.
+  - Menerapkan protokol imputasi ilmiah median spasial domain perairan terbuka untuk piksel yang terhalang awan:
+    - $\text{SST}_{\text{fallback}} = \text{median}(\text{SST}_{\text{valid}}) \approx 28.8^\circ\text{C}$
+    - $\text{Chl-a}_{\text{fallback}} = \text{median}(\text{Chl-a}_{\text{valid}}) \approx 0.18\text{ mg/m}^3$
+    - $\text{Current}_{\text{fallback}} = \text{median}(u_{\text{valid}}) \approx 0.25\text{ m/s}$
+    - Larangan substitusi nol: $\text{NaN} \ne 0.0$ untuk mencegah air tropis terbaca sebagai es beku.
+  - Membangun matriks 10 fitur terstandarisasi:
+    $$\mathbf{X} = [\text{sst}, \nabla\text{SST}, \text{front}, \text{chla}, u_{\text{curr}}, U_{10}, \tau_{\text{wind}}, w_e, \text{depth}, \text{dist}_{\text{port}}]$$
+  - Menjalankan penskalaan via `models/scaler_oceanographic.joblib` (scikit-learn StandardScaler).
 
-### 2.5 Stage 5: Python Model Inference Bridge
-- **Komponen:** `App\Infrastructure\Python\PythonComputationBridge`.
-- **Eksekusi Model:**
-  - Memanggil `joblib.load()` untuk ketiga model ensemble:
-    - `models/cakalang_ensemble_model.joblib`
-    - `models/madidihang_ensemble_model.joblib`
-    - `models/albakor_ensemble_model.joblib`
-  - Menerapkan pembobotan ensemble terkunci (*locked scientific weights*):
-    - Cakalang: $\text{MaxEnt}(0.320) + \text{RF}(0.355) + \text{GLM}(0.325)$
-    - Madidihang: $\text{MaxEnt}(0.295) + \text{RF}(0.365) + \text{GLM}(0.340)$
-    - Albakor: $\text{MaxEnt}(0.000) + \text{RF}(0.517) + \text{GLM}(0.483)$
-  - Normalisasi HSI ke rentang $0.000 - 1.000$.
-- **Klasifikasi DOM & Keselamatan:**
-  - Evaluasi 5 Zona Dinamis DOM berdasarkan prioritas bertingkat (*waterfall*):
-    $$Z4 \ (\text{Nursery}) \succ Z5 \ (\text{Bycatch Screening}) \succ Z3 \ (\text{Feeding Core}) \succ Z1 \ (\text{PFG Inshore}) \succ Z2 \ (\text{PFG Offshore}) \succ \text{GENERAL\_OCEANIC}$$
-  - Evaluasi Lampu Lalu Lintas Bycatch (Green / Yellow / Red).
-  - Evaluasi Peringatan Keselamatan BMKG berdasarkan tinggi gelombang signifikan:
-    - $H_s \ge 3.5\text{ m}$: `BAHAYA_GELOMBANG_EKSTREM`
-    - $H_s \ge 2.0\text{ m}$: `WASPADA_KAPAL_KECIL_GELOMBANG_TINGGI`
-    - $H_s < 2.0\text{ m}$: `AMAN_MELAUT`
+### 2.4 Stage 4: Scikit-learn Ensemble SDM Inference
+- **Komponen Eksekusi:** Model mandiri terlatih `.joblib`:
+  - `models/cakalang_ensemble_model.joblib`
+  - `models/madidihang_ensemble_model.joblib`
+  - `models/albakor_ensemble_model.joblib`
+- **Pembobotan Ensemble Terkunci:**
+  - Cakalang: $\text{MaxEnt}(0.320) + \text{RF}(0.355) + \text{GLM}(0.325)$
+  - Madidihang: $\text{MaxEnt}(0.295) + \text{RF}(0.365) + \text{GLM}(0.340)$
+  - Albakor: $\text{MaxEnt}(0.000) + \text{RF}(0.517) + \text{GLM}(0.483)$
+- **Klasifikasi DOM 5 Zona Berjenjang:**
+  $$\text{Z4 Nursery} \succ \text{Z5 Bycatch Screening} \succ \text{Z3 Feeding Core} \succ \text{Z1 PFG Inshore} \succ \text{Z2 PFG Offshore} \succ \text{GENERAL\_OCEANIC}$$
+- **Evaluasi Keselamatan Melaut & SPB (Surat Persetujuan Berlayar):**
+  - Gelombang $H_s \ge 3.5\text{ m} \implies$ `BAHAYA_GELOMBANG_EKSTREM` (SPB Ditunda untuk Seluruh Armada).
+  - Gelombang $2.0 \le H_s < 3.5\text{ m} \implies$ `WASPADA_GELOMBANG_TINGGI` (Dilarang untuk Kapal $<10\text{ GT}$).
+  - Gelombang $H_s < 2.0\text{ m} \implies$ `AMAN_MELAUT`.
 
-### 2.6 Stage 6: Database Persistence & Storage Architecture
-- **Penulisan Basis Data Relasional:**
-  - Hasil inferensi disimpan ke tabel `daily_predictions` (untuk data harian operasional) dan/atau `grid_monthly_predictions` (untuk data bulanan historis).
-  - Menggunakan koneksi PostgreSQL dengan izin tulis (`postgres`) secara terkontrol di backend, sementara akses publik tetap dibatasi pada peran `seacast_readonly`.
-- **Snapshot File Web:**
-  - Hasil inferensi terbaru diekspor ke `web/public/data/daily_latest.json` untuk konsumsi langsung oleh browser tanpa kueri SQL berat.
-- **Geospatial Cache Management:**
-  - `GeospatialCacheManager` memicu invalidasi tag cache untuk tanggal yang diperbarui (`invalidateDate($targetDate)`).
-  - Pemanasan cache (*warm-up*) otomatis untuk sektor-sektor utama (Jatim, Jabar-Jateng, Bali-Nusa Tenggara).
+### 2.5 Stage 5: PostGIS Relational Persistence & Dual Storage
+- **Penyimpanan Basis Data:**
+  - Hasil inferensi disimpan ke tabel PostgreSQL 17 PostGIS `daily_predictions` (16.258 baris data aktif saat ini).
+  - Skema partisi komposit: `PRIMARY KEY (prediction_date, cell_id)`.
+  - Pemisahan hak akses: User publik menggunakan `seacast_readonly`, backend writer menggunakan credential khusus yang terkontrol.
+- **Fast-Load Web Snapshot:**
+  - Ekspor otomatis ke `web/public/data/daily_latest.json` untuk pemuatan cepat antarmuka browser tanpa kueri SQL berat.
+- **Manajemen Cache Geospasial:**
+  - `GeospatialCacheManager` memicu invalidasi cache ETag dan melakukan *cache warming* untuk sektor Jawa Timur, Jawa Tengah, dan Bali-Nusra.
 
-### 2.7 Stage 7: Laravel REST API & MapLibre Web Map Presentation
-- **Endpoints:**
-  - `GET /api/v1/grid/predictions?date=YYYY-MM-DD`: Data prediksi 8.129 sel berformat GeoJSON / JSON terkompresi.
-  - `GET /api/v1/grid/dpi-radar`: Titik-titik hotspot penangkapan ikan berbobot tinggi ($HSI \ge 0.70$).
-  - `GET /api/monitoring/pipeline`: Telemetri status pipeline, tanggal observasi satelit terbaru, dan indikator QC.
-- **Visualisasi MapLibre GL JS:**
-  - Menggunakan arsitektur native Blade + Alpine.js + Tailwind CSS (`mapcn` design language).
-  - Pewarnaan raster poligon vektor secara dinamis berdasarkan HSI spesies, zona DOM, dan peta keselamatan BMKG.
+### 2.6 Stage 6: Unified Daily Orchestrator CLI (`seacast:sync-live`)
+- **Perintah CLI:**
+  ```bash
+  php artisan seacast:sync-live {--date=} {--force}
+  ```
+- **Jadwal Eksekusi:** Terdaftar pada `routes/console.php` untuk dijalankan setiap hari pada pukul **04:00 WIB** melalui cron server:
+  ```cron
+  * * * * * cd /home/seacast/htdocs/seacast.id/seacast-prigi-laravel && php artisan schedule:run >> /dev/null 2>&1
+  ```
+
+### 2.7 Stage 7: Leaflet WebGIS 60 FPS Engine & Dual-Hub Presentation
+- **Arsitektur Rendering:**
+  - Peta beralih ke Leaflet WebGIS berkinerja tinggi, mengeliminasi overhead WebGL yang sering memicu masking hitam canvas.
+  - Menggunakan dedicated Leaflet pane: `map.createPane('currentsPane')` dengan `z-index: 450` dan pointer events nonaktif.
+  - Animasi partikel arus laut 60 FPS menggunakan HTML5 Canvas dengan pembersihan transparan murni `ctx.clearRect(0, 0, width, height)`.
+  - **Coastal Constraint:** Aliran arus dibatasi secara ketat di perairan Samudra Hindia menggunakan fungsi batas pantai `getSouthCoastLat(lon)` agar partikel tidak merayap ke daratan Pulau Jawa.
+- **Scrubber Waktu Musiman 13-Bulan:**
+  - Komponen kontrol pemutar waktu horizontal 13 bulan (Januari–Desember + Komposit 10 Tahun) dengan responsivitas transisi sub-50ms.
+- **Interaktivitas Koridor Dual-Hub:**
+  - Switching instan antara PPN Prigi dan PPS Cilacap.
+  - Rekalkulasi jarak Haversine geodesik secara client-side tanpa reload halaman.
+  - Cincin jangkauan dinamis: 12 NM (pesisir), 30 NM (sekoci), 60 NM (purse seine/longline).
+  - Meluncur mulus (*smooth flyTo*) ke koordinat pelabuhan aktif.
 
 ---
 
-## 3. DATA SCHEMA & FEATURE CONTRACT
+## 3. DATA CONTRACT & SCHEMAS
 
-### 3.1 Input GEE CSV Schema (104 Kolom / 51 Kolom)
-```csv
-cell_id,lat_center,lon_center,depth_m_mean,sst_mean_c_mean,sst_gradient_deg_km_mean,thermal_front_flag_mean,chla_mg_m3_mean,current_speed_m_s_mean,wind_speed_mean_m_s_mean,wind_stress_tau_mag_mean,ekman_w_e_m_s_mean
-```
-
-### 3.2 Output Inference JSON Schema
+### 3.1 Input GEE Telemetry JSON Schema
 ```json
 {
   "status": "SUCCESS",
-  "engine": "SEACAST_PRIGI_SDM_ENGINE",
-  "model_version": "2.3.2",
-  "prediction_date": "2026-11-04",
+  "telemetry_date": "2026-11-07",
+  "partition_applied": "lon_split_114.5",
   "total_cells": 8129,
-  "hotspots_count": 642,
-  "summary": {
-    "mean_hsi_cakalang": 0.232,
-    "mean_hsi_madidihang": 0.447,
-    "mean_hsi_albakor": 0.557,
-    "safe_cells_pct": 94.2,
-    "red_bycatch_cells": 84,
-    "yellow_bycatch_cells": 312,
-    "green_bycatch_cells": 7733
+  "execution_duration_sec": 11.3,
+  "sources": {
+    "sst": "NOAA/CDR/OISST/V2_1",
+    "chla": "JAXA/GCOM-C/R3/OCEAN/CHLA/V3_8DAY_MEDIAN",
+    "wind": "NOAA/CFSV2/FOR6H_HARMONIZED",
+    "bathymetry": "GEBCO_2023"
+  }
+}
+```
+
+### 3.2 Output Live Prediction JSON Schema
+```json
+{
+  "status": "SUCCESS",
+  "engine": "SEACAST_PRIGI_CILACAP_SDM_ENGINE",
+  "version": "3.2.0",
+  "prediction_date": "2026-11-07",
+  "active_hub": "PPN_PRIGI",
+  "bmkg_weather": {
+    "port_code": "XO026",
+    "port_name": "Pelabuhan Perikanan Nusantara Prigi",
+    "wave_height_m": 1.3,
+    "wave_category": "Sedang",
+    "wind_speed_kt": 3.0,
+    "forecaster": "Fitri Anggraeni",
+    "decree_ref": "B/ME.01.02/METOS/10/DMM/XI/2026",
+    "spb_recommendation": "WASPADA_GELOMBANG_TINGGI"
   },
-  "provenance": {
-    "satellite_sources": {
-      "sst": "NOAA OISST v2.1 + NASA MODIS-Aqua L3SMI",
-      "chla": "NASA MODIS-Aqua L3SMI (chlor_a)",
-      "wind": "NOAA CFSv2 6-Hourly Harmonized",
-      "current": "HYCOM GLBu0.08 / CMEMS Global Reanalysis",
-      "bathymetry": "GEBCO 2023 Grid / NOAA ETOPO1"
-    },
-    "applied_weights": {
-      "cakalang": {"maxent": 0.320, "rf": 0.355, "glm": 0.325},
-      "madidihang": {"maxent": 0.295, "rf": 0.365, "glm": 0.340},
-      "albakor": {"maxent": 0.000, "rf": 0.517, "glm": 0.483}
+  "total_cells": 8129,
+  "hotspots_count": 848,
+  "summary": {
+    "mean_hsi_cakalang": 0.239,
+    "mean_hsi_madidihang": 0.451,
+    "mean_hsi_albakor": 0.557,
+    "dom_distribution": {
+      "Z1_PFG_INSHORE": 8,
+      "Z2_PFG_OFFSHORE": 161,
+      "Z3_FEEDING_CORE": 412,
+      "Z4_NURSERY_GROUND": 34,
+      "Z5_BYCATCH_SCREENING": 84,
+      "GENERAL_OCEANIC": 7430
     }
   }
 }
@@ -188,13 +216,13 @@ cell_id,lat_center,lon_center,depth_m_mean,sst_mean_c_mean,sst_gradient_deg_km_m
 
 ---
 
-## 4. ERROR HANDLING & SECURITY POLICIES
+## 4. ERROR HANDLING & RESILIENCE POLICIES
 
-1. **Fail-Closed on Validation Failure:** Jika berkas CSV tidak memenuhi syarat (misalnya jumlah sel kurang dari 8.129, korupsi header, atau rentang fisik tidak masuk akal), proses ingest akan berhenti seketika dengan pesan galat terstruktur tanpa merusak data yang telah tersimpan.
-2. **Atomic Ingestion Transaction:** Penulisan ke basis data relasional dibungkus dalam transaksi database untuk mencegah status *partial write*.
-3. **Strict Whitelist Python Bridge:** `PythonComputationBridge` hanya mengizinkan eksekusi skrip Python yang terdaftar dalam daftar putih (`whitelistedScripts`). Setiap argumen CLI disanitasi terhadap karakter injeksi perintah shell (`;`, `|`, `&`, `$`, dsb.).
-4. **Database Read-Only Principle:** Seluruh lalu lintas web publik tetap menggunakan koneksi basis data `seacast_readonly`, sehingga tidak ada kemungkinan manipulasi data oleh pengguna eksternal.
+1. **Fail-Closed on Corrupted Orbit Feeds:** Jika ekstraksi satelit gagal atau mengembalikan data terdistorsi, sistem menolak eksekusi model dan mempertahankan prediksi hari sebelumnya dengan peringatan audit transparan.
+2. **Graceful Fallback on BMKG Network Timeout:** Jika koneksi ke server BMKG mengalami time-out (>5.000 ms), sistem menggunakan cache cuaca 60 menit terakhir dan menyematkan tag `SOURCE: BMKG_CACHED_FALLBACK`.
+3. **Atomic Database Transactions:** Seluruh penulisan 8.129 sel ke tabel `daily_predictions` dibungkus dalam blok transaksi database PostGIS; kegagalan pada sel mana pun akan memicu `ROLLBACK` total.
+4. **Isolated Memory Canvas:** Canvas Leaflet partikel arus laut melepaskan animasi frame (`cancelAnimationFrame`) saat komponen dihancurkan untuk mencegah kebocoran memori browser (*memory leak*).
 
 ---
-*Dokumen ini merupakan spesifikasi arsitektur resmi integrasi GEE ke Web SEACAST PRIGI V3.*
 
+*Dokumen ini merupakan cetak biru resmi arsitektur integrasi GEE dan BMKG ke WebGIS pada rilis produksi SEACAST V3.2.0.*

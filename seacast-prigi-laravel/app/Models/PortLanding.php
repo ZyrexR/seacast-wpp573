@@ -36,3 +36,4 @@ class PortLanding extends Model
         return $query->where('year', $year);
     }
 }
+

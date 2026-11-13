@@ -49,6 +49,7 @@ Route::middleware('throttle:60,1')->group(function () {
     // Public Health & Pipeline Telemetry Endpoints
     Route::get('/monitoring', [MonitoringApiController::class, 'index'])->name('api.monitoring');
     Route::get('/monitoring/pipeline', [MonitoringApiController::class, 'pipeline'])->name('api.monitoring.pipeline');
+    Route::get('/bmkg/live', [MonitoringApiController::class, 'bmkgLive'])->name('api.bmkg.live');
 
     // Protected Diagnostic Endpoint (Requires auth session & admin role)
     Route::get('/monitoring/diagnostics', [MonitoringApiController::class, 'diagnostics'])->name('api.monitoring.diagnostics');

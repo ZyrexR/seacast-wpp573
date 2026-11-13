@@ -1,0 +1,9 @@
+source,type,path,min_lon,max_lon,min_lat,max_lat,area_epsg6933_km2,geodesic_area_km2,vertices,interior_rings,note
+RAW_BIG_FETCH_2026-11-02,COMPUTED_FROM_FILE,data/aoi/raw/WPP573_BIG_ORIGINAL.geojson,102.57782959700006,126.49957913200001,-13.938230691999934,-6.80179637599997,933749.49,933750.9,625698,1400,valid
+AOI_MASTER,COMPUTED_FROM_FILE,data/aoi/processed/AOI_WPP573_MASTER.geojson,102.57782959700006,126.49957913200001,-13.938230691999934,-6.80179637599997,933749.49,933750.9,625698,1400,valid
+LEGACY_BIG_2026-10-31,COMPUTED_FROM_FILE,data/boundaries/wppnri_573_big.geojson,102.57782959700006,126.49957913200001,-13.938230691999934,-6.80179637599997,933749.49,933750.9,625698,1400,valid
+LEGACY_WEB_SIMPLIFIED,COMPUTED_FROM_FILE,data/boundaries/wppnri_573_web.geojson,102.57783921000004,126.49957913200001,-13.938230691999934,-6.802071080999951,933990.55,933992.14,5231,1400,invalid/degenerate rings present (see AOI_GEOMETRY_QA.json)
+AOI-VAL-01 col.2 (Nilai Terhitung),REPORTED_LITERAL,reports/phase_0_1/AOI_VALIDATION_REPORT.md,102.57783,126.499579,-13.938231,-6.801796,933749.49,933750.9,625698,1400,f-string from computed geometry -> matches file
+AOI-VAL-01 col.3 / SPAT-DES-05 (as cited),REPORTED_LITERAL,scratch/run_aoi_validation.py:284 (template literal),105.132141,129.544498,-13.784534,-7.3,,,,,ERROR: hard-coded literal typed into report template; not derived from any dataset
+data/spatial_config_aoi.json primary_aoi.bounding_box_wgs84,CONFIG_LITERAL,data/spatial_config_aoi.json,102.5778,126.4996,-13.9382,-6.8018,933749.49,,625698,,consistent with file (4 dp)
+KKP nominal WPP 573 area (as cited in config),UNSOURCED_LITERAL,data/spatial_config_aoi.json area_reconciliation,,,,,1423238.0,,,,UNVERIFIED: no primary citation in workspace ('often quoted'); differs from BIG polygon by ~52%

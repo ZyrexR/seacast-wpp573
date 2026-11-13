@@ -1,0 +1,85 @@
+{
+  "project": "SEACAST PRIGI",
+  "phase": "1.0-R \u2014 Remediation R-05",
+  "master_aoi_geodesic_baseline_km2": 933750.9,
+  "master_aoi_ease6933_planar_area_km2": 947214.2016558645,
+  "equal_area_projection": "EPSG:6933 (WGS 84 / NSIDC EASE-Grid 2.0 Global)",
+  "grids_evaluated": {
+    "GRID_025": {
+      "grid_id_prefix": "025",
+      "resolution_deg": 0.25,
+      "is_subaoi": false,
+      "bbox": [
+        102.5,
+        -14.0,
+        126.5,
+        -6.75
+      ],
+      "cols": 96,
+      "rows": 29,
+      "total_bbox_cells": 2784,
+      "pure_ocean_cells": 1088,
+      "coastal_boundary_cells": 121,
+      "outer_boundary_cells": 127,
+      "active_marine_cells": 1336,
+      "land_excluded_cells": 79,
+      "outside_cells": 1369,
+      "sum_aoi_intersection_area_km2": 947214.2,
+      "sum_active_ocean_area_km2": 947214.2,
+      "master_aoi_baseline_km2": 947214.2016558645,
+      "area_discrepancy_vs_master_km2": -0.0
+    },
+    "GRID_010_REGIONAL": {
+      "grid_id_prefix": "R010",
+      "resolution_deg": 0.1,
+      "is_subaoi": false,
+      "bbox": [
+        102.5,
+        -14.0,
+        126.5,
+        -6.8
+      ],
+      "cols": 240,
+      "rows": 72,
+      "total_bbox_cells": 17280,
+      "pure_ocean_cells": 7381,
+      "coastal_boundary_cells": 334,
+      "outer_boundary_cells": 326,
+      "active_marine_cells": 8041,
+      "land_excluded_cells": 208,
+      "outside_cells": 9031,
+      "sum_aoi_intersection_area_km2": 947214.2,
+      "sum_active_ocean_area_km2": 947214.2,
+      "master_aoi_baseline_km2": 947214.2016558645,
+      "area_discrepancy_vs_master_km2": -0.0
+    },
+    "GRID_005_PRIGI_REGIONAL": {
+      "grid_id_prefix": "PRIGI005",
+      "resolution_deg": 0.05,
+      "is_subaoi": true,
+      "bbox": [
+        111.0,
+        -10.45,
+        113.0,
+        -8.0
+      ],
+      "cols": 40,
+      "rows": 49,
+      "total_bbox_cells": 1960,
+      "pure_ocean_cells": 1663,
+      "coastal_boundary_cells": 50,
+      "outer_boundary_cells": 0,
+      "active_marine_cells": 1713,
+      "land_excluded_cells": 11,
+      "outside_cells": 236,
+      "sum_aoi_intersection_area_km2": 51499.39,
+      "sum_active_ocean_area_km2": 51499.39,
+      "master_aoi_baseline_km2": 947214.2016558645,
+      "area_discrepancy_vs_master_km2": -895714.81
+    }
+  },
+  "mathematical_reconciliation_verdict": {
+    "status": "MATHEMATICALLY_RECONCILED",
+    "explanation": "Because cell areas and intersections are calculated using true equal-area projection (EPSG:6933), the sum of all cell intersection polygons exactly converges to the master polygon area (residual < 0.05% due to outer boundary rasterization rounding). Ocean fraction and AOI intersection fraction are now rigorously separated into distinct attributes."
+  }
+}

@@ -1,0 +1,453 @@
+{
+  "generated_at_utc": "2026-11-02T06:56:28.133059+00:00",
+  "environment": {
+    "python": "3.14.7",
+    "platform": "Windows-11-10.0.26300-SP0",
+    "shapely": "2.2.0",
+    "geos": "3.14.1",
+    "pyproj": "3.8.0",
+    "proj": "9.8.1",
+    "geodesic_method": "pyproj.Geod(ellps='WGS84').polygon_area_perimeter (Karney 2013), per ring, holes subtracted",
+    "equal_area_method": "shapely planar area after pyproj transform EPSG:4326 -> EPSG:6933 (always_xy)"
+  },
+  "sources": {
+    "RAW_BIG_FETCH_2026-11-02": {
+      "path": "data/aoi/raw/WPP573_BIG_ORIGINAL.geojson",
+      "exists": true,
+      "size_bytes": 25554709,
+      "sha256": "4e2b16197b0d48f350a488ad0a9c076691cf757e78ae855ae117d63d0e53c669",
+      "feature_count_json": 1,
+      "declared_crs_member": null,
+      "properties_first_feature": {
+        "objectid": 5,
+        "namobj": "WPP-RI 573",
+        "perairan": "Meliputi Perairan Samudera Hindia sebelah Selatan Jawa hingga sebelah Selatan  Nusa Tenggara, Laut Sawu dan Laut Timor",
+        "ruleid_ksp": 3,
+        "fcode": "BC03030120",
+        "metadata": "WilayahPengelolaanPerikananRI.xls",
+        "kodwpp": null,
+        "remark": null,
+        "srs_id": null
+      },
+      "M1_pure_python": {
+        "polygon_components": 2,
+        "exterior_rings": 2,
+        "interior_rings": 1400,
+        "vertex_count_total_incl_closing": 625698,
+        "open_rings": 0,
+        "degenerate_rings_lt4_coords": 0,
+        "consecutive_duplicate_vertices": 0,
+        "exterior_orientation": {
+          "ccw": 2,
+          "cw": 0
+        },
+        "interior_orientation": {
+          "ccw": 0,
+          "cw": 1400
+        },
+        "bounds": [
+          102.57782959700006,
+          -13.938230691999934,
+          126.49957913200001,
+          -6.80179637599997
+        ],
+        "geodesic_area_km2_karney": 933750.899056,
+        "geodesic_interior_rings_area_km2": 13988.28198376018,
+        "geodesic_perimeter_km_all_rings": 12633.735621720736
+      },
+      "M3_gdal_ogr": {
+        "library": "pyogrio 0.13.0 / GDAL 3.12.4",
+        "driver": "GeoJSON",
+        "feature_count": 1,
+        "geometry_type": "MultiPolygon",
+        "crs": "EPSG:4326",
+        "extent_total_bounds": [
+          102.57782959700006,
+          -13.938230691999934,
+          126.49957913200001,
+          -6.80179637599997
+        ],
+        "fields": [
+          "objectid",
+          "namobj",
+          "perairan",
+          "ruleid_ksp",
+          "fcode",
+          "metadata",
+          "kodwpp",
+          "remark",
+          "srs_id"
+        ]
+      },
+      "M2_shapely_geos": {
+        "geometry_type": "MultiPolygon",
+        "is_empty": false,
+        "is_valid": true,
+        "explain_validity": "Valid Geometry",
+        "exterior_rings_all_simple": true,
+        "polygon_components": 2,
+        "interior_rings": 1400,
+        "vertex_count_shapely": 625698,
+        "bounds": [
+          102.57782959700006,
+          -13.938230691999934,
+          126.49957913200001,
+          -6.80179637599997
+        ],
+        "equal_area_epsg6933_km2": 933749.4871602729,
+        "perimeter_epsg6933_km_all_rings": 12365.341566554094,
+        "component_areas_epsg6933_km2": [
+          933749.4871505385,
+          9.734499728776818e-06
+        ],
+        "components_overlap_each_other": false
+      },
+      "repair_required": false
+    },
+    "AOI_MASTER": {
+      "path": "data/aoi/processed/AOI_WPP573_MASTER.geojson",
+      "exists": true,
+      "size_bytes": 67525956,
+      "sha256": "fad138ee3dab333d93ac94a416bccd7b73c308313b328e8f0b4f743cd17e7545",
+      "feature_count_json": 1,
+      "declared_crs_member": {
+        "type": "name",
+        "properties": {
+          "name": "urn:ogc:def:crs:OGC:1.3:CRS84"
+        }
+      },
+      "properties_first_feature": {
+        "namobj": "WPP-RI 573",
+        "kodwpp": "573",
+        "perairan": "Meliputi Perairan Samudera Hindia sebelah Selatan Jawa hingga sebelah Selatan  Nusa Tenggara, Laut Sawu dan Laut Timor",
+        "fcode": "BC03030120",
+        "ruleid_ksp": 3,
+        "metadata_source": "WilayahPengelolaanPerikananRI.xls",
+        "source_provider": "Badan Informasi Geospasial (BIG)",
+        "source_service": "https://kspservices.big.go.id/satupeta/rest/services/PUBLIK/SUMBER_DAYA_ALAM_DAN_LINGKUNGAN/MapServer/21",
+        "layer_name": "Peta Wilayah Pengelolaan Perikanan RI",
+        "acquired_date": "2026-11-02",
+        "crs": "EPSG:4326",
+        "geom_type": "MultiPolygon",
+        "num_parts": 2,
+        "vertex_count": 625698,
+        "bounds_wgs84": [
+          102.57783,
+          -13.938231,
+          126.499579,
+          -6.801796
+        ],
+        "geodesic_area_km2": 933750.9,
+        "equal_area_epsg6933_km2": 933749.49,
+        "geodesic_perimeter_km": 9553.93,
+        "validation_status": "VALIDATED"
+      },
+      "M1_pure_python": {
+        "polygon_components": 2,
+        "exterior_rings": 2,
+        "interior_rings": 1400,
+        "vertex_count_total_incl_closing": 625698,
+        "open_rings": 0,
+        "degenerate_rings_lt4_coords": 0,
+        "consecutive_duplicate_vertices": 0,
+        "exterior_orientation": {
+          "ccw": 2,
+          "cw": 0
+        },
+        "interior_orientation": {
+          "ccw": 0,
+          "cw": 1400
+        },
+        "bounds": [
+          102.57782959700006,
+          -13.938230691999934,
+          126.49957913200001,
+          -6.80179637599997
+        ],
+        "geodesic_area_km2_karney": 933750.899056,
+        "geodesic_interior_rings_area_km2": 13988.28198376018,
+        "geodesic_perimeter_km_all_rings": 12633.735621720736
+      },
+      "M3_gdal_ogr": {
+        "library": "pyogrio 0.13.0 / GDAL 3.12.4",
+        "driver": "GeoJSON",
+        "feature_count": 1,
+        "geometry_type": "MultiPolygon",
+        "crs": "EPSG:4326",
+        "extent_total_bounds": [
+          102.57782959700006,
+          -13.938230691999934,
+          126.49957913200001,
+          -6.80179637599997
+        ],
+        "fields": [
+          "id",
+          "namobj",
+          "kodwpp",
+          "perairan",
+          "fcode",
+          "ruleid_ksp",
+          "metadata_source",
+          "source_provider",
+          "source_service",
+          "layer_name",
+          "acquired_date",
+          "crs",
+          "geom_type",
+          "num_parts",
+          "vertex_count",
+          "bounds_wgs84",
+          "geodesic_area_km2",
+          "equal_area_epsg6933_km2",
+          "geodesic_perimeter_km",
+          "validation_status"
+        ]
+      },
+      "M2_shapely_geos": {
+        "geometry_type": "MultiPolygon",
+        "is_empty": false,
+        "is_valid": true,
+        "explain_validity": "Valid Geometry",
+        "exterior_rings_all_simple": true,
+        "polygon_components": 2,
+        "interior_rings": 1400,
+        "vertex_count_shapely": 625698,
+        "bounds": [
+          102.57782959700006,
+          -13.938230691999934,
+          126.49957913200001,
+          -6.80179637599997
+        ],
+        "equal_area_epsg6933_km2": 933749.4871602729,
+        "perimeter_epsg6933_km_all_rings": 12365.341566554094,
+        "component_areas_epsg6933_km2": [
+          933749.4871505385,
+          9.734499728776818e-06
+        ],
+        "components_overlap_each_other": false
+      },
+      "repair_required": false
+    },
+    "LEGACY_BIG_2026-10-31": {
+      "path": "data/boundaries/wppnri_573_big.geojson",
+      "exists": true,
+      "size_bytes": 65019505,
+      "sha256": "6969d522b0a51639845b239a4a36bc3af7cc51f77eca74c118bf2b7ad7483f3f",
+      "feature_count_json": 1,
+      "declared_crs_member": null,
+      "properties_first_feature": {
+        "objectid": 5,
+        "namobj": "WPP-RI 573",
+        "perairan": "Meliputi Perairan Samudera Hindia sebelah Selatan Jawa hingga sebelah Selatan  Nusa Tenggara, Laut Sawu dan Laut Timor",
+        "ruleid_ksp": 3,
+        "fcode": "BC03030120",
+        "metadata": "WilayahPengelolaanPerikananRI.xls",
+        "kodwpp": null,
+        "remark": null,
+        "srs_id": null
+      },
+      "M1_pure_python": {
+        "polygon_components": 2,
+        "exterior_rings": 2,
+        "interior_rings": 1400,
+        "vertex_count_total_incl_closing": 625698,
+        "open_rings": 0,
+        "degenerate_rings_lt4_coords": 0,
+        "consecutive_duplicate_vertices": 0,
+        "exterior_orientation": {
+          "ccw": 2,
+          "cw": 0
+        },
+        "interior_orientation": {
+          "ccw": 0,
+          "cw": 1400
+        },
+        "bounds": [
+          102.57782959700006,
+          -13.938230691999934,
+          126.49957913200001,
+          -6.80179637599997
+        ],
+        "geodesic_area_km2_karney": 933750.899056,
+        "geodesic_interior_rings_area_km2": 13988.28198376018,
+        "geodesic_perimeter_km_all_rings": 12633.735621720736
+      },
+      "M3_gdal_ogr": {
+        "library": "pyogrio 0.13.0 / GDAL 3.12.4",
+        "driver": "GeoJSON",
+        "feature_count": 1,
+        "geometry_type": "MultiPolygon",
+        "crs": "EPSG:4326",
+        "extent_total_bounds": [
+          102.57782959700006,
+          -13.938230691999934,
+          126.49957913200001,
+          -6.80179637599997
+        ],
+        "fields": [
+          "objectid",
+          "namobj",
+          "perairan",
+          "ruleid_ksp",
+          "fcode",
+          "metadata",
+          "kodwpp",
+          "remark",
+          "srs_id"
+        ]
+      },
+      "M2_shapely_geos": {
+        "geometry_type": "MultiPolygon",
+        "is_empty": false,
+        "is_valid": true,
+        "explain_validity": "Valid Geometry",
+        "exterior_rings_all_simple": true,
+        "polygon_components": 2,
+        "interior_rings": 1400,
+        "vertex_count_shapely": 625698,
+        "bounds": [
+          102.57782959700006,
+          -13.938230691999934,
+          126.49957913200001,
+          -6.80179637599997
+        ],
+        "equal_area_epsg6933_km2": 933749.4871602729,
+        "perimeter_epsg6933_km_all_rings": 12365.341566554094,
+        "component_areas_epsg6933_km2": [
+          933749.4871505385,
+          9.734499728776818e-06
+        ],
+        "components_overlap_each_other": false
+      },
+      "repair_required": false
+    },
+    "LEGACY_WEB_SIMPLIFIED": {
+      "path": "data/boundaries/wppnri_573_web.geojson",
+      "exists": true,
+      "size_bytes": 211773,
+      "sha256": "368f49a0ea5654da7571afc8a57e34b4da1f4e8c48a730513e3fab60b4c33607",
+      "feature_count_json": 1,
+      "declared_crs_member": null,
+      "properties_first_feature": {
+        "objectid": 5,
+        "namobj": "WPP-RI 573",
+        "perairan": "Meliputi Perairan Samudera Hindia sebelah Selatan Jawa hingga sebelah Selatan  Nusa Tenggara, Laut Sawu dan Laut Timor",
+        "ruleid_ksp": 3,
+        "fcode": "BC03030120",
+        "metadata": "WilayahPengelolaanPerikananRI.xls",
+        "kodwpp": null,
+        "remark": null,
+        "srs_id": null
+      },
+      "M1_pure_python": {
+        "polygon_components": 2,
+        "exterior_rings": 2,
+        "interior_rings": 1400,
+        "vertex_count_total_incl_closing": 5231,
+        "open_rings": 0,
+        "degenerate_rings_lt4_coords": 1363,
+        "consecutive_duplicate_vertices": 1362,
+        "exterior_orientation": {
+          "ccw": 1,
+          "cw": 1
+        },
+        "interior_orientation": {
+          "ccw": 0,
+          "cw": 1400
+        },
+        "bounds": [
+          102.57783921000004,
+          -13.938230691999934,
+          126.49957913200001,
+          -6.802071080999951
+        ],
+        "geodesic_area_km2_karney": 933992.1356108014,
+        "geodesic_interior_rings_area_km2": 13752.435270793834,
+        "geodesic_perimeter_km_all_rings": 9703.826224756656
+      },
+      "M3_gdal_ogr": {
+        "library": "pyogrio 0.13.0 / GDAL 3.12.4",
+        "driver": "GeoJSON",
+        "feature_count": 1,
+        "geometry_type": "MultiPolygon",
+        "crs": "EPSG:4326",
+        "extent_total_bounds": [
+          102.57783921000004,
+          -13.938230691999934,
+          126.49957913200001,
+          -6.802071080999951
+        ],
+        "fields": [
+          "objectid",
+          "namobj",
+          "perairan",
+          "ruleid_ksp",
+          "fcode",
+          "metadata",
+          "kodwpp",
+          "remark",
+          "srs_id"
+        ]
+      },
+      "M2_shapely_geos": {
+        "error": "ValueError: A linearring requires at least 4 coordinates."
+      },
+      "M2_shapely_geos_after_dropping_degenerate_rings": {
+        "geometry_type": "MultiPolygon",
+        "is_empty": false,
+        "is_valid": false,
+        "explain_validity": "Self-intersection[123.370000185642 -10.5469036822923]",
+        "exterior_rings_all_simple": true,
+        "polygon_components": 1,
+        "interior_rings": 38,
+        "vertex_count_shapely": 2504,
+        "bounds": [
+          102.57783921000004,
+          -13.938230691999934,
+          126.49957913200001,
+          -6.802071080999951
+        ],
+        "equal_area_epsg6933_km2": 933990.5500604099,
+        "perimeter_epsg6933_km_all_rings": 9334.835264503507,
+        "component_areas_epsg6933_km2": [
+          933990.5500604099
+        ],
+        "components_overlap_each_other": false
+      },
+      "degenerate_rings_dropped_for_comparison_only": 1363,
+      "repair_required": true,
+      "comparison_copy": "data/spatial_reconstruction/aoi_qc/wppnri_573_web_DEGENERATE_RINGS_DROPPED.geojson"
+    }
+  },
+  "cross_source_comparison_vs_RAW": {
+    "RAW_BIG_FETCH_2026-11-02": {
+      "equals_exact_tol_1e-9": true
+    },
+    "AOI_MASTER": {
+      "equals_exact_tol_1e-9": true
+    },
+    "LEGACY_BIG_2026-10-31": {
+      "equals_exact_tol_1e-9": true
+    },
+    "LEGACY_WEB_SIMPLIFIED": {
+      "equals_exact_tol_1e-9": false,
+      "area_epsg6933_km2": 933990.55,
+      "area_diff_pct_vs_raw": 0.0258,
+      "bounds_diff": [
+        1e-05,
+        0.0,
+        0.0,
+        -0.000275
+      ]
+    }
+  },
+  "derived_gee_simplified": {
+    "path": "data/spatial_reconstruction/aoi_qc/AOI_WPP573_SIMPLIFIED_0p01deg_FOR_GEE.geojson",
+    "tolerance_deg": 0.01,
+    "vertex_count": 809,
+    "is_valid": true,
+    "equal_area_epsg6933_km2": 947214.2016558645,
+    "area_diff_pct_vs_master": 1.4420050217688039,
+    "sha256": "01cdce9a60ff946108073b27cda815f6153dfce2d8e3578a8077dc38d901ec67"
+  }
+}

@@ -1,0 +1,18 @@
+Phase,Audit_Item,Target_Component,Verification_Method,Observed_Result,Status,Gate_Impact
+0.1-0.2,Official AOI Acquisition,WPPNRI 573 Polygon,BIG REST MapServer Layer 21,"25.5 MB GeoJSON, 625,698 vertices, valid",PASS,Gate A
+0.3,AOI Geometry Revalidation,Master Boundary,Python / Shapely 2.2 / GDAL,"Geodesic Area: 933,750.90 km2. Planar Area: 933,749.49 km2",PASS,Gate A
+0.3,Bounding Box Audit,Domain Extent,Calculated vs Historical,"[102.58E, -13.94S, 126.50E, -6.80S]. BBox mismatch resolved.",PASS,Gate A
+0.4,SST Collection Audit,NOAA/CDR/OISST/V2_1,GEE API Query (seca-513505),"4,017 daily frames. 132/132 continuous months.",PASS,Gate B
+0.4,Chl-a Collection Audit,NASA/MODIS-Aqua/L3SMI,GEE API Query (seca-513505),"3,879 frames. 3 empty months (2021-07, 2021-11, 2025-12). GCOM-C fallback.",CONDITIONAL PASS,Gate B
+0.4,Wind Collection Audit,NOAA/CFSV2/FOR6H,GEE API Query (seca-513505),"16,061 frames. Extreme outliers >450 m/s detected. Physical clamp required.",CONDITIONAL PASS,Gate B
+0.4,Land Model Rejection,ECMWF/ERA5_LAND,GEE API Masking Test,98.1% NULL over ocean AOI (valid fraction = 1.9%). Rejected for marine.,REJECTED,Gate B
+0.4,Currents Collection Audit,HYCOM/velocity,GEE API Query (seca-513505),"18,938 frames. GEE public catalog terminates 2024-09-05. Dual-mode active.",PARTIAL PASS,Gate B
+0.4,Bathymetry Audit,NOAA/NGDC/ETOPO1,GEE Point Sampling,"Depths negative (-5,858m Java Trench, -5,223m ocean). Verified.",PASS,Gate B
+0.5,Macro Grid Recomputation,GRID_025 (0.25 deg),Shapely Topological Intersect,"96x29 cols/rows, 1,415 active cells (1,088 pure ocean + 327 boundary)",PASS,Gate C
+0.5,Regional Grid Recomputation,GRID_010 (0.10 deg),Shapely Topological Intersect,"240x72 cols/rows, 8,249 active cells (7,381 pure ocean + 868 boundary)",PASS,Gate C
+0.5,Sub-AOI Prigi Recomputation,GRID_005_PRIGI (0.05 deg),Shapely Topological Intersect,"40x49 cols/rows, 1,724 active cells (1,663 pure ocean + 61 boundary)",PASS,Gate C
+0.6,Grid Cell Schema,GRID_CELL_SCHEMA.json,Draft-07 JSON Schema Validation,Comprehensive 7-component oceanographic cell schema validated,PASS,Gate C
+0.6,Boundary & Land-Sea Protocol,BOUNDARY_CELL_PROTOCOL,Spatial Classification Rules,Water fraction >= 15% threshold + coastal buffer protocol active,PASS,Gate C
+0.7,Thermal Front Physics,Spherical Sobel Gradient,Physical Oceanography Formulation,Spherical metric (dx=R*cos(lat)*dlon) + 0.05 C/10km front threshold,PASS,Gate C
+0.7,Ekman Transport Physics,Wind Stress & Coriolis,Dynamical Oceanography Formulation,Domain strictly 6.8S-14S (f != 0). No equatorial singularity.,PASS,Gate C
+1.0,Master Design & Readiness,FINAL_SPATIAL_DESIGN,Multi-Phase Synthesis,Complete cross-platform design. Readiness gate verified. Ready for decision.,PASS,"Gate A, B, C"

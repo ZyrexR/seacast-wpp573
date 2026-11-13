@@ -1,0 +1,80 @@
+{
+  "dictionary_version": "2.0",
+  "project": "SEACAST PRIGI",
+  "variables": [
+    {
+      "variable_name": "Sea Surface Temperature",
+      "code": "sst",
+      "units": "degC",
+      "valid_min": 20,
+      "valid_max": 34,
+      "missing_value": -9999,
+      "scientific_description": "Temperature of the uppermost layer of the ocean (skin temperature ~10-20 microns from satellite radiometer, bulk equivalent). Controls metabolic rate, distribution boundary, and thermal preference of pelagic fish.",
+      "provenance": "Data-derived from satellite radiometry (MODIS-Aqua L3 SMI)",
+      "relevance_prigi": "Indicator of seasonal upwelling in South Java. Drops to 25.5-26.5 degC during peak southeast monsoon (June-August)."
+    },
+    {
+      "variable": "Relative SST Anomaly",
+      "code": "sst_anomaly",
+      "units": "degC",
+      "formula": "SST_anomaly(m, y) = SST(m, y) - Mean_SST(m, 2015-2025)",
+      "valid_min": -4,
+      "valid_max": 4,
+      "scientific_description": "Deviation of sea surface temperature from the 11-year monthly climatological mean. Positive values indicate warm anomalies (El Nino / positive IOD conditions); negative values indicate enhanced upwelling cooling.",
+      "provenance": "Model-derived from 11-year baseline"
+    },
+    {
+      "variable": "Chlorophyll-a Concentration",
+      "code": "chlor_a",
+      "units": "mg/m^3",
+      "valid_min": 0.01,
+      "valid_max": 20,
+      "missing_value": -9999,
+      "scientific_description": "Concentration of photosynthetic pigment in phytoplankton. Serves as primary indicator of marine primary productivity and basis of the pelagic marine food web.",
+      "caution_note": "Strictly labeled as primary productivity indicator; NOT direct proof of fish abundance or verified feeding activity.",
+      "provenance": "Data-derived from satellite ocean color (MODIS-Aqua L3 SMI)"
+    },
+    {
+      "variable": "Thermal Front Magnitude",
+      "code": "thermal_front",
+      "units": "degC / km",
+      "formula": "grad_mag = sqrt((d_SST/dx)^2 + (d_SST/dy)^2) in degC/km",
+      "threshold_active_front": 0.08,
+      "valid_min": 0,
+      "valid_max": 0.8,
+      "scientific_description": "Spatial horizontal temperature gradient. Fronts demarcate boundaries between cold upwelled water and warmer offshore water masses, acting as aggregation zones for zooplankton and pelagic schooling fish.",
+      "provenance": "Model-derived via 3x3 Sobel spatial filtering"
+    },
+    {
+      "variable": "SST Contrast (\u0394T coast-offshore)",
+      "code": "cui_thermal",
+      "units": "degC",
+      "formula": "Delta_T_co(m, y) = SST_offshore(m, y) - SST_coastal(m, y)",
+      "valid_min": -3,
+      "valid_max": 5,
+      "scientific_description": "Temperature contrast between offshore oceanic waters (south of -9.5 S) and coastal neritic waters of Prigi (north of -8.6 S). Serves as a diagnostic surface thermal contrast indicator (distinct from Bakun wind-stress Coastal Upwelling Index).",
+      "provenance": "Model-derived spatial index"
+    },
+    {
+      "variable": "Bathymetric Depth & Slope",
+      "code": "depth_and_slope",
+      "depth_units": "meters (negative)",
+      "slope_units": "degrees",
+      "zones": {
+        "neritic_shelf": "Depth > -200 m",
+        "shelf_break_and_slope": "Depth between -200 m and -1000 m",
+        "deep_ocean_trench": "Depth < -1000 m"
+      },
+      "scientific_description": "Seafloor topography and inclination derived from multi-source compilation. Continental slope (150-1200m / shelf-break 200-1000m) serves as the bathymetric screening envelope for voluntary shark bycatch review.",
+      "provenance": "Data-derived from GEBCO 2023 & ETOPO1 (multi-source composite without single uniform vertical datum)"
+    },
+    {
+      "variable": "Meridional Ekman Transport (Mey)",
+      "code": "ekman_transport",
+      "units": "m^2 / s",
+      "formula": "M_ey = -tau_x / (rho_w * f)",
+      "scientific_description": "Meridional (north-south cross-shore) Ekman volume transport per unit width driven by zonal wind stress tau_x along the east-west trending South Java coast.",
+      "provenance": "Model-derived physical oceanography equation"
+    }
+  ]
+}

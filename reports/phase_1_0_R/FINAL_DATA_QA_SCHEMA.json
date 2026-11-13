@@ -1,0 +1,218 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "SEACAST_PRIGI_GRID_DATA_QA_SCHEMA",
+  "description": "Multi-sensor, multi-resolution spatial grid data schema with explicit missing states and per-variable provenance for SEACAST PRIGI 132-month study period (2015-2025).",
+  "type": "object",
+  "primary_key": [
+    "grid_id",
+    "year",
+    "month"
+  ],
+  "required": [
+    "grid_id",
+    "grid_resolution_deg",
+    "year",
+    "month",
+    "time_start_iso",
+    "time_end_iso",
+    "cell_lon_center",
+    "cell_lat_center",
+    "cell_area_km2",
+    "aoi_intersection_area_km2",
+    "aoi_intersection_fraction",
+    "ocean_fraction",
+    "land_fraction",
+    "cell_classification",
+    "variables"
+  ],
+  "properties": {
+    "grid_id": {
+      "type": "string",
+      "pattern": "^WPP573_(025|R010|PRIGI005)_C[0-9]{3}_R[0-9]{3}$"
+    },
+    "grid_resolution_deg": {
+      "type": "number",
+      "enum": [
+        0.25,
+        0.1,
+        0.05
+      ]
+    },
+    "year": {
+      "type": "integer",
+      "minimum": 2015,
+      "maximum": 2025
+    },
+    "month": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 12
+    },
+    "time_start_iso": {
+      "type": "string",
+      "format": "date"
+    },
+    "time_end_iso": {
+      "type": "string",
+      "format": "date"
+    },
+    "cell_lon_center": {
+      "type": "number"
+    },
+    "cell_lat_center": {
+      "type": "number"
+    },
+    "cell_area_km2": {
+      "type": "number"
+    },
+    "aoi_intersection_area_km2": {
+      "type": "number"
+    },
+    "aoi_intersection_fraction": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 1.0
+    },
+    "ocean_fraction": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 1.0
+    },
+    "land_fraction": {
+      "type": "number",
+      "minimum": 0.0,
+      "maximum": 1.0
+    },
+    "cell_classification": {
+      "type": "string",
+      "enum": [
+        "PURE_OCEAN",
+        "COASTAL_BOUNDARY",
+        "OUTER_EEZ_BOUNDARY",
+        "LAND_EXCLUDED",
+        "OUTSIDE_AOI"
+      ]
+    },
+    "variables": {
+      "type": "object",
+      "description": "Per-variable value and full provenance metadata block.",
+      "properties": {
+        "sst": {
+          "$ref": "#/$defs/variable_provenance_block"
+        },
+        "chlorophyll_a": {
+          "$ref": "#/$defs/variable_provenance_block"
+        },
+        "wind_speed": {
+          "$ref": "#/$defs/variable_provenance_block"
+        },
+        "wind_stress": {
+          "$ref": "#/$defs/variable_provenance_block"
+        },
+        "ekman_pumping": {
+          "$ref": "#/$defs/variable_provenance_block"
+        },
+        "current_velocity": {
+          "$ref": "#/$defs/variable_provenance_block"
+        },
+        "eke": {
+          "$ref": "#/$defs/variable_provenance_block"
+        },
+        "bathymetry": {
+          "$ref": "#/$defs/variable_provenance_block"
+        }
+      }
+    }
+  },
+  "$defs": {
+    "variable_provenance_block": {
+      "type": "object",
+      "required": [
+        "value",
+        "unit",
+        "missing_state",
+        "source_dataset",
+        "source_product",
+        "source_version",
+        "native_spatial_resolution_deg",
+        "native_temporal_resolution",
+        "sensor_identifier",
+        "processing_method",
+        "scaling_factor",
+        "qa_rule_applied",
+        "valid_pixel_count",
+        "valid_pixel_fraction",
+        "interpolation_flag",
+        "processing_timestamp_utc"
+      ],
+      "properties": {
+        "value": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "description": "Calculated value. Strictly null if missing_state is not OBSERVED_VALID or OBSERVED_PARTIAL or INTERPOLATED."
+        },
+        "unit": {
+          "type": "string"
+        },
+        "missing_state": {
+          "type": "string",
+          "enum": [
+            "OBSERVED_VALID",
+            "OBSERVED_PARTIAL",
+            "MISSING_NO_IMAGE",
+            "MISSING_ALL_MASKED",
+            "INVALID_QA",
+            "INVALID_PHYSICAL",
+            "INTERPOLATED",
+            "CLIMATOLOGY",
+            "SENSOR_FALLBACK"
+          ]
+        },
+        "source_dataset": {
+          "type": "string"
+        },
+        "source_product": {
+          "type": "string"
+        },
+        "source_version": {
+          "type": "string"
+        },
+        "native_spatial_resolution_deg": {
+          "type": "number"
+        },
+        "native_temporal_resolution": {
+          "type": "string"
+        },
+        "sensor_identifier": {
+          "type": "string"
+        },
+        "processing_method": {
+          "type": "string"
+        },
+        "scaling_factor": {
+          "type": "number"
+        },
+        "qa_rule_applied": {
+          "type": "string"
+        },
+        "valid_pixel_count": {
+          "type": "integer"
+        },
+        "valid_pixel_fraction": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0
+        },
+        "interpolation_flag": {
+          "type": "boolean"
+        },
+        "processing_timestamp_utc": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    }
+  }
+}

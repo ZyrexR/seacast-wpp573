@@ -1,0 +1,267 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "SEACAST_PRIGI_GridCellFeatureSchema",
+  "description": "Standardized schema for multi-scale oceanographic intelligence grid cells across WPPNRI 573",
+  "type": "object",
+  "required": [
+    "cell_id",
+    "grid_level",
+    "temporal_timestamp",
+    "coordinates",
+    "classification",
+    "static_topography",
+    "oceanographic_indicators"
+  ],
+  "properties": {
+    "cell_id": {
+      "type": "string",
+      "description": "Unique identifier formatted as WPP573_<LEVEL>_C<COL>_R<ROW>, e.g. WPP573_R010_C120_R035"
+    },
+    "grid_level": {
+      "type": "string",
+      "enum": [
+        "REGIONAL_010",
+        "LOCAL_005",
+        "MACRO_025"
+      ]
+    },
+    "temporal_timestamp": {
+      "type": "string",
+      "format": "date",
+      "description": "Temporal unit timestamp, YYYY-MM-01 for monthly"
+    },
+    "coordinates": {
+      "type": "object",
+      "required": [
+        "lon_center",
+        "lat_center",
+        "bbox"
+      ],
+      "properties": {
+        "lon_center": {
+          "type": "number",
+          "minimum": 102.5,
+          "maximum": 126.5
+        },
+        "lat_center": {
+          "type": "number",
+          "minimum": -14.0,
+          "maximum": -6.8
+        },
+        "bbox": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 4,
+          "maxItems": 4,
+          "description": "[lon_min, lat_min, lon_max, lat_max]"
+        }
+      }
+    },
+    "classification": {
+      "type": "object",
+      "required": [
+        "cell_type",
+        "water_fraction",
+        "distance_to_coast_km"
+      ],
+      "properties": {
+        "cell_type": {
+          "type": "string",
+          "enum": [
+            "PURE_OCEAN",
+            "COASTAL_BOUNDARY",
+            "ISLAND_BOUNDARY",
+            "OUTER_EEZ_BOUNDARY",
+            "LAND_EXCLUDED"
+          ]
+        },
+        "water_fraction": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0
+        },
+        "distance_to_coast_km": {
+          "type": "number",
+          "minimum": 0.0
+        },
+        "is_active_for_analysis": {
+          "type": "boolean"
+        }
+      }
+    },
+    "static_topography": {
+      "type": "object",
+      "required": [
+        "bathymetry_bedrock_m",
+        "slope_deg",
+        "depth_zone"
+      ],
+      "properties": {
+        "bathymetry_bedrock_m": {
+          "type": "number",
+          "description": "ETOPO1 bedrock elevation in meters (negative in ocean)"
+        },
+        "water_depth_m": {
+          "type": "number",
+          "minimum": 0.0,
+          "description": "Absolute positive depth = -bathymetry_bedrock_m"
+        },
+        "slope_deg": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 90.0
+        },
+        "depth_zone": {
+          "type": "string",
+          "enum": [
+            "NERITIC_SHELF_0_200M",
+            "BATHYAL_SLOPE_200_2000M",
+            "ABYSSAL_PLAIN_2000_6000M",
+            "HADAL_TRENCH_GT_6000M"
+          ]
+        }
+      }
+    },
+    "oceanographic_indicators": {
+      "type": "object",
+      "required": [
+        "sst",
+        "chlor_a",
+        "wind",
+        "currents",
+        "fronts",
+        "upwelling"
+      ],
+      "properties": {
+        "sst": {
+          "type": "object",
+          "properties": {
+            "sst_mean_c": {
+              "type": "number"
+            },
+            "sst_anomaly_c": {
+              "type": "number"
+            },
+            "sst_gradient_c_km": {
+              "type": "number",
+              "minimum": 0.0
+            }
+          }
+        },
+        "chlor_a": {
+          "type": "object",
+          "properties": {
+            "chlor_a_mean_mg_m3": {
+              "type": "number",
+              "minimum": 0.0
+            },
+            "chlor_a_log10": {
+              "type": "number"
+            },
+            "data_source_used": {
+              "type": "string",
+              "enum": [
+                "MODIS_AQUA",
+                "GCOM_C_FALLBACK",
+                "TEMPORAL_INTERPOLATED"
+              ]
+            }
+          }
+        },
+        "wind": {
+          "type": "object",
+          "properties": {
+            "u_wind_10m_m_s": {
+              "type": "number",
+              "minimum": -35.0,
+              "maximum": 35.0
+            },
+            "v_wind_10m_m_s": {
+              "type": "number",
+              "minimum": -35.0,
+              "maximum": 35.0
+            },
+            "wind_speed_m_s": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 45.0
+            },
+            "wind_stress_pa": {
+              "type": "number",
+              "minimum": 0.0
+            }
+          }
+        },
+        "currents": {
+          "type": "object",
+          "properties": {
+            "u_velocity_surface_m_s": {
+              "type": "number"
+            },
+            "v_velocity_surface_m_s": {
+              "type": "number"
+            },
+            "current_speed_m_s": {
+              "type": "number",
+              "minimum": 0.0
+            },
+            "current_direction_deg": {
+              "type": "number",
+              "minimum": 0.0,
+              "maximum": 360.0
+            }
+          }
+        },
+        "fronts": {
+          "type": "object",
+          "properties": {
+            "thermal_front_detected": {
+              "type": "boolean"
+            },
+            "thermal_front_gradient_c_per_10km": {
+              "type": "number"
+            },
+            "chlorophyll_front_detected": {
+              "type": "boolean"
+            }
+          }
+        },
+        "upwelling": {
+          "type": "object",
+          "properties": {
+            "ekman_mass_transport_cross_shore_kg_m_s": {
+              "type": "number"
+            },
+            "ekman_pumping_velocity_m_day": {
+              "type": "number"
+            },
+            "coastal_upwelling_index": {
+              "type": "number"
+            }
+          }
+        }
+      }
+    },
+    "qa_provenance": {
+      "type": "object",
+      "properties": {
+        "valid_pixel_ratio": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0
+        },
+        "qa_flags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "gee_export_batch_id": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

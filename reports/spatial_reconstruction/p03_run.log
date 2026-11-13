@@ -1,0 +1,29 @@
+﻿[0.3] RAW_BIG_FETCH_2026-11-02: data/aoi/raw/WPP573_BIG_ORIGINAL.geojson
+[0.3] AOI_MASTER: data/aoi/processed/AOI_WPP573_MASTER.geojson
+[0.3] LEGACY_BIG_2026-10-31: data/boundaries/wppnri_573_big.geojson
+[0.3] LEGACY_WEB_SIMPLIFIED: data/boundaries/wppnri_573_web.geojson
+python.exe : Traceback (most recent call last):
+At line:2 char:1
++ & $py gee\spatial_reconstruction\v2\tools\p03_aoi_revalidation.py 2>& ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Traceback (most recent call last)::String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  File "C:\Users\ThinkPad\.gemini\antigravity\scratch\prigi-pelagis\gee\spatial_reconstruction\v2\tools\p03_aoi_revalid
+ation.py", line 331, in <module>
+    main()
+    ~~~~^^
+  File "C:\Users\ThinkPad\.gemini\antigravity\scratch\prigi-pelagis\gee\spatial_reconstruction\v2\tools\p03_aoi_revalid
+ation.py", line 255, in main
+    sym = shapely.transform(g.symmetric_difference(ref), lambda xy: np.column_stack(T6933.transform(xy[:, 0], xy[:, 
+1])))
+                            ~~~~~~~~~~~~~~~~~~~~~~^^^^^
+  File "C:\Users\ThinkPad\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\shapely\decorators.py", line 184, 
+in wrapper
+    result = func(*args, **kwargs)
+  File "C:\Users\ThinkPad\AppData\Local\Python\pythoncore-3.14-64\Lib\site-packages\shapely\geometry\base.py", line 
+729, in symmetric_difference
+    return shapely.lib.symmetric_difference_scalar(self, other)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+shapely.errors.GEOSException: TopologyException: side location conflict at 123.36855644500073 -10.545091342661388. 
+This can occur if the input geometry is invalid.

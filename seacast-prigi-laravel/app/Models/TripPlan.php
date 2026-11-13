@@ -37,3 +37,4 @@ class TripPlan extends Model
         return $query->where('port_code', $portCode);
     }
 }
+

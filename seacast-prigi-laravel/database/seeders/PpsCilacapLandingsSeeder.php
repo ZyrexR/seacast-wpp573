@@ -177,3 +177,4 @@ class PpsCilacapLandingsSeeder extends Seeder
         }
     }
 }
+

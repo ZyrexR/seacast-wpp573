@@ -119,3 +119,4 @@
   - Lakukan request HTTP ke `http://127.0.0.1:8000/` dan `http://127.0.0.1:8000/dashboard` untuk memverifikasi halaman termuat dengan respons 200 OK.
 - [ ] **Step 4: Commit Task 4**
   - Git commit final untuk penyesuaian integrasi.
+

@@ -1,0 +1,5 @@
+Grid_ID,Resolution_deg,Resolution_km,Lon_Min,Lon_Max,Lat_Min,Lat_Max,Cols,Rows,Total_BBox_Cells,Pure_Ocean_Cells,Boundary_Cells,Total_Active_Cells,Cell_Area_km2,Represented_Area_km2,Area_Error_vs_AOI_pct
+GRID_025,0.25,27.5,102.5,126.5,-14.0,-6.75,96,29,2784,1088,327,1415,756.74,1070787.6,14.68
+GRID_010,0.1,11.0,102.5,126.5,-14.0,-6.8,240,72,17280,7381,868,8249,121.07,998696.3,6.96
+GRID_005_PRIGI,0.05,5.5,111.0,113.0,-10.45,-8.0,40,49,1960,1663,61,1724,30.37,52366.1,N/A (Sub-AOI)
+GRID_005_FULL,0.05,5.5,102.5,126.5,-14.0,-6.8,480,144,69120,27788,1736,31260,30.27,998696.3,6.96

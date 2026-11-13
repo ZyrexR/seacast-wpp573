@@ -1,0 +1,5 @@
+period,component,sample_count,min_raw_m_s,p01_m_s,p05_m_s,p25_m_s,median_p50_m_s,p75_m_s,p95_m_s,p99_m_s,p99_9_m_s,max_raw_m_s,mean_m_s,std_dev_m_s,outliers_gt_30ms,outliers_pct
+2015-2024 (Operational 10-Yr Baseline),u_component,14610,-24.72,-14.85,-11.6,-7.2,-4.15,-1.1,5.4,9.85,15.2,24.15,-4.22,4.81,0,0.0
+2015-2024 (Operational 10-Yr Baseline),v_component,14610,-22.4,-12.3,-9.1,-4.8,-1.8,1.9,6.8,11.2,16.4,23.8,-1.54,4.62,0,0.0
+2025 (Forecast Anomaly Period),u_component,1451,-482.15,-15.1,-11.9,-7.4,-4.2,-0.95,5.6,10.15,22.4,458.7,-4.18,12.35,21,1.45
+2025 (Forecast Anomaly Period),v_component,1451,-412.3,-12.5,-9.25,-4.9,-1.75,2.05,6.95,11.5,20.8,395.4,-1.51,10.88,18,1.24

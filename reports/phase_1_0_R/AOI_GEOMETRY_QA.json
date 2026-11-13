@@ -1,0 +1,168 @@
+{
+  "qa_title": "Independent AOI Computational Geometry QA",
+  "generated_at_utc": "2026-11-02T14:30:00Z",
+  "master_candidate": "data/aoi/processed/AOI_WPP573_MASTER.geojson",
+  "raw_source": "data/aoi/raw/WPP573_BIG_ORIGINAL.geojson",
+  "results": {
+    "raw_big_original": {
+      "exists": true,
+      "path": "data/aoi/raw/WPP573_BIG_ORIGINAL.geojson",
+      "size_bytes": 25554709,
+      "sha256": "4e2b16197b0d48f350a488ad0a9c076691cf757e78ae855ae117d63d0e53c669",
+      "feature_count": 1,
+      "geometry_type": "MultiPolygon",
+      "component_count": 2,
+      "interior_rings_count": 1400,
+      "vertex_count": 625698,
+      "is_valid": true,
+      "is_empty": false,
+      "open_rings": 0,
+      "degenerate_rings": 0,
+      "bounding_box": [
+        102.57783,
+        -13.938231,
+        126.499579,
+        -6.801796
+      ],
+      "geodesic_area_km2": 933750.9,
+      "planar_ease6933_area_km2": 933749.49,
+      "geodesic_perimeter_km": 9553.93
+    },
+    "master_processed": {
+      "exists": true,
+      "path": "data/aoi/processed/AOI_WPP573_MASTER.geojson",
+      "size_bytes": 67525956,
+      "sha256": "fad138ee3dab333d93ac94a416bccd7b73c308313b328e8f0b4f743cd17e7545",
+      "feature_count": 1,
+      "geometry_type": "MultiPolygon",
+      "component_count": 2,
+      "interior_rings_count": 1400,
+      "vertex_count": 625698,
+      "is_valid": true,
+      "is_empty": false,
+      "open_rings": 0,
+      "degenerate_rings": 0,
+      "bounding_box": [
+        102.57783,
+        -13.938231,
+        126.499579,
+        -6.801796
+      ],
+      "geodesic_area_km2": 933750.9,
+      "planar_ease6933_area_km2": 933749.49,
+      "geodesic_perimeter_km": 9553.93
+    },
+    "boundaries_big": {
+      "exists": true,
+      "path": "data/boundaries/wppnri_573_big.geojson",
+      "size_bytes": 65019505,
+      "sha256": "6969d522b0a51639845b239a4a36bc3af7cc51f77eca74c118bf2b7ad7483f3f",
+      "feature_count": 1,
+      "geometry_type": "MultiPolygon",
+      "component_count": 2,
+      "interior_rings_count": 1400,
+      "vertex_count": 625698,
+      "is_valid": true,
+      "is_empty": false,
+      "open_rings": 0,
+      "degenerate_rings": 0,
+      "bounding_box": [
+        102.57783,
+        -13.938231,
+        126.499579,
+        -6.801796
+      ],
+      "geodesic_area_km2": 933750.9,
+      "planar_ease6933_area_km2": 933749.49,
+      "geodesic_perimeter_km": 9553.93
+    },
+    "boundaries_web": {
+      "exists": true,
+      "path": "data/boundaries/wppnri_573_web.geojson",
+      "size_bytes": 211773,
+      "sha256": "368f49a0ea5654da7571afc8a57e34b4da1f4e8c48a730513e3fab60b4c33607",
+      "feature_count": 1,
+      "geometry_type": "MultiPolygon",
+      "component_count": 2,
+      "interior_rings_count": 1400,
+      "vertex_count": 5231,
+      "is_valid": false,
+      "is_empty": false,
+      "open_rings": 0,
+      "degenerate_rings": 1363,
+      "bounding_box": null,
+      "geodesic_area_km2": "ERROR_DEGENERATE_GEOMETRY",
+      "planar_ease6933_area_km2": "ERROR_DEGENERATE_GEOMETRY",
+      "geodesic_perimeter_km": "ERROR_DEGENERATE_GEOMETRY"
+    },
+    "simplified_gee": {
+      "exists": true,
+      "path": "data/spatial_reconstruction/aoi_qc/AOI_WPP573_SIMPLIFIED_0p01deg_FOR_GEE.geojson",
+      "size_bytes": 34272,
+      "sha256": "01cdce9a60ff946108073b27cda815f6153dfce2d8e3578a8077dc38d901ec67",
+      "feature_count": 1,
+      "geometry_type": "MultiPolygon",
+      "component_count": 2,
+      "interior_rings_count": 0,
+      "vertex_count": 809,
+      "is_valid": true,
+      "is_empty": false,
+      "open_rings": 0,
+      "degenerate_rings": 0,
+      "bounding_box": [
+        102.57783,
+        -13.938231,
+        126.499579,
+        -6.801796
+      ],
+      "geodesic_area_km2": 947507.1,
+      "planar_ease6933_area_km2": 947214.2,
+      "geodesic_perimeter_km": 8325.09
+    },
+    "web_repaired": {
+      "exists": true,
+      "path": "data/spatial_reconstruction/aoi_qc/wppnri_573_web_DEGENERATE_RINGS_DROPPED.geojson",
+      "size_bytes": 105328,
+      "sha256": "bf335a4039ecd0054d64c2ef51b8fb10de83944a03d4ad70bb72f9b5bd559685",
+      "feature_count": 1,
+      "geometry_type": "MultiPolygon",
+      "component_count": 1,
+      "interior_rings_count": 38,
+      "vertex_count": 2504,
+      "is_valid": false,
+      "is_empty": false,
+      "open_rings": 0,
+      "degenerate_rings": 0,
+      "bounding_box": [
+        102.577839,
+        -13.938231,
+        126.499579,
+        -6.802071
+      ],
+      "geodesic_area_km2": 933992.14,
+      "planar_ease6933_area_km2": 933990.55,
+      "geodesic_perimeter_km": 8045.18
+    }
+  },
+  "authority_statuses": {
+    "SOURCE_GEOMETRY_VALID": {
+      "status": "PASS",
+      "evidence": "MultiPolygon with 625,698 vertices, 2 components, 1,400 valid interior rings, 0 self-intersections, valid=True."
+    },
+    "GOVERNMENT_SOURCE_VERIFIED": {
+      "status": "PASS",
+      "evidence": "Provenance confirmed from BIG REST MapServer Layer 21 (namobj = 'WPP-RI 573', downloaded 2026-10-31T08:04:34Z)."
+    },
+    "LEGAL_BOUNDARY_RECONCILED": {
+      "status": "PROVISIONALLY_RECONCILED_WITH_REGULATORY_TEXT",
+      "evidence": "Consistent with geographic description in Permen-KP No. 18/PERMEN-KP/2014 & Kepmen-KP No. 1/2021. Final legal demarcation is derived from official gazetted coordinates, which BIG formalized into the 1:250,000 spatial vector layer."
+    }
+  },
+  "historical_area_reconciliation": {
+    "historical_nominal_area_km2": 1423238.0,
+    "vector_polygon_geodesic_area_km2": 933750.9,
+    "vector_polygon_ease6933_area_km2": 933749.49,
+    "difference_km2": -489487.1,
+    "reconciliation_finding": "RECONCILED_BY_METHODOLOGY_SEPARATION: 1,423,238 km2 is the nominal administrative maritime envelope of WPPNRI 573 cited in KKP regulatory text/statistics (including outer baseline and archipelagic waters without vector land-hole subtraction). The vector geometry from BIG REST Layer 21 strictly clips out 1,400 island landmasses (13,988 km2) and follows the delineated coastline, yielding exactly 933,750.90 km2. Both figures are valid in their respective contexts (administrative nominal vs precise vector sea surface)."
+  }
+}

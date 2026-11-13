@@ -26,14 +26,16 @@ class DashboardController extends Controller
     /**
      * Interactive DPI Radar Geospasial WebGL Module (Phase 2)
      */
-    public function dpiRadar()
+    public function dpiRadar(\App\Services\BmkgMaritimService $bmkgService)
     {
         $latestDate = DailyPrediction::max('prediction_date') ?? '2026-11-03';
         $summary = $this->scientificDataRepository->getDailySummary($latestDate);
+        $bmkgOverview = $bmkgService->getMaritimeOverview('prigi');
 
         return view('dashboard.dpi-radar', [
             'latestDate' => $latestDate,
             'summary' => $summary['summary'] ?? [],
+            'bmkgLive' => $bmkgOverview,
             'sectors' => [
                 'ALL' => 'Seluruh WPPNRI 573',
                 'JATIM' => 'Jawa Timur (PPN Prigi)',

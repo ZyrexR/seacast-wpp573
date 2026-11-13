@@ -1,0 +1,152 @@
+{
+  "primary_aoi": {
+    "name": "WPPNRI 573",
+    "description": "Official Fisheries Management Area 573 (Indian Ocean South of Java to Timor Sea)",
+    "source": "Badan Informasi Geospasial (BIG)",
+    "service_url": "https://kspservices.big.go.id/satupeta/rest/services/PUBLIK/SUMBER_DAYA_ALAM_DAN_LINGKUNGAN/MapServer/21",
+    "layer_id": 21,
+    "layer_name": "Peta Wilayah Pengelolaan Perikanan RI",
+    "filter_field": "namobj",
+    "filter_value": "WPP-RI 573",
+    "geometry_type": "MultiPolygon",
+    "native_crs": "EPSG:4326",
+    "canonical_file": "data/boundaries/wppnri_573_big.geojson",
+    "web_display_file": "data/boundaries/wppnri_573_web.geojson",
+    "bounding_box_wgs84": {
+      "west": 102.5778,
+      "south": -13.9382,
+      "east": 126.4996,
+      "north": -6.8018
+    },
+    "total_vertices_raw": 625698,
+    "raw_file_size_bytes": 65019505,
+    "download_timestamp": "2026-10-31T08:04:34Z",
+    "status": "verified_official_boundary"
+  },
+  "secondary_aoi": {
+    "name": "Prigi Regional Study Area (Sub-AOI Prigi)",
+    "description": "Regional sub-area around Prigi Bay for local oceanographic correlation and fleet interaction analysis",
+    "west": 111.0,
+    "east": 113.0,
+    "north": -8.0,
+    "south": -10.45,
+    "crs": "EPSG:4326",
+    "status": "sub_aoi_for_local_analysis",
+    "caveat": "NOT the official WPPNRI 573 boundary; this is a localized analysis window",
+    "resolution_deg": 0.05,
+    "grid_columns": 40,
+    "grid_rows": 49,
+    "active_grid_centers_ layout": "50 cols (111.025 to 112.975 E, step ~0.04/0.05) x 41 rows (-10.425 to -8.025 S, step ~0.06/0.05) = 2050 cells",
+    "grid_centers_count": 2050,
+    "equal_area_km2": 59550.43,
+    "equal_area_crs": "EPSG:6933 / WGS84 Authalic Ellipsoid"
+  },
+  "fleet_accessibility": {
+    "scenarios_nm": [
+      12,
+      60
+    ],
+    "unit": "nautical_miles",
+    "status": "scenario_not_verified_operational_range",
+    "description": "Simulated fleet accessibility buffers from PPN Prigi; not actual tracked tracks",
+    "scenarios": [
+      {
+        "id": "RING_12NM",
+        "name": "Skenario Aksesibilitas Armada Pesisir (12 NM)",
+        "radius_nm": 12,
+        "radius_km": 22.224,
+        "indicative_class": "KM < 10 GT",
+        "primary_gears": [
+          "Pancing Ulur",
+          "Payang"
+        ],
+        "target_zone": "Zona Neritik & Perairan Teluk Prigi (< 200m)",
+        "caveat": "Hanya skenario batas jangkauan harian; bukan batas hukum atau batas eksklusif"
+      },
+      {
+        "id": "RING_60NM",
+        "name": "Skenario Aksesibilitas Armada Lepas Pantai (60 NM)",
+        "radius_nm": 60,
+        "radius_km": 111.12,
+        "indicative_class": "KM 20 - < 30 GT",
+        "primary_gears": [
+          "Pukat Cincin (Purse Seine)"
+        ],
+        "target_zone": "Tubir Benua (Shelf-break 200-1000m) & Oseanik WPPNRI 573",
+        "caveat": "Hanya skenario radius operasional; kapal pukat cincin dapat melaut lebih jauh"
+      }
+    ]
+  },
+  "coordinate_reference_systems": {
+    "display_crs": "EPSG:4326",
+    "display_crs_description": "WGS 84 Geographic Coordinates (Vector GeoJSON & Web Display)",
+    "local_analysis_crs": "EPSG:32749",
+    "local_analysis_crs_description": "WGS 84 / UTM Zone 49S (Local Distance & High-Resolution Buffer Calculations)",
+    "regional_area_crs": "EPSG:6933",
+    "regional_area_crs_description": "WGS 84 / NSIDC EASE-Grid 2.0 Global (Cylindrical Equal-Area for Regional Area Calculations across WPPNRI 573)",
+    "geodesic_distance_metric": "WGS 84 Geodesic Distance"
+  },
+  "temporal_monsoon_framework": {
+    "description": "Configurable multi-monsoon classification system respecting cross-calendar year transitions",
+    "monsoons": [
+      {
+        "id": "MONSOON_WEST",
+        "name": "Musim Barat (Northwest Monsoon)",
+        "months": [
+          11,
+          12,
+          1,
+          2
+        ],
+        "nomenclature_rule": "Cross-year notation (e.g., Musim Barat 2015/2016 for Nov 2015 - Feb 2016)",
+        "oceanographic_signature": "Non-upwelling, high SST (28.5 - 29.5 C), low Chl-a (0.15 - 0.22 mg/m3), high waves",
+        "fishery_phase": "Paceklik (Off-season for tuna/skipjack)"
+      },
+      {
+        "id": "TRANSITION_1",
+        "name": "Musim Peralihan I (Transition I)",
+        "months": [
+          3,
+          4,
+          5
+        ],
+        "nomenclature_rule": "Single-year notation (e.g., Peralihan I 2016 for Mar - Mei 2016)",
+        "oceanographic_signature": "Onset of seasonal upwelling, gradual cooling of coastal waters",
+        "fishery_phase": "Musim Sedang (Rising catch)"
+      },
+      {
+        "id": "MONSOON_EAST",
+        "name": "Musim Timur (Southeast Monsoon)",
+        "months": [
+          6,
+          7,
+          8
+        ],
+        "nomenclature_rule": "Single-year notation (e.g., Musim Timur 2016 for Jun - Agu 2016)",
+        "oceanographic_signature": "Intense Upwelling, SST drop (25.5 - 26.8 C), Chl-a bloom (>0.60 mg/m3)",
+        "fishery_phase": "Puncak Panen (Peak harvest for Cakalang & Pelagic Complex)"
+      },
+      {
+        "id": "TRANSITION_2",
+        "name": "Musim Peralihan II (Transition II)",
+        "months": [
+          9,
+          10
+        ],
+        "nomenclature_rule": "Single-year notation (e.g., Peralihan II 2016 for Sep - Okt 2016)",
+        "oceanographic_signature": "Decay of seasonal upwelling, gradual thermal stratification",
+        "fishery_phase": "Musim Sedang (Second peak / transition harvest)"
+      }
+    ]
+  },
+  "area_reconciliation_phase_4_1_1": {
+    "sub_aoi_prigi_exact_wgs84_equal_area_km2": 59550.43,
+    "wppnri_573_nominal_kkp_reference_area_km2": 1423238.0,
+    "sub_aoi_pct_of_nominal_wpp573": 4.1842,
+    "wppnri_573_big_geojson_polygon_epsg6933_area_km2": 933749.49,
+    "sub_aoi_pct_of_big_geojson_polygon": 6.3776,
+    "legacy_planar_sub_aoi_approximation_km2": 59206.0,
+    "legacy_rounded_wpp573_reference_km2": 1425000.0,
+    "canonical_note": "Sub-AOI Prigi [111.00, 113.00] E x [-10.45, -8.00] S has an exact WGS84 authalic/equal-area (EPSG:6933) surface area of 59,550.43 km2. Relative to the KKP nominal WPPNRI 573 reference area (1,423,238 km2), this is 4.1842% (4.18%). Relative to the clipped BIG polygon geometry stored in data/boundaries/wppnri_573_big.geojson (933,749.49 km2 equal-area), this is 6.3776% (6.38%)."
+  }
+}

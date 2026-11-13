@@ -1,0 +1,64 @@
+{
+  "test_suite": "CFSV2 Remediation & QA Rule Unit Tests",
+  "tests": [
+    {
+      "test_id": "TEST_CFSV2_01",
+      "description": "Valid normal monsoon wind (U = 12.5 m/s, V = -8.2 m/s)",
+      "input": {
+        "u": 12.5,
+        "v": -8.2
+      },
+      "expected_classification": "VALID_PHYSICAL",
+      "expected_wind_speed": 14.95,
+      "expected_mask": false,
+      "status": "PASS"
+    },
+    {
+      "test_id": "TEST_CFSV2_02",
+      "description": "Tropical Cyclone strong wind (U = 28.0 m/s, V = 22.0 m/s)",
+      "input": {
+        "u": 28.0,
+        "v": 22.0
+      },
+      "expected_classification": "SUSPECT_REVIEW",
+      "expected_wind_speed": 35.61,
+      "expected_mask": false,
+      "status": "PASS"
+    },
+    {
+      "test_id": "TEST_CFSV2_03",
+      "description": "Extreme unphysical outlier spike (U = 435.98 m/s, V = 7.15 m/s)",
+      "input": {
+        "u": 435.98,
+        "v": 7.15
+      },
+      "expected_classification": "INVALID_ARTIFACT",
+      "expected_wind_speed": 436.04,
+      "expected_mask": true,
+      "status": "PASS"
+    },
+    {
+      "test_id": "TEST_CFSV2_04",
+      "description": "Negative unphysical outlier (U = -6.2 m/s, V = -422.22 m/s)",
+      "input": {
+        "u": -6.2,
+        "v": -422.22
+      },
+      "expected_classification": "INVALID_ARTIFACT",
+      "expected_wind_speed": 422.27,
+      "expected_mask": true,
+      "status": "PASS"
+    },
+    {
+      "test_id": "TEST_CFSV2_05",
+      "description": "Sudden 6h unphysical delta (|delta U| = 296.76 m/s between t and t-6h)",
+      "input": {
+        "u_t": 294.54,
+        "u_t_minus_6h": -2.22
+      },
+      "expected_classification": "INVALID_ARTIFACT",
+      "expected_mask": true,
+      "status": "PASS"
+    }
+  ]
+}

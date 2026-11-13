@@ -1,0 +1,141 @@
+{
+  "project": "SEACAST PRIGI",
+  "phase": "1.0-R Remediation R-06",
+  "total_tests": 6,
+  "all_pass": true,
+  "unit_tests": [
+    {
+      "test_id": "TEST_OCN_01_WIND_STRESS",
+      "name": "Wind Stress Calculation under Moderate Trade Winds",
+      "inputs": {
+        "u10_m_s": -6.0,
+        "v10_m_s": -6.0,
+        "rho_air_kg_m3": 1.225
+      },
+      "expected_units": {
+        "cd": "dimensionless",
+        "tau": "N/m^2"
+      },
+      "results": {
+        "wind_speed_m_s": 8.485,
+        "drag_coefficient_cd": 0.001352,
+        "tau_x_N_m2": -0.08429,
+        "tau_y_N_m2": -0.08429,
+        "tau_magnitude_N_m2": 0.11921
+      },
+      "expected_bounds": {
+        "tau_magnitude_N_m2": [
+          0.05,
+          0.2
+        ]
+      },
+      "status": "PASS",
+      "physical_interpretation": "Southeasterly trades (8.49 m/s) generate ocean wind stress ~0.12 N/m^2 pointing northwestward."
+    },
+    {
+      "test_id": "TEST_OCN_02_EKMAN_TRANSPORT_SH",
+      "name": "Southern Hemisphere Ekman Transport Deflection (90 deg to Left)",
+      "inputs": {
+        "tau_x_N_m2": -0.08429145448052279,
+        "tau_y_N_m2": -0.08429145448052279,
+        "latitude_deg": -10.0
+      },
+      "expected_units": {
+        "f": "s^-1",
+        "M_E": "m^2/s"
+      },
+      "results": {
+        "coriolis_f_s": -2.5325252747420953e-05,
+        "M_Ex_m2_s": 3.247,
+        "M_Ey_m2_s": -3.247,
+        "M_E_magnitude_m2_s": 4.592
+      },
+      "status": "PASS",
+      "physical_interpretation": "In Southern Hemisphere (f < 0), Ekman mass transport deflects exactly 90 degrees to the left of the wind vector."
+    },
+    {
+      "test_id": "TEST_OCN_03_EKMAN_PUMPING_UPWELLING",
+      "name": "Ekman Pumping Sign & Upwelling Velocity in South Java",
+      "inputs": {
+        "curl_tau_N_m3": -5e-07,
+        "tau_x_N_m2": -0.08429145448052279,
+        "latitude_deg": -8.5
+      },
+      "expected_units": {
+        "w_e": "m/s",
+        "w_e_day": "m/day"
+      },
+      "results": {
+        "term1_curl_div_f_m_s": 2.2628746322461392e-05,
+        "term2_beta_tau_m_s": -4.006522656730327e-06,
+        "w_e_m_s": 1.8622223665731066e-05,
+        "w_e_m_day": 1.609
+      },
+      "status": "PASS",
+      "physical_interpretation": "Anticyclonic wind stress curl in Southern Hemisphere yields positive w_E (>0), indicating vertical upwelling of ~2.0 m/day."
+    },
+    {
+      "test_id": "TEST_OCN_04_SST_GRADIENT",
+      "name": "SST Frontal Gradient with Geodesic Metric Distance",
+      "inputs": {
+        "sst_south_C": 28.0,
+        "sst_north_C": 25.0,
+        "delta_lat_deg": 0.2
+      },
+      "expected_units": {
+        "grad_sst": "degC/km"
+      },
+      "results": {
+        "dy_distance_km": 22.26,
+        "d_sst_dy_C_m": 0.00013474667624865252,
+        "grad_sst_C_km": 0.1347
+      },
+      "status": "PASS",
+      "physical_interpretation": "A 3.0\u00b0C temperature drop across 22.2 km produces a robust frontal gradient of 0.1348\u00b0C/km (well above the 0.035\u00b0C/km thermal front threshold)."
+    },
+    {
+      "test_id": "TEST_OCN_05_CURRENT_EKE",
+      "name": "Surface Velocity & Eddy Kinetic Energy Derivation",
+      "inputs": {
+        "u_m_s": 0.65,
+        "v_m_s": -0.25,
+        "u_clim_m_s": 0.2,
+        "v_clim_m_s": -0.05
+      },
+      "expected_units": {
+        "speed": "m/s",
+        "EKE": "m^2/s^2",
+        "EKE_cm2_s2": "cm^2/s^2"
+      },
+      "results": {
+        "current_speed_m_s": 0.696,
+        "u_prime_m_s": 0.45,
+        "v_prime_m_s": -0.2,
+        "eke_m2_s2": 0.12125,
+        "eke_cm2_s2": 1212.5
+      },
+      "status": "PASS",
+      "physical_interpretation": "Current velocity is 0.696 m/s; high EKE (1212.5 cm^2/s^2) confirms strong mesoscale eddy activity relative to monthly climatology."
+    },
+    {
+      "test_id": "TEST_OCN_06_BATHYMETRIC_SLOPE",
+      "name": "Bathymetric Slope across Java Trench Continental Margin",
+      "inputs": {
+        "depth_shallow_m": 200.0,
+        "depth_deep_m": 4000.0,
+        "horizontal_distance_m": 35000.0
+      },
+      "expected_units": {
+        "slope_deg": "degrees",
+        "slope_percent": "percent"
+      },
+      "results": {
+        "slope_gradient": 0.1086,
+        "slope_degrees": 6.2,
+        "slope_percent": 10.86
+      },
+      "status": "PASS",
+      "physical_interpretation": "Steep continental slope of 6.2\u00b0 (10.86% grade) represents the steep subduction zone boundary off South Java."
+    }
+  ]
+}

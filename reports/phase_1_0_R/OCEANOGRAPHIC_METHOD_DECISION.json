@@ -1,0 +1,37 @@
+{
+  "project": "SEACAST PRIGI",
+  "phase": "1.0-R Remediation R-06",
+  "governing_methods": {
+    "sst_gradient": {
+      "formula": "Spherical Sobel gradient magnitude |grad(SST)| = sqrt((dT/dx)^2 + (dT/dy)^2)",
+      "distance_metric": "Geodesic metric with latitude-dependent dx = R_E * cos(lat) * dlon * pi/180",
+      "thermal_front_threshold_C_km": 0.035,
+      "caveat": "Gradient alone is an edge indicator; confirmed thermal fronts require spatial edge continuity and bimodal histogram checks."
+    },
+    "wind_stress": {
+      "formula": "tau = rho_a * Cd * |U_10| * U_10",
+      "air_density_kg_m3": 1.225,
+      "drag_coefficient_model": "Large & Pond (1981) / Wu (1982) wind-dependent formula",
+      "qa_precondition": "CFSv2 artifact masking (wind speed must be < 30 m/s and isolated spikes rejected)"
+    },
+    "ekman_dynamics": {
+      "southern_hemisphere_sign": "f = 2 * Omega * sin(lat) is NEGATIVE. Ekman transport deflects 90 deg LEFT of wind.",
+      "ekman_pumping_formula": "w_E = (1 / (rho_w * f)) * curl(tau) + (beta * tau_x) / (rho_w * f^2)",
+      "beta_term_inclusion": true,
+      "regularization_threshold": "|f| >= 1.0e-5 s^-1 to avoid equatorial division-by-zero",
+      "upwelling_sign": "w_E > 0 denotes upward velocity (upwelling); w_E < 0 denotes downwelling."
+    },
+    "current_and_eke": {
+      "vertical_level": "Surface layer (HYCOM z=0m; CMEMS ANFC z=0.494m)",
+      "eke_formula": "0.5 * (u'^2 + v'^2) relative to 10-year monthly climatology",
+      "resolution_caveat": "Coarse 1/12 deg model captures mesoscale features (>50 km), not submesoscale coastal eddies."
+    },
+    "bathymetry_and_shelf": {
+      "source": "GEBCO 2024 / 2022 (15 arc-sec)",
+      "datum": "Mean Sea Level (MSL), depths positive downwards (D = -z)",
+      "shelf_break_threshold_m": 200.0,
+      "classification_policy": "Neritic (D <= 200m) vs Oceanic (D > 200m). Slope magnitude is reported as an auxiliary terrain variable, NOT sole classifier."
+    }
+  },
+  "approval_recommendation": "APPROVED_FOR_PIPELINE_SPECIFICATION"
+}

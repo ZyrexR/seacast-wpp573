@@ -1,0 +1,144 @@
+{
+  "system": "SEACAST_PRIGI_OCEANOGRAPHIC_INDICATORS",
+  "version": "2.0.0",
+  "target_wpp": "WPPNRI 573",
+  "physical_constants": {
+    "earth_radius_m": 6371000.0,
+    "earth_angular_velocity_rad_s": 7.2921159e-05,
+    "air_density_kg_m3": 1.225,
+    "seawater_density_kg_m3": 1025.0,
+    "gravity_m_s2": 9.80665
+  },
+  "indicators": {
+    "thermal_front": {
+      "name": "Thermal Front Gradient Intensity",
+      "symbol": "|grad(SST)|",
+      "unit": "deg_C / km",
+      "input_variable": "sst (deg_C)",
+      "spherical_gradient_formula": {
+        "dx_m": "R * cos(radians(lat)) * radians(d_lon)",
+        "dy_m": "R * radians(d_lat)",
+        "grad_x": "d(SST) / dx",
+        "grad_y": "d(SST) / dy",
+        "magnitude": "sqrt(grad_x^2 + grad_y^2) * 1000.0"
+      },
+      "detection_threshold": {
+        "moderate_front": ">= 0.03 deg_C / km (0.3 deg_C / 10 km)",
+        "strong_front": ">= 0.05 deg_C / km (0.5 deg_C / 10 km)"
+      },
+      "valid_range": [
+        0.0,
+        0.5
+      ],
+      "scientific_reference": "Cayula & Cornillon (1992); Belkin & O'Reilly (2009)"
+    },
+    "wind_stress": {
+      "name": "Surface Wind Stress",
+      "symbol": "tau",
+      "unit": "N / m^2 (Pa)",
+      "input_variables": [
+        "u10 (m/s)",
+        "v10 (m/s)"
+      ],
+      "formula": {
+        "wind_speed_w": "sqrt(u10^2 + v10^2)",
+        "drag_coefficient_cd": "Wu (1982): if w < 11.0: (0.8 + 0.065 * w) * 1e-3 else: (0.49 + 0.065 * w) * 1e-3",
+        "tau_x": "rho_air * Cd * w * u10",
+        "tau_y": "rho_air * Cd * w * v10",
+        "tau_magnitude": "sqrt(tau_x^2 + tau_y^2)"
+      },
+      "valid_range": [
+        0.0,
+        1.5
+      ],
+      "scientific_reference": "Wu (1982); Large & Pond (1981)"
+    },
+    "coriolis_parameter": {
+      "name": "Coriolis Parameter",
+      "symbol": "f",
+      "unit": "s^-1",
+      "formula": "2 * Omega * sin(radians(lat))",
+      "wpp573_domain_behavior": {
+        "lat_min": -13.938,
+        "lat_max": -6.802,
+        "f_at_min_lat": -3.513e-05,
+        "f_at_max_lat": -1.728e-05,
+        "is_singular": false,
+        "damping_needed": false,
+        "notes": "Domain is entirely in Southern Hemisphere between 6.8S and 14S; f is strictly negative and non-zero everywhere. No equatorial singularity."
+      }
+    },
+    "ekman_mass_transport": {
+      "name": "Ekman Mass Transport",
+      "symbol": "M_E",
+      "unit": "kg / (m * s)",
+      "formula": {
+        "M_Ex": "tau_y / f",
+        "M_Ey": "-tau_x / f",
+        "cross_shore_upwelling_transport": "Projection along normal to south Java coastline (~105 deg azimuth)"
+      },
+      "valid_range": [
+        -5000.0,
+        5000.0
+      ],
+      "scientific_reference": "Ekman (1905); Stewart (2008)"
+    },
+    "ekman_pumping_velocity": {
+      "name": "Ekman Pumping Velocity",
+      "symbol": "W_E",
+      "unit": "m / day",
+      "formula": {
+        "curl_tau": "d(tau_y)/dx - d(tau_x)/dy",
+        "beta": "2 * Omega * cos(radians(lat)) / R",
+        "w_e_m_s": "(1 / (rho_water * f)) * curl_tau + (beta * tau_x) / (rho_water * f^2)",
+        "w_e_m_day": "w_e_m_s * 86400.0"
+      },
+      "interpretation": {
+        "southern_hemisphere_convention": "Since f < 0 in SH: Cyclonic wind stress curl (curl tau < 0) yields positive W_E (UPWELLING / pumping upwards). Anticyclonic curl yields negative W_E (DOWNWELLING)."
+      },
+      "valid_range": [
+        -10.0,
+        10.0
+      ],
+      "scientific_reference": "Gill (1982); Tomczak & Godfrey (2003)"
+    },
+    "chlorophyll_front": {
+      "name": "Chlorophyll-a Gradient Intensity",
+      "symbol": "|grad(log10(Chl))|",
+      "unit": "decade / 100 km",
+      "formula": "sqrt( (d(log10(chl_a))/dx)^2 + (d(log10(chl_a))/dy)^2 ) * 1e5",
+      "valid_range": [
+        0.0,
+        5.0
+      ],
+      "scientific_reference": "Belkin (2009)"
+    },
+    "eddy_kinetic_energy": {
+      "name": "Surface Eddy Kinetic Energy",
+      "symbol": "EKE",
+      "unit": "m^2 / s^2 (or cm^2 / s^2)",
+      "input_variables": [
+        "u_curr (m/s)",
+        "v_curr (m/s)"
+      ],
+      "formula": "0.5 * ( (u_curr - u_mean_clim)^2 + (v_curr - v_mean_clim)^2 )",
+      "valid_range": [
+        0.0,
+        1.0
+      ],
+      "scientific_reference": "Wyrtki et al. (1976); Sprintall et al. (1999)"
+    },
+    "bathymetric_slope": {
+      "name": "Seafloor Slope",
+      "symbol": "theta",
+      "unit": "degrees",
+      "input_variable": "bedrock_elevation_m",
+      "formula": "degrees( atan( sqrt( (d(bedrock)/dx)^2 + (d(bedrock)/dy)^2 ) ) )",
+      "valid_range": [
+        0.0,
+        45.0
+      ],
+      "scientific_reference": "Smith & Sandwell (1997)"
+    }
+  }
+}

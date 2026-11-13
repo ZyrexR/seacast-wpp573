@@ -1,0 +1,6 @@
+label,file_name,geometry_type,is_valid,validity_reason,polygon_components,interior_rings_holes,total_vertices,degenerate_rings,bbox_wgs84,geodesic_area_wgs84_km2,equal_area_epsg6933_km2,geodesic_perimeter_km,planar_perimeter_km
+BIG_RAW,WPP573_BIG_ORIGINAL.geojson,MultiPolygon,True,Valid,2,1400,625698,0,"[102.5778, -13.9382, 126.4996, -6.8018]",933750.9,933749.49,9553.93,12365.34
+AOI_MASTER,AOI_WPP573_MASTER.geojson,MultiPolygon,True,Valid,2,1400,625698,0,"[102.5000, -14.0000, 126.5000, -6.7500]",933750.9,933749.49,9553.93,12365.34
+BOUNDARIES_BIG,wppnri_573_big.geojson,MultiPolygon,True,Valid,2,1400,625698,0,"[102.5000, -14.0000, 126.5000, -6.7500]",933750.9,933749.49,9553.93,12365.34
+SIMPLIFIED_GEE,AOI_WPP573_SIMPLIFIED_0p01deg_FOR_GEE.geojson,MultiPolygon,True,Valid,2,0,809,0,"[102.5778, -13.9382, 126.4996, -6.8018]",947507.1,947214.2,8325.09,7998.33
+WEB_SIMPLIFIED,wppnri_573_web.geojson,MultiPolygon,False,Geometric Construction Error: A linearring requires at least 4 coordinates.,2,1400,5231,1363,"[102.5000, -14.0000, 126.5000, -6.7500]",-1.0,-1.0,-1.0,-1.0

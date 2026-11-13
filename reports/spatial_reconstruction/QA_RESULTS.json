@@ -1,0 +1,37 @@
+{
+  "project": "SEACAST PRIGI \u2014 WPPNRI 573",
+  "qa_evaluation_timestamp": "2026-11-02T06:29:14.432244+00:00",
+  "audit_status": "PASS_WITH_LIMITATIONS",
+  "tests": [
+    {
+      "test_id": "QA-AOI-01",
+      "name": "Official BIG WPPNRI 573 Geometry Validation",
+      "status": "PASS",
+      "evidence": "Acquired via official BIG MapServer REST Layer 21; Valid geometry with 625,698 vertices; Area = 933,749.49 km2; Identical to data/boundaries/wppnri_573_big.geojson"
+    },
+    {
+      "test_id": "QA-TEMP-01",
+      "name": "Temporal Domain Completeness (2015-01 to 2025-12)",
+      "status": "PASS_WITH_LIMITATIONS",
+      "evidence": "132 fixed calendar months established. OISST, CFSv2, and HYCOM cover 100% (132/132). MODIS-Aqua L3SMI covers 131/132 months (Dec 2025 requires gap-fill mitigation)."
+    },
+    {
+      "test_id": "QA-PHYS-01",
+      "name": "Thermal Front Gradient Formulation in \u00b0C/km",
+      "status": "PASS",
+      "evidence": "Replaced arbitrary /4.63 divisor with spherical metric gradient (dLat_km = 111.0, dLon_km = 111.32 * cos(lat))."
+    },
+    {
+      "test_id": "QA-PHYS-02",
+      "name": "Ekman Transport Physical Units and Latitude Damping",
+      "status": "PASS",
+      "evidence": "Formulation M_ey = -tau_x / (rho_w * f) in m2/s with Coriolis damping parameter f = 2*Omega*sin(lat) and low-latitude cutoff |lat| >= 2.0\u00b0."
+    },
+    {
+      "test_id": "QA-REPRO-01",
+      "name": "Existing Baseline Preservation Integrity",
+      "status": "PASS",
+      "evidence": "All Phase 1-4.1.1 baseline files, weights, and fisheries datasets untouched (15/15 regression tests preserved)."
+    }
+  ]
+}

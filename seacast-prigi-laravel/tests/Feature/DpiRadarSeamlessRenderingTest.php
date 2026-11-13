@@ -49,3 +49,4 @@ class DpiRadarSeamlessRenderingTest extends TestCase
         $response->assertSee('Rencanakan Melaut');
     }
 }
+

@@ -1,0 +1,79 @@
+{
+  "pipeline": "SEACAST PRIGI Phase 4.2 Google Earth Engine Spatial Pipeline",
+  "run_id": "GEE-P42-20261102T054741Z",
+  "executed_at": "2026-11-02T05:47:41.782295+00:00",
+  "ee_version": "1.7.50",
+  "gcp_project_id": "seca-513505",
+  "datasets_used": {
+    "bathymetry_etopo1": "NOAA/NGDC/ETOPO1",
+    "sst_oisst_v21": "NOAA/CDR/OISST/V2_1",
+    "modis_aqua_l3smi": "NASA/OCEANDATA/MODIS-Aqua/L3SMI",
+    "wind_cfsv2_6h": "NOAA/CFSV2/FOR6H_HARMONIZED",
+    "hycom_temp_salinity": "HYCOM/sea_temp_salinity",
+    "hycom_velocity": "HYCOM/sea_water_velocity",
+    "viirs_dnb_monthly": "NOAA/VIIRS/DNB/MONTHLY_V1/VCMSLCFG"
+  },
+  "sub_aoi": {
+    "west": 111.0,
+    "east": 113.0,
+    "south": -10.45,
+    "north": -8.0,
+    "step_deg": 0.05,
+    "n_rows": 50,
+    "n_cols": 41,
+    "n_cells": 2050,
+    "harbor_name": "PPN Prigi",
+    "harbor_lon": 111.7314,
+    "harbor_lat": -8.2818,
+    "crs_geographic": "EPSG:4326",
+    "crs_equal_area": "EPSG:6933",
+    "crs_utm": "EPSG:32749"
+  },
+  "qc_summary": {
+    "timeseries_months_extracted": 132,
+    "timeseries_valid_sst_months": 132,
+    "timeseries_valid_chla_months": 132,
+    "sst_132m_min_max_mean_c": [
+      24.902,
+      31.444,
+      28.294
+    ],
+    "chla_132m_min_max_mean_mg_m3": [
+      0.119,
+      1.407,
+      0.395
+    ],
+    "ekman_mey_132m_min_max_mean_m2s": [
+      -3.161,
+      4.005,
+      -0.76
+    ],
+    "grid_cells_extracted": 2050,
+    "scenario_rows_extracted": 12300,
+    "depth_m_min_max": [
+      -6383.0,
+      2658.0
+    ],
+    "shark_shelf_slope_overlap_cells_200_1000m": 278
+  },
+  "files": [
+    {
+      "path": "data/gee/exports/gee_ocean_monthly_132m_v2.csv",
+      "rows": 132,
+      "bytes": 13167,
+      "sha256": "cfd9bcded8fef9af69ed55e62e4e4f654d828c91aa22fdf020505ce8ee07703c"
+    },
+    {
+      "path": "data/gee/exports/gee_grid_2050_april_2022_v2.csv",
+      "rows": 2050,
+      "bytes": 304805,
+      "sha256": "e7fbf1f7307eabd5b68fcb75ccd23db6216b0e412be6846cf6e01fed25ef74ae"
+    },
+    {
+      "path": "data/gee/exports/gee_predictor_stack_6scenarios_2050cells_v2.csv",
+      "rows": 12300,
+      "bytes": 1802984,
+      "sha256": "b9754e87258fd46fb11883ad5b446af3ea347623ac24cb4bb4030e4ca6b32803"
+    }
+  ]
+}

@@ -1,0 +1,148 @@
+{
+  "project": "SEACAST PRIGI \u2014 WPPNRI 573",
+  "phase": "1.0-R Scientific Remediation & Gate Reassessment",
+  "generated_at_utc": "2026-11-02T07:54:15.981982Z",
+  "target_directory": "C:\\Users\\ThinkPad\\.gemini\\antigravity\\scratch\\prigi-pelagis\\reports\\phase_1_0_R",
+  "artifacts": {
+    "AOI_FILE_HASH_MANIFEST.json": {
+      "size_bytes": 1820,
+      "sha256": "bf0f1a238a16311c9c0fbfbe073fe7accd67a5b05c95cfeb37d9876697d3c223"
+    },
+    "AOI_FINAL_PROVENANCE_AND_AUTHORITY.md": {
+      "size_bytes": 6048,
+      "sha256": "e0f2b935e21b912ebe684f6f91e3b7d567ace1e08ba5bf5168da61b469115aad"
+    },
+    "AOI_GEOMETRY_QA.json": {
+      "size_bytes": 6322,
+      "sha256": "05b2fe37d570a52537237da69429963fe3b099f65b4c57f5657aef8f5ba9e0eb"
+    },
+    "ARTIFACT_SHA256_MANIFEST.json": {
+      "size_bytes": 5607,
+      "sha256": "61c3df433e9b48f4aba09da98dc7014e3a707d51abc0ce071576e9e6192b1d83"
+    },
+    "CFSV2_OUTLIER_FORENSIC_REMEDIATION.md": {
+      "size_bytes": 4153,
+      "sha256": "46269d8030913fa0cd3b27ebcd967e3916944b8140d78203692503f7578b0ee1"
+    },
+    "CFSV2_OUTLIER_SAMPLES.csv": {
+      "size_bytes": 4390,
+      "sha256": "2dd1ab3988cb0d5b84721423520696898e8e7ce28e344285d9189677531c316b"
+    },
+    "CFSV2_QA_RULES.json": {
+      "size_bytes": 1519,
+      "sha256": "b72c2b9ac889d4a9724e669aa1026c6294254d84450d6a69b1b090aeec81688a"
+    },
+    "CFSV2_REMEDIATION_TESTS.json": {
+      "size_bytes": 1808,
+      "sha256": "d5476497e7bf5949ae02652fc2fe474fb044773803dbb1c9ea68517993e7c61d"
+    },
+    "CFSV2_TEMPORAL_COMPLETENESS.csv": {
+      "size_bytes": 799,
+      "sha256": "60249ef7cc000df58763a9b369361b4d67ed9377fae5ade4d0005eb8427e593f"
+    },
+    "CHL_A_FALLBACK_DECISION.json": {
+      "size_bytes": 1983,
+      "sha256": "90ec44aad672797a1b62501cc3ee288e20bc7e16a8029a824b3eaf80146408c7"
+    },
+    "CMEMS_PRODUCT_METADATA.json": {
+      "size_bytes": 1389,
+      "sha256": "1ed0199ad876102646abb2c5d544941e0a887975fe70d3f4a948b30001086693"
+    },
+    "CROSS_SENSOR_VALIDATION_METRICS.csv": {
+      "size_bytes": 783,
+      "sha256": "11fd9ad6816265267c07f9a625b762fdbd2a81979298102caab37a5e2d4e3597"
+    },
+    "CURRENT_DATA_SOURCE_DECISION.json": {
+      "size_bytes": 1431,
+      "sha256": "cde66c6143da7bd568e6880ab634c08084cbfb08f0d79e5d125cf1dc71e69de2"
+    },
+    "DATA_VALIDATION_ARCHITECTURE.md": {
+      "size_bytes": 5335,
+      "sha256": "d640fb8267f10f4567ea0efa9b514f87b4d60e6e0534088c84227f8f3e90b53a"
+    },
+    "EXECUTION_ENVIRONMENT.json": {
+      "size_bytes": 977,
+      "sha256": "96b6223fcdcfeb9469b2b581184ada5ade524c2f2bb78f6ab7a64d4446cd2c4a"
+    },
+    "FINAL_DATA_QA_SCHEMA.json": {
+      "size_bytes": 5412,
+      "sha256": "228da46c6abdbaf12e4dc9d0efb86f7e6538581448c0b706d29937a68f167134"
+    },
+    "GCOMC_MONTHLY_COVERAGE_132.csv": {
+      "size_bytes": 11986,
+      "sha256": "8b3d33816add7fa061c18fc2646e8f15395552f380edb512a9a2de5ede2a37b8"
+    },
+    "GRID_AREA_INTERSECTION_RECOMPUTATION.md": {
+      "size_bytes": 4134,
+      "sha256": "603f6cdd58b6d8ba14c17d8ede8cf3aca94c98707fd067ceff33b5df4bfe00d5"
+    },
+    "GRID_AREA_RECONCILIATION.json": {
+      "size_bytes": 2835,
+      "sha256": "48f3c17be4aa2758367416b704a2d7c64235a5e3ef1581d704b039c626bce089"
+    },
+    "GRID_CELL_QA_005_PRIGI.csv": {
+      "size_bytes": 221646,
+      "sha256": "1f86f7db6708c067b8a0a4dba708cfb40400f29280de169dab688566c0219ba8"
+    },
+    "GRID_CELL_QA_010.csv": {
+      "size_bytes": 1041488,
+      "sha256": "945e871185b1f49c40af8df1c45acc8c23d99c63f1ec5e22161b9685b53c07bc"
+    },
+    "GRID_CELL_QA_025.csv": {
+      "size_bytes": 185062,
+      "sha256": "e43161a72654241b6b060a7951f1a188e70f15ead7a54d838bbf4782f8d97174"
+    },
+    "GRID_RESOLUTION_SUPPORT_MATRIX.csv": {
+      "size_bytes": 1532,
+      "sha256": "815a0e384fe0a95a531b26463b8d89290dea5b4e5de4498707971860e88dcb69"
+    },
+    "HYCOM_CMEMS_OVERLAP_VALIDATION.csv": {
+      "size_bytes": 730,
+      "sha256": "df6d76210348be86895972ecf0c2716b2f72009dc69c26f4cc2d6e1578180c02"
+    },
+    "HYCOM_CMEMS_TEMPORAL_CONTINUITY_DECISION.md": {
+      "size_bytes": 3312,
+      "sha256": "3fc613778d2ae1e0263b9be5d8ad63596ae9091a6528bba00e236e877260c9dd"
+    },
+    "HYCOM_MONTHLY_COVERAGE_132.csv": {
+      "size_bytes": 11108,
+      "sha256": "ec143aaaef4add28b8221171b45d915b6446dea3d262d56182a319b1ba9bed10"
+    },
+    "MODIS_GCOMC_CROSS_SENSOR_HARMONIZATION.md": {
+      "size_bytes": 3276,
+      "sha256": "756de22493b349e50eab64c729d5b0a9ac92fab4853e4d9e355d5050f8550364"
+    },
+    "MODIS_MONTHLY_COVERAGE_132.csv": {
+      "size_bytes": 11347,
+      "sha256": "da5b4d63be6cb0d6d8ee6fc8a7cf1f3a33c497e4253cb41cb31cab7c5ad92b29"
+    },
+    "OCEANOGRAPHIC_FORMULA_VALIDATION.md": {
+      "size_bytes": 9712,
+      "sha256": "7259fee1f3cd4d6a43dd7fd552f30f59d27ddcff4c8fffcf0269a0a70294f2f0"
+    },
+    "OCEANOGRAPHIC_METHOD_DECISION.json": {
+      "size_bytes": 2090,
+      "sha256": "649ac45e3f6a9c21f1859fe6283701826dc477a3337181c60a0e4be1ce4eff10"
+    },
+    "OCEANOGRAPHIC_UNIT_TESTS.json": {
+      "size_bytes": 4591,
+      "sha256": "06a520097bdd574208985d5301e44dc3e368355122f3fd792bc38af3bd6c86cc"
+    },
+    "PHASE_1_0_R_FINAL_REASSESSMENT.md": {
+      "size_bytes": 16193,
+      "sha256": "966f4578f330c9d88964bd8abb92bf9e86a993b5f95a74bc4caeca9b2e845452"
+    },
+    "PPN_LANDING_DATA_USAGE_POLICY.md": {
+      "size_bytes": 3616,
+      "sha256": "e5282769b9082a0688864e597b2e958040a832b7a7eeadbe8f7f3e0099f465a5"
+    },
+    "REPRODUCIBILITY_EVIDENCE_REGISTRY.csv": {
+      "size_bytes": 5308,
+      "sha256": "cf450cda8bea4e6c956e3fe6b8c81f0e40a7feb39c64373cb2ebf04526ba049b"
+    },
+    "SPECIES_OCCURRENCE_READINESS.csv": {
+      "size_bytes": 1590,
+      "sha256": "95c8cb05c7dc81a1f33f3eb8138225b176abd3dec0c3cca3e3d75599aa7c852e"
+    }
+  }
+}

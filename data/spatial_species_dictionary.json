@@ -1,0 +1,407 @@
+{
+  "metadata": {
+    "total_taxa_recorded": 12,
+    "port_source": "Laporan Statistik PPN Prigi (Sheet 5 Re-Audit, 2015-2025)",
+    "total_months_audited": 132,
+    "total_volume_kg_verified": 18405261,
+    "audit_date": "2026-10-31",
+    "audit_finding": "Verified exact cell-by-cell sum across all 132 rows of Sheet 5. Discrepancy in preliminary report (18,827,401 vs 18,405,261 kg = 422,140 kg) resolved: preliminary table included rough manual aggregates for Krai, Como, Kenyar, Tenggiri, and Marlin which have now been replaced with the verified exact values.",
+    "disaggregated_volume_summary_11y": {
+      "total_selected_taxa_catch_kg": 18405261,
+      "legacy_alias_total_pelagis_kg": 18405261,
+      "pelagic_catch_kg_10_taxa": 18070653,
+      "pelagic_catch_pct": 98.18,
+      "large_pelagic_9_taxa_kg": 18001747,
+      "large_pelagic_9_taxa_pct": 97.81,
+      "small_pelagic_exception_kg_julung": 68906,
+      "small_pelagic_exception_pct": 0.37,
+      "demersal_exception_kg_gulamah": 207156,
+      "demersal_exception_pct": 1.13,
+      "elasmobranch_bycatch_kg_cucut": 127452,
+      "elasmobranch_bycatch_pct": 0.69,
+      "metric_naming_note": "Legacy columns total_pelagis_kg and total_pelagis_besar_kg are preserved for backward compatibility and equal total_selected_taxa_catch_kg (18,405,261 kg across all 12 recorded Sheet 5 categories). True teleost pelagic landings equal pelagic_catch_kg = 18,070,653 kg (98.18%)."
+    }
+  },
+  "taxa": [
+    {
+      "id": 1,
+      "local_name": "Cakalang (Blereng)",
+      "english_name": "Skipjack Tuna",
+      "scientific_name": "Katsuwonus pelamis",
+      "taxonomic_authority": "Linnaeus, 1758",
+      "family": "Scombridae",
+      "ecological_group": "True Oceanic Large Pelagic",
+      "habitat_depth_range": "0 - 100 m (Epipelagic)",
+      "preferred_sst_celsius": {
+        "min": 25,
+        "opt_min": 25.5,
+        "opt_max": 28,
+        "max": 29.5,
+        "provenance": "Literature-derived (FAO Species Catalogue; FishBase; Syamsuddin et al., 2025)"
+      },
+      "preferred_chla_mg_m3": {
+        "min": 0.15,
+        "opt_min": 0.3,
+        "opt_max": 0.75,
+        "max": 1.5,
+        "provenance": "Literature-derived (Yati et al., 2024; Zainuddin et al., 2017)"
+      },
+      "verified_total_landings_kg_11y": 8294092,
+      "percentage_of_total_pelagics": 45.06,
+      "primary_gear": "Pukat Cincin (Purse Seine)",
+      "iucn_status": "Least Concern (LC)",
+      "iucn_provenance": "Literature-derived (IUCN Red List of Threatened Species 2021)",
+      "sdm_role": "Flagship Target Species (Oceanic SDM Model)"
+    },
+    {
+      "id": 2,
+      "local_name": "Tongkol Krai (Tongkol Glundung)",
+      "english_name": "Frigate Tuna",
+      "scientific_name": "Auxis thazard",
+      "taxonomic_authority": "Lacepede, 1800",
+      "family": "Scombridae",
+      "ecological_group": "Neritic / Coastal Pelagic",
+      "habitat_depth_range": "0 - 50 m (Coastal epipelagic)",
+      "preferred_sst_celsius": {
+        "min": 25,
+        "opt_min": 26.5,
+        "opt_max": 29,
+        "max": 30.5,
+        "provenance": "Literature-derived (FishBase; Collette & Nauen, 1983)"
+      },
+      "preferred_chla_mg_m3": {
+        "min": 0.2,
+        "opt_min": 0.35,
+        "opt_max": 0.9,
+        "max": 2,
+        "provenance": "Assumption / preliminary threshold (Requires in-situ validation)"
+      },
+      "verified_total_landings_kg_11y": 3094621,
+      "percentage_of_total_pelagics": 16.81,
+      "primary_gear": "Pukat Cincin, Jaring Insang",
+      "iucn_status": "Least Concern (LC)",
+      "iucn_provenance": "Literature-derived (IUCN Red List 2011)",
+      "sdm_role": "Neritic Pelagic Secondary Target (Explosive Catch in June 2024: 374 Ton)"
+    },
+    {
+      "id": 3,
+      "local_name": "Madidihang (Balong)",
+      "english_name": "Yellowfin Tuna",
+      "scientific_name": "Thunnus albacares",
+      "taxonomic_authority": "Bonnaterre, 1788",
+      "family": "Scombridae",
+      "ecological_group": "True Oceanic Large Pelagic",
+      "habitat_depth_range": "0 - 250 m (Epi-mesopelagic / Thermocline diver)",
+      "preferred_sst_celsius": {
+        "min": 24.5,
+        "opt_min": 26,
+        "opt_max": 28.5,
+        "max": 30,
+        "provenance": "Literature-derived (IOTC Scientific Committee Reports; FishBase)"
+      },
+      "preferred_chla_mg_m3": {
+        "min": 0.1,
+        "opt_min": 0.2,
+        "opt_max": 0.6,
+        "max": 1.2,
+        "provenance": "Literature-derived (Yati et al., 2024)"
+      },
+      "verified_total_landings_kg_11y": 2933924,
+      "percentage_of_total_pelagics": 15.94,
+      "primary_gear": "Pancing Ulur, Pancing Tonda",
+      "iucn_status": "Least Concern (LC)",
+      "iucn_provenance": "Literature-derived (IUCN Red List 2021)",
+      "sdm_role": "Flagship Target Species 2 (Hook-and-Line Offshore Model)"
+    },
+    {
+      "id": 4,
+      "local_name": "Tongkol Como (Tongkol Abon)",
+      "english_name": "Eastern Little Tuna / Kawakawa",
+      "scientific_name": "Euthynnus affinis",
+      "taxonomic_authority": "Cantor, 1849",
+      "family": "Scombridae",
+      "ecological_group": "Neritic Pelagic",
+      "habitat_depth_range": "0 - 60 m (Coastal shelf and bays)",
+      "preferred_sst_celsius": {
+        "min": 25.5,
+        "opt_min": 27,
+        "opt_max": 29.5,
+        "max": 31,
+        "provenance": "Literature-derived (Syamsuddin et al., 2025; FishBase)"
+      },
+      "preferred_chla_mg_m3": {
+        "min": 0.2,
+        "opt_min": 0.3,
+        "opt_max": 0.85,
+        "max": 1.8,
+        "provenance": "Assumption / preliminary threshold"
+      },
+      "verified_total_landings_kg_11y": 2412039,
+      "percentage_of_total_pelagics": 13.1,
+      "primary_gear": "Pukat Cincin, Pancing Ulur",
+      "iucn_status": "Least Concern (LC)",
+      "iucn_provenance": "Literature-derived (IUCN Red List 2011)",
+      "sdm_role": "Neritic Coastal Pelagic Complex"
+    },
+    {
+      "id": 5,
+      "local_name": "Tongkol Kenyar (Tongkol Surat)",
+      "english_name": "Striped Bonito",
+      "scientific_name": "Sarda orientalis",
+      "taxonomic_authority": "Temminck & Schlegel, 1844",
+      "family": "Scombridae",
+      "ecological_group": "Neritic / Coastal Pelagic",
+      "habitat_depth_range": "0 - 80 m",
+      "preferred_sst_celsius": {
+        "min": 24,
+        "opt_min": 25.5,
+        "opt_max": 28,
+        "max": 29.5,
+        "provenance": "Literature-derived (FishBase)"
+      },
+      "preferred_chla_mg_m3": {
+        "min": 0.25,
+        "opt_min": 0.35,
+        "opt_max": 0.8,
+        "max": 1.5,
+        "provenance": "Assumption / preliminary threshold"
+      },
+      "verified_total_landings_kg_11y": 520888,
+      "percentage_of_total_pelagics": 2.83,
+      "primary_gear": "Pukat Cincin",
+      "iucn_status": "Least Concern (LC)",
+      "iucn_provenance": "Literature-derived (IUCN Red List 2011)",
+      "sdm_role": "Neritic Pelagic Complex"
+    },
+    {
+      "id": 6,
+      "local_name": "Albakor (Balong)",
+      "english_name": "Albacore",
+      "scientific_name": "Thunnus alalunga",
+      "taxonomic_authority": "Bonnaterre, 1788",
+      "family": "Scombridae",
+      "ecological_group": "Deep Oceanic Pelagic",
+      "habitat_depth_range": "50 - 350 m (Subtropical/temperate, upwelling deep layer)",
+      "preferred_sst_celsius": {
+        "min": 18,
+        "opt_min": 21,
+        "opt_max": 25,
+        "max": 26.5,
+        "provenance": "Literature-derived (IOTC Albacore Working Group; FishBase)"
+      },
+      "preferred_chla_mg_m3": {
+        "min": 0.1,
+        "opt_min": 0.25,
+        "opt_max": 0.7,
+        "max": 1.2,
+        "provenance": "Literature-derived"
+      },
+      "verified_total_landings_kg_11y": 316632,
+      "percentage_of_total_pelagics": 1.72,
+      "primary_gear": "Pancing Ulur",
+      "iucn_status": "Least Concern (LC)",
+      "iucn_provenance": "Literature-derived (IUCN Red List 2021)",
+      "sdm_role": "Deep Upwelling Water Mass Indicator"
+    },
+    {
+      "id": 7,
+      "local_name": "Marlin Setuhuk Hitam (Panjer)",
+      "english_name": "Black Marlin",
+      "scientific_name": "Istiompax indica",
+      "synonyms": [
+        "Makaira indica (Cuvier, 1832)"
+      ],
+      "taxonomic_authority": "Cuvier, 1832",
+      "family": "Istiophoridae",
+      "ecological_group": "Oceanic Pelagic Billfish",
+      "habitat_depth_range": "0 - 150 m (Open ocean pelagic)",
+      "preferred_sst_celsius": {
+        "min": 24,
+        "opt_min": 26,
+        "opt_max": 28.5,
+        "max": 30,
+        "provenance": "Literature-derived (Nakamura, 1985; FishBase)"
+      },
+      "preferred_chla_mg_m3": {
+        "min": 0.1,
+        "opt_min": 0.2,
+        "opt_max": 0.5,
+        "max": 1,
+        "provenance": "Assumption / preliminary threshold"
+      },
+      "verified_total_landings_kg_11y": 315281,
+      "percentage_of_total_pelagics": 1.71,
+      "primary_gear": "Pancing Ulur, Pancing Tonda",
+      "iucn_status": "Vulnerable (VU)",
+      "iucn_provenance": "Literature-derived (IUCN Red List 2022)",
+      "sdm_role": "Apex Pelagic Predator / Vulnerability Indicator"
+    },
+    {
+      "id": 8,
+      "local_name": "Gulamah (Awon-Awon)",
+      "english_name": "Croaker",
+      "scientific_name": "Nibea albiflora",
+      "taxonomic_authority": "Richardson, 1846",
+      "family": "Sciaenidae",
+      "ecological_group": "Demersal / Coastal Estuarine",
+      "habitat_depth_range": "10 - 80 m (Bottom dwelling)",
+      "preferred_sst_celsius": {
+        "min": 26,
+        "opt_min": 27.5,
+        "opt_max": 29.5,
+        "max": 31,
+        "provenance": "Literature-derived (FishBase)"
+      },
+      "preferred_chla_mg_m3": {
+        "min": 0.3,
+        "opt_min": 0.5,
+        "opt_max": 1.5,
+        "max": 3,
+        "provenance": "Assumption / coastal runoff proxy"
+      },
+      "verified_total_landings_kg_11y": 207156,
+      "percentage_of_total_pelagics": 1.13,
+      "primary_gear": "Jaring Insang Dasar, Payang",
+      "iucn_status": "Data Deficient (DD)",
+      "iucn_provenance": "Literature-derived (IUCN Red List)",
+      "sdm_role": "VERIFIED DEMERSAL EXCEPTION: Excluded from Oceanic Pelagic SDM to avoid ecological distortion."
+    },
+    {
+      "id": 9,
+      "local_name": "Hiu Cucut Tikus / Lanyam",
+      "english_name": "Requiem Shark (Genus Complex)",
+      "scientific_name": "Carcharhinus spp.",
+      "taxonomic_authority": "Blainville, 1816",
+      "family": "Carcharhinidae",
+      "ecological_group": "Elasmobranch Apex Predator / Bycatch Component",
+      "habitat_depth_range": "0 - 500 m (Shelf-break & open pelagic)",
+      "preferred_sst_celsius": {
+        "min": 23,
+        "opt_min": 25,
+        "opt_max": 28.5,
+        "max": 30,
+        "provenance": "Literature-derived (Compagno, 1984)"
+      },
+      "preferred_chla_mg_m3": {
+        "min": 0.15,
+        "opt_min": 0.25,
+        "opt_max": 0.8,
+        "max": 1.5,
+        "provenance": "Assumption / preliminary threshold"
+      },
+      "verified_total_landings_kg_11y": 127452,
+      "percentage_of_total_pelagics": 0.69,
+      "primary_gear": "Bycatch in Pukat Cincin & Pancing Ulur",
+      "iucn_status": "Genus Level (Taxon Complex); multiple constituent species listed as Vulnerable (VU) to Critically Endangered (CR) under CITES App. II & IUCN Red List",
+      "iucn_provenance": "Scientific Caution: No species-level IUCN assigned because recorded at genus level only in port yearbook.",
+      "sdm_role": "Candidate Bathymetric Screening Polygons for Voluntary Shark Bycatch Review (Continental Slope 150-1200m)",
+      "identified_taxon_name": "Carcharhinus spp. (Ikan Cucut / Hiu Tikus)",
+      "taxonomic_resolution_level": "Genus",
+      "taxonomic_uncertainty_notes": "Recorded only at genus level (Carcharhinus spp.) in PPN Prigi port landings. Cannot be differentiated between C. falciformis (CITES Appendix II) or C. longimanus (CITES Appendix I effective 2026-03-05) without morphological inspection or molecular barcoding.",
+      "identification_verification_status": "NEEDS_VERIFICATION",
+      "cites_appendix": "Appendix II (Family Carcharhinidae spp. listing; with Appendix I exception for Carcharhinus longimanus)",
+      "cites_taxonomic_scope": "Family Carcharhinidae spp. included in CITES Appendix II except species listed in Appendix I (Carcharhinus longimanus transferred to Appendix I effective 2026-03-05); genus-level port records require species-level diagnostic verification.",
+      "cites_reference_date": "2026-03-05",
+      "cites_verification_source": "CITES Notification to the Parties No. 2026/015 (Appendices valid from 5 March 2026)"
+    },
+    {
+      "id": 10,
+      "local_name": "Julung-Julung (Panjo)",
+      "english_name": "Garfish and Halfbeaks (Genus Complex)",
+      "scientific_name": "Hemiramphus spp.",
+      "taxonomic_authority": "Cuvier, 1816",
+      "family": "Hemiramphidae",
+      "ecological_group": "Coastal Small Pelagic (Surface)",
+      "habitat_depth_range": "0 - 10 m (Surface neritic)",
+      "preferred_sst_celsius": {
+        "min": 27,
+        "opt_min": 28,
+        "opt_max": 30.5,
+        "max": 32,
+        "provenance": "Literature-derived (FishBase)"
+      },
+      "preferred_chla_mg_m3": {
+        "min": 0.25,
+        "opt_min": 0.4,
+        "opt_max": 1.2,
+        "max": 2.5,
+        "provenance": "Assumption / preliminary threshold"
+      },
+      "verified_total_landings_kg_11y": 68906,
+      "percentage_of_total_pelagics": 0.37,
+      "primary_gear": "Payang, Jaring Insang Hanyut",
+      "iucn_status": "Genus Level (Taxon Complex); Global constituent species mostly Least Concern (LC) or Not Evaluated (NE)",
+      "iucn_provenance": "Scientific Caution: Genus-level record",
+      "sdm_role": "VERIFIED SMALL PELAGIC EXCEPTION: Classified as surface small pelagic forage species."
+    },
+    {
+      "id": 11,
+      "local_name": "Tuna Mata Besar (Swanggi)",
+      "english_name": "Bigeye Tuna",
+      "scientific_name": "Thunnus obesus",
+      "taxonomic_authority": "Lowe, 1839",
+      "family": "Scombridae",
+      "ecological_group": "Deep Oceanic Pelagic",
+      "habitat_depth_range": "100 - 400 m (Deep mesopelagic diver)",
+      "preferred_sst_celsius": {
+        "min": 21,
+        "opt_min": 23,
+        "opt_max": 26.5,
+        "max": 28.5,
+        "provenance": "Literature-derived (IOTC; Dagorn et al., 2000)"
+      },
+      "preferred_chla_mg_m3": {
+        "min": 0.1,
+        "opt_min": 0.2,
+        "opt_max": 0.5,
+        "max": 1,
+        "provenance": "Literature-derived"
+      },
+      "verified_total_landings_kg_11y": 63135,
+      "percentage_of_total_pelagics": 0.34,
+      "primary_gear": "Pancing Ulur",
+      "iucn_status": "Vulnerable (VU)",
+      "iucn_provenance": "Literature-derived (IUCN Red List 2021)",
+      "sdm_role": "Deep Oceanic Sub-thermocline Target"
+    },
+    {
+      "id": 12,
+      "local_name": "Tenggiri",
+      "english_name": "Narrow-barred Spanish Mackerel",
+      "scientific_name": "Scomberomorus commerson",
+      "taxonomic_authority": "Lacepede, 1800",
+      "family": "Scombridae",
+      "ecological_group": "Neritic Pelagic Scombridae",
+      "habitat_depth_range": "10 - 70 m (Coastal shelf)",
+      "preferred_sst_celsius": {
+        "min": 26,
+        "opt_min": 27.5,
+        "opt_max": 30,
+        "max": 31.5,
+        "provenance": "Literature-derived (Habibi et al., 2026 JMCS; Chen et al., 2021)"
+      },
+      "preferred_chla_mg_m3": {
+        "min": 0.2,
+        "opt_min": 0.35,
+        "opt_max": 1,
+        "max": 2,
+        "provenance": "Literature-derived (Habibi et al., 2026 JMCS)"
+      },
+      "verified_total_landings_kg_11y": 51135,
+      "percentage_of_total_pelagics": 0.28,
+      "primary_gear": "Pancing Tonda, Jaring Insang",
+      "iucn_status": "Near Threatened (NT)",
+      "iucn_provenance": "Literature-derived (IUCN Red List 2023)",
+      "sdm_role": "Coastal Neritic SDM Comparison Model"
+    }
+  ],
+  "ecological_assumptions_provenance_matrix": {
+    "SST_optimum": "Literature-derived from FishBase, IOTC species profiles, and Habibi et al. (2026 JMCS)",
+    "Chla_threshold": "Model-derived & literature proxy (indicative of primary productivity, NOT direct proof of prey availability)",
+    "Thermal_front_definition": "Model-derived: spatial Sobel gradient magnitude on SST (||grad SST|| > 0.35 C / pixel)",
+    "Bathymetric_zones": "Data-derived from ETOPO1 / GEBCO (Neritic: <200m, Shelf-break: 200-1000m, Offshore: >1000m)",
+    "Nursery_habitat_proxy": "Assumption / preliminary proxy: Neritic sheltered bay waters (<200m) with high Chl-a retention; STRICTLY labeled as Potential Nursery Habitat Proxy until in-situ larval surveys exist.",
+    "Feeding_habitat_proxy": "Model-derived: Overlay of thermal front and Chl-a bloom (>0.50 mg/m3); labeled as Potential Feeding Habitat.",
+    "Bycatch_risk_zone": "Data-derived bathymetric screening proxy: Continental slope (150-1200m / shelf-break 200-1000m) intersected with seasonal upwelling cooling (<26.0 C). Strictly labeled as Candidate Bathymetric Screening Polygons for Voluntary Shark Bycatch Review."
+  }
+}

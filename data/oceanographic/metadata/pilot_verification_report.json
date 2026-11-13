@@ -1,0 +1,75 @@
+{
+  "stage": "STAGE 3 - Pilot Oceanographic Processing Verification",
+  "executed_at": "2026-10-31T08:25:13.618Z",
+  "status": "PILOT_PASSED_AND_VERIFIED",
+  "verification_checks": {
+    "file_readable": true,
+    "crs_verified": "EPSG:4326 (WGS 84 Geographic)",
+    "aoi_clipping_verified": "Sub-AOI Prigi Bounding Box within Primary WPPNRI 573",
+    "units_verified": {
+      "sst": "Degrees Celsius (\u00b0C)",
+      "chlor_a": "mg/m\u00b3",
+      "thermal_front": "\u00b0C / km",
+      "cui_thermal": "\u00b0C",
+      "ekman_transport": "m\u00b2/s",
+      "wave_height": "Meters (Hs)"
+    },
+    "physical_range_bounds": "All values strictly within physical maritime bounds (SST 20-34 C, Chl 0.01-10 mg/m3)",
+    "raster_non_empty": true,
+    "metadata_persisted": true
+  },
+  "scenarios_evaluated": [
+    {
+      "month_id": "2024-07",
+      "season": "Musim Timur (Puncak Upwelling)",
+      "bounding_box": {
+        "west": 111.0,
+        "east": 113.0,
+        "south": -10.45,
+        "north": -8.0
+      },
+      "crs": "EPSG:4326",
+      "summary_metrics": {
+        "mean_sst": 25.82,
+        "min_sst": 24,
+        "max_sst": 27.64,
+        "mean_chl": 0.886,
+        "min_chl": 0.51,
+        "max_chl": 1.262,
+        "cui_thermal_index_celsius": 2.3,
+        "ekman_mass_transport_m2_s": -3.69,
+        "wind_u_m_s": -6.8,
+        "wind_v_m_s": -3.2,
+        "significant_wave_height_m": 2.3
+      },
+      "sample_grid_points_count": 2050,
+      "equal_area_km2": 59550.43
+    },
+    {
+      "month_id": "2024-01",
+      "season": "Musim Barat (Paceklik / Non-Upwelling)",
+      "bounding_box": {
+        "west": 111.0,
+        "east": 113.0,
+        "south": -10.45,
+        "north": -8.0
+      },
+      "crs": "EPSG:4326",
+      "summary_metrics": {
+        "mean_sst": 28.98,
+        "min_sst": 28.56,
+        "max_sst": 29.4,
+        "mean_chl": 0.144,
+        "min_chl": 0.108,
+        "max_chl": 0.18,
+        "cui_thermal_index_celsius": -0.3,
+        "ekman_mass_transport_m2_s": 1.35,
+        "wind_u_m_s": 4.2,
+        "wind_v_m_s": -1.5,
+        "significant_wave_height_m": 1.6
+      },
+      "sample_grid_points_count": 2050,
+      "equal_area_km2": 59550.43
+    }
+  ]
+}

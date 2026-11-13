@@ -1,0 +1,6 @@
+test_id,name,expected,actual,status,evidence
+TEST_A_INITIALIZATION,AOI and Grid Baseline Integrity,"8129 total (7166 Pure, 501 Coastal, 462 Outer), 8129 unique IDs","8129 total (7166 Pure, 501 Coastal, 462 Outer), 8129 unique IDs",PASS,GRID_010_REGIONAL_CELLS_QA.csv exact validation
+TEST_B_SINGLE_MONTH,Single-Month Full Multi-Sensor Test (2024-04),"OISST=30, MODIS=30, CFSv2=120, HYCOM=240, valid physical ranges","OISST=30, MODIS=30, CFSv2=120, HYCOM=240",PASS,"GEE server-side extraction (SST=29.49°C, Chla=0.228mg/m³)"
+TEST_C_MISSING_MONTH,Missing-Month Sensor Fallback Test (2024-10),"HYCOM=0, CMEMS asset missing, values masked (null) without synthetic data","HYCOM=0, CMEMS asset present=False, zero fabrication verified",PASS,HYCOM cessation verified on GEE catalog; un-ingested CMEMS masked
+TEST_D_GRID_AGGREGATION,Spatial Grid Aggregation Sampling Test,"100/100 cells extracted, cell_id preserved, realistic ocean SST (25-32°C)","100/100 valid, range 29.20°C to 29.57°C",PASS,Sampled reduceRegions on 100 canonical grid points
+TEST_E_PHYSICAL_CONSISTENCY,Physical Formula & Unit Consistency Test,"1.755e-5 m/s = 1.51632 m/day (never 1.68), Cd(10m/s)=0.00145, f<0 in SH, |f|>=1.72e-5","w_E=1.51632 m/day, Cd=0.001450, f=-2.53e-05, |f_north|=1.73e-05",PASS,UT-06/07 verified; Wu 1982 formulation verified; SH sign verified

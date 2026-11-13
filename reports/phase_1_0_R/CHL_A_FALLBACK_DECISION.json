@@ -1,0 +1,44 @@
+{
+  "target_indicator": "Chlorophyll-a (mg / m^3)",
+  "primary_sensor": {
+    "catalog_id": "NASA/OCEANDATA/MODIS-Aqua/L3SMI",
+    "band": "chlor_a",
+    "native_scale_m": 9260,
+    "algorithm": "OCI / OC3M Band-Ratio",
+    "operational_period": "2002-07-04 to 2025-11-30",
+    "assigned_role": "PRIMARY_SOURCE"
+  },
+  "fallback_sensor": {
+    "catalog_id": "JAXA/GCOM-C/L3/OCEAN/CHLA/V3",
+    "band": "CHLA_AVE",
+    "qa_band": "CHLA_QA_flag",
+    "native_scale_m": 4630,
+    "scaling_formula": "CHLA = CHLA_AVE * 0.0016",
+    "operational_period": "2018-01-01 to Present",
+    "assigned_role": "VALIDATED_SECONDARY_FALLBACK"
+  },
+  "monthly_allocation_summary_132_months": {
+    "MODIS_PRIMARY": 129,
+    "GCOMC_FALLBACK_VALIDATED": 3,
+    "MISSING_UNRESOLVED": 0
+  },
+  "specific_gap_decisions": {
+    "2021-07": {
+      "status": "GCOMC_FALLBACK_VALIDATED",
+      "justification": "MODIS has 0 images in GEE catalog. GCOM-C is active in orbit and available in GEE with complete July 2021 coverage across WPP 573. Scaled by 0.0016 with cloud QA masking."
+    },
+    "2021-11": {
+      "status": "GCOMC_FALLBACK_VALIDATED",
+      "justification": "MODIS has 0 images in GEE catalog. GCOM-C is active and available in GEE with November 2021 coverage. Scaled by 0.0016."
+    },
+    "2025-12": {
+      "status": "GCOMC_FALLBACK_VALIDATED",
+      "justification": "MODIS collection in GEE terminates on 2025-11-30. GCOM-C V3 collection continues through late 2026 and covers December 2025 in GEE."
+    }
+  },
+  "compositing_protocol": {
+    "spatial_aggregation": "Log-Transformed Mean: Chl_monthly = 10^(mean(log10(Chl_daily)))",
+    "rationale": "Chlorophyll-a concentration in marine ecosystems follows a log-normal distribution (Campbell, 1995). Arithmetic mean biases composites toward episodic blooms.",
+    "case2_water_masking": "ETOPO1 depth <= 5m excluded to eliminate benthic reflection and suspended sediment contamination."
+  }
+}

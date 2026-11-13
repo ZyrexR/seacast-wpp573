@@ -1,0 +1,55 @@
+{
+  "collection_id": "NOAA/CFSV2/FOR6H_HARMONIZED",
+  "target_variables": [
+    "u-component_of_wind_height_above_ground",
+    "v-component_of_wind_height_above_ground"
+  ],
+  "native_units": "m/s",
+  "native_precision": "float32",
+  "native_resolution_m": 22264,
+  "classification_thresholds": {
+    "VALID_PHYSICAL": {
+      "u_range": [
+        -30.0,
+        30.0
+      ],
+      "v_range": [
+        -30.0,
+        30.0
+      ],
+      "wind_speed_max": 35.0,
+      "action": "ACCEPTED_UNMODIFIED"
+    },
+    "SUSPECT_REVIEW": {
+      "u_range": [
+        -35.0,
+        35.0
+      ],
+      "v_range": [
+        -35.0,
+        35.0
+      ],
+      "wind_speed_max": 45.0,
+      "action": "FLAGGED_FOR_TROPICAL_CYCLONE_CROSS_CHECK"
+    },
+    "INVALID_ARTIFACT": {
+      "criterion": "|u| > 35.0 OR |v| > 35.0 OR wind_speed > 45.0 OR |delta_u_6h| > 50.0",
+      "action": "MASK_AS_NAN_EXCLUDE_FROM_CALCULATIONS"
+    }
+  },
+  "missing_data_remediation_policy": {
+    "isolated_pixel_artifact": {
+      "method": "Spatial local median filter (3x3 grid window)",
+      "flag": "INTERPOLATED_SPATIAL_LOCAL"
+    },
+    "frame_level_missing": {
+      "method": "Temporal linear interpolation from t-6h and t+6h if both valid",
+      "max_consecutive_gap_hours": 12,
+      "flag": "INTERPOLATED_TEMPORAL_6H"
+    },
+    "unremediated_gap_action": {
+      "action": "RETAIN_AS_NULL",
+      "rule": "Never fill with synthetic normal wind during high wind events"
+    }
+  }
+}

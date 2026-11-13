@@ -1,0 +1,6 @@
+frame_id,timestamp_utc,lon_deg,lat_deg,u_raw_m_s,u_t_minus_6h,u_t_plus_6h,six_hour_delta_m_s,spatial_neighbor_median,meteorological_event,qc_classification,action
+2_2025101806,2025-10-18T06:00:00Z,114.25,-11.5,-342.1,-5.4,-4.8,336.7,-5.1,None (No cyclone active in BOM/JTWC archive),INVALID_SOURCE_FLAG,Masked to NaN
+2_2025110400,2025-11-04T00:00:00Z,115.4,-10.21,294.54,-2.22,3.57,296.76,0.85,None (Calm inter-monsoon season),INVALID_SOURCE_FLAG,Masked to NaN
+2_2025121218,2025-12-12T18:00:00Z,108.5,-9.75,458.7,6.2,5.9,452.5,6.1,None (Barat laut normal),INVALID_SOURCE_FLAG,Masked to NaN
+2_2018031706,2018-03-17T06:00:00Z,121.5,-13.2,-24.72,-14.2,-22.1,10.52,-21.4,Tropical Cyclone Marcus (Severe Category 5 in Timor Sea),VALID,Retained as valid physical extreme
+2_2021040412,2021-04-04T12:00:00Z,123.8,-10.5,22.8,8.5,19.4,14.3,20.1,Tropical Cyclone Seroja (Historic storm causing NTT floods),VALID,Retained as valid physical extreme

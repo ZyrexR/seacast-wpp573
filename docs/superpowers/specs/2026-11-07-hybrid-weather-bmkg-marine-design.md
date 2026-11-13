@@ -117,3 +117,4 @@ flowchart TD
    - Test respon live API dengan Http::fake().
    - Test toleransi timeout / network failure (graceful fallback).
    - Test konsistensi verifikasi izin berlayar di PDF slip.
+

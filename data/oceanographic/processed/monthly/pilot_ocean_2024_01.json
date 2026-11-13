@@ -1,0 +1,26 @@
+{
+  "month_id": "2024-01",
+  "season": "Musim Barat (Paceklik / Non-Upwelling)",
+  "bounding_box": {
+    "west": 111.0,
+    "east": 113.0,
+    "south": -10.45,
+    "north": -8.0
+  },
+  "crs": "EPSG:4326",
+  "summary_metrics": {
+    "mean_sst": 28.98,
+    "min_sst": 28.56,
+    "max_sst": 29.4,
+    "mean_chl": 0.144,
+    "min_chl": 0.108,
+    "max_chl": 0.18,
+    "cui_thermal_index_celsius": -0.3,
+    "ekman_mass_transport_m2_s": 1.35,
+    "wind_u_m_s": 4.2,
+    "wind_v_m_s": -1.5,
+    "significant_wave_height_m": 1.6
+  },
+  "sample_grid_points_count": 2050,
+  "equal_area_km2": 59550.43
+}

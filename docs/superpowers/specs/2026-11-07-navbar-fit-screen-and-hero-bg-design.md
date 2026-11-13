@@ -50,3 +50,4 @@ Navigasi publik (`components/public/navbar.blade.php`) disusun ulang dengan urut
    - Set ukuran `min-h-[calc(100vh-4rem)]` dan proporsi vertikal fit-to-screen.
 3. `seacast-prigi-laravel/tests/Feature/Wpp573GeneralizationTest.php`:
    - Perbarui assertion untuk memverifikasi teks menu baru: `Sains & Model`, `Data Oseanografi`, `Dokumentasi`, `Tentang SEACAST`.
+

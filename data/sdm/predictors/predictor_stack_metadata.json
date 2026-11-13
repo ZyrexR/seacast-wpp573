@@ -1,0 +1,96 @@
+{
+  "title": "WPPNRI 573 \u00d7 PPN Prigi Multi-Scenario Oceanographic Predictor Stack",
+  "crs": "EPSG:4326",
+  "projected_crs_metric": "EPSG:32749",
+  "area_crs": "EPSG:6933",
+  "resolution_deg": 0.05,
+  "resolution_km_approx": 5.5,
+  "bounds": {
+    "west": 111,
+    "east": 113,
+    "south": -10.45,
+    "north": -8
+  },
+  "total_cells_per_scenario": 2050,
+  "variables": [
+    {
+      "name": "sst_celsius",
+      "unit": "\u00b0C",
+      "description": "Sea Surface Temperature",
+      "source": "MODIS Aqua / NOAA OISST"
+    },
+    {
+      "name": "sst_anomaly_celsius",
+      "unit": "\u00b0C",
+      "description": "Relative SST Anomaly against annual mean",
+      "source": "Derived"
+    },
+    {
+      "name": "chlor_a_mg_m3",
+      "unit": "mg/m\u00b3",
+      "description": "Chlorophyll-a Concentration",
+      "source": "MODIS Aqua OCI"
+    },
+    {
+      "name": "log_chla",
+      "unit": "log10(mg/m\u00b3)",
+      "description": "Log-transformed Chlorophyll-a",
+      "source": "Derived"
+    },
+    {
+      "name": "thermal_front_sobel_c_km",
+      "unit": "\u00b0C/km",
+      "description": "Thermal Front Horizontal Gradient Magnitude",
+      "source": "Sobel 2D Kernel Derived"
+    },
+    {
+      "name": "depth_m",
+      "unit": "m",
+      "description": "Seafloor Bathymetric Depth",
+      "source": "GEBCO 2023 Grid & NOAA ETOPO1 Bedrock (multi-source composite without single uniform vertical datum)"
+    },
+    {
+      "name": "slope_deg",
+      "unit": "degrees",
+      "description": "Seafloor Topographic Slope",
+      "source": "GEBCO 2023 Grid & NOAA ETOPO1 Bedrock (multi-source composite without single uniform vertical datum)"
+    },
+    {
+      "name": "dist_to_200m_isobath_km",
+      "unit": "km",
+      "description": "Distance to 200m Shelf Break Contour",
+      "source": "GEBCO 2023 Grid & NOAA ETOPO1 Bedrock (multi-source composite without single uniform vertical datum)"
+    },
+    {
+      "name": "dist_harbor_nm",
+      "unit": "NM",
+      "description": "Distance to PPN Prigi Harbor",
+      "source": "Geodesic Calculation"
+    },
+    {
+      "name": "ekman_transport_m2_s",
+      "unit": "m\u00b2/s",
+      "description": "Meridional Ekman Transport (Mey)",
+      "source": "ERA5 Zonal Wind Stress Derived (Mey = -tau_x / (rho * f))"
+    },
+    {
+      "name": "cui_thermal_celsius",
+      "unit": "\u00b0C",
+      "description": "SST Contrast (\u0394T coast-offshore)",
+      "source": "Offshore - Coastal SST Diagnostic Contrast (\u0394T coast-offshore)"
+    },
+    {
+      "name": "hs_wave_m",
+      "unit": "m",
+      "description": "Significant Wave Height",
+      "source": "ERA5 Ocean Wave"
+    }
+  ],
+  "vif_collinearity_check": {
+    "status": "PASSED_VIF_CONTROLLED",
+    "max_vif_selected_predictors": 3.42,
+    "note": "Collinear pairs (SST & SST Anomaly, Chl-a & log_chla) isolated during model fitting"
+  },
+  "equal_area_km2": 59550.43,
+  "grid_dimensions": "50 cols x 41 rows = 2,050 grid centers"
+}

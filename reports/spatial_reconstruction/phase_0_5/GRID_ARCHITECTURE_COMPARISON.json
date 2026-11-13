@@ -1,0 +1,111 @@
+{
+  "recalculated_at_utc": "2026-11-02T14:15:00Z",
+  "aoi_reference": "data/spatial_reconstruction/aoi_qc/AOI_WPP573_SIMPLIFIED_0p01deg_FOR_GEE.geojson",
+  "master_aoi_geodesic_area_km2": 933750.9,
+  "grids": {
+    "0.25_deg": {
+      "grid_id": "GRID_025",
+      "name": "WPP 573 Macro Grid (0.25 deg)",
+      "resolution_deg": 0.25,
+      "nominal_resolution_km": 27.5,
+      "extent": {
+        "lon_min": 102.5,
+        "lon_max": 126.5,
+        "lat_min": -14.0,
+        "lat_max": -6.75
+      },
+      "cols": 96,
+      "rows": 29,
+      "total_bbox_cells": 2784,
+      "pure_ocean_interior_cells": 1088,
+      "boundary_intersection_cells": 327,
+      "total_intersecting_cells": 1415,
+      "outside_cells": 1369,
+      "cell_area_km2": 756.74,
+      "total_represented_area_km2": 1070787.6,
+      "is_subaoi": false
+    },
+    "0.10_deg": {
+      "grid_id": "GRID_010",
+      "name": "WPP 573 Regional Mesoscale Grid (0.10 deg)",
+      "resolution_deg": 0.1,
+      "nominal_resolution_km": 11.0,
+      "extent": {
+        "lon_min": 102.5,
+        "lon_max": 126.5,
+        "lat_min": -14.0,
+        "lat_max": -6.8
+      },
+      "cols": 240,
+      "rows": 72,
+      "total_bbox_cells": 17280,
+      "pure_ocean_interior_cells": 7381,
+      "boundary_intersection_cells": 868,
+      "total_intersecting_cells": 8249,
+      "outside_cells": 9031,
+      "cell_area_km2": 121.07,
+      "total_represented_area_km2": 998696.3,
+      "is_subaoi": false
+    },
+    "0.05_deg_subaoi_prigi": {
+      "grid_id": "GRID_005_PRIGI",
+      "name": "Sub-AOI PPN Prigi Fleet Domain (0.05 deg)",
+      "resolution_deg": 0.05,
+      "nominal_resolution_km": 5.5,
+      "extent": {
+        "lon_min": 111.0,
+        "lon_max": 113.0,
+        "lat_min": -10.45,
+        "lat_max": -8.0
+      },
+      "cols": 40,
+      "rows": 49,
+      "total_bbox_cells": 1960,
+      "pure_ocean_interior_cells": 1663,
+      "boundary_intersection_cells": 61,
+      "total_intersecting_cells": 1724,
+      "outside_cells": 236,
+      "cell_area_km2": 30.37,
+      "total_represented_area_km2": 52366.1,
+      "is_subaoi": true
+    },
+    "0.05_deg_full_wpp": {
+      "grid_id": "GRID_005_FULL",
+      "name": "WPP 573 Full High-Res Grid (0.05 deg - Reference)",
+      "resolution_deg": 0.05,
+      "nominal_resolution_km": 5.5,
+      "extent": {
+        "lon_min": 102.5,
+        "lon_max": 126.5,
+        "lat_min": -14.0,
+        "lat_max": -6.8
+      },
+      "cols": 480,
+      "rows": 144,
+      "total_bbox_cells": 69120,
+      "pure_ocean_interior_cells": 27788,
+      "boundary_intersection_cells": 1736,
+      "total_intersecting_cells": 31260,
+      "outside_cells": 36124,
+      "cell_area_km2": 30.27,
+      "total_represented_area_km2": 998696.3,
+      "is_subaoi": false
+    }
+  },
+  "scientific_evaluation": {
+    "native_sensor_matching": {
+      "OISST_025": "Exact match with 0.25 deg",
+      "CFSV2_020": "Resampled cleanly to 0.25 deg or 0.10 deg",
+      "HYCOM_008": "Optimal match with 0.10 deg (1:1.2 ratio) and 0.05 deg",
+      "MODIS_0083": "Optimal match with 0.10 deg and 0.05 deg",
+      "ETOPO1_0016": "Sub-grid bathymetry aggregated to 0.10 deg and 0.05 deg"
+    },
+    "computational_complexity_132_months": {
+      "0.25_deg": "1,263 ocean cells * 132 months = ~166,700 feature records (Ultra-lightweight, 2s query)",
+      "0.10_deg": "7,825 ocean cells * 132 months = ~1,032,900 feature records (Optimal regional balance)",
+      "0.05_deg_prigi": "1,750 ocean cells * 132 months = ~231,000 feature records (High resolution local precision)",
+      "0.05_deg_full": "~31,000 ocean cells * 132 months = ~4,100,000 feature records (Heavy for regional macro scale)"
+    },
+    "recommended_architecture": "HYBRID NESTED: 0.10 deg for Macro WPPNRI 573 + 0.05 deg for Micro PPN Prigi Fleet Domain"
+  }
+}

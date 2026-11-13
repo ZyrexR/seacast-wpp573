@@ -1,0 +1,6 @@
+Current_Component,Region_Domain,Depth_Level_m,Sample_Count_N,Mean_HYCOM_m_s,Mean_CMEMS_m_s,Mean_Bias_m_s,MAE_m_s,RMSE_m_s,Vector_Correlation_r,Direction_Error_deg,Compatibility_Status
+u_surface,WPPNRI 573 Oceanic,0.0,5240,-0.142,-0.158,-0.016,0.054,0.076,0.912,11.2,STRONGLY_COMPATIBLE
+v_surface,WPPNRI 573 Oceanic,0.0,5240,0.068,0.057,-0.011,0.048,0.069,0.887,13.5,STRONGLY_COMPATIBLE
+current_speed,WPPNRI 573 Oceanic,0.0,5240,0.284,0.298,0.014,0.062,0.088,0.904,12.1,STRONGLY_COMPATIBLE
+u_surface,South Java Current Coastal,0.0,1860,-0.264,-0.292,-0.028,0.082,0.114,0.874,14.8,COMPATIBLE_SLIGHT_CMEMS_STRONGER_COASTAL_JET
+v_surface,South Java Current Coastal,0.0,1860,-0.094,-0.082,0.012,0.071,0.098,0.862,15.2,COMPATIBLE

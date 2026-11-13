@@ -1,0 +1,26 @@
+{
+  "month_id": "2024-07",
+  "season": "Musim Timur (Puncak Upwelling)",
+  "bounding_box": {
+    "west": 111.0,
+    "east": 113.0,
+    "south": -10.45,
+    "north": -8.0
+  },
+  "crs": "EPSG:4326",
+  "summary_metrics": {
+    "mean_sst": 25.82,
+    "min_sst": 24,
+    "max_sst": 27.64,
+    "mean_chl": 0.886,
+    "min_chl": 0.51,
+    "max_chl": 1.262,
+    "cui_thermal_index_celsius": 2.3,
+    "ekman_mass_transport_m2_s": -3.69,
+    "wind_u_m_s": -6.8,
+    "wind_v_m_s": -3.2,
+    "significant_wave_height_m": 2.3
+  },
+  "sample_grid_points_count": 2050,
+  "equal_area_km2": 59550.43
+}

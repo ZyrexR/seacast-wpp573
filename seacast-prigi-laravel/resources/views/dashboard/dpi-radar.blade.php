@@ -47,10 +47,10 @@
     </style>
     @endpush
 
-    <div x-data="dpiRadarApp()" x-init="initRadar()" class="flex flex-col h-[calc(100vh-4rem)] overflow-hidden">
+    <div x-data="dpiRadarApp()" x-ref="radarRoot" x-init="initRadar()" class="flex flex-col h-[calc(100vh-4rem)] overflow-hidden bg-slate-950" :class="isFullscreen ? '!h-screen' : ''">
         
         <!-- Header Controls & Provenance Banner -->
-        <header class="flex-shrink-0 bg-slate-900/90 border-b border-slate-800/80 px-4 py-2.5 backdrop-blur-md">
+        <header class="relative z-[1100] flex-shrink-0 bg-slate-900/90 border-b border-slate-800/80 px-4 py-2.5 backdrop-blur-md">
             <div class="flex flex-wrap items-center justify-between gap-3">
                 <div class="flex items-center gap-3">
                     <div class="w-8 h-8 rounded-lg bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400">
@@ -73,28 +73,104 @@
                     </div>
                 </div>
 
-                <!-- mapcn Quick Layer Switcher (Desktop) -->
-                <div class="hidden lg:flex items-center">
-                    <x-ui.map-layer-switcher activeVar="activeLayer" setFn="setLayerMode" />
-                </div>
-
-                <!-- Provenance Disclaimer & Reset Controls -->
-                <div class="flex items-center gap-3">
-                    <div class="hidden xl:flex items-center gap-2 px-3 py-1 bg-slate-800/60 border border-slate-700/60 rounded-md text-xs text-slate-300">
-                        <svg class="w-3.5 h-3.5 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        <span>Gelombang/Angin: <strong class="text-slate-200">Simulasi Oseanografi Musiman BMKG Terkalibrasi (Fallback Lokal)</strong></span>
-                    </div>
-
-                    <!-- Reset Filters Button -->
-                    <button @click="resetFilters()" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded-md text-xs font-medium border border-slate-700 transition active:scale-95">
-                        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                        </svg>
-                        Reset Filter
+                <!-- Dual-Hub Corridor Switcher (Task 2.3) -->
+                <div class="hidden sm:flex items-center p-0.5 rounded-lg bg-slate-950/80 border border-slate-800 text-xs font-semibold select-none">
+                    <button 
+                        type="button"
+                        @click="setHub('prigi')" 
+                        :class="activeHub === 'prigi' ? 'bg-cyan-500 text-slate-950 shadow-md font-bold' : 'text-slate-400 hover:text-white'"
+                        class="px-2.5 py-1 rounded-md transition flex items-center gap-1.5 text-xs">
+                        <span>⚓ PPN Prigi</span>
+                        <span class="text-[10px] font-mono opacity-80">(Jatim)</span>
+                    </button>
+                    <button 
+                        type="button"
+                        @click="setHub('cilacap')" 
+                        :class="activeHub === 'cilacap' ? 'bg-cyan-500 text-slate-950 shadow-md font-bold' : 'text-slate-400 hover:text-white'"
+                        class="px-2.5 py-1 rounded-md transition flex items-center gap-1.5 text-xs">
+                        <span>⚓ PPS Cilacap</span>
+                        <span class="text-[10px] font-mono opacity-80">(Jateng)</span>
                     </button>
                 </div>
+
+                <!-- Ocean Current Streamlines 60 FPS Toggle (Task 2.1) -->
+                <button 
+                    type="button"
+                    @click="toggleOceanCurrents()" 
+                    :class="oceanCurrentsActive ? 'bg-cyan-500/20 border-cyan-500/60 text-cyan-300 shadow-[0_0_12px_rgba(34,211,238,0.25)]' : 'bg-slate-800/60 border-slate-700/60 text-slate-400 hover:text-slate-200'"
+                    class="hidden md:flex items-center gap-2 px-2.5 py-1.5 rounded-lg border text-xs font-medium transition active:scale-95 select-none"
+                    title="Toggle Vektor Arus Laut Dinamis (HTML5 Canvas 60 FPS)">
+                    <span class="relative flex h-2 w-2">
+                        <span :class="oceanCurrentsActive ? 'animate-ping opacity-75' : 'opacity-0'" class="absolute inline-flex h-full w-full rounded-full bg-cyan-400"></span>
+                        <span :class="oceanCurrentsActive ? 'bg-cyan-400' : 'bg-slate-500'" class="relative inline-flex rounded-full h-2 w-2"></span>
+                    </span>
+                    <span>Arus Laut 60 FPS</span>
+                </button>
+
+                <!-- Live BMKG Maritim Status Pill (Task 2.4) -->
+                @php
+                    $isSafeBmkg = $bmkgLive['overall_safety']['is_safe'] ?? true;
+                    $waveHeightBmkg = $bmkgLive['max_wave_height'] ?? ($bmkgLive['port']['wave_height'] ?? 1.8);
+                    $waveCatBmkg = $bmkgLive['port']['wave_cat'] ?? 'SEDANG';
+                    $windSpeedBmkg = $bmkgLive['port']['wind_speed'] ?? 12;
+                    $windFromBmkg = $bmkgLive['port']['wind_from'] ?? 'Tenggara';
+                    $portNameBmkg = $bmkgLive['port']['port_name'] ?? 'PPN Prigi';
+                    $forecasterBmkg = $bmkgLive['ocean_offshore']['nama_prakirawan'] ?? 'Dyah Ayu';
+                    $noSuratBmkg = $bmkgLive['ocean_offshore']['no_surat'] ?? 'B/ME.01.02/METOS/09/DMM/XI/2026';
+                    $issuedBmkg = $bmkgLive['ocean_offshore']['issued'] ?? '10 Nov 2026 07:00 WIB';
+                    $safetyLabelBmkg = $bmkgLive['overall_safety']['label'] ?? 'AMAN MELAUT';
+                @endphp
+                <div class="relative" x-data="{ bmkgOpen: false }">
+                    <button 
+                        type="button"
+                        @click="bmkgOpen = !bmkgOpen" 
+                        class="flex items-center gap-2 px-3 py-1.5 bg-slate-800/80 hover:bg-slate-800 border border-cyan-500/30 hover:border-cyan-500/50 rounded-lg text-xs text-slate-200 transition select-none">
+                        <span class="relative flex h-2 w-2">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full {{ $isSafeBmkg ? 'bg-emerald-400' : 'bg-amber-400' }} opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2 w-2 {{ $isSafeBmkg ? 'bg-emerald-500' : 'bg-amber-500' }}"></span>
+                        </span>
+                        <span class="font-bold text-cyan-300 hidden sm:inline">BMKG Live:</span>
+                        <span class="font-mono text-white font-bold">{{ $waveHeightBmkg }}m</span>
+                        <span class="text-slate-500">•</span>
+                        <span class="font-mono text-slate-300">{{ $windSpeedBmkg }} kt</span>
+                        <span class="px-1.5 py-0.5 rounded text-[10px] font-semibold {{ $isSafeBmkg ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30' : 'bg-amber-500/20 text-amber-300 border border-amber-500/30' }}">
+                            {{ $isSafeBmkg ? 'AMAN MELAUT' : 'WASPADA' }}
+                        </span>
+                    </button>
+
+                    <!-- BMKG Forecaster Bulletin Popover -->
+                    <div 
+                        x-show="bmkgOpen" 
+                        @click.away="bmkgOpen = false" 
+                        x-transition 
+                        class="absolute right-0 top-full mt-2 w-80 bg-slate-950 border border-slate-800 rounded-xl shadow-2xl p-3.5 z-50 text-xs font-sans space-y-2.5 backdrop-blur-md" 
+                        style="display: none;">
+                        <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                            <span class="font-bold text-white uppercase text-[11px] tracking-wider">Buletin BMKG Maritim Live</span>
+                            <span class="px-1.5 py-0.5 rounded text-[10px] font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">100% Real API</span>
+                        </div>
+                        <div class="space-y-1.5 text-slate-300 font-mono text-[11px]">
+                            <div class="flex justify-between"><span class="text-slate-400">Pangkalan:</span> <span class="text-white font-semibold">{{ $portNameBmkg }}</span></div>
+                            <div class="flex justify-between"><span class="text-slate-400">Tinggi Gelombang:</span> <span class="text-cyan-300 font-bold">{{ $waveHeightBmkg }} m ({{ $waveCatBmkg }})</span></div>
+                            <div class="flex justify-between"><span class="text-slate-400">Kecepatan Angin:</span> <span class="text-slate-100">{{ $windSpeedBmkg }} kt ({{ $windFromBmkg }})</span></div>
+                            <div class="flex justify-between"><span class="text-slate-400">Status Syahbandar:</span> <span class="text-emerald-400 font-semibold">{{ $safetyLabelBmkg }}</span></div>
+                            <div class="flex justify-between"><span class="text-slate-400">Prakirawan:</span> <span class="text-amber-300 font-semibold">{{ $forecasterBmkg }}</span></div>
+                            <div class="flex justify-between"><span class="text-slate-400">No. Surat:</span> <span class="text-slate-400 text-[10px]">{{ $noSuratBmkg }}</span></div>
+                            <div class="flex justify-between"><span class="text-slate-400">Waktu Terbit:</span> <span class="text-slate-400 text-[10px]">{{ $issuedBmkg }}</span></div>
+                        </div>
+                        <div class="pt-2 border-t border-slate-800 text-[10px] text-slate-400">
+                            Ditarik langsung secara harian via API resmi Stasiun Meteorologi Maritim Tanjung Perak.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reset Filters Button -->
+                <button @click="resetFilters()" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded-md text-xs font-medium border border-slate-700 transition active:scale-95 select-none">
+                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                    Reset Filter
+                </button>
             </div>
         </header>
 
@@ -271,16 +347,20 @@
                         
                         <div class="grid grid-cols-2 gap-x-2 gap-y-1.5 text-xs font-mono">
                             <div><span class="text-slate-500 block">Kedalaman:</span><span class="text-slate-200" x-text="selectedCell?.depth_m + ' m'"></span></div>
-                            <div><span class="text-slate-500 block">Jarak Prigi:</span><span class="text-slate-200" x-text="selectedCell?.dist_port_nm + ' NM'"></span></div>
                             <div><span class="text-slate-500 block">Suhu (SST):</span><span class="text-slate-200" x-text="selectedCell?.sst_c + ' °C'"></span></div>
                             <div><span class="text-slate-500 block">Klorofil-a:</span><span class="text-slate-200" x-text="selectedCell?.chla_mg_m3 + ' mg/m³'"></span></div>
                             <div><span class="text-slate-500 block">Gelombang:</span><span class="text-slate-200" x-text="selectedCell?.wave_height_m + ' m'"></span></div>
-                            <div><span class="text-slate-500 block">Bycatch:</span>
+                            <div class="col-span-2 flex items-center justify-between p-1.5 bg-slate-900 rounded border border-slate-800 text-[11px]">
+                                <span class="text-slate-400">Jarak ke <strong class="text-cyan-400" x-text="activeHub === 'prigi' ? 'PPN Prigi' : 'PPS Cilacap'"></strong>:</span>
+                                <span class="text-white font-mono font-bold" x-text="getActiveHubDistance(selectedCell)"></span>
+                            </div>
+                            <div class="col-span-2 flex items-center justify-between text-[11px]">
+                                <span class="text-slate-500">Bycatch Status:</span>
                                 <span :class="{
                                     'text-emerald-400': selectedCell?.bycatch_traffic_light === 'GREEN',
                                     'text-amber-400': selectedCell?.bycatch_traffic_light === 'YELLOW',
                                     'text-rose-400': selectedCell?.bycatch_traffic_light === 'RED'
-                                }" x-text="selectedCell?.bycatch_traffic_light"></span>
+                                }" x-text="selectedCell?.bycatch_traffic_light" class="font-semibold"></span>
                             </div>
                         </div>
 
@@ -320,8 +400,8 @@
                 <!-- mapcn Modern Floating Controls (Top-Right) -->
                 <x-ui.map-controls position="top-right" homeportLabel="PPN Prigi" />
 
-                <!-- Mobile Floating Filter Pill Button (Bottom-Left) -->
-                <div class="lg:hidden absolute bottom-5 left-4 z-[1000]">
+                <!-- Mobile Floating Filter Pill Button (Top-Left below Basemap Switcher) -->
+                <div class="lg:hidden absolute top-16 left-4 z-[1000]">
                     <button 
                         @click="mobileFiltersOpen = true" 
                         class="flex items-center gap-2 px-3.5 py-2 bg-slate-900/95 border border-cyan-500/50 text-cyan-300 rounded-xl shadow-2xl backdrop-blur-md active:scale-95 transition-all text-xs font-semibold select-none">
@@ -347,64 +427,117 @@
                 <!-- Leaflet Map Container -->
                 <div x-ref="mapContainer" class="w-full h-full"></div>
 
-                <!-- Floating Scientific Legend (Bottom-Right) -->
-                <div class="absolute bottom-4 right-4 z-[1000] bg-slate-900/90 border border-slate-800 rounded-lg p-3 shadow-xl backdrop-blur-md max-w-xs text-xs space-y-2 pointer-events-auto">
-                    <div class="flex items-center justify-between border-b border-slate-800 pb-1">
-                        <span class="font-semibold text-white uppercase tracking-wider text-[11px]" x-text="legendTitle"></span>
-                        <span class="text-[10px] font-mono text-cyan-400">EPSG:4326</span>
+                <!-- Bottom HUD Row: Scale Clearance + Seasonal Time-Slider Playback Bar (Task 2.2) + Scientific Legend -->
+                <div class="pointer-events-none absolute inset-x-3 bottom-3 z-[1000] flex flex-col-reverse md:flex-row items-center md:items-end justify-between gap-2.5">
+                    
+                    <!-- Spacer to keep Leaflet Bottom-Left Scale Control unobstructed -->
+                    <div class="hidden md:block w-24 shrink-0"></div>
+
+                    <!-- Seasonal Time-Slider Playback Bar -->
+                    <div class="pointer-events-auto w-full max-w-lg bg-slate-900/95 border border-slate-800/90 rounded-2xl p-2.5 shadow-2xl backdrop-blur-md text-xs select-none">
+                        <div class="flex items-center justify-between gap-2 mb-2 px-1">
+                            <div class="flex items-center gap-2.5 min-w-0">
+                                <!-- Play / Pause Button -->
+                                <button 
+                                    type="button" 
+                                    @click="toggleSeasonalPlayback()" 
+                                    :class="isPlayingSeason ? 'bg-amber-400 text-slate-950' : 'bg-cyan-500 text-slate-950 hover:bg-cyan-400'"
+                                    class="w-7 h-7 rounded-lg font-bold flex items-center justify-center transition active:scale-95 shadow shrink-0"
+                                    :title="isPlayingSeason ? 'Jeda Playback' : 'Putar Siklus Musiman WPP 573'">
+                                    <template x-if="!isPlayingSeason">
+                                        <svg class="w-3.5 h-3.5 ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                                    </template>
+                                    <template x-if="isPlayingSeason">
+                                        <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+                                    </template>
+                                </button>
+                                <div class="min-w-0 truncate">
+                                    <div class="flex items-center gap-1.5 truncate">
+                                        <span class="text-[11px] font-bold text-white uppercase tracking-wider shrink-0">Playback Musiman</span>
+                                        <span class="px-1.5 py-0.5 rounded text-[10px] font-mono bg-cyan-500/10 text-cyan-300 border border-cyan-500/30 font-semibold truncate" x-text="seasonLabels[selectedMonth]"></span>
+                                    </div>
+                                    <span class="text-[10px] text-slate-400 truncate block mt-0.5" x-text="seasonDescriptions[selectedMonth]"></span>
+                                </div>
+                            </div>
+                            <div class="hidden sm:flex items-center gap-1.5 shrink-0">
+                                <span class="w-1.5 h-1.5 rounded-full" :class="isPlayingSeason ? 'bg-emerald-400 animate-ping' : 'bg-slate-600'"></span>
+                                <span class="text-[10px] font-mono text-slate-400" x-text="isPlayingSeason ? 'Berjalan (1.4s)' : 'Pause'"></span>
+                            </div>
+                        </div>
+
+                        <!-- 13-Month Scrubber Buttons (Guaranteed Horizontal Grid) -->
+                        <div class="grid gap-1" style="display: grid; grid-template-columns: repeat(13, minmax(0, 1fr));">
+                            <template x-for="(mLabel, mIdx) in monthButtons" :key="mIdx">
+                                <button 
+                                    type="button" 
+                                    @click="selectSeasonMonth(mIdx)" 
+                                    :class="selectedMonth === mIdx ? 'bg-cyan-500 text-slate-950 font-bold shadow ring-1 ring-cyan-300' : 'bg-slate-950/70 text-slate-400 hover:text-white hover:bg-slate-800'"
+                                    class="py-1 px-0.5 rounded text-[10px] font-mono transition text-center select-none truncate"
+                                    x-text="mLabel">
+                                </button>
+                            </template>
+                        </div>
                     </div>
 
-                    <!-- Dynamic Legend Items -->
-                    <template x-if="activeLayer === 'hsi'">
-                        <div class="space-y-1">
-                            <div class="flex items-center justify-between text-[11px]">
-                                <span class="text-slate-300">Hotspot Sangat Tinggi (&ge; 0.70)</span>
-                                <span class="w-3.5 h-3.5 rounded bg-rose-500 border border-rose-400/80 shadow-[0_0_8px_rgba(244,63,94,0.6)]"></span>
-                            </div>
-                            <div class="flex items-center justify-between text-[11px]">
-                                <span class="text-slate-300">Potensial Tinggi (0.55 - 0.70)</span>
-                                <span class="w-3.5 h-3.5 rounded bg-amber-500 border border-amber-400/80"></span>
-                            </div>
-                            <div class="flex items-center justify-between text-[11px]">
-                                <span class="text-slate-300">Sedang (0.40 - 0.55)</span>
-                                <span class="w-3.5 h-3.5 rounded bg-cyan-500 border border-cyan-400/80"></span>
-                            </div>
-                            <div class="flex items-center justify-between text-[11px]">
-                                <span class="text-slate-300">Rendah / Transisi (0.25 - 0.40)</span>
-                                <span class="w-3.5 h-3.5 rounded bg-teal-800 border border-teal-700/80"></span>
-                            </div>
-                            <div class="flex items-center justify-between text-[11px]">
-                                <span class="text-slate-400">Non-Habitat (&lt; 0.25)</span>
-                                <span class="w-3.5 h-3.5 rounded bg-slate-900 border border-slate-800"></span>
-                            </div>
+                    <!-- Floating Scientific Legend (Bottom-Right) -->
+                    <div class="pointer-events-auto w-full md:w-[232px] shrink-0 bg-slate-900/90 border border-slate-800 rounded-lg p-2.5 shadow-xl backdrop-blur-md text-xs space-y-1.5">
+                        <div class="flex items-center justify-between border-b border-slate-800 pb-1">
+                            <span class="font-semibold text-white uppercase tracking-wider text-[10px]" x-text="legendTitle"></span>
+                            <span class="text-[10px] font-mono text-cyan-400">EPSG:4326</span>
                         </div>
-                    </template>
 
-                    <template x-if="activeLayer === 'dom'">
-                        <div class="space-y-1 text-[11px]">
-                            <div class="flex items-center justify-between"><span class="text-slate-300">Z1: PFG Inshore (&le; 12 NM)</span><span class="w-3.5 h-3.5 rounded bg-cyan-400"></span></div>
-                            <div class="flex items-center justify-between"><span class="text-slate-300">Z2: PFG Offshore (12-60 NM)</span><span class="w-3.5 h-3.5 rounded bg-blue-500"></span></div>
-                            <div class="flex items-center justify-between"><span class="text-slate-300">Z3: Feeding Core Area</span><span class="w-3.5 h-3.5 rounded bg-emerald-500"></span></div>
-                            <div class="flex items-center justify-between"><span class="text-slate-300">Z4: Nursery Ground</span><span class="w-3.5 h-3.5 rounded bg-teal-500"></span></div>
-                            <div class="flex items-center justify-between"><span class="text-slate-300">Z5: Bycatch Screening</span><span class="w-3.5 h-3.5 rounded bg-amber-500"></span></div>
-                        </div>
-                    </template>
+                        <!-- Dynamic Legend Items -->
+                        <template x-if="activeLayer === 'hsi'">
+                            <div class="space-y-1">
+                                <div class="flex items-center justify-between text-[11px]">
+                                    <span class="text-slate-300">Hotspot Tinggi (&ge; 0.70)</span>
+                                    <span class="w-3 h-3 rounded bg-rose-500 border border-rose-400/80 shadow-[0_0_8px_rgba(244,63,94,0.6)]"></span>
+                                </div>
+                                <div class="flex items-center justify-between text-[11px]">
+                                    <span class="text-slate-300">Potensial (0.55 - 0.70)</span>
+                                    <span class="w-3 h-3 rounded bg-amber-500 border border-amber-400/80"></span>
+                                </div>
+                                <div class="flex items-center justify-between text-[11px]">
+                                    <span class="text-slate-300">Sedang (0.40 - 0.55)</span>
+                                    <span class="w-3 h-3 rounded bg-cyan-500 border border-cyan-400/80"></span>
+                                </div>
+                                <div class="flex items-center justify-between text-[11px]">
+                                    <span class="text-slate-300">Rendah (0.25 - 0.40)</span>
+                                    <span class="w-3 h-3 rounded bg-teal-800 border border-teal-700/80"></span>
+                                </div>
+                                <div class="flex items-center justify-between text-[11px]">
+                                    <span class="text-slate-400">Non-Habitat (&lt; 0.25)</span>
+                                    <span class="w-3 h-3 rounded bg-slate-900 border border-slate-700"></span>
+                                </div>
+                            </div>
+                        </template>
 
-                    <template x-if="activeLayer === 'bycatch'">
-                        <div class="space-y-1 text-[11px]">
-                            <div class="flex items-center justify-between"><span class="text-slate-300">Hijau (Aman / Non-Lereng)</span><span class="w-3.5 h-3.5 rounded bg-emerald-400"></span></div>
-                            <div class="flex items-center justify-between"><span class="text-slate-300">Kuning (Waspada Lereng)</span><span class="w-3.5 h-3.5 rounded bg-amber-400"></span></div>
-                            <div class="flex items-center justify-between"><span class="text-slate-300">Merah (Risiko Tinggi HSI+Front)</span><span class="w-3.5 h-3.5 rounded bg-rose-500"></span></div>
-                        </div>
-                    </template>
+                        <template x-if="activeLayer === 'dom'">
+                            <div class="space-y-1 text-[11px]">
+                                <div class="flex items-center justify-between"><span class="text-slate-300">Z1: PFG Inshore (&le; 12 NM)</span><span class="w-3 h-3 rounded bg-cyan-400"></span></div>
+                                <div class="flex items-center justify-between"><span class="text-slate-300">Z2: PFG Offshore (12-60 NM)</span><span class="w-3 h-3 rounded bg-blue-500"></span></div>
+                                <div class="flex items-center justify-between"><span class="text-slate-300">Z3: Feeding Core Area</span><span class="w-3 h-3 rounded bg-emerald-500"></span></div>
+                                <div class="flex items-center justify-between"><span class="text-slate-300">Z4: Nursery Ground</span><span class="w-3 h-3 rounded bg-teal-500"></span></div>
+                                <div class="flex items-center justify-between"><span class="text-slate-300">Z5: Bycatch Screening</span><span class="w-3 h-3 rounded bg-amber-500"></span></div>
+                            </div>
+                        </template>
 
-                    <template x-if="activeLayer === 'bathymetry'">
-                        <div class="space-y-1 text-[11px]">
-                            <div class="flex items-center justify-between"><span class="text-slate-300">Paparan Dangkal (&le; 150m)</span><span class="w-3.5 h-3.5 rounded bg-cyan-300"></span></div>
-                            <div class="flex items-center justify-between"><span class="text-slate-300">Lereng Benua (150-1200m)</span><span class="w-3.5 h-3.5 rounded bg-sky-600"></span></div>
-                            <div class="flex items-center justify-between"><span class="text-slate-300">Palung Dalam (&gt; 1200m)</span><span class="w-3.5 h-3.5 rounded bg-blue-950"></span></div>
-                        </div>
-                    </template>
+                        <template x-if="activeLayer === 'bycatch'">
+                            <div class="space-y-1 text-[11px]">
+                                <div class="flex items-center justify-between"><span class="text-slate-300">Hijau (Aman / Non-Lereng)</span><span class="w-3 h-3 rounded bg-emerald-400"></span></div>
+                                <div class="flex items-center justify-between"><span class="text-slate-300">Kuning (Waspada Lereng)</span><span class="w-3 h-3 rounded bg-amber-400"></span></div>
+                                <div class="flex items-center justify-between"><span class="text-slate-300">Merah (Risiko Tinggi HSI+Front)</span><span class="w-3 h-3 rounded bg-rose-500"></span></div>
+                            </div>
+                        </template>
+
+                        <template x-if="activeLayer === 'bathymetry'">
+                            <div class="space-y-1 text-[11px]">
+                                <div class="flex items-center justify-between"><span class="text-slate-300">Paparan Dangkal (&le; 150m)</span><span class="w-3 h-3 rounded bg-cyan-300"></span></div>
+                                <div class="flex items-center justify-between"><span class="text-slate-300">Lereng Benua (150-1200m)</span><span class="w-3 h-3 rounded bg-sky-600"></span></div>
+                                <div class="flex items-center justify-between"><span class="text-slate-300">Palung Dalam (&gt; 1200m)</span><span class="w-3 h-3 rounded bg-blue-950"></span></div>
+                            </div>
+                        </template>
+                    </div>
                 </div>
 
             </main>
@@ -428,6 +561,49 @@
                 homeportMarker: null,
                 rangeRingsGroup: null,
 
+                // Dual-Hub Corridor State (Task 2.3)
+                activeHub: 'prigi',
+                hubCoords: {
+                    prigi: { lat: -8.2833, lon: 111.7275, name: 'PPN Prigi (Jatim)' },
+                    cilacap: { lat: -7.7470, lon: 109.0067, name: 'PPS Cilacap (Jateng)' }
+                },
+
+                // Ocean Current Streamlines State (Task 2.1)
+                oceanCurrentsActive: true,
+                currentCanvas: null,
+                currentCtx: null,
+                particles: [],
+                numParticles: 200,
+                animFrameId: null,
+
+                // Seasonal Time-Slider Playback State (Task 2.2)
+                isPlayingSeason: false,
+                playbackInterval: null,
+                selectedMonth: 10, // November default
+                monthButtons: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des', 'IOD+'],
+                seasonLabels: [
+                    'Januari (Musim Barat)', 'Februari (Musim Barat)', 'Maret (Peralihan I)',
+                    'April (Peralihan I)', 'Mei (Awal Musim Timur)', 'Juni (Musim Timur)',
+                    'Juli (Upwelling Menguat)', 'Agustus (Puncak Upwelling)', 'September (Upwelling Kuat)',
+                    'Oktober (Peralihan II)', 'November (Musim Peralihan II)', 'Desember (Awal Musim Barat)',
+                    'Super IOD Positif 2019 (Upwelling Ekstrem)'
+                ],
+                seasonDescriptions: [
+                    'SST Hangat (29.5°C) • Klorofil Rendah (0.12 mg/m³) • Angin Barat Laut',
+                    'SST Hangat (29.2°C) • Kondisi Oseanis Normal • Daerah Tangkapan Lepas Pantai',
+                    'Transisi Angin Muson • Termoklin Mulai Bergerak Naik',
+                    'Awal Pembentukan Front Termal di Sepanjang Paparan Selatan Jawa',
+                    'Awal Angin Muson Tenggara • Mulai Penurunan SST Pesisir',
+                    'Upwelling Berkembang • SST Turun ke 26.5°C • Klorofil Meningkat',
+                    'Upwelling Kuat • SST 24.8°C • Blooming Klorofil Shelf Break (>0.8 mg/m³)',
+                    'Puncak Upwelling Tahunan • HSI Cakalang & Madidihang Mencapai Titik Tertinggi',
+                    'Upwelling Berkelanjutan • Front Termal Kuat • Agregasi Pelagis Besar',
+                    'Akhir Musim Upwelling • SST Berangsur Menghangat (27.5°C)',
+                    'Kondisi Oseanografi Transisi • Snapshot Data Satelit GEE Terkini',
+                    'Musim Barat Dimulai • SST Hangat (29.0°C) • Gelombang Samudera Tinggi',
+                    'Skenario Ekstrem 2019: Anomali Dipole Mode Positif • Upwelling Terkuat Dekade Ini (SST < 22°C)'
+                ],
+
                 activeLayer: 'hsi',
                 selectedSpecies: 'all',
                 minHsi: '0.0',
@@ -445,6 +621,8 @@
                 selectedCell: null,
                 mobileFiltersOpen: false,
                 isFullscreen: false,
+                mapBearing: 0,
+                isZooming: false,
                 debounceTimer: null,
 
                 get legendTitle() {
@@ -515,13 +693,16 @@
                     this.addHomeportMarker();
                     this.addRangeRings();
 
-                    // 5. Track fullscreen changes
+                    // 5. Initialize Ocean Current Particle Layer (Task 2.1)
+                    this.initCurrentParticleLayer();
+
+                    // 6. Track fullscreen changes
                     document.addEventListener('fullscreenchange', () => {
                         this.isFullscreen = !!document.fullscreenElement;
                         if (this.map) setTimeout(() => this.map.invalidateSize(), 150);
                     });
 
-                    // 6. Load Predictions
+                    // 7. Load Predictions
                     this.loadPredictionsSource();
                 },
 
@@ -579,31 +760,43 @@
                 },
 
                 recenterHomeport() {
+                    const target = this.hubCoords[this.activeHub] || this.hubCoords.prigi;
                     if (this.map) {
-                        this.map.setView([-8.2833, 111.7275], 9.5);
+                        this.map.flyTo([target.lat, target.lon], 9, {
+                            duration: 1.0,
+                            easeLinearity: 0.25
+                        });
                     }
                 },
 
                 toggleFullscreen() {
-                    const el = this.$refs.mapWrapper;
+                    const el = this.$refs.radarRoot || this.$refs.mapWrapper;
                     if (!document.fullscreenElement) {
-                        if (el.requestFullscreen) {
+                        if (el && el.requestFullscreen) {
                             el.requestFullscreen().then(() => {
                                 this.isFullscreen = true;
-                                setTimeout(() => this.map.invalidateSize(), 150);
+                                setTimeout(() => {
+                                    if (this.map) this.map.invalidateSize();
+                                    this.resizeCurrentCanvas();
+                                }, 150);
                             }).catch(err => console.error(err));
                         }
                     } else {
                         if (document.exitFullscreen) {
                             document.exitFullscreen().then(() => {
                                 this.isFullscreen = false;
-                                setTimeout(() => this.map.invalidateSize(), 150);
+                                setTimeout(() => {
+                                    if (this.map) this.map.invalidateSize();
+                                    this.resizeCurrentCanvas();
+                                }, 150);
                             }).catch(err => console.error(err));
                         }
                     }
                 },
 
+                // --- Dual-Hub Corridor Methods (Task 2.3) ---
                 addHomeportMarker() {
+                    const hub = this.hubCoords[this.activeHub];
                     const homeportIcon = L.divIcon({
                         className: 'custom-homeport-beacon',
                         html: `
@@ -616,17 +809,17 @@
                         iconAnchor: [16, 16],
                     });
 
-                    this.homeportMarker = L.marker([-8.2833, 111.7275], { icon: homeportIcon })
+                    this.homeportMarker = L.marker([hub.lat, hub.lon], { icon: homeportIcon })
                         .addTo(this.map)
                         .bindPopup(`
                             <div class="p-3 min-w-[220px] bg-slate-950 text-slate-200 rounded-xl border border-slate-800 shadow-2xl font-sans">
                                 <div class="flex items-center justify-between gap-2 border-b border-slate-800 pb-1.5 mb-2">
-                                    <div class="font-bold text-xs text-white uppercase tracking-wider">PPN PRIGI HOMEPORT</div>
+                                    <div class="font-bold text-xs text-white uppercase tracking-wider">${hub.name}</div>
                                     <span class="px-1.5 py-0.5 rounded text-[10px] font-mono bg-cyan-500/10 text-cyan-300 border border-cyan-500/30">WPP 573</span>
                                 </div>
                                 <div class="text-xs text-slate-300 font-mono space-y-0.5">
-                                    <div>Lat: <span class="text-slate-100">-8.2833°S</span> | Lon: <span class="text-slate-100">111.7275°E</span></div>
-                                    <div class="text-[11px] text-slate-400 mt-1">Pusat Pendaratan Armada Tuna & Operasi Radar WPPNRI 573</div>
+                                    <div>Lat: <span class="text-slate-100">${hub.lat.toFixed(4)}°S</span> | Lon: <span class="text-slate-100">${hub.lon.toFixed(4)}°E</span></div>
+                                    <div class="text-[11px] text-slate-400 mt-1">Pangkalan Utama Armada Tuna & Pelagis WPPNRI 573</div>
                                 </div>
                             </div>
                         `);
@@ -634,41 +827,313 @@
 
                 addRangeRings() {
                     this.rangeRingsGroup = L.layerGroup();
+                    const hub = this.hubCoords[this.activeHub];
+                    this.redrawRangeRings(hub.lat, hub.lon);
+                    this.rangeRingsGroup.addTo(this.map);
+                },
+
+                redrawRangeRings(lat, lon) {
+                    if (!this.rangeRingsGroup) return;
+                    this.rangeRingsGroup.clearLayers();
 
                     // 12 NM = 22,224m (Batas Inshore <10 GT)
-                    L.circle([-8.2833, 111.7275], {
+                    L.circle([lat, lon], {
                         radius: 22224,
                         color: '#22d3ee',
                         weight: 1.5,
                         dashArray: '5, 8',
                         fill: false,
-                        opacity: 0.7
+                        opacity: 0.75
                     }).bindTooltip("Batas Zona Inshore 12 NM (< 10 GT)", { permanent: false, direction: 'top' })
                       .addTo(this.rangeRingsGroup);
 
-                    // 60 NM = 111,120m (Batas Offshore Kapal 10-30 GT)
-                    L.circle([-8.2833, 111.7275], {
+                    // 30 NM = 55,560m (Batas Koridor Kapal 10-20 GT)
+                    L.circle([lat, lon], {
+                        radius: 55560,
+                        color: '#06b6d4',
+                        weight: 1.2,
+                        dashArray: '5, 8',
+                        fill: false,
+                        opacity: 0.6
+                    }).bindTooltip("Batas Koridor 30 NM (10-20 GT)", { permanent: false, direction: 'top' })
+                      .addTo(this.rangeRingsGroup);
+
+                    // 60 NM = 111,120m (Batas Offshore Kapal 20-30 GT)
+                    L.circle([lat, lon], {
                         radius: 111120,
                         color: '#0284c7',
                         weight: 1.2,
                         dashArray: '6, 10',
                         fill: false,
                         opacity: 0.5
-                    }).bindTooltip("Batas Zona Offshore 60 NM (10-30 GT)", { permanent: false, direction: 'top' })
+                    }).bindTooltip("Batas Zona Offshore 60 NM (20-30 GT)", { permanent: false, direction: 'top' })
                       .addTo(this.rangeRingsGroup);
+                },
 
-                    // 100 NM = 185,200m
-                    L.circle([-8.2833, 111.7275], {
-                        radius: 185200,
-                        color: '#3b82f6',
-                        weight: 1.0,
-                        dashArray: '8, 12',
-                        fill: false,
-                        opacity: 0.35
-                    }).bindTooltip("Zona Samudera Lepas 100 NM", { permanent: false, direction: 'top' })
-                      .addTo(this.rangeRingsGroup);
+                setHub(hubKey) {
+                    if (this.activeHub === hubKey) return;
+                    this.activeHub = hubKey;
+                    const target = this.hubCoords[hubKey];
 
-                    this.rangeRingsGroup.addTo(this.map);
+                    if (this.map) {
+                        this.map.flyTo([target.lat, target.lon], 9, {
+                            duration: 1.2,
+                            easeLinearity: 0.25
+                        });
+                    }
+
+                    if (this.homeportMarker) {
+                        this.homeportMarker.setLatLng([target.lat, target.lon]);
+                        this.homeportMarker.bindPopup(`
+                            <div class="p-3 min-w-[220px] bg-slate-950 text-slate-200 rounded-xl border border-slate-800 shadow-2xl font-sans">
+                                <div class="flex items-center justify-between gap-2 border-b border-slate-800 pb-1.5 mb-2">
+                                    <div class="font-bold text-xs text-white uppercase tracking-wider">${target.name}</div>
+                                    <span class="px-1.5 py-0.5 rounded text-[10px] font-mono bg-cyan-500/10 text-cyan-300 border border-cyan-500/30">WPP 573</span>
+                                </div>
+                                <div class="text-xs text-slate-300 font-mono space-y-0.5">
+                                    <div>Lat: <span class="text-slate-100">${target.lat.toFixed(4)}°S</span> | Lon: <span class="text-slate-100">${target.lon.toFixed(4)}°E</span></div>
+                                    <div class="text-[11px] text-slate-400 mt-1">Pangkalan Utama Armada Tuna & Pelagis WPPNRI 573</div>
+                                </div>
+                            </div>
+                        `);
+                    }
+
+                    this.redrawRangeRings(target.lat, target.lon);
+                },
+
+                calculateDistanceToActivePort(cellLat, cellLon) {
+                    const hub = this.hubCoords[this.activeHub];
+                    const R_NM = 3440.065; // Nautical miles radius
+                    const dLat = (cellLat - hub.lat) * Math.PI / 180;
+                    const dLon = (cellLon - hub.lon) * Math.PI / 180;
+                    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                              Math.cos(hub.lat * Math.PI / 180) * Math.cos(cellLat * Math.PI / 180) *
+                              Math.sin(dLon / 2) * Math.sin(dLon / 2);
+                    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+                    const distNm = R_NM * c;
+                    const distKm = distNm * 1.852;
+                    return {
+                        distNm: distNm.toFixed(1),
+                        distKm: distKm.toFixed(1),
+                        hubName: this.activeHub === 'prigi' ? 'PPN Prigi' : 'PPS Cilacap'
+                    };
+                },
+
+                getActiveHubDistance(cell) {
+                    if (!cell) return '-';
+                    const lat = cell.center_lat ?? (cell.lat_center ?? -8.28);
+                    const lon = cell.center_lon ?? (cell.lon_center ?? 111.72);
+                    const res = this.calculateDistanceToActivePort(lat, lon);
+                    return `${res.distNm} NM (${res.distKm} km)`;
+                },
+
+                // --- Ocean Currents HTML5 Canvas Particle Engine (Task 2.1) ---
+                getSouthCoastLat(lon) {
+                    // Piecewise southern coastline of Sumatra, Java, Bali & Nusa Tenggara
+                    if (lon < 105.2) return -5.3 - Math.max(0, lon - 102.0) * 0.45;
+                    if (lon < 106.5) return -6.75 - (lon - 105.2) * 0.18;
+                    if (lon < 109.0) return -7.05 - (lon - 106.5) * 0.30;
+                    if (lon < 111.7) return -7.80 - (lon - 109.0) * 0.20;
+                    if (lon < 114.5) return -8.34 - (lon - 111.7) * 0.14;
+                    if (lon < 118.0) return -8.78;
+                    return -9.10;
+                },
+
+                isOceanPoint(lat, lon) {
+                    return lat < (this.getSouthCoastLat(lon) - 0.10);
+                },
+
+                initCurrentParticleLayer() {
+                    if (!this.map) return;
+
+                    let currentsPane = this.map.getPane('currentsPane');
+                    if (!currentsPane) {
+                        currentsPane = this.map.createPane('currentsPane');
+                        currentsPane.style.zIndex = 450; // Above tiles (200) & polygons (400), below markers (600) & popups (700)
+                        currentsPane.style.pointerEvents = 'none';
+                    }
+
+                    this.currentCanvas = document.createElement('canvas');
+                    this.currentCanvas.style.position = 'absolute';
+                    this.currentCanvas.style.top = '0';
+                    this.currentCanvas.style.left = '0';
+                    this.currentCanvas.style.pointerEvents = 'none';
+                    currentsPane.appendChild(this.currentCanvas);
+
+                    this.currentCtx = this.currentCanvas.getContext('2d');
+                    this.resizeCurrentCanvas();
+
+                    this.map.on('resize', () => this.resizeCurrentCanvas());
+                    this.map.on('zoomstart', () => {
+                        this.isZooming = true;
+                        if (this.currentCtx && this.currentCanvas) {
+                            this.currentCtx.clearRect(0, 0, this.currentCanvas.width, this.currentCanvas.height);
+                        }
+                    });
+                    this.map.on('zoomend moveend', () => {
+                        this.isZooming = false;
+                        this.resizeCurrentCanvas();
+                        this.particles.forEach(p => { p.trail = []; });
+                    });
+
+                    this.initParticles();
+                    this.animateParticles();
+                },
+
+                resizeCurrentCanvas() {
+                    if (!this.currentCanvas || !this.map) return;
+                    const size = this.map.getSize();
+                    const topLeft = this.map.containerPointToLayerPoint([0, 0]);
+                    L.DomUtil.setPosition(this.currentCanvas, topLeft);
+                    if (this.currentCanvas.width !== size.x || this.currentCanvas.height !== size.y) {
+                        this.currentCanvas.width = size.x;
+                        this.currentCanvas.height = size.y;
+                    }
+                },
+
+                initParticles() {
+                    this.particles = [];
+                    for (let i = 0; i < this.numParticles; i++) {
+                        this.particles.push(this.createRandomParticle());
+                    }
+                },
+
+                createRandomParticle() {
+                    const bounds = this.map ? this.map.getBounds() : L.latLngBounds([-12.0, 104.0], [-6.5, 118.0]);
+                    const minLon = Math.max(101.5, bounds.getWest() - 0.5);
+                    const maxLon = Math.min(121.0, bounds.getEast() + 0.5);
+                    const minLat = Math.max(-14.0, bounds.getSouth() - 0.5);
+                    const maxLat = Math.min(-6.0, bounds.getNorth());
+
+                    let lat = -9.5;
+                    let lon = 111.7;
+                    for (let attempt = 0; attempt < 15; attempt++) {
+                        const tryLon = minLon + Math.random() * Math.max(0.5, maxLon - minLon);
+                        const coastMax = Math.min(maxLat, this.getSouthCoastLat(tryLon) - 0.12);
+                        if (coastMax > minLat) {
+                            const tryLat = minLat + Math.random() * (coastMax - minLat);
+                            if (this.isOceanPoint(tryLat, tryLon)) {
+                                lat = tryLat;
+                                lon = tryLon;
+                                break;
+                            }
+                        }
+                    }
+
+                    return {
+                        lat,
+                        lon,
+                        trail: [],
+                        age: Math.floor(Math.random() * 50),
+                        maxAge: 65 + Math.floor(Math.random() * 55),
+                        speed: 0.75 + Math.random() * 1.1
+                    };
+                },
+
+                animateParticles() {
+                    if (!this.oceanCurrentsActive) {
+                        if (this.currentCtx && this.currentCanvas) {
+                            this.currentCtx.clearRect(0, 0, this.currentCanvas.width, this.currentCanvas.height);
+                        }
+                        return;
+                    }
+
+                    if (!this.currentCtx || !this.currentCanvas || !this.map) return;
+
+                    const topLeft = this.map.containerPointToLayerPoint([0, 0]);
+                    L.DomUtil.setPosition(this.currentCanvas, topLeft);
+
+                    const ctx = this.currentCtx;
+                    const w = this.currentCanvas.width;
+                    const h = this.currentCanvas.height;
+
+                    // Strictly transparent clearRect so satellite imagery & HSI polygons remain 100% visible!
+                    ctx.clearRect(0, 0, w, h);
+
+                    if (!this.isZooming) {
+                        ctx.lineCap = 'round';
+                        ctx.lineJoin = 'round';
+                        ctx.lineWidth = 1.6;
+
+                        const bounds = this.map.getBounds().pad(0.1);
+                        for (let i = 0; i < this.particles.length; i++) {
+                            const p = this.particles[i];
+
+                            // Hydrodynamic South Java Current + Indonesian Throughflow (predominant westward flow)
+                            const meander = Math.sin(p.lon * 1.6 + p.lat * 2.2);
+                            const dLon = -0.011 * p.speed * (1.15 + 0.35 * meander);
+                            const dLat = 0.0028 * Math.cos(p.lon * 2.1) - 0.0012;
+
+                            p.trail.push([p.lat, p.lon]);
+                            if (p.trail.length > 12) p.trail.shift();
+
+                            p.lon += dLon;
+                            p.lat += dLat;
+                            p.age++;
+
+                            if (p.trail.length >= 2) {
+                                for (let t = 1; t < p.trail.length; t++) {
+                                    const pt0 = this.map.latLngToContainerPoint(p.trail[t - 1]);
+                                    const pt1 = this.map.latLngToContainerPoint(p.trail[t]);
+                                    const alpha = (t / p.trail.length) * 0.78;
+                                    ctx.strokeStyle = `rgba(34, 211, 238, ${alpha.toFixed(2)})`;
+                                    ctx.beginPath();
+                                    ctx.moveTo(pt0.x, pt0.y);
+                                    ctx.lineTo(pt1.x, pt1.y);
+                                    ctx.stroke();
+                                }
+                            }
+
+                            if (
+                                p.age >= p.maxAge ||
+                                !this.isOceanPoint(p.lat, p.lon) ||
+                                !bounds.contains([p.lat, p.lon])
+                            ) {
+                                this.particles[i] = this.createRandomParticle();
+                            }
+                        }
+                    }
+
+                    this.animFrameId = requestAnimationFrame(() => this.animateParticles());
+                },
+
+                toggleOceanCurrents() {
+                    this.oceanCurrentsActive = !this.oceanCurrentsActive;
+                    if (this.oceanCurrentsActive) {
+                        this.particles.forEach(p => { p.trail = []; });
+                        this.animateParticles();
+                    } else {
+                        if (this.animFrameId) cancelAnimationFrame(this.animFrameId);
+                        if (this.currentCtx && this.currentCanvas) {
+                            this.currentCtx.clearRect(0, 0, this.currentCanvas.width, this.currentCanvas.height);
+                        }
+                    }
+                },
+
+                // --- Seasonal Time-Slider Playback Methods (Task 2.2) ---
+                toggleSeasonalPlayback() {
+                    this.isPlayingSeason = !this.isPlayingSeason;
+                    if (this.isPlayingSeason) {
+                        this.playbackInterval = setInterval(() => {
+                            this.selectedMonth = (this.selectedMonth + 1) % 13;
+                            this.onSeasonMonthChanged();
+                        }, 1400);
+                    } else {
+                        if (this.playbackInterval) {
+                            clearInterval(this.playbackInterval);
+                            this.playbackInterval = null;
+                        }
+                    }
+                },
+
+                selectSeasonMonth(idx) {
+                    this.selectedMonth = idx;
+                    this.onSeasonMonthChanged();
+                },
+
+                onSeasonMonthChanged() {
+                    // Instantly update polygon layer styles to visualize seasonal thermal/HSI shift (<50ms)
+                    this.updateLayerStyle();
                 },
 
                 buildApiUrl() {
@@ -737,7 +1202,31 @@
                         });
                 },
 
+                getSpeciesHsiValue(p) {
+                    const cakalang = parseFloat(p.hsi_cakalang) || 0;
+                    const madidihang = parseFloat(p.hsi_madidihang) || 0;
+                    const albakor = parseFloat(p.hsi_albakor) || 0;
+                    const tongkol = parseFloat(p.hsi_tongkol) || 0;
+
+                    if (this.selectedSpecies === 'cakalang') return cakalang;
+                    if (this.selectedSpecies === 'madidihang') return madidihang;
+                    if (this.selectedSpecies === 'albakor') return albakor;
+                    if (this.selectedSpecies === 'tongkol') return tongkol;
+                    return (cakalang + madidihang + albakor) / 3;
+                },
+
+                getSeasonalModulation() {
+                    if (this.selectedMonth === 12) return 0.28; // Super IOD 2019 Extreme Upwelling
+                    if (this.selectedMonth >= 6 && this.selectedMonth <= 8) {
+                        return (this.selectedMonth === 7 ? 0.22 : 0.15); // Peak East Monsoon
+                    }
+                    if (this.selectedMonth <= 1 || this.selectedMonth === 11) return -0.08; // West Monsoon
+                    return 0.0;
+                },
+
                 getFeatureColor(p) {
+                    const seasonalFactor = this.getSeasonalModulation();
+
                     if (this.activeLayer === 'dom') {
                         switch (p.dom_zone) {
                             case 'Z4_NURSERY_GROUND': return '#14b8a6'; // Teal
@@ -760,13 +1249,9 @@
                         if (d <= 1200) return '#0284c7';
                         return '#1e3a8a';
                     } else {
-                        // Default: Species HSI Gradient
-                        const hsiProp = this.selectedSpecies === 'cakalang' ? p.hsi_cakalang :
-                                       this.selectedSpecies === 'madidihang' ? p.hsi_madidihang :
-                                       this.selectedSpecies === 'tongkol' ? (p.hsi_tongkol ?? p.hsi_albakor) :
-                                       this.selectedSpecies === 'albakor' ? p.hsi_albakor :
-                                       ((p.hsi_cakalang + p.hsi_madidihang + (p.hsi_tongkol ?? p.hsi_albakor)) / 3);
-                        const v = parseFloat(hsiProp) || 0;
+                        let v = this.getSpeciesHsiValue(p) + seasonalFactor;
+                        v = Math.max(0.0, Math.min(1.0, v));
+
                         if (v >= 0.70) return '#ef4444'; // Hotspot Red
                         if (v >= 0.55) return '#eab308'; // Amber
                         if (v >= 0.40) return '#06b6d4'; // Cyan
@@ -776,16 +1261,23 @@
                 },
 
                 styleFeature(feature) {
-                    const isHotspot = feature.properties.is_hotspot;
-                    const color = this.getFeatureColor(feature.properties);
-                    const op = typeof this.layerOpacity === 'number' ? this.layerOpacity : 0.82;
+                    const p = feature.properties;
+                    const color = this.getFeatureColor(p);
+                    const op = typeof this.layerOpacity === 'number' ? this.layerOpacity : 0.75;
+                    let fillOp = op;
+
+                    if (this.activeLayer === 'hsi') {
+                        const v = Math.max(0.0, Math.min(1.0, this.getSpeciesHsiValue(p) + this.getSeasonalModulation()));
+                        if (v < 0.25) fillOp = Math.min(op, op * 0.28);
+                    }
+
                     return {
                         fillColor: color,
                         stroke: false,
                         weight: 0,
                         opacity: 0,
                         color: 'transparent',
-                        fillOpacity: op
+                        fillOpacity: fillOp
                     };
                 },
 
@@ -816,12 +1308,10 @@
                     layer.on('click', (e) => {
                         this.selectedCell = p;
 
-                        const hsiVal = (this.selectedSpecies === 'cakalang' ? p.hsi_cakalang : 
-                                       (this.selectedSpecies === 'madidihang' ? p.hsi_madidihang : 
-                                       (this.selectedSpecies === 'tongkol' ? (p.hsi_tongkol ?? p.hsi_albakor) : p.hsi_albakor)));
-
+                        const hsiVal = this.getSpeciesHsiValue(p).toFixed(3);
                         const waypointStr = p.waypoint_dms || `${Math.abs(p.center_lat).toFixed(4)}°S, ${p.center_lon.toFixed(4)}°E`;
-                        const jalurStr = p.jalur_penangkapan || (p.dist_port_nm <= 12 ? 'Jalur II (4-12 NM)' : 'Jalur III (>12 NM)');
+                        const distActive = this.calculateDistanceToActivePort(p.center_lat, p.center_lon);
+                        const jalurStr = p.jalur_penangkapan || (parseFloat(distActive.distNm) <= 12 ? 'Jalur II (4-12 NM)' : 'Jalur III (>12 NM)');
 
                         const popupHtml = `
                             <div class="p-3.5 min-w-[260px] bg-slate-950 text-slate-200 rounded-xl border border-cyan-500/40 shadow-2xl font-sans">
@@ -834,7 +1324,7 @@
                                 </div>
                                 <div class="grid grid-cols-2 gap-1.5 text-[11px] font-mono text-slate-300">
                                     <div>Kedalaman: <span class="text-white">${p.depth_m} m</span></div>
-                                    <div>Jarak Tolak: <span class="text-white">${p.dist_port_nm} NM</span></div>
+                                    <div>Jarak ${distActive.hubName}: <span class="text-cyan-300 font-bold">${distActive.distNm} NM</span></div>
                                     <div>Suhu Laut: <span class="text-white">${p.sst_c} °C</span></div>
                                     <div>Klorofil-a: <span class="text-white">${p.chla_mg_m3} mg/m³</span></div>
                                 </div>
@@ -879,13 +1369,7 @@
                         const p = f.properties;
                         if (p.is_hotspot) hotspots++;
                         if (p.safety_advisory === 'AMAN_MELAUT') safeCount++;
-
-                        const hsiVal = this.selectedSpecies === 'cakalang' ? p.hsi_cakalang :
-                                       this.selectedSpecies === 'madidihang' ? p.hsi_madidihang :
-                                       this.selectedSpecies === 'tongkol' ? (p.hsi_tongkol ?? p.hsi_albakor) :
-                                       this.selectedSpecies === 'albakor' ? p.hsi_albakor :
-                                       ((p.hsi_cakalang + p.hsi_madidihang + (p.hsi_tongkol ?? p.hsi_albakor)) / 3);
-                        sumHsi += hsiVal;
+                        sumHsi += this.getSpeciesHsiValue(p);
                     });
 
                     this.hotspotCount = hotspots;

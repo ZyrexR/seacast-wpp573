@@ -1,0 +1,54 @@
+{
+  "manifest_title": "AOI File Hash & Integrity Manifest",
+  "generated_at_utc": "2026-11-02T14:30:00Z",
+  "files": [
+    {
+      "key": "raw_big_original",
+      "path": "data/aoi/raw/WPP573_BIG_ORIGINAL.geojson",
+      "size_bytes": 25554709,
+      "sha256": "4e2b16197b0d48f350a488ad0a9c076691cf757e78ae855ae117d63d0e53c669",
+      "vertices": 625698,
+      "valid": true
+    },
+    {
+      "key": "master_processed",
+      "path": "data/aoi/processed/AOI_WPP573_MASTER.geojson",
+      "size_bytes": 67525956,
+      "sha256": "fad138ee3dab333d93ac94a416bccd7b73c308313b328e8f0b4f743cd17e7545",
+      "vertices": 625698,
+      "valid": true
+    },
+    {
+      "key": "boundaries_big",
+      "path": "data/boundaries/wppnri_573_big.geojson",
+      "size_bytes": 65019505,
+      "sha256": "6969d522b0a51639845b239a4a36bc3af7cc51f77eca74c118bf2b7ad7483f3f",
+      "vertices": 625698,
+      "valid": true
+    },
+    {
+      "key": "boundaries_web",
+      "path": "data/boundaries/wppnri_573_web.geojson",
+      "size_bytes": 211773,
+      "sha256": "368f49a0ea5654da7571afc8a57e34b4da1f4e8c48a730513e3fab60b4c33607",
+      "vertices": 5231,
+      "valid": false
+    },
+    {
+      "key": "simplified_gee",
+      "path": "data/spatial_reconstruction/aoi_qc/AOI_WPP573_SIMPLIFIED_0p01deg_FOR_GEE.geojson",
+      "size_bytes": 34272,
+      "sha256": "01cdce9a60ff946108073b27cda815f6153dfce2d8e3578a8077dc38d901ec67",
+      "vertices": 809,
+      "valid": true
+    },
+    {
+      "key": "web_repaired",
+      "path": "data/spatial_reconstruction/aoi_qc/wppnri_573_web_DEGENERATE_RINGS_DROPPED.geojson",
+      "size_bytes": 105328,
+      "sha256": "bf335a4039ecd0054d64c2ef51b8fb10de83944a03d4ad70bb72f9b5bd559685",
+      "vertices": 2504,
+      "valid": false
+    }
+  ]
+}

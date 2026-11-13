@@ -1,0 +1,67 @@
+{
+  "type": "FeatureCollection",
+  "metadata": {
+    "feature_name": "200m Isobath / Continental Shelf Break (Paparan Benua)",
+    "source": "GEBCO 2023 Grid / NOAA ETOPO1 Bedrock (multi-source composite without single uniform vertical datum)",
+    "crs": "EPSG:4326",
+    "ecological_role": "Batas paparan benua (tubir benua), zona peningkatan gradien front termal, dan koridor ruaya tuna madidihang & cakalang.",
+    "clipped_to_sub_aoi": {
+      "west": 111.0,
+      "east": 113.0,
+      "south": -10.45,
+      "north": -8.0
+    }
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "isobath_depth_m": -200,
+        "name": "Shelf Break WPPNRI 573 - Segmen Jawa Timur (Sub-AOI Prigi)",
+        "slope_category": "Curam (Tubir Benua > 15\u00b0)",
+        "clipped_bounds": "[111.00, 113.00] E x [-10.45, -8.00] S"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            111.0,
+            -8.41
+          ],
+          [
+            111.25,
+            -8.43
+          ],
+          [
+            111.5,
+            -8.45
+          ],
+          [
+            111.73,
+            -8.46
+          ],
+          [
+            112.0,
+            -8.48
+          ],
+          [
+            112.3,
+            -8.5
+          ],
+          [
+            112.6,
+            -8.53
+          ],
+          [
+            112.9,
+            -8.55
+          ],
+          [
+            113.0,
+            -8.56
+          ]
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "project": "SEACAST PRIGI",
+  "current_stage": "Phase 0.1 - 1.0 Spatial Reconstruction",
+  "gates": {
+    "Gate A": {
+      "name": "AOI Approval",
+      "status": "READY FOR REVIEW (PASS)",
+      "deliverable": "data/aoi/processed/AOI_WPP573_MASTER.geojson",
+      "notes": "Verified from BIG MapServer Layer 21. Equal-area = 933,749.49 km2."
+    },
+    "Gate B": {
+      "name": "Data Source Approval",
+      "status": "READY FOR REVIEW (PASS_WITH_LIMITATIONS)",
+      "deliverable": "reports/phase_0_2/DATA_SOURCE_CATALOG.md",
+      "notes": "Core sources audited in GEE. MODIS-Aqua Dec 2025 gap documented."
+    },
+    "Gate C": {
+      "name": "Methodology Approval",
+      "status": "READY FOR REVIEW",
+      "deliverable": "reports/spatial_reconstruction/05_SPATIAL_ANALYSIS_DESIGN.md",
+      "notes": "Multi-scale grid design (0.25\u00b0 regional WPP 573 vs 0.10\u00b0 intermediate vs 0.05\u00b0 Sub-AOI Prigi)."
+    },
+    "Gate D": {
+      "name": "Full Processing Approval",
+      "status": "NOT STARTED",
+      "notes": "Awaiting researcher methodology approval before launching full 132-month export across 933,750 km2."
+    },
+    "Gate E": {
+      "name": "Phase Completion",
+      "status": "NOT STARTED",
+      "notes": "Awaiting Gate D execution and validation."
+    }
+  }
+}

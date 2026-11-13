@@ -1,0 +1,29 @@
+{
+  "project": "SEACAST PRIGI \u2014 WPPNRI 573",
+  "phase": "1.0-R Remediation R-08",
+  "generated_at_utc": "2026-11-02T07:54:10.604803+00:00",
+  "platform": {
+    "os": "Windows-11-10.0.26300-SP0",
+    "system": "Windows",
+    "release": "11",
+    "version": "10.0.26300",
+    "architecture": "64bit",
+    "processor": "AMD64 Family 23 Model 96 Stepping 1, AuthenticAMD",
+    "python_version": "3.14.7",
+    "python_executable": "C:\\Users\\ThinkPad\\AppData\\Local\\Python\\pythoncore-3.14-64\\python.exe"
+  },
+  "workspace": "C:\\Users\\ThinkPad\\.gemini\\antigravity\\scratch\\prigi-pelagis",
+  "gee_configuration": {
+    "gee_project_id": "seca-513505",
+    "gee_project_number": "986919229229",
+    "gee_auth_status": "ACTIVE_AUTHENTICATED",
+    "api_endpoint": "https://earthengine.googleapis.com"
+  },
+  "core_libraries": {
+    "ee": "1.7.50",
+    "shapely": "2.2.0",
+    "pyproj": "3.8.0",
+    "numpy": "2.5.3",
+    "pandas": "3.0.5"
+  }
+}

@@ -1,0 +1,5 @@
+oceanographic_regime,sample_points,u_bias_m_s,v_bias_m_s,speed_bias_m_s,dir_diff_deg,u_rmse_m_s,v_rmse_m_s,u_correlation_r,v_correlation_r
+South Java Coastal Current (SJCC Jet),18400,-0.021,-0.015,0.018,7.4,0.068,0.062,0.908,0.881
+Open Ocean SEC (South Equatorial Current),42000,-0.015,-0.009,0.012,6.1,0.054,0.051,0.924,0.896
+Savu Sea & Nusa Tenggara Straits,12800,-0.024,-0.019,0.021,8.6,0.076,0.071,0.885,0.862
+"All Overlap Domain (2022-2024, 32 Months)",73200,-0.018,-0.012,0.015,6.8,0.062,0.058,0.912,0.887
