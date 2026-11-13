@@ -18,7 +18,7 @@ Tujuan dari pengujian menyeluruh terhadap sistem **SEACAST V3** per 13 November 
 2. **Integrasi Live BMKG Maritim:** Layanan `BmkgMaritimService.php` mampu menarik dan mem-parsing endpoint resmi BMKG (`XO026`, `XM001`, `M.12`, `M.10`) tanpa token, mengatribusikan nama prakirawan dan nomor surat keputusan, serta memberlakukan ambang batas keselamatan SPB sesuai kelompok GT.
 3. **Fungsionalitas Koridor Dual-Hub:** Perpindahan antara PPN Prigi dan PPS Cilacap menghitung ulang jarak Haversine geodesik secara presisi, memusatkan cincin jangkauan armada (12, 30, 60 NM), dan memuat data pendaratan pangkalan yang bersangkutan.
 4. **Rendering Leaflet WebGIS 60 FPS:** Animasi partikel arus laut berjalan di atas canvas transparan pada `currentsPane` (`z-index: 450`) tanpa penumpukan warna hitam, terpotong rapi di batas pantai Samudra Hindia (`getSouthCoastLat`), dan scrubber waktu 13 bulan merespons sub-50ms.
-5. **Integritas Model Machine Learning:** Ketiga model spesies (Cakalang, Madidihang, Albakor) dieksekusi menggunakan model scikit-learn terkalibrasi dengan pembobotan ensemble terkunci tanpa perubahan parameter.
+5. **Integritas Model TCT:** Model Cakalang dan Tuna Sirip Kuning dieksekusi menggunakan artefak scikit-learn dengan bobot terkunci; Tongkol Krai diverifikasi melalui screening rule-based transparan.
 6. **Persistensi Basis Data:** 16.258 record inferensi tersimpan aman pada tabel PostGIS `daily_predictions`.
 
 ---
@@ -71,8 +71,8 @@ Berikut hasil pengujian pada modul-modul inti per 13 November 2026:
 ```
 [SCIENTIFIC WEIGHT ENFORCEMENT]
 - Cakalang   : MaxEnt(0.320) + RF(0.355) + GLM(0.325) = 1.000 [ROC-AUC: 0.795] -> VERIFIED
-- Madidihang : MaxEnt(0.295) + RF(0.365) + GLM(0.340) = 1.000 [ROC-AUC: 0.784] -> VERIFIED
-- Albakor    : MaxEnt(0.000) + RF(0.517) + GLM(0.483) = 1.000 [ROC-AUC: 0.860] -> VERIFIED
+- Tuna Sirip Kuning : MaxEnt(0.295) + RF(0.365) + GLM(0.340) = 1.000 [ROC-AUC: 0.784] -> VERIFIED
+- Tongkol Krai    : 0.45 SI_SST + 0.40 SI_Chl-a + 0.15 SI_depth [RULE_BASED_SCIENTIFIC_SCREENING] -> VERIFIED
 [IMPUTATION CHECK]
 - Input NaN Values  : Imputed via Open-Ocean Domain Median
 - Prohibited Zeroes : 0 cells converted to 0.0°C

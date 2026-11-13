@@ -4,7 +4,7 @@
 **Document Version:** 3.2.0  
 **Audit Date:** 13 November 2026 (Updated from Baseline 4 November 2026)  
 **Spatial Domain:** WPPNRI 573 (Canonical Grid 8,129 Cells, Resolution 0.10°)  
-**Target Species:** Cakalang (*Katsuwonus pelamis*), Madidihang (*Thunnus albacares*), Albakor (*Thunnus alalunga*)  
+**Target Species:** Cakalang (*Katsuwonus pelamis*), Tuna Sirip Kuning (*Thunnus albacares*), Tongkol Krai (*Auxis thazard*)  
 **Reference Ports:** Dual-Hub Corridor: PPN Prigi, Jawa Timur (111.7275° E, -8.2833° S) & PPS Cilacap, Jawa Tengah (109.0049° E, -7.7478° S)  
 **Execution Environment:** Hostinger KVM VPS / Ubuntu 24.04 LTS / CloudPanel PHP 8.3-FPM / Python 3.12-3.14 / PostgreSQL 17.11 + PostGIS 3.6.2  
 
@@ -86,7 +86,7 @@ Pemeriksaan sistem berkas dan basis data PostgreSQL 17 PostGIS menunjukkan inven
 ## 4. FEATURE MAPPING & SCALER ALIGNMENT AUDIT
 
 ### 4.1 Persyaratan Vektor Fitur Model Ilmiah
-Artefak normalisasi `models/scaler_oceanographic.joblib` (StandardScaler) dan ketiga model ensemble spesies wajib menerima **tepat 10 variabel prediktor** dalam urutan terstandarisasi:
+Artefak normalisasi `models/scaler_oceanographic.joblib` (StandardScaler) dan dua model ensemble spesies wajib menerima **tepat 10 variabel prediktor** dalam urutan terstandarisasi; Tongkol Krai memakai formula screening yang sama-sama menerima fitur oseanografi tersebut:
 
 $$\mathbf{X} = [x_1, x_2, x_3, x_4, x_5, x_6, x_7, x_8, x_9, x_{10}]$$
 
@@ -104,14 +104,14 @@ $$\mathbf{X} = [x_1, x_2, x_3, x_4, x_5, x_6, x_7, x_8, x_9, x_{10}]$$
 | 10 | `dist_port_km` | km | Jarak geodesik ke Hub Aktif (Prigi/Cilacap) | `dist_prigi_harbor_km` | $0.0 \le \text{Dist} \le 1500.0$ |
 
 ### 4.2 Pembobotan Model Ensemble Terkunci (*Locked Baseline*)
-Dalam proses inferensi, seluruh model spesies mematuhi bobot terkunci:
+Dalam proses inferensi, dua model spesies memakai bobot ensemble terkunci; Tongkol Krai memakai screening rule-based:
 - **Cakalang (*Katsuwonus pelamis*):**
   $$HSI_{\text{cakalang}} = 0.320 \cdot P_{\text{MaxEnt}} + 0.355 \cdot P_{\text{RF}} + 0.325 \cdot P_{\text{GLM}}$$
-- **Madidihang (*Thunnus albacares*):**
+- **Tuna Sirip Kuning (*Thunnus albacares*):**
   $$HSI_{\text{madidihang}} = 0.295 \cdot P_{\text{MaxEnt}} + 0.365 \cdot P_{\text{RF}} + 0.340 \cdot P_{\text{GLM}}$$
-- **Albakor (*Thunnus alalunga*):**
-  $$HSI_{\text{albakor}} = 0.000 \cdot P_{\text{MaxEnt}} + 0.517 \cdot P_{\text{RF}} + 0.483 \cdot P_{\text{GLM}}$$
-  *(MaxEnt dinolkan mutlak karena karakteristik habitat pelagis dalam sub-tropis/termoklin).*
+- **Tongkol Krai (*Auxis thazard*):**
+  $$HSI_{\text{tongkol}} = 0.45 \cdot SI_{SST} + 0.40 \cdot SI_{Chl-a} + 0.15 \cdot SI_{depth}$$
+  *(Screening transparan; tidak ada artefak `.joblib` Tongkol Krai.)*
 
 ---
 

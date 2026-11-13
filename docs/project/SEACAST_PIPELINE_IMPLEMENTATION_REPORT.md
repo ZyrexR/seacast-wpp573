@@ -7,7 +7,7 @@
 **Status:** Completed, Verified & Ready for Hostinger CloudPanel Deployment  
 **Target Domain:** WPPNRI 573 (8,129 Canonical Grid Cells, Resolution 0.10°)  
 **Dual-Hub Corridor:** PPN Prigi, Jawa Timur & PPS Cilacap, Jawa Tengah  
-**Target Species:** Cakalang (*Katsuwonus pelamis*), Madidihang (*Thunnus albacares*), Albakor (*Thunnus alalunga*)  
+**Target Species:** Cakalang (*Katsuwonus pelamis*), Tuna Sirip Kuning (*Thunnus albacares*), Tongkol Krai (*Auxis thazard*)  
 
 ---
 
@@ -39,7 +39,7 @@ $$\begin{matrix}
 Semua batasan arsitektur dipatuhi secara ketat:
 1. **Zero-Dummy Policy:** 100% data satelit dan cuaca kelautan ditarik dari sensor orbit dan stasiun BMKG resmi tanpa data tiruan/sintetik.
 2. **Otomatisasi Headless Penuh:** Menghilangkan keharusan membuka Google Earth Engine Code Editor secara manual; penarikan data harian dijalankan via skrip Python otomatis dalam waktu **11,3 detik**.
-3. **Pembobotan Model Ilmiah Terkunci:** Formula bobot ensemble ($\Sigma w_i = 1.000$, MaxEnt Albakor $0.000$) dan scikit-learn StandardScaler dipertahankan tanpa modifikasi atau *retraining*.
+3. **Pembobotan Model Ilmiah Terkunci:** Formula bobot ensemble ($\Sigma w_i = 1.000$, MaxEnt Tongkol Krai $0.000$) dan scikit-learn StandardScaler dipertahankan tanpa modifikasi atau *retraining*.
 4. **Peta WebGIS Berkinerja Tinggi:** Visualisasi arus laut 60 FPS pada `currentsPane` transparan penuh dengan pembatasan garis pantai Samudra Hindia (`getSouthCoastLat()`) dan scrubber 13 bulan sub-50ms.
 5. **Kesiapan Infrastruktur Cloud:** Panduan instalasi dan deployment pada Hostinger VPS (Ubuntu 24.04 LTS) + CloudPanel telah difinalisasi.
 

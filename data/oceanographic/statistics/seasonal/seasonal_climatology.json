@@ -13,11 +13,10 @@
     "wind_speed_mean": 4.398,
     "ekman_transport_mean": 1.384,
     "hs_wave_mean": 1.313,
-    "total_pelagis_catch_kg": 2035990,
+    "total_pelagis_catch_kg": 2026940,
     "mean_monthly_catch_kg": 61697,
     "cakalang_catch_kg": 705452,
     "madidihang_catch_kg": 379963,
-    "albakor_catch_kg": 9050,
     "total_trips": 30933
   },
   {
@@ -34,11 +33,10 @@
     "wind_speed_mean": 3.058,
     "ekman_transport_mean": -0.508,
     "hs_wave_mean": 1.015,
-    "total_pelagis_catch_kg": 4027022,
+    "total_pelagis_catch_kg": 4005353,
     "mean_monthly_catch_kg": 122031,
     "cakalang_catch_kg": 1861275,
     "madidihang_catch_kg": 1064081,
-    "albakor_catch_kg": 21669,
     "total_trips": 46158
   },
   {
@@ -55,11 +53,10 @@
     "wind_speed_mean": 9.107,
     "ekman_transport_mean": -5.602,
     "hs_wave_mean": 2.576,
-    "total_pelagis_catch_kg": 7943994,
+    "total_pelagis_catch_kg": 7769408,
     "mean_monthly_catch_kg": 240727,
     "cakalang_catch_kg": 3699966,
     "madidihang_catch_kg": 983792,
-    "albakor_catch_kg": 174586,
     "total_trips": 48042
   },
   {
@@ -76,11 +73,10 @@
     "wind_speed_mean": 5.365,
     "ekman_transport_mean": -2.384,
     "hs_wave_mean": 1.575,
-    "total_pelagis_catch_kg": 4398255,
+    "total_pelagis_catch_kg": 4286928,
     "mean_monthly_catch_kg": 133280,
     "cakalang_catch_kg": 2027399,
     "madidihang_catch_kg": 506088,
-    "albakor_catch_kg": 111327,
     "total_trips": 64201
   }
 ]

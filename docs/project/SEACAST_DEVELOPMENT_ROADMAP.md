@@ -75,8 +75,8 @@ gantt
 2. **Uji Validasi Silang Spasial Independen (*Spatial Block Cross-Validation*):**
    - Melatih ulang model Ensemble SDM menggunakan titik koordinat tangkapan GPS empiris sebagai data keberadaan (*presence data*).
    - Menghitung nilai ROC-AUC dan *True Skill Statistic* (TSS) independen yang bebas dari bias sirkular proxy lingkungan.
-3. **Penyempurnaan Formula HSI Albakor:**
-   - Memasukkan parameter kedalaman lapisan termoklin (*thermocline depth*) dari reanalisis oseanografi untuk memperkuat pemodelan Albakor di perairan laut dalam.
+3. **Penyempurnaan Formula HSI Tongkol Krai:**
+   - Memasukkan parameter kedalaman lapisan termoklin (*thermocline depth*) dari reanalisis oseanografi untuk memperkuat pemodelan Tongkol Krai di perairan laut dalam.
 
 ---
 

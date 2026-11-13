@@ -41,7 +41,7 @@ flowchart TD
         SYNC_CLI --> TRANS["Scientific Transformer: scripts/gee_pipeline_transformer.py"]
         TRANS --> QC["Preflight QC & Imputasi Median Spasial Domain (Anti-Zero)"]
         QC --> SCL["models/scaler_oceanographic.joblib (10 Vektor Fitur)"]
-        SCL --> ENS["Ensemble SDM Inference (.joblib)<br/>Cakalang + Madidihang + Albakor"]
+        SCL --> ENS["Inference TCT<br/>Ensemble .joblib (Cakalang + Tuna Sirip Kuning)<br/>Rule-based (Tongkol Krai)"]
         ENS --> DOM["Delineasi 5 Zona DOM (Z4 -> Z5 -> Z3 -> Z1 -> Z2 -> GEN)"]
         DOM --> SAF["Evaluasi SPB BMKG & Bycatch Traffic Light"]
     end
@@ -108,14 +108,13 @@ flowchart TD
   - Menjalankan penskalaan via `models/scaler_oceanographic.joblib` (scikit-learn StandardScaler).
 
 ### 2.4 Stage 4: Scikit-learn Ensemble SDM Inference
-- **Komponen Eksekusi:** Model mandiri terlatih `.joblib`:
+- **Komponen Eksekusi:** Dua model mandiri terlatih `.joblib` dan satu screening rule-based:
   - `models/cakalang_ensemble_model.joblib`
   - `models/madidihang_ensemble_model.joblib`
-  - `models/albakor_ensemble_model.joblib`
 - **Pembobotan Ensemble Terkunci:**
   - Cakalang: $\text{MaxEnt}(0.320) + \text{RF}(0.355) + \text{GLM}(0.325)$
-  - Madidihang: $\text{MaxEnt}(0.295) + \text{RF}(0.365) + \text{GLM}(0.340)$
-  - Albakor: $\text{MaxEnt}(0.000) + \text{RF}(0.517) + \text{GLM}(0.483)$
+  - Tuna Sirip Kuning: $\text{MaxEnt}(0.295) + \text{RF}(0.365) + \text{GLM}(0.340)$
+  - Tongkol Krai: $0,45\cdot SI_{SST} + 0,40\cdot SI_{Chl-a} + 0,15\cdot SI_{depth}$ (`RULE_BASED_SCIENTIFIC_SCREENING`)
 - **Klasifikasi DOM 5 Zona Berjenjang:**
   $$\text{Z4 Nursery} \succ \text{Z5 Bycatch Screening} \succ \text{Z3 Feeding Core} \succ \text{Z1 PFG Inshore} \succ \text{Z2 PFG Offshore} \succ \text{GENERAL\_OCEANIC}$$
 - **Evaluasi Keselamatan Melaut & SPB (Surat Persetujuan Berlayar):**
@@ -201,7 +200,7 @@ flowchart TD
   "summary": {
     "mean_hsi_cakalang": 0.239,
     "mean_hsi_madidihang": 0.451,
-    "mean_hsi_albakor": 0.557,
+    "mean_hsi_tongkol": 0.557,
     "dom_distribution": {
       "Z1_PFG_INSHORE": 8,
       "Z2_PFG_OFFSHORE": 161,

@@ -13,11 +13,8 @@
     "ensemble_auc": 0.7019207212326606,
     "status": "FAIR"
   },
-  "albakor": {
-    "auc_maxent": 0.6744184270485066,
-    "auc_rf": 0.6843105886545305,
-    "auc_glm": 0.6744468259337573,
-    "ensemble_auc": 0.6778877833319277,
-    "status": "FAIR"
+  "tongkol_krai": {
+    "status": "RULE_BASED_SCIENTIFIC_SCREENING",
+    "model_artifact": null
   }
 }

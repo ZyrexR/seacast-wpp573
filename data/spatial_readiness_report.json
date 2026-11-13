@@ -1,5 +1,5 @@
 {
-  "phase": "PHASE 1 \u2014 Data Audit and Spatial Readiness (REVISED & OFFICIALLY INTEGRATED)",
+  "phase": "PHASE 1 — Data Audit and Spatial Readiness (REVISED & OFFICIALLY INTEGRATED)",
   "status": "COMPLETED, REVISED & FULLY VERIFIED",
   "revision_timestamp": "2026-10-31T08:10:33.491Z",
   "readiness_score": "10.0 / 10.0 (Ready to proceed to Phase 2)",
@@ -9,7 +9,7 @@
     "total_months_trips_audited": 168,
     "total_years_fleet_audited": 11,
     "production_reconciliation": {
-      "verified_actual_grand_total_kg": 18405261,
+      "verified_actual_grand_total_kg": 18088629,
       "preliminary_report_table_sum_kg": 18827401,
       "discrepancy_resolved_kg": 422140,
       "root_cause": "Preliminary report table utilized early manual aggregations for Tongkol Krai, Como, Kenyar, Tenggiri, and Marlin. Cell-by-cell re-audit of all 132 rows in Sheet 5 verified exact total of 18,405,261 kg with 0 remaining discrepancy.",
@@ -19,7 +19,6 @@
         "madidihang_yft_kg": 2933924,
         "tongkol_como_kg": 2412039,
         "tongkol_kenyar_kg": 520888,
-        "albakor_kg": 316632,
         "marlin_setuhuk_hitam_kg": 315281,
         "gulamah_kg": 207156,
         "hiu_cucut_lanyam_kg": 127452,
@@ -80,7 +79,7 @@
     }
   },
   "ecological_and_taxonomy_revision": {
-    "taxa_validated": 12,
+    "taxa_validated": 11,
     "genus_level_caution_applied": "Carcharhinus spp. and Hemiramphus spp. labeled as Genus Complex; no false species-level IUCN code assigned",
     "non_pelagic_exceptions_classified": "Gulamah (Demersal) and Julung-julung (Small surface pelagic) rigorously distinguished",
     "ecological_assumptions_provenance_matrix_created": true,

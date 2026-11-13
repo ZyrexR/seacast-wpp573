@@ -1,25 +1,25 @@
 {
   "metadata": {
-    "total_taxa_recorded": 12,
+    "total_taxa_recorded": 11,
     "port_source": "Laporan Statistik PPN Prigi (Sheet 5 Re-Audit, 2015-2025)",
     "total_months_audited": 132,
-    "total_volume_kg_verified": 18405261,
+    "total_volume_kg_verified": 18088629,
     "audit_date": "2026-10-31",
     "audit_finding": "Verified exact cell-by-cell sum across all 132 rows of Sheet 5. Discrepancy in preliminary report (18,827,401 vs 18,405,261 kg = 422,140 kg) resolved: preliminary table included rough manual aggregates for Krai, Como, Kenyar, Tenggiri, and Marlin which have now been replaced with the verified exact values.",
     "disaggregated_volume_summary_11y": {
-      "total_selected_taxa_catch_kg": 18405261,
-      "legacy_alias_total_pelagis_kg": 18405261,
-      "pelagic_catch_kg_10_taxa": 18070653,
-      "pelagic_catch_pct": 98.18,
-      "large_pelagic_9_taxa_kg": 18001747,
-      "large_pelagic_9_taxa_pct": 97.81,
+      "total_selected_taxa_catch_kg": 18088629,
+      "legacy_alias_total_pelagis_kg": 18088629,
+      "pelagic_catch_kg_10_taxa": 17754021,
+      "pelagic_catch_pct": 98.15,
+      "large_pelagic_9_taxa_kg": 17685115,
+      "large_pelagic_9_taxa_pct": 97.77,
       "small_pelagic_exception_kg_julung": 68906,
       "small_pelagic_exception_pct": 0.37,
       "demersal_exception_kg_gulamah": 207156,
       "demersal_exception_pct": 1.13,
       "elasmobranch_bycatch_kg_cucut": 127452,
       "elasmobranch_bycatch_pct": 0.69,
-      "metric_naming_note": "Legacy columns total_pelagis_kg and total_pelagis_besar_kg are preserved for backward compatibility and equal total_selected_taxa_catch_kg (18,405,261 kg across all 12 recorded Sheet 5 categories). True teleost pelagic landings equal pelagic_catch_kg = 18,070,653 kg (98.18%)."
+      "metric_naming_note": "Legacy columns total_pelagis_kg and total_pelagis_besar_kg are preserved for backward compatibility and equal total_selected_taxa_catch_kg (18,088,629 kg across 11 recorded Sheet 5 categories). True teleost pelagic landings equal pelagic_catch_kg = 17,754,021 kg (98.15%)."
     }
   },
   "taxa": [
@@ -172,36 +172,6 @@
       "iucn_status": "Least Concern (LC)",
       "iucn_provenance": "Literature-derived (IUCN Red List 2011)",
       "sdm_role": "Neritic Pelagic Complex"
-    },
-    {
-      "id": 6,
-      "local_name": "Albakor (Balong)",
-      "english_name": "Albacore",
-      "scientific_name": "Thunnus alalunga",
-      "taxonomic_authority": "Bonnaterre, 1788",
-      "family": "Scombridae",
-      "ecological_group": "Deep Oceanic Pelagic",
-      "habitat_depth_range": "50 - 350 m (Subtropical/temperate, upwelling deep layer)",
-      "preferred_sst_celsius": {
-        "min": 18,
-        "opt_min": 21,
-        "opt_max": 25,
-        "max": 26.5,
-        "provenance": "Literature-derived (IOTC Albacore Working Group; FishBase)"
-      },
-      "preferred_chla_mg_m3": {
-        "min": 0.1,
-        "opt_min": 0.25,
-        "opt_max": 0.7,
-        "max": 1.2,
-        "provenance": "Literature-derived"
-      },
-      "verified_total_landings_kg_11y": 316632,
-      "percentage_of_total_pelagics": 1.72,
-      "primary_gear": "Pancing Ulur",
-      "iucn_status": "Least Concern (LC)",
-      "iucn_provenance": "Literature-derived (IUCN Red List 2021)",
-      "sdm_role": "Deep Upwelling Water Mass Indicator"
     },
     {
       "id": 7,

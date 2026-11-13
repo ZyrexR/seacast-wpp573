@@ -478,14 +478,13 @@ table.intel-table tr:hover td {
     <div class="ctl-strip">
       <label>Pilih Komoditas Spesifik:
         <select id="selGlobalSpecies" onchange="updateSpeciesOverview()">
-          <option value="total">-- SEMUA 12 SPESIES (TOTAL PELAGIS BESAR) --</option>
+           <option value="total">-- SEMUA 11 TAKSA (TOTAL PELAGIS BESAR) --</option>
           <option value="cak">1. Cakalang (Katsuwonus pelamis)</option>
-          <option value="yft">2. Madidihang / Yellowfin Tuna (Thunnus albacares)</option>
+           <option value="yft">2. Tuna Sirip Kuning / Yellowfin Tuna (Thunnus albacares)</option>
           <option value="com">3. Tongkol Como (Euthynnus affinis)</option>
           <option value="krai">4. Tongkol Krai (Auxis thazard)</option>
           <option value="ken">5. Tongkol Kenyar (Sarda orientalis)</option>
           <option value="mar">6. Marlin Setuhuk Hitam (Makaira indica)</option>
-          <option value="alb">7. Albakor (Thunnus alalunga)</option>
           <option value="bet">8. Tuna Mata Besar / Swanggi (Thunnus obesus)</option>
           <option value="gul">9. Gulamah / Awon Awon (Nibea albiflora)</option>
           <option value="jul">10. Julung-julung / Panjo (Hemirhamphus spp.)</option>
@@ -514,7 +513,7 @@ table.intel-table tr:hover td {
         </div>
         <div id="chartAllSpeciesDonut" style="height: 320px;"></div>
         <div style="font-size:11px; color:var(--text-muted); line-height:1.5; margin-top:8px;">
-          Pendaratan 11 tahun (18.405.261 kg) dipimpin oleh <b>Cakalang (45,06%)</b>, <b>Tongkol Krai (16,81%)</b>, <b>Madidihang (15,94%)</b>, <b>Tongkol Como (13,11%)</b>, dan <b>Tongkol Kenyar (2,83%)</b>. Tujuh taksa lainnya menyumbang <b>6,25%</b>.
+          Pendaratan 11 tahun (18.405.261 kg) dipimpin oleh <b>Cakalang (45,06%)</b>, <b>Tongkol Krai (16,81%)</b>, <b>Tuna Sirip Kuning (15,94%)</b>, <b>Tongkol Como (13,11%)</b>, dan <b>Tongkol Kenyar (2,83%)</b>. Tujuh taksa lainnya menyumbang <b>6,25%</b>.
         </div>
       </div>
     </div>
@@ -530,12 +529,11 @@ table.intel-table tr:hover td {
             <tr>
               <th>Periode</th>
               <th>Cakalang</th>
-              <th>Madidihang</th>
+              <th>Tuna Sirip Kuning</th>
               <th>T. Krai</th>
               <th>T. Kenyar</th>
               <th>T. Como</th>
               <th>Marlin</th>
-              <th>Albakor</th>
               <th>Bigeye</th>
               <th>Gulamah</th>
               <th>Julung</th>
@@ -657,7 +655,7 @@ table.intel-table tr:hover td {
       </div>
       <div id="chartOcean132m" style="height: 380px;"></div>
       <div style="font-size:11.5px; color:var(--text-muted); margin-top:8px; line-height:1.5;">
-        Grafik menunjukkan hubungan erat siklus lingkungan laut dengan hasil tangkapan: Puncak tangkapan pelagis besar (terutama Cakalang dan Madidihang) terjadi pada <b>fase penurunan suhu muka laut (SST &lt; 26°C)</b> dan <b>peningkatan SST Contrast (ΔT coast-offshore &gt; 1.5°C) serta Meridional Ekman Transport (Mey)</b>. Fenomena ekstrem El Niño 2015 dan Super Positive IOD 2019 memperkuat upwelling dan melipatgandakan klorofil-a.
+        Grafik menunjukkan hubungan erat siklus lingkungan laut dengan hasil tangkapan: Puncak tangkapan pelagis besar (terutama Cakalang dan Tuna Sirip Kuning) terjadi pada <b>fase penurunan suhu muka laut (SST &lt; 26°C)</b> dan <b>peningkatan SST Contrast (ΔT coast-offshore &gt; 1.5°C) serta Meridional Ekman Transport (Mey)</b>. Fenomena ekstrem El Niño 2015 dan Super Positive IOD 2019 memperkuat upwelling dan melipatgandakan klorofil-a.
       </div>
     </div>
 
@@ -755,7 +753,7 @@ table.intel-table tr:hover td {
               <td>Ruaya ke permukaan saat upwelling dingin (25-27°C)</td>
             </tr>
             <tr>
-              <td><b>2. Madidihang / YFT</b></td>
+              <td><b>2. Tuna Sirip Kuning / YFT</b></td>
               <td><span class="badge-tag badge-emerald">Mei - Agustus</span></td>
               <td>Maret - April</td>
               <td>November - Desember</td>
@@ -793,14 +791,6 @@ table.intel-table tr:hover td {
               <td>November - Januari</td>
               <td>Pancing Ulur Tuna</td>
               <td>Pelagis predator besar perenang cepat</td>
-            </tr>
-            <tr>
-              <td><b>7. Albakor</b></td>
-              <td><span class="badge-tag badge-emerald">Agustus - September</span></td>
-              <td>Juni - Juli</td>
-              <td>Januari - Maret</td>
-              <td>Pancing Ulur / Tonda</td>
-              <td>Muncul di perairan dingin bersuhu &lt;26°C</td>
             </tr>
             <tr>
               <td><b>8. Tuna Mata Besar</b></td>
@@ -868,7 +858,7 @@ table.intel-table tr:hover td {
         </thead>
         <tbody>
           <tr>
-            <td><b>Madidihang / YFT</b></td>
+            <td><b>Tuna Sirip Kuning / YFT</b></td>
             <td><i>Thunnus albacares</i></td>
             <td><span class="badge-tag badge-emerald">LEAST CONCERN (IUCN 2021)</span></td>
             <td>100 cm</td>
@@ -877,13 +867,13 @@ table.intel-table tr:hover td {
             <td>Seleksi ukuran armada pancing ulur & pemantauan rumpon</td>
           </tr>
           <tr>
-            <td><b>Albakor</b></td>
-            <td><i>Thunnus alalunga</i></td>
+            <td><b>Tongkol Krai</b></td>
+            <td><i>Auxis thazard</i></td>
             <td><span class="badge-tag badge-emerald">LEAST CONCERN (IUCN 2021)</span></td>
-            <td>90 cm</td>
-            <td>135 cm</td>
-            <td>0.28 / thn</td>
-            <td>Pemantauan tangkapan sub-termoklin pada fase upwelling</td>
+            <td>31 cm</td>
+            <td>58 cm</td>
+            <td>0.70 / thn</td>
+            <td>Prioritaskan pemantauan perairan neritik dangkal dan selektivitas alat tangkap</td>
           </tr>
           <tr>
             <td><b>Tuna Mata Besar</b></td>
@@ -988,8 +978,8 @@ table.intel-table tr:hover td {
         <label>Target Spesies:
           <select id="selSdmSpecies" onchange="updateSdmSpatialLayer(); renderSdmCharts();">
             <option value="cakalang">1. Cakalang (Skipjack Tuna - Katsuwonus pelamis)</option>
-            <option value="madidihang">2. Madidihang (Yellowfin Tuna - Thunnus albacares)</option>
-            <option value="albakor">3. Albakor (Albacore - Thunnus alalunga)</option>
+            <option value="madidihang">2. Tuna Sirip Kuning (Yellowfin Tuna - Thunnus albacares)</option>
+           <option value="tongkol_krai">3. Tongkol Krai (Frigate Tuna - Auxis thazard)</option>
           </select>
         </label>
 
@@ -1305,8 +1295,8 @@ function updateSpeciesOverview() {
 function renderStaticCharts() {
   // Donut of 12 Species (11 Years Aggregate)
   const sum = k => masterData.reduce((acc, d) => acc + d[k], 0);
-  const spNames = ['Cakalang', 'Madidihang', 'T. Krai', 'T. Kenyar', 'T. Como', 'Marlin', 'Albakor', 'Bigeye', 'Julung', 'Tenggiri', 'Gulamah', 'Cucut'];
-  const spVals = [sum('cak'), sum('yft'), sum('krai'), sum('ken'), sum('com'), sum('mar'), sum('alb'), sum('bet'), sum('jul'), sum('tgr'), sum('gul'), sum('cuc')];
+   const spNames = ['Cakalang', 'Tuna Sirip Kuning', 'T. Krai', 'T. Kenyar', 'T. Como', 'Marlin', 'Bigeye', 'Julung', 'Tenggiri', 'Gulamah', 'Cucut'];
+   const spVals = [sum('cak'), sum('yft'), sum('krai'), sum('ken'), sum('com'), sum('mar'), sum('bet'), sum('jul'), sum('tgr'), sum('gul'), sum('cuc')];
 
   Plotly.react('chartAllSpeciesDonut', [{
     values: spVals,
@@ -1738,8 +1728,8 @@ function renderOceanAdvancedCharts() {
 
   // 3. Chart Cross-Correlation Matrix (Verified Lag-0 Statistical Associations from ocean_fisheries_correlation.json)
   if (window.oceanCrossCorrelation) {
-    const speciesKeys = ['total_pelagis_kg', 'cakalang_kg', 'madidihang_kg', 'albakor_kg', 'tongkol_como_kg', 'total_trip_alat'];
-    const species = ['Total Pelagis', 'Cakalang', 'Madidihang', 'Albakor', 'Tongkol Como', 'Total Trip'];
+     const speciesKeys = ['total_pelagis_kg', 'cakalang_kg', 'madidihang_kg', 'tongkol_krai_kg', 'tongkol_como_kg', 'total_trip_alat'];
+     const species = ['Total Pelagis', 'Cakalang', 'Tuna Sirip Kuning', 'Tongkol Krai', 'Tongkol Como', 'Total Trip'];
     const envKeys = ['prigi_sst_coastal', 'prigi_chl_mean', 'prigi_cui_thermal', 'thermal_front_sobel_c_km', 'ekman_transport_m2_s', 'hs_wave_m'];
     const envs = ['SST Pesisir Prigi', 'Klorofil-a Prigi', 'SST Contrast (ΔT)', 'Front Termal Sobel', 'Meridional Ekman (Mey)', 'Tinggi Gelombang Hs'];
     

@@ -1,12 +1,12 @@
 {
-  "title": "PHASE 4.1.1 \u2014 RECONCILED RHSI & PFG ADVISORY SENSITIVITY ANALYSIS",
+  "title": "PHASE 4.1.1 — RECONCILED RHSI & PFG ADVISORY SENSITIVITY ANALYSIS",
   "generated_at": "2026-11-01T08:13:06.905719+00:00",
   "reference_scenario": "east_monsoon_jja (Klimatologi Musim Timur / Peak Upwelling)",
   "total_cells": 2050,
   "cells_within_60nm": 804,
   "total_clipped_aoi_area_km2": 59550.44,
   "weight_provenance_status": "PROVISIONAL_ANALYST_SELECTED_WEIGHTS",
-  "weight_provenance_explanation": "Balanced linear proxy-skill weights across active heuristic response equations (Albakor Component 1 zeroed because circular proxy AUC = 0.507 <= 0.51). Labeled PROVISIONAL_ANALYST_SELECTED_WEIGHTS because underlying AUCs are evaluated against deterministic environmental proxy points rather than independent empirical field catch coordinates.",
+  "weight_provenance_explanation": "Balanced linear proxy-skill weights across active heuristic response equations (TCT rule-based Component 1 zeroed because circular proxy AUC = 0.507 <= 0.51). Labeled PROVISIONAL_ANALYST_SELECTED_WEIGHTS because underlying AUCs are evaluated against deterministic environmental proxy points rather than independent empirical field catch coordinates.",
   "canonical_ensemble_weights": {
     "cakalang": {
       "maxent": 0.32,
@@ -18,10 +18,8 @@
       "rf": 0.365,
       "glm": 0.34
     },
-    "albakor": {
-      "maxent": 0.0,
-      "rf": 0.517,
-      "glm": 0.483
+    "tongkol_krai": {
+      "model_type": "RULE_BASED_SCIENTIFIC_SCREENING"
     }
   },
   "legacy_phase3_squared_auc_weights": {
@@ -34,11 +32,6 @@
       "maxent": 0.238,
       "rf": 0.447,
       "glm": 0.315
-    },
-    "albakor": {
-      "maxent": 0.0,
-      "rf": 0.554,
-      "glm": 0.446
     }
   },
   "formulas": {
@@ -48,46 +41,7 @@
     "visualization_score": "clip(raw_advisory_score, 0, 1)"
   },
   "diagnostic_explanations": {
-    "madidihang_389_cell_invariance_at_tau_065": "Within <=60 NM (804 cells), Component 2 (hsi_rf) is a discrete 4-rule step function (0.00, 0.25, 0.50, 0.75, 1.00). Cells passing 3 of 4 rules (hsi_rf >= 0.75, n = 389 cells) achieve visualization_score >= 0.708 under canonical weights, whereas cells passing <=2 rules (hsi_rf <= 0.50) have visualization_score <= 0.548. Because no cell has visualization_score in the interval (0.548, 0.708), thresholding at tau = 0.65 falls inside this 0.160-wide discrete step gap and selects the exact same 389 cells across all weight schemes. At tau = 0.75 (or when thresholding weighted_mean_rhsi >= 0.65), cell counts vary across weight schemes (from 194 to 389 cells at tau=0.75, and 585 to 601 cells for weighted_mean_rhsi >= 0.65).",
-    "albakor_zero_penalized_advisory_vs_230_pfg_zone_cells": "In functional_zones_albakor.geojson, PFG screening zones are defined by weighted_mean_rhsi >= 0.50 within <=60 NM, which yields 230 qualifying cells (6,887.01 km2) under canonical weights (and 277 cells AOI-wide). However, because Component 3 (hsi_glm, calibrated for cooler subtropical waters) outputs 0.004-0.012 at 24.8-26.2 C while Component 2 (hsi_rf) outputs 1.00 in deep slope waters, inter-component disagreement sigma_w is ~0.495. Consequently, penalized raw_advisory_score = weighted_mean_rhsi - 0.5 * sigma_w peaks at 0.276 (< 0.50), yielding 0 cells if tau = 0.50 is applied to the penalized score. Both metrics (pfg_zone_cells_by_weighted_mean_rhsi and penalized_advisory_cells_by_vis_score) are now explicitly tabulated."
-  },
-  "albakor_zero_weight_fix_impact": {
-    "cakalang": {
-      "weights": {
-        "maxent": 0.32,
-        "rf": 0.355,
-        "glm": 0.325
-      },
-      "old_unweighted_mean_sigma": 0.1612,
-      "old_unweighted_max_sigma": 0.3724,
-      "remediated_weighted_mean_sigma_w": 0.1601,
-      "remediated_weighted_max_sigma_w": 0.376,
-      "mean_sigma_reduction": 0.0011
-    },
-    "madidihang": {
-      "weights": {
-        "maxent": 0.295,
-        "rf": 0.365,
-        "glm": 0.34
-      },
-      "old_unweighted_mean_sigma": 0.1981,
-      "old_unweighted_max_sigma": 0.4069,
-      "remediated_weighted_mean_sigma_w": 0.1972,
-      "remediated_weighted_max_sigma_w": 0.405,
-      "mean_sigma_reduction": 0.0009
-    },
-    "albakor": {
-      "weights": {
-        "maxent": 0.0,
-        "rf": 0.517,
-        "glm": 0.483
-      },
-      "old_unweighted_mean_sigma": 0.2691,
-      "old_unweighted_max_sigma": 0.5756,
-      "remediated_weighted_mean_sigma_w": 0.1993,
-      "remediated_weighted_max_sigma_w": 0.496,
-      "mean_sigma_reduction": 0.0698
-    }
+    "madidihang_389_cell_invariance_at_tau_065": "Within <=60 NM (804 cells), Component 2 (hsi_rf) is a discrete 4-rule step function (0.00, 0.25, 0.50, 0.75, 1.00). Cells passing 3 of 4 rules (hsi_rf >= 0.75, n = 389 cells) achieve visualization_score >= 0.708 under canonical weights, whereas cells passing <=2 rules (hsi_rf <= 0.50) have visualization_score <= 0.548. Because no cell has visualization_score in the interval (0.548, 0.708), thresholding at tau = 0.65 falls inside this 0.160-wide discrete step gap and selects the exact same 389 cells across all weight schemes. At tau = 0.75 (or when thresholding weighted_mean_rhsi >= 0.65), cell counts vary across weight schemes (from 194 to 389 cells at tau=0.75, and 585 to 601 cells for weighted_mean_rhsi >= 0.65)."
   },
   "lambda_and_threshold_grid": {
     "cakalang": {
@@ -100,10 +54,10 @@
         "thresholds": {
           "tau_0.50": {
             "cells_aoi_wide": 1065,
-            "pct_aoi_wide": 52.0,
+            "pct_aoi_wide": 52,
             "area_km2_aoi_wide": 31595.25,
             "cells_within_60nm": 718,
-            "pct_within_60nm": 35.0,
+            "pct_within_60nm": 35,
             "area_km2_within_60nm": 21577.68,
             "unpenalized_rhsi_cells_aoi_wide": 1065,
             "unpenalized_rhsi_cells_within_60nm": 718,
@@ -133,7 +87,7 @@
           },
           "tau_0.65": {
             "cells_aoi_wide": 778,
-            "pct_aoi_wide": 38.0,
+            "pct_aoi_wide": 38,
             "area_km2_aoi_wide": 23083.24,
             "cells_within_60nm": 619,
             "pct_within_60nm": 30.2,
@@ -147,7 +101,7 @@
             "pct_aoi_wide": 37.4,
             "area_km2_aoi_wide": 22763.44,
             "cells_within_60nm": 614,
-            "pct_within_60nm": 30.0,
+            "pct_within_60nm": 30,
             "area_km2_within_60nm": 18428.29,
             "unpenalized_rhsi_cells_aoi_wide": 767,
             "unpenalized_rhsi_cells_within_60nm": 614,
@@ -175,7 +129,7 @@
         "thresholds": {
           "tau_0.50": {
             "cells_aoi_wide": 984,
-            "pct_aoi_wide": 48.0,
+            "pct_aoi_wide": 48,
             "area_km2_aoi_wide": 29180.56,
             "cells_within_60nm": 713,
             "pct_within_60nm": 34.8,
@@ -200,7 +154,7 @@
             "pct_aoi_wide": 37.6,
             "area_km2_aoi_wide": 22839.54,
             "cells_within_60nm": 615,
-            "pct_within_60nm": 30.0,
+            "pct_within_60nm": 30,
             "area_km2_within_60nm": 18458.76,
             "unpenalized_rhsi_cells_aoi_wide": 834,
             "unpenalized_rhsi_cells_within_60nm": 662,
@@ -211,7 +165,7 @@
             "pct_aoi_wide": 37.6,
             "area_km2_aoi_wide": 22839.54,
             "cells_within_60nm": 615,
-            "pct_within_60nm": 30.0,
+            "pct_within_60nm": 30,
             "area_km2_within_60nm": 18458.76,
             "unpenalized_rhsi_cells_aoi_wide": 778,
             "unpenalized_rhsi_cells_within_60nm": 619,
@@ -233,7 +187,7 @@
             "pct_aoi_wide": 28.2,
             "area_km2_aoi_wide": 17148.19,
             "cells_within_60nm": 472,
-            "pct_within_60nm": 23.0,
+            "pct_within_60nm": 23,
             "area_km2_within_60nm": 14151.16,
             "unpenalized_rhsi_cells_aoi_wide": 631,
             "unpenalized_rhsi_cells_within_60nm": 507,
@@ -264,7 +218,7 @@
             "pct_aoi_wide": 37.6,
             "area_km2_aoi_wide": 22839.54,
             "cells_within_60nm": 615,
-            "pct_within_60nm": 30.0,
+            "pct_within_60nm": 30,
             "area_km2_within_60nm": 18458.76,
             "unpenalized_rhsi_cells_aoi_wide": 927,
             "unpenalized_rhsi_cells_within_60nm": 701,
@@ -275,7 +229,7 @@
             "pct_aoi_wide": 37.6,
             "area_km2_aoi_wide": 22839.54,
             "cells_within_60nm": 615,
-            "pct_within_60nm": 30.0,
+            "pct_within_60nm": 30,
             "area_km2_within_60nm": 18458.76,
             "unpenalized_rhsi_cells_aoi_wide": 834,
             "unpenalized_rhsi_cells_within_60nm": 662,
@@ -328,7 +282,7 @@
             "pct_aoi_wide": 37.6,
             "area_km2_aoi_wide": 22839.54,
             "cells_within_60nm": 615,
-            "pct_within_60nm": 30.0,
+            "pct_within_60nm": 30,
             "area_km2_within_60nm": 18458.76,
             "unpenalized_rhsi_cells_aoi_wide": 1065,
             "unpenalized_rhsi_cells_within_60nm": 718,
@@ -339,7 +293,7 @@
             "pct_aoi_wide": 37.6,
             "area_km2_aoi_wide": 22839.54,
             "cells_within_60nm": 615,
-            "pct_within_60nm": 30.0,
+            "pct_within_60nm": 30,
             "area_km2_within_60nm": 18458.76,
             "unpenalized_rhsi_cells_aoi_wide": 927,
             "unpenalized_rhsi_cells_within_60nm": 701,
@@ -350,7 +304,7 @@
             "pct_aoi_wide": 37.6,
             "area_km2_aoi_wide": 22839.54,
             "cells_within_60nm": 615,
-            "pct_within_60nm": 30.0,
+            "pct_within_60nm": 30,
             "area_km2_within_60nm": 18458.76,
             "unpenalized_rhsi_cells_aoi_wide": 834,
             "unpenalized_rhsi_cells_within_60nm": 662,
@@ -403,7 +357,7 @@
             "pct_aoi_wide": 37.6,
             "area_km2_aoi_wide": 22839.54,
             "cells_within_60nm": 615,
-            "pct_within_60nm": 30.0,
+            "pct_within_60nm": 30,
             "area_km2_within_60nm": 18458.76,
             "unpenalized_rhsi_cells_aoi_wide": 1065,
             "unpenalized_rhsi_cells_within_60nm": 718,
@@ -414,7 +368,7 @@
             "pct_aoi_wide": 37.6,
             "area_km2_aoi_wide": 22839.54,
             "cells_within_60nm": 615,
-            "pct_within_60nm": 30.0,
+            "pct_within_60nm": 30,
             "area_km2_within_60nm": 18458.76,
             "unpenalized_rhsi_cells_aoi_wide": 927,
             "unpenalized_rhsi_cells_within_60nm": 701,
@@ -455,7 +409,7 @@
           },
           "tau_0.75": {
             "cells_aoi_wide": 390,
-            "pct_aoi_wide": 19.0,
+            "pct_aoi_wide": 19,
             "area_km2_aoi_wide": 11582.68,
             "cells_within_60nm": 331,
             "pct_within_60nm": 16.1,
@@ -499,7 +453,7 @@
           },
           "tau_0.60": {
             "cells_aoi_wide": 1846,
-            "pct_aoi_wide": 90.0,
+            "pct_aoi_wide": 90,
             "area_km2_aoi_wide": 54073.8,
             "cells_within_60nm": 680,
             "pct_within_60nm": 33.2,
@@ -524,7 +478,7 @@
             "pct_aoi_wide": 23.8,
             "area_km2_aoi_wide": 14466.56,
             "cells_within_60nm": 389,
-            "pct_within_60nm": 19.0,
+            "pct_within_60nm": 19,
             "area_km2_within_60nm": 11652.89,
             "unpenalized_rhsi_cells_aoi_wide": 488,
             "unpenalized_rhsi_cells_within_60nm": 389,
@@ -535,7 +489,7 @@
             "pct_aoi_wide": 23.8,
             "area_km2_aoi_wide": 14466.56,
             "cells_within_60nm": 389,
-            "pct_within_60nm": 19.0,
+            "pct_within_60nm": 19,
             "area_km2_within_60nm": 11652.89,
             "unpenalized_rhsi_cells_aoi_wide": 488,
             "unpenalized_rhsi_cells_within_60nm": 389,
@@ -574,10 +528,10 @@
           },
           "tau_0.60": {
             "cells_aoi_wide": 862,
-            "pct_aoi_wide": 42.0,
+            "pct_aoi_wide": 42,
             "area_km2_aoi_wide": 25049.39,
             "cells_within_60nm": 409,
-            "pct_within_60nm": 20.0,
+            "pct_within_60nm": 20,
             "area_km2_within_60nm": 12261.82,
             "unpenalized_rhsi_cells_aoi_wide": 1846,
             "unpenalized_rhsi_cells_within_60nm": 680,
@@ -588,7 +542,7 @@
             "pct_aoi_wide": 23.8,
             "area_km2_aoi_wide": 14466.56,
             "cells_within_60nm": 389,
-            "pct_within_60nm": 19.0,
+            "pct_within_60nm": 19,
             "area_km2_within_60nm": 11652.89,
             "unpenalized_rhsi_cells_aoi_wide": 995,
             "unpenalized_rhsi_cells_within_60nm": 476,
@@ -599,7 +553,7 @@
             "pct_aoi_wide": 23.8,
             "area_km2_aoi_wide": 14466.56,
             "cells_within_60nm": 389,
-            "pct_within_60nm": 19.0,
+            "pct_within_60nm": 19,
             "area_km2_within_60nm": 11652.89,
             "unpenalized_rhsi_cells_aoi_wide": 488,
             "unpenalized_rhsi_cells_within_60nm": 389,
@@ -641,7 +595,7 @@
             "pct_aoi_wide": 41.7,
             "area_km2_aoi_wide": 24741.68,
             "cells_within_60nm": 389,
-            "pct_within_60nm": 19.0,
+            "pct_within_60nm": 19,
             "area_km2_within_60nm": 11652.89,
             "unpenalized_rhsi_cells_aoi_wide": 1905,
             "unpenalized_rhsi_cells_within_60nm": 680,
@@ -652,7 +606,7 @@
             "pct_aoi_wide": 23.8,
             "area_km2_aoi_wide": 14466.56,
             "cells_within_60nm": 389,
-            "pct_within_60nm": 19.0,
+            "pct_within_60nm": 19,
             "area_km2_within_60nm": 11652.89,
             "unpenalized_rhsi_cells_aoi_wide": 1846,
             "unpenalized_rhsi_cells_within_60nm": 680,
@@ -663,7 +617,7 @@
             "pct_aoi_wide": 23.8,
             "area_km2_aoi_wide": 14466.56,
             "cells_within_60nm": 389,
-            "pct_within_60nm": 19.0,
+            "pct_within_60nm": 19,
             "area_km2_within_60nm": 11652.89,
             "unpenalized_rhsi_cells_aoi_wide": 995,
             "unpenalized_rhsi_cells_within_60nm": 476,
@@ -674,7 +628,7 @@
             "pct_aoi_wide": 23.8,
             "area_km2_aoi_wide": 14466.56,
             "cells_within_60nm": 389,
-            "pct_within_60nm": 19.0,
+            "pct_within_60nm": 19,
             "area_km2_within_60nm": 11652.89,
             "unpenalized_rhsi_cells_aoi_wide": 488,
             "unpenalized_rhsi_cells_within_60nm": 389,
@@ -705,7 +659,7 @@
             "pct_aoi_wide": 44.3,
             "area_km2_aoi_wide": 26332.8,
             "cells_within_60nm": 389,
-            "pct_within_60nm": 19.0,
+            "pct_within_60nm": 19,
             "area_km2_within_60nm": 11652.89,
             "unpenalized_rhsi_cells_aoi_wide": 1905,
             "unpenalized_rhsi_cells_within_60nm": 680,
@@ -716,7 +670,7 @@
             "pct_aoi_wide": 23.8,
             "area_km2_aoi_wide": 14466.56,
             "cells_within_60nm": 389,
-            "pct_within_60nm": 19.0,
+            "pct_within_60nm": 19,
             "area_km2_within_60nm": 11652.89,
             "unpenalized_rhsi_cells_aoi_wide": 1905,
             "unpenalized_rhsi_cells_within_60nm": 680,
@@ -727,7 +681,7 @@
             "pct_aoi_wide": 23.8,
             "area_km2_aoi_wide": 14466.56,
             "cells_within_60nm": 389,
-            "pct_within_60nm": 19.0,
+            "pct_within_60nm": 19,
             "area_km2_within_60nm": 11652.89,
             "unpenalized_rhsi_cells_aoi_wide": 1846,
             "unpenalized_rhsi_cells_within_60nm": 680,
@@ -738,7 +692,7 @@
             "pct_aoi_wide": 23.8,
             "area_km2_aoi_wide": 14466.56,
             "cells_within_60nm": 389,
-            "pct_within_60nm": 19.0,
+            "pct_within_60nm": 19,
             "area_km2_within_60nm": 11652.89,
             "unpenalized_rhsi_cells_aoi_wide": 995,
             "unpenalized_rhsi_cells_within_60nm": 476,
@@ -780,7 +734,7 @@
             "pct_aoi_wide": 23.8,
             "area_km2_aoi_wide": 14466.56,
             "cells_within_60nm": 389,
-            "pct_within_60nm": 19.0,
+            "pct_within_60nm": 19,
             "area_km2_within_60nm": 11652.89,
             "unpenalized_rhsi_cells_aoi_wide": 1905,
             "unpenalized_rhsi_cells_within_60nm": 680,
@@ -791,7 +745,7 @@
             "pct_aoi_wide": 23.8,
             "area_km2_aoi_wide": 14466.56,
             "cells_within_60nm": 389,
-            "pct_within_60nm": 19.0,
+            "pct_within_60nm": 19,
             "area_km2_within_60nm": 11652.89,
             "unpenalized_rhsi_cells_aoi_wide": 1905,
             "unpenalized_rhsi_cells_within_60nm": 680,
@@ -802,7 +756,7 @@
             "pct_aoi_wide": 23.8,
             "area_km2_aoi_wide": 14466.56,
             "cells_within_60nm": 389,
-            "pct_within_60nm": 19.0,
+            "pct_within_60nm": 19,
             "area_km2_within_60nm": 11652.89,
             "unpenalized_rhsi_cells_aoi_wide": 1846,
             "unpenalized_rhsi_cells_within_60nm": 680,
@@ -810,7 +764,7 @@
           },
           "tau_0.65": {
             "cells_aoi_wide": 452,
-            "pct_aoi_wide": 22.0,
+            "pct_aoi_wide": 22,
             "area_km2_aoi_wide": 13402.47,
             "cells_within_60nm": 362,
             "pct_within_60nm": 17.7,
@@ -821,7 +775,7 @@
           },
           "tau_0.70": {
             "cells_aoi_wide": 286,
-            "pct_aoi_wide": 14.0,
+            "pct_aoi_wide": 14,
             "area_km2_aoi_wide": 8475.3,
             "cells_within_60nm": 239,
             "pct_within_60nm": 11.7,
@@ -843,383 +797,6 @@
           }
         }
       }
-    },
-    "albakor": {
-      "lambda_0.00": {
-        "mean_weighted_rhsi": 0.2123,
-        "mean_sigma_w": 0.1993,
-        "mean_raw_advisory_score": 0.2123,
-        "min_raw_advisory_score": 0.001,
-        "max_raw_advisory_score": 0.523,
-        "thresholds": {
-          "tau_0.50": {
-            "cells_aoi_wide": 277,
-            "pct_aoi_wide": 13.5,
-            "area_km2_aoi_wide": 8232.98,
-            "cells_within_60nm": 230,
-            "pct_within_60nm": 11.2,
-            "area_km2_within_60nm": 6909.06,
-            "unpenalized_rhsi_cells_aoi_wide": 277,
-            "unpenalized_rhsi_cells_within_60nm": 230,
-            "unpenalized_rhsi_area_km2_within_60nm": 6909.06
-          },
-          "tau_0.55": {
-            "cells_aoi_wide": 0,
-            "pct_aoi_wide": 0.0,
-            "area_km2_aoi_wide": 0,
-            "cells_within_60nm": 0,
-            "pct_within_60nm": 0.0,
-            "area_km2_within_60nm": 0,
-            "unpenalized_rhsi_cells_aoi_wide": 0,
-            "unpenalized_rhsi_cells_within_60nm": 0,
-            "unpenalized_rhsi_area_km2_within_60nm": 0
-          },
-          "tau_0.60": {
-            "cells_aoi_wide": 0,
-            "pct_aoi_wide": 0.0,
-            "area_km2_aoi_wide": 0,
-            "cells_within_60nm": 0,
-            "pct_within_60nm": 0.0,
-            "area_km2_within_60nm": 0,
-            "unpenalized_rhsi_cells_aoi_wide": 0,
-            "unpenalized_rhsi_cells_within_60nm": 0,
-            "unpenalized_rhsi_area_km2_within_60nm": 0
-          },
-          "tau_0.65": {
-            "cells_aoi_wide": 0,
-            "pct_aoi_wide": 0.0,
-            "area_km2_aoi_wide": 0,
-            "cells_within_60nm": 0,
-            "pct_within_60nm": 0.0,
-            "area_km2_within_60nm": 0,
-            "unpenalized_rhsi_cells_aoi_wide": 0,
-            "unpenalized_rhsi_cells_within_60nm": 0,
-            "unpenalized_rhsi_area_km2_within_60nm": 0
-          },
-          "tau_0.70": {
-            "cells_aoi_wide": 0,
-            "pct_aoi_wide": 0.0,
-            "area_km2_aoi_wide": 0,
-            "cells_within_60nm": 0,
-            "pct_within_60nm": 0.0,
-            "area_km2_within_60nm": 0,
-            "unpenalized_rhsi_cells_aoi_wide": 0,
-            "unpenalized_rhsi_cells_within_60nm": 0,
-            "unpenalized_rhsi_area_km2_within_60nm": 0
-          },
-          "tau_0.75": {
-            "cells_aoi_wide": 0,
-            "pct_aoi_wide": 0.0,
-            "area_km2_aoi_wide": 0,
-            "cells_within_60nm": 0,
-            "pct_within_60nm": 0.0,
-            "area_km2_within_60nm": 0,
-            "unpenalized_rhsi_cells_aoi_wide": 0,
-            "unpenalized_rhsi_cells_within_60nm": 0,
-            "unpenalized_rhsi_area_km2_within_60nm": 0
-          }
-        }
-      },
-      "lambda_0.25": {
-        "mean_weighted_rhsi": 0.2123,
-        "mean_sigma_w": 0.1993,
-        "mean_raw_advisory_score": 0.1625,
-        "min_raw_advisory_score": 0.001,
-        "max_raw_advisory_score": 0.4,
-        "thresholds": {
-          "tau_0.50": {
-            "cells_aoi_wide": 0,
-            "pct_aoi_wide": 0.0,
-            "area_km2_aoi_wide": 0,
-            "cells_within_60nm": 0,
-            "pct_within_60nm": 0.0,
-            "area_km2_within_60nm": 0,
-            "unpenalized_rhsi_cells_aoi_wide": 277,
-            "unpenalized_rhsi_cells_within_60nm": 230,
-            "unpenalized_rhsi_area_km2_within_60nm": 6909.06
-          },
-          "tau_0.55": {
-            "cells_aoi_wide": 0,
-            "pct_aoi_wide": 0.0,
-            "area_km2_aoi_wide": 0,
-            "cells_within_60nm": 0,
-            "pct_within_60nm": 0.0,
-            "area_km2_within_60nm": 0,
-            "unpenalized_rhsi_cells_aoi_wide": 0,
-            "unpenalized_rhsi_cells_within_60nm": 0,
-            "unpenalized_rhsi_area_km2_within_60nm": 0
-          },
-          "tau_0.60": {
-            "cells_aoi_wide": 0,
-            "pct_aoi_wide": 0.0,
-            "area_km2_aoi_wide": 0,
-            "cells_within_60nm": 0,
-            "pct_within_60nm": 0.0,
-            "area_km2_within_60nm": 0,
-            "unpenalized_rhsi_cells_aoi_wide": 0,
-            "unpenalized_rhsi_cells_within_60nm": 0,
-            "unpenalized_rhsi_area_km2_within_60nm": 0
-          },
-          "tau_0.65": {
-            "cells_aoi_wide": 0,
-            "pct_aoi_wide": 0.0,
-            "area_km2_aoi_wide": 0,
-            "cells_within_60nm": 0,
-            "pct_within_60nm": 0.0,
-            "area_km2_within_60nm": 0,
-            "unpenalized_rhsi_cells_aoi_wide": 0,
-            "unpenalized_rhsi_cells_within_60nm": 0,
-            "unpenalized_rhsi_area_km2_within_60nm": 0
-          },
-          "tau_0.70": {
-            "cells_aoi_wide": 0,
-            "pct_aoi_wide": 0.0,
-            "area_km2_aoi_wide": 0,
-            "cells_within_60nm": 0,
-            "pct_within_60nm": 0.0,
-            "area_km2_within_60nm": 0,
-            "unpenalized_rhsi_cells_aoi_wide": 0,
-            "unpenalized_rhsi_cells_within_60nm": 0,
-            "unpenalized_rhsi_area_km2_within_60nm": 0
-          },
-          "tau_0.75": {
-            "cells_aoi_wide": 0,
-            "pct_aoi_wide": 0.0,
-            "area_km2_aoi_wide": 0,
-            "cells_within_60nm": 0,
-            "pct_within_60nm": 0.0,
-            "area_km2_within_60nm": 0,
-            "unpenalized_rhsi_cells_aoi_wide": 0,
-            "unpenalized_rhsi_cells_within_60nm": 0,
-            "unpenalized_rhsi_area_km2_within_60nm": 0
-          }
-        }
-      },
-      "lambda_0.50": {
-        "mean_weighted_rhsi": 0.2123,
-        "mean_sigma_w": 0.1993,
-        "mean_raw_advisory_score": 0.1126,
-        "min_raw_advisory_score": 0.001,
-        "max_raw_advisory_score": 0.277,
-        "thresholds": {
-          "tau_0.50": {
-            "cells_aoi_wide": 0,
-            "pct_aoi_wide": 0.0,
-            "area_km2_aoi_wide": 0,
-            "cells_within_60nm": 0,
-            "pct_within_60nm": 0.0,
-            "area_km2_within_60nm": 0,
-            "unpenalized_rhsi_cells_aoi_wide": 277,
-            "unpenalized_rhsi_cells_within_60nm": 230,
-            "unpenalized_rhsi_area_km2_within_60nm": 6909.06
-          },
-          "tau_0.55": {
-            "cells_aoi_wide": 0,
-            "pct_aoi_wide": 0.0,
-            "area_km2_aoi_wide": 0,
-            "cells_within_60nm": 0,
-            "pct_within_60nm": 0.0,
-            "area_km2_within_60nm": 0,
-            "unpenalized_rhsi_cells_aoi_wide": 0,
-            "unpenalized_rhsi_cells_within_60nm": 0,
-            "unpenalized_rhsi_area_km2_within_60nm": 0
-          },
-          "tau_0.60": {
-            "cells_aoi_wide": 0,
-            "pct_aoi_wide": 0.0,
-            "area_km2_aoi_wide": 0,
-            "cells_within_60nm": 0,
-            "pct_within_60nm": 0.0,
-            "area_km2_within_60nm": 0,
-            "unpenalized_rhsi_cells_aoi_wide": 0,
-            "unpenalized_rhsi_cells_within_60nm": 0,
-            "unpenalized_rhsi_area_km2_within_60nm": 0
-          },
-          "tau_0.65": {
-            "cells_aoi_wide": 0,
-            "pct_aoi_wide": 0.0,
-            "area_km2_aoi_wide": 0,
-            "cells_within_60nm": 0,
-            "pct_within_60nm": 0.0,
-            "area_km2_within_60nm": 0,
-            "unpenalized_rhsi_cells_aoi_wide": 0,
-            "unpenalized_rhsi_cells_within_60nm": 0,
-            "unpenalized_rhsi_area_km2_within_60nm": 0
-          },
-          "tau_0.70": {
-            "cells_aoi_wide": 0,
-            "pct_aoi_wide": 0.0,
-            "area_km2_aoi_wide": 0,
-            "cells_within_60nm": 0,
-            "pct_within_60nm": 0.0,
-            "area_km2_within_60nm": 0,
-            "unpenalized_rhsi_cells_aoi_wide": 0,
-            "unpenalized_rhsi_cells_within_60nm": 0,
-            "unpenalized_rhsi_area_km2_within_60nm": 0
-          },
-          "tau_0.75": {
-            "cells_aoi_wide": 0,
-            "pct_aoi_wide": 0.0,
-            "area_km2_aoi_wide": 0,
-            "cells_within_60nm": 0,
-            "pct_within_60nm": 0.0,
-            "area_km2_within_60nm": 0,
-            "unpenalized_rhsi_cells_aoi_wide": 0,
-            "unpenalized_rhsi_cells_within_60nm": 0,
-            "unpenalized_rhsi_area_km2_within_60nm": 0
-          }
-        }
-      },
-      "lambda_0.75": {
-        "mean_weighted_rhsi": 0.2123,
-        "mean_sigma_w": 0.1993,
-        "mean_raw_advisory_score": 0.0628,
-        "min_raw_advisory_score": 0.0,
-        "max_raw_advisory_score": 0.153,
-        "thresholds": {
-          "tau_0.50": {
-            "cells_aoi_wide": 0,
-            "pct_aoi_wide": 0.0,
-            "area_km2_aoi_wide": 0,
-            "cells_within_60nm": 0,
-            "pct_within_60nm": 0.0,
-            "area_km2_within_60nm": 0,
-            "unpenalized_rhsi_cells_aoi_wide": 277,
-            "unpenalized_rhsi_cells_within_60nm": 230,
-            "unpenalized_rhsi_area_km2_within_60nm": 6909.06
-          },
-          "tau_0.55": {
-            "cells_aoi_wide": 0,
-            "pct_aoi_wide": 0.0,
-            "area_km2_aoi_wide": 0,
-            "cells_within_60nm": 0,
-            "pct_within_60nm": 0.0,
-            "area_km2_within_60nm": 0,
-            "unpenalized_rhsi_cells_aoi_wide": 0,
-            "unpenalized_rhsi_cells_within_60nm": 0,
-            "unpenalized_rhsi_area_km2_within_60nm": 0
-          },
-          "tau_0.60": {
-            "cells_aoi_wide": 0,
-            "pct_aoi_wide": 0.0,
-            "area_km2_aoi_wide": 0,
-            "cells_within_60nm": 0,
-            "pct_within_60nm": 0.0,
-            "area_km2_within_60nm": 0,
-            "unpenalized_rhsi_cells_aoi_wide": 0,
-            "unpenalized_rhsi_cells_within_60nm": 0,
-            "unpenalized_rhsi_area_km2_within_60nm": 0
-          },
-          "tau_0.65": {
-            "cells_aoi_wide": 0,
-            "pct_aoi_wide": 0.0,
-            "area_km2_aoi_wide": 0,
-            "cells_within_60nm": 0,
-            "pct_within_60nm": 0.0,
-            "area_km2_within_60nm": 0,
-            "unpenalized_rhsi_cells_aoi_wide": 0,
-            "unpenalized_rhsi_cells_within_60nm": 0,
-            "unpenalized_rhsi_area_km2_within_60nm": 0
-          },
-          "tau_0.70": {
-            "cells_aoi_wide": 0,
-            "pct_aoi_wide": 0.0,
-            "area_km2_aoi_wide": 0,
-            "cells_within_60nm": 0,
-            "pct_within_60nm": 0.0,
-            "area_km2_within_60nm": 0,
-            "unpenalized_rhsi_cells_aoi_wide": 0,
-            "unpenalized_rhsi_cells_within_60nm": 0,
-            "unpenalized_rhsi_area_km2_within_60nm": 0
-          },
-          "tau_0.75": {
-            "cells_aoi_wide": 0,
-            "pct_aoi_wide": 0.0,
-            "area_km2_aoi_wide": 0,
-            "cells_within_60nm": 0,
-            "pct_within_60nm": 0.0,
-            "area_km2_within_60nm": 0,
-            "unpenalized_rhsi_cells_aoi_wide": 0,
-            "unpenalized_rhsi_cells_within_60nm": 0,
-            "unpenalized_rhsi_area_km2_within_60nm": 0
-          }
-        }
-      },
-      "lambda_1.00": {
-        "mean_weighted_rhsi": 0.2123,
-        "mean_sigma_w": 0.1993,
-        "mean_raw_advisory_score": 0.0129,
-        "min_raw_advisory_score": -0.0,
-        "max_raw_advisory_score": 0.03,
-        "thresholds": {
-          "tau_0.50": {
-            "cells_aoi_wide": 0,
-            "pct_aoi_wide": 0.0,
-            "area_km2_aoi_wide": 0,
-            "cells_within_60nm": 0,
-            "pct_within_60nm": 0.0,
-            "area_km2_within_60nm": 0,
-            "unpenalized_rhsi_cells_aoi_wide": 277,
-            "unpenalized_rhsi_cells_within_60nm": 230,
-            "unpenalized_rhsi_area_km2_within_60nm": 6909.06
-          },
-          "tau_0.55": {
-            "cells_aoi_wide": 0,
-            "pct_aoi_wide": 0.0,
-            "area_km2_aoi_wide": 0,
-            "cells_within_60nm": 0,
-            "pct_within_60nm": 0.0,
-            "area_km2_within_60nm": 0,
-            "unpenalized_rhsi_cells_aoi_wide": 0,
-            "unpenalized_rhsi_cells_within_60nm": 0,
-            "unpenalized_rhsi_area_km2_within_60nm": 0
-          },
-          "tau_0.60": {
-            "cells_aoi_wide": 0,
-            "pct_aoi_wide": 0.0,
-            "area_km2_aoi_wide": 0,
-            "cells_within_60nm": 0,
-            "pct_within_60nm": 0.0,
-            "area_km2_within_60nm": 0,
-            "unpenalized_rhsi_cells_aoi_wide": 0,
-            "unpenalized_rhsi_cells_within_60nm": 0,
-            "unpenalized_rhsi_area_km2_within_60nm": 0
-          },
-          "tau_0.65": {
-            "cells_aoi_wide": 0,
-            "pct_aoi_wide": 0.0,
-            "area_km2_aoi_wide": 0,
-            "cells_within_60nm": 0,
-            "pct_within_60nm": 0.0,
-            "area_km2_within_60nm": 0,
-            "unpenalized_rhsi_cells_aoi_wide": 0,
-            "unpenalized_rhsi_cells_within_60nm": 0,
-            "unpenalized_rhsi_area_km2_within_60nm": 0
-          },
-          "tau_0.70": {
-            "cells_aoi_wide": 0,
-            "pct_aoi_wide": 0.0,
-            "area_km2_aoi_wide": 0,
-            "cells_within_60nm": 0,
-            "pct_within_60nm": 0.0,
-            "area_km2_within_60nm": 0,
-            "unpenalized_rhsi_cells_aoi_wide": 0,
-            "unpenalized_rhsi_cells_within_60nm": 0,
-            "unpenalized_rhsi_area_km2_within_60nm": 0
-          },
-          "tau_0.75": {
-            "cells_aoi_wide": 0,
-            "pct_aoi_wide": 0.0,
-            "area_km2_aoi_wide": 0,
-            "cells_within_60nm": 0,
-            "pct_within_60nm": 0.0,
-            "area_km2_within_60nm": 0,
-            "unpenalized_rhsi_cells_aoi_wide": 0,
-            "unpenalized_rhsi_cells_within_60nm": 0,
-            "unpenalized_rhsi_area_km2_within_60nm": 0
-          }
-        }
-      }
     }
   },
   "weight_scheme_comparison": {
@@ -1230,7 +807,7 @@
           "rf": 0.355,
           "glm": 0.325
         },
-        "weights_sum": 1.0,
+        "weights_sum": 1,
         "reference_threshold_tau": 0.65,
         "mean_weighted_rhsi": 0.6238,
         "mean_sigma_w": 0.1601,
@@ -1249,7 +826,7 @@
           "rf": 0.403,
           "glm": 0.271
         },
-        "weights_sum": 1.0,
+        "weights_sum": 1,
         "reference_threshold_tau": 0.65,
         "mean_weighted_rhsi": 0.6152,
         "mean_sigma_w": 0.1557,
@@ -1268,7 +845,7 @@
           "rf": 0.334,
           "glm": 0.333
         },
-        "weights_sum": 1.0,
+        "weights_sum": 1,
         "reference_threshold_tau": 0.65,
         "mean_weighted_rhsi": 0.6259,
         "mean_sigma_w": 0.1611,
@@ -1277,7 +854,7 @@
         "pfg_zone_area_km2_within_60nm_by_rhsi": 18732.93,
         "pfg_zone_cells_aoi_wide_by_rhsi": 784,
         "pfg_cells_within_60nm": 607,
-        "pfg_area_km2_within_60nm": 18215.0,
+        "pfg_area_km2_within_60nm": 18215,
         "penalized_advisory_cells_within_60nm_tau_075": 417,
         "penalized_advisory_area_km2_within_60nm_tau_075": 12493.96
       },
@@ -1287,7 +864,7 @@
           "rf": 0.334,
           "glm": 0.333
         },
-        "weights_sum": 1.0,
+        "weights_sum": 1,
         "reference_threshold_tau": 0.65,
         "mean_weighted_rhsi": 0.6259,
         "mean_sigma_w": 0.1611,
@@ -1296,7 +873,7 @@
         "pfg_zone_area_km2_within_60nm_by_rhsi": 18732.93,
         "pfg_zone_cells_aoi_wide_by_rhsi": 784,
         "pfg_cells_within_60nm": 607,
-        "pfg_area_km2_within_60nm": 18215.0,
+        "pfg_area_km2_within_60nm": 18215,
         "penalized_advisory_cells_within_60nm_tau_075": 417,
         "penalized_advisory_area_km2_within_60nm_tau_075": 12493.96
       },
@@ -1306,7 +883,7 @@
           "rf": 0.25,
           "glm": 0.25
         },
-        "weights_sum": 1.0,
+        "weights_sum": 1,
         "reference_threshold_tau": 0.65,
         "mean_weighted_rhsi": 0.6221,
         "mean_sigma_w": 0.1559,
@@ -1325,7 +902,7 @@
           "rf": 0.355,
           "glm": 0.325
         },
-        "weights_sum": 1.0,
+        "weights_sum": 1,
         "reference_threshold_tau": 0.65,
         "mean_weighted_rhsi": 0.6238,
         "mean_sigma_w": 0.1601,
@@ -1346,7 +923,7 @@
           "rf": 0.365,
           "glm": 0.34
         },
-        "weights_sum": 1.0,
+        "weights_sum": 1,
         "reference_threshold_tau": 0.65,
         "mean_weighted_rhsi": 0.6807,
         "mean_sigma_w": 0.1972,
@@ -1365,7 +942,7 @@
           "rf": 0.447,
           "glm": 0.315
         },
-        "weights_sum": 1.0,
+        "weights_sum": 1,
         "reference_threshold_tau": 0.65,
         "mean_weighted_rhsi": 0.6505,
         "mean_sigma_w": 0.1966,
@@ -1384,7 +961,7 @@
           "rf": 0.334,
           "glm": 0.333
         },
-        "weights_sum": 1.0,
+        "weights_sum": 1,
         "reference_threshold_tau": 0.65,
         "mean_weighted_rhsi": 0.6954,
         "mean_sigma_w": 0.1976,
@@ -1403,7 +980,7 @@
           "rf": 0.334,
           "glm": 0.333
         },
-        "weights_sum": 1.0,
+        "weights_sum": 1,
         "reference_threshold_tau": 0.65,
         "mean_weighted_rhsi": 0.6954,
         "mean_sigma_w": 0.1976,
@@ -1422,7 +999,7 @@
           "rf": 0.25,
           "glm": 0.25
         },
-        "weights_sum": 1.0,
+        "weights_sum": 1,
         "reference_threshold_tau": 0.65,
         "mean_weighted_rhsi": 0.7483,
         "mean_sigma_w": 0.1947,
@@ -1441,7 +1018,7 @@
           "rf": 0.365,
           "glm": 0.34
         },
-        "weights_sum": 1.0,
+        "weights_sum": 1,
         "reference_threshold_tau": 0.65,
         "mean_weighted_rhsi": 0.6807,
         "mean_sigma_w": 0.1972,
@@ -1453,122 +1030,6 @@
         "pfg_area_km2_within_60nm": 11652.89,
         "penalized_advisory_cells_within_60nm_tau_075": 269,
         "penalized_advisory_area_km2_within_60nm_tau_075": 8049.16
-      }
-    },
-    "albakor": {
-      "canonical_provisional_weights": {
-        "weights": {
-          "maxent": 0.0,
-          "rf": 0.517,
-          "glm": 0.483
-        },
-        "weights_sum": 1.0,
-        "reference_threshold_tau": 0.5,
-        "mean_weighted_rhsi": 0.2123,
-        "mean_sigma_w": 0.1993,
-        "mean_raw_advisory_score": 0.1126,
-        "pfg_zone_cells_within_60nm_by_rhsi": 230,
-        "pfg_zone_area_km2_within_60nm_by_rhsi": 6909.06,
-        "pfg_zone_cells_aoi_wide_by_rhsi": 277,
-        "pfg_cells_within_60nm": 0,
-        "pfg_area_km2_within_60nm": 0,
-        "penalized_advisory_cells_within_60nm_tau_075": 0,
-        "penalized_advisory_area_km2_within_60nm_tau_075": 0
-      },
-      "legacy_phase3_squared_auc_weights": {
-        "weights": {
-          "maxent": 0.0,
-          "rf": 0.554,
-          "glm": 0.446
-        },
-        "weights_sum": 1.0,
-        "reference_threshold_tau": 0.5,
-        "mean_weighted_rhsi": 0.227,
-        "mean_sigma_w": 0.1983,
-        "mean_raw_advisory_score": 0.1278,
-        "pfg_zone_cells_within_60nm_by_rhsi": 230,
-        "pfg_zone_area_km2_within_60nm_by_rhsi": 6909.06,
-        "pfg_zone_cells_aoi_wide_by_rhsi": 277,
-        "pfg_cells_within_60nm": 0,
-        "pfg_area_km2_within_60nm": 0,
-        "penalized_advisory_cells_within_60nm_tau_075": 0,
-        "penalized_advisory_area_km2_within_60nm_tau_075": 0
-      },
-      "equal_active_weights": {
-        "weights": {
-          "maxent": 0.0,
-          "rf": 0.5,
-          "glm": 0.5
-        },
-        "weights_sum": 1.0,
-        "reference_threshold_tau": 0.5,
-        "mean_weighted_rhsi": 0.2054,
-        "mean_sigma_w": 0.1994,
-        "mean_raw_advisory_score": 0.1058,
-        "pfg_zone_cells_within_60nm_by_rhsi": 230,
-        "pfg_zone_area_km2_within_60nm_by_rhsi": 6909.06,
-        "pfg_zone_cells_aoi_wide_by_rhsi": 277,
-        "pfg_cells_within_60nm": 0,
-        "pfg_area_km2_within_60nm": 0,
-        "penalized_advisory_cells_within_60nm_tau_075": 0,
-        "penalized_advisory_area_km2_within_60nm_tau_075": 0
-      },
-      "equal_all_three_weights": {
-        "weights": {
-          "maxent": 0.333,
-          "rf": 0.334,
-          "glm": 0.333
-        },
-        "weights_sum": 1.0,
-        "reference_threshold_tau": 0.5,
-        "mean_weighted_rhsi": 0.2918,
-        "mean_sigma_w": 0.2427,
-        "mean_raw_advisory_score": 0.1704,
-        "pfg_zone_cells_within_60nm_by_rhsi": 461,
-        "pfg_zone_area_km2_within_60nm_by_rhsi": 13838.08,
-        "pfg_zone_cells_aoi_wide_by_rhsi": 553,
-        "pfg_cells_within_60nm": 0,
-        "pfg_area_km2_within_60nm": 0,
-        "penalized_advisory_cells_within_60nm_tau_075": 0,
-        "penalized_advisory_area_km2_within_60nm_tau_075": 0
-      },
-      "niche_dominant_weights": {
-        "weights": {
-          "maxent": 0.2,
-          "rf": 0.4,
-          "glm": 0.4
-        },
-        "weights_sum": 1.0,
-        "reference_threshold_tau": 0.5,
-        "mean_weighted_rhsi": 0.2572,
-        "mean_sigma_w": 0.2378,
-        "mean_raw_advisory_score": 0.1384,
-        "pfg_zone_cells_within_60nm_by_rhsi": 241,
-        "pfg_zone_area_km2_within_60nm_by_rhsi": 7243.68,
-        "pfg_zone_cells_aoi_wide_by_rhsi": 297,
-        "pfg_cells_within_60nm": 0,
-        "pfg_area_km2_within_60nm": 0,
-        "penalized_advisory_cells_within_60nm_tau_075": 0,
-        "penalized_advisory_area_km2_within_60nm_tau_075": 0
-      },
-      "baseline_auc_weights": {
-        "weights": {
-          "maxent": 0.0,
-          "rf": 0.517,
-          "glm": 0.483
-        },
-        "weights_sum": 1.0,
-        "reference_threshold_tau": 0.5,
-        "mean_weighted_rhsi": 0.2123,
-        "mean_sigma_w": 0.1993,
-        "mean_raw_advisory_score": 0.1126,
-        "pfg_zone_cells_within_60nm_by_rhsi": 230,
-        "pfg_zone_area_km2_within_60nm_by_rhsi": 6909.06,
-        "pfg_zone_cells_aoi_wide_by_rhsi": 277,
-        "pfg_cells_within_60nm": 0,
-        "pfg_area_km2_within_60nm": 0,
-        "penalized_advisory_cells_within_60nm_tau_075": 0,
-        "penalized_advisory_area_km2_within_60nm_tau_075": 0
       }
     }
   },
@@ -1593,16 +1054,6 @@
         "pfg_zone_area_km2_within_60nm": 14299.85,
         "penalized_advisory_cells_within_60nm": 389,
         "penalized_advisory_area_km2_within_60nm": 11652.89
-      },
-      "albakor": {
-        "mean_weighted_rhsi": 0.212,
-        "mean_disagreement_sigma_w": 0.199,
-        "mean_raw_advisory_score": 0.113,
-        "high_suitability_cells_aoi_wide": 0,
-        "pfg_zone_cells_within_60nm": 230,
-        "pfg_zone_area_km2_within_60nm": 6909.06,
-        "penalized_advisory_cells_within_60nm": 0,
-        "penalized_advisory_area_km2_within_60nm": 0
       }
     },
     "west_monsoon_djf": {
@@ -1620,16 +1071,6 @@
         "mean_weighted_rhsi": 0.179,
         "mean_disagreement_sigma_w": 0.186,
         "mean_raw_advisory_score": 0.086,
-        "high_suitability_cells_aoi_wide": 0,
-        "pfg_zone_cells_within_60nm": 0,
-        "pfg_zone_area_km2_within_60nm": 0,
-        "penalized_advisory_cells_within_60nm": 0,
-        "penalized_advisory_area_km2_within_60nm": 0
-      },
-      "albakor": {
-        "mean_weighted_rhsi": 0.014,
-        "mean_disagreement_sigma_w": 0.013,
-        "mean_raw_advisory_score": 0.007,
         "high_suitability_cells_aoi_wide": 0,
         "pfg_zone_cells_within_60nm": 0,
         "pfg_zone_area_km2_within_60nm": 0,
@@ -1657,16 +1098,6 @@
         "pfg_zone_area_km2_within_60nm": 11458.98,
         "penalized_advisory_cells_within_60nm": 72,
         "penalized_advisory_area_km2_within_60nm": 2145.23
-      },
-      "albakor": {
-        "mean_weighted_rhsi": 0.105,
-        "mean_disagreement_sigma_w": 0.101,
-        "mean_raw_advisory_score": 0.054,
-        "high_suitability_cells_aoi_wide": 0,
-        "pfg_zone_cells_within_60nm": 0,
-        "pfg_zone_area_km2_within_60nm": 0,
-        "penalized_advisory_cells_within_60nm": 0,
-        "penalized_advisory_area_km2_within_60nm": 0
       }
     },
     "transition_2_son": {
@@ -1689,16 +1120,6 @@
         "pfg_zone_area_km2_within_60nm": 14014.04,
         "penalized_advisory_cells_within_60nm": 323,
         "penalized_advisory_area_km2_within_60nm": 9679.58
-      },
-      "albakor": {
-        "mean_weighted_rhsi": 0.122,
-        "mean_disagreement_sigma_w": 0.117,
-        "mean_raw_advisory_score": 0.063,
-        "high_suitability_cells_aoi_wide": 0,
-        "pfg_zone_cells_within_60nm": 0,
-        "pfg_zone_area_km2_within_60nm": 0,
-        "penalized_advisory_cells_within_60nm": 0,
-        "penalized_advisory_area_km2_within_60nm": 0
       }
     },
     "super_positive_iod_2019": {
@@ -1721,16 +1142,6 @@
         "pfg_zone_area_km2_within_60nm": 20586.86,
         "penalized_advisory_cells_within_60nm": 77,
         "penalized_advisory_area_km2_within_60nm": 2310.76
-      },
-      "albakor": {
-        "mean_weighted_rhsi": 0.256,
-        "mean_disagreement_sigma_w": 0.225,
-        "mean_raw_advisory_score": 0.143,
-        "high_suitability_cells_aoi_wide": 0,
-        "pfg_zone_cells_within_60nm": 240,
-        "pfg_zone_area_km2_within_60nm": 7198.09,
-        "penalized_advisory_cells_within_60nm": 0,
-        "penalized_advisory_area_km2_within_60nm": 0
       }
     },
     "negative_iod_2016": {
@@ -1753,17 +1164,13 @@
         "pfg_zone_area_km2_within_60nm": 12082.4,
         "penalized_advisory_cells_within_60nm": 59,
         "penalized_advisory_area_km2_within_60nm": 1749.55
-      },
-      "albakor": {
-        "mean_weighted_rhsi": 0.101,
-        "mean_disagreement_sigma_w": 0.098,
-        "mean_raw_advisory_score": 0.053,
-        "high_suitability_cells_aoi_wide": 0,
-        "pfg_zone_cells_within_60nm": 0,
-        "pfg_zone_area_km2_within_60nm": 0,
-        "penalized_advisory_cells_within_60nm": 0,
-        "penalized_advisory_area_km2_within_60nm": 0
       }
+    }
+  },
+  "tct_rule_based_species": {
+    "tongkol_krai": {
+      "scientific_name": "Auxis thazard",
+      "status": "RULE_BASED_SCIENTIFIC_SCREENING"
     }
   }
 }

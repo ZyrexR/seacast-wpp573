@@ -28,8 +28,8 @@
   5. Batas resmi geospasial WPPNRI 573 dari Badan Informasi Geospasial (BIG).
 - **Spesies Target Utama:** 
   1. Cakalang (*Katsuwonus pelamis*)
-  2. Madidihang / Yellowfin Tuna (*Thunnus albacares*)
-  3. Albakor / Albacore Tuna (*Thunnus alalunga*)
+  2. Tuna Sirip Kuning / Yellowfin Tuna (*Thunnus albacares*)
+  3. Tongkol Krai / Frigate Tuna (*Auxis thazard*)
 
 ---
 
@@ -94,12 +94,12 @@ Sistem menyediakan antarmuka pemilih pangkalan (*Hub Selector*) interaktif pada 
 | Spesies Target | Nama Ilmiah | Karakteristik Ekologis & Oseanografi | Peran dalam Sistem |
 | :--- | :--- | :--- | :--- |
 | **Cakalang** | *Katsuwonus pelamis* | Epipelagis, suhu optimum $28,0 - 30,0^\circ\text{C}$, klorofil-a tinggi ($0,2 - 0,5\text{ mg/m}^3$), agregasi tinggi pada front termal upwelling. | Target utama armada Purse Seine & Pancing Ulur Prigi-Cilacap. |
-| **Madidihang** | *Thunnus albacares* | Epipelagis–Mesopelagis, toleransi termal $22,0 - 28,0^\circ\text{C}$, beruaya vertikal mengikuti termoklin dan lapisan oksigen minimum. | Target bernilai ekspor tinggi; indikator interaksi bycatch Z5. |
-| **Albakor** | *Thunnus alalunga* | Oseanotropis–subtropis, menyukai massa air lebih dingin ($17,0 - 22,0^\circ\text{C}$) di perairan dalam dan zona transisi selatan. | Target armada rawai tuna (*longline*) perairan lepas pantai dalam. |
+| **Tuna Sirip Kuning** | *Thunnus albacares* | Epipelagis–Mesopelagis, toleransi termal $22,0 - 28,0^\circ\text{C}$, beruaya vertikal mengikuti termoklin dan lapisan oksigen minimum. | Target bernilai ekspor tinggi; indikator interaksi bycatch Z5. |
+| **Tongkol Krai** | *Auxis thazard* | Neritik tropis, respons kuat pada SST sekitar $27,0 - 30,0^\circ\text{C}$, Chl-a $0,20 - 0,60\text{ mg/m}^3$, dan kedalaman dangkal hingga $150\text{ m}$. | Komoditas pesisir TCT; dipantau melalui screening rule-based yang transparan. |
 
 ---
 
-## 6. PEMODELAN ENSEMBLE MACHINE LEARNING & INTEGRITAS ILMIAH
+## 6. PEMODELAN ENSEMBLE TCT & INTEGRITAS ILMIAH
 
 ### 6.1 Vektor 10 Fitur Prediktor Lingkungan
 $$\mathbf{X} = [\text{sst}, \nabla\text{SST}, \text{front}, \text{chla}, u_{\text{curr}}, U_{10}, \tau_{\text{wind}}, w_e, \text{depth}, \text{dist}_{\text{port}}]$$
@@ -108,12 +108,11 @@ $$\mathbf{X} = [\text{sst}, \nabla\text{SST}, \text{front}, \text{chla}, u_{\tex
 $$HSI = w_1 \cdot P_{\text{MaxEnt}} + w_2 \cdot P_{\text{RF}} + w_3 \cdot P_{\text{GLM}}$$
 
 - **Cakalang:** $\text{MaxEnt}(0.320) + \text{RF}(0.355) + \text{GLM}(0.325) \implies \text{AUC } 0,795$
-- **Madidihang:** $\text{MaxEnt}(0.295) + \text{RF}(0.365) + \text{GLM}(0.340) \implies \text{AUC } 0,784$
-- **Albakor:** $\text{MaxEnt}(0.000) + \text{RF}(0.517) + \text{GLM}(0.483) \implies \text{AUC } 0,860$
-  *(MaxEnt Albakor dinolkan mutlak karena karakteristik sebaran sub-tropis dalam).*
+- **Tuna Sirip Kuning:** $\text{MaxEnt}(0.295) + \text{RF}(0.365) + \text{GLM}(0.340) \implies \text{AUC } 0,784$
+- **Tongkol Krai:** $HSI = 0,45\cdot SI_{SST} + 0,40\cdot SI_{Chl-a} + 0,15\cdot SI_{depth}$ dengan status `RULE_BASED_SCIENTIFIC_SCREENING`.
 
 ### 6.3 Integritas Ilmiah (Scientific Reality Check)
-- Seluruh model dieksekusi secara mandiri (*self-contained local inference*) melalui artefak `.joblib` tanpa bergantung pada Google Colab pada runtime produksi.
+- Model Cakalang dan Tuna Sirip Kuning dieksekusi secara mandiri melalui artefak `.joblib`; Tongkol Krai memakai aturan ilmiah transparan tanpa artefak model terlatih.
 - Nilai HSI merepresentasikan derajat kesesuaian relung lingkungan biofisik (*relative environmental suitability*), bukan estimasi mutlak biomassa ikan di laut.
 
 ---
@@ -151,7 +150,7 @@ graph TD
     subgraph ScientificTier["Scientific Computing & Telemetry Tier"]
         GeeExtract["scripts/gee_daily_extractor.py (11.3s, Partitioned Grid)"]
         GeeTrans["scripts/gee_pipeline_transformer.py"]
-        MLModels["Ensemble SDM .joblib (Cakalang, Madidihang, Albakor)"]
+        MLModels["Ensemble SDM .joblib (Cakalang + Tuna Sirip Kuning)<br/>Tongkol Krai rule-based"]
     end
 
     subgraph StorageTier["Data Tier"]

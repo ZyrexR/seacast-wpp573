@@ -33,7 +33,6 @@ c:\Users\ThinkPad\.gemini\antigravity\scratch\prigi-pelagis\
 │   ├── py/                     # Skrip otomatisasi GEE via Python API
 │   └── spatial_reconstruction/ # Skrip audit dan rekonstruksi grid WPP 573
 ├── models/                     # Artefak model terlatih (.joblib) dan scaler
-│   ├── albakor_ensemble_model.joblib   (2.55 MB)
 │   ├── cakalang_ensemble_model.joblib  (3.79 MB)
 │   ├── madidihang_ensemble_model.joblib (3.45 MB)
 │   ├── scaler_oceanographic.joblib     (855 bytes)
@@ -62,7 +61,7 @@ c:\Users\ThinkPad\.gemini\antigravity\scratch\prigi-pelagis\
 ### 2.1 File `data/master.csv` (132 Bulan PPN Prigi)
 - **Rentang Waktu:** 1 Januari 2015 – 1 Desember 2025 (132 bulan observasi kontinu).
 - **Jumlah Baris:** 133 baris (1 header + 132 record bulanan).
-- **Jumlah Kolom:** 36 variabel (produksi pelagis, cakalang, madidihang, albakor, trip kapal, CPUE, anomali iklim).
+- **Jumlah Kolom:** 35 variabel setelah penghapusan field legacy (produksi pelagis, cakalang, madidihang, tongkol_krai, trip kapal, CPUE, anomali iklim).
 - **Status:** **VERIFIED IN POSTGIS (`prigi_port_landings`)**.
 
 ### 2.2 Dataset Pendaratan PPS Cilacap (`pps_cilacap_landings`)
@@ -111,9 +110,9 @@ c:\Users\ThinkPad\.gemini\antigravity\scratch\prigi-pelagis\
    - Bobot: `maxent: 0.320`, `rf: 0.355`, `glm: 0.325`. Skor AUC: 0,795.
 2. **`madidihang_ensemble_model.joblib` (3.453.645 bytes):**
    - Bobot: `maxent: 0.295`, `rf: 0.365`, `glm: 0.340`. Skor AUC: 0,784.
-3. **`albakor_ensemble_model.joblib` (2.552.045 bytes):**
-   - Bobot: `maxent: 0.000`, `rf: 0.517`, `glm: 0.483`. Skor AUC: 0,860.
-   - MaxEnt bernilai 0.000 karena karakteristik persebaran termoklin.
+3. **Tongkol Krai Rule-Based Scientific Screening:**
+   - Formula: `0.45 * SI_SST + 0.40 * SI_Chl-a + 0.15 * SI_depth`.
+   - Tidak menghasilkan atau memerlukan artefak `.joblib`.
 4. **`scaler_oceanographic.joblib` (855 bytes):**
    - StandardScaler 10 variabel biofisik.
 5. **Execution Mode:** 100% self-contained local inference via `joblib.load()`. Zero dependency on Google Colab.
@@ -142,7 +141,7 @@ erDiagram
         varchar(32) cell_id PK
         float hsi_cakalang
         float hsi_madidihang
-        float hsi_albakor
+        float hsi_tongkol
         boolean is_hotspot
         varchar(32) dom_zone
         varchar(16) bycatch_traffic_light

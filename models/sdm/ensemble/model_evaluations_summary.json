@@ -32,9 +32,9 @@
       "status": "EXPLORATORY_HEURISTIC_SCREENING (Proxy Discrimination Only; Not Biological Validation)",
       "disagreement_formula": "sigma_w = sqrt(sum_i w_i * (RHSI_i - weighted_mean_rhsi)^2)",
       "advisory_formula": "raw_advisory_score = weighted_mean_rhsi - lambda * sigma_w (baseline lambda = 0.5)",
-      "weights_sum": 1.0,
+      "weights_sum": 1,
       "weight_provenance_status": "PROVISIONAL_ANALYST_SELECTED_WEIGHTS",
-      "weight_provenance_explanation": "Balanced linear proxy-skill weights across active heuristic response equations (Albakor Component 1 zeroed because circular proxy AUC = 0.507 <= 0.51). Labeled PROVISIONAL_ANALYST_SELECTED_WEIGHTS because underlying AUCs are evaluated against deterministic environmental proxy points rather than independent empirical field catch coordinates.",
+      "weight_provenance_explanation": "Balanced linear proxy-skill weights across active heuristic response equations (TCT rule-based Component 1 zeroed because circular proxy AUC = 0.507 <= 0.51). Labeled PROVISIONAL_ANALYST_SELECTED_WEIGHTS because underlying AUCs are evaluated against deterministic environmental proxy points rather than independent empirical field catch coordinates.",
       "legacy_phase3_squared_auc_weights": {
         "maxent": 0.326,
         "rf": 0.403,
@@ -54,7 +54,7 @@
     "methodological_caveat": "Component scores are evaluated via analytical heuristic response equations (Gaussian-Sigmoid Niche, Rule-Based Step Function, Polynomial Logistic) against deterministic presence-proxy points. No statistical machine learning fitting or spatial cross-validation was executed in code."
   },
   "madidihang": {
-    "species_name": "Madidihang (Thunnus albacares)",
+    "species_name": "Tuna Sirip Kuning (Thunnus albacares)",
     "presence_points_count": 387,
     "background_points_count": 1000,
     "individual_models": {
@@ -86,9 +86,9 @@
       "status": "EXPLORATORY_HEURISTIC_SCREENING (Proxy Discrimination Only; Not Biological Validation)",
       "disagreement_formula": "sigma_w = sqrt(sum_i w_i * (RHSI_i - weighted_mean_rhsi)^2)",
       "advisory_formula": "raw_advisory_score = weighted_mean_rhsi - lambda * sigma_w (baseline lambda = 0.5)",
-      "weights_sum": 1.0,
+      "weights_sum": 1,
       "weight_provenance_status": "PROVISIONAL_ANALYST_SELECTED_WEIGHTS",
-      "weight_provenance_explanation": "Balanced linear proxy-skill weights across active heuristic response equations (Albakor Component 1 zeroed because circular proxy AUC = 0.507 <= 0.51). Labeled PROVISIONAL_ANALYST_SELECTED_WEIGHTS because underlying AUCs are evaluated against deterministic environmental proxy points rather than independent empirical field catch coordinates.",
+      "weight_provenance_explanation": "Balanced linear proxy-skill weights across active heuristic response equations (TCT rule-based Component 1 zeroed because circular proxy AUC = 0.507 <= 0.51). Labeled PROVISIONAL_ANALYST_SELECTED_WEIGHTS because underlying AUCs are evaluated against deterministic environmental proxy points rather than independent empirical field catch coordinates.",
       "legacy_phase3_squared_auc_weights": {
         "maxent": 0.238,
         "rf": 0.447,
@@ -107,58 +107,11 @@
     "spatial_cv_executed_in_code": false,
     "methodological_caveat": "Component scores are evaluated via analytical heuristic response equations (Gaussian-Sigmoid Niche, Rule-Based Step Function, Polynomial Logistic) against deterministic presence-proxy points. No statistical machine learning fitting or spatial cross-validation was executed in code."
   },
-  "albakor": {
-    "species_name": "Albakor (Thunnus alalunga)",
-    "presence_points_count": 189,
-    "background_points_count": 1000,
-    "individual_models": {
-      "maxent": {
-        "auc": 0.507,
-        "tss": 0.143,
-        "opt_threshold": 0.75,
-        "note": "MaxEnt weight set to 0.000 due to poor performance on fragmented cold tongue"
-      },
-      "random_forest": {
-        "auc": 0.862,
-        "tss": 0.723,
-        "opt_threshold": 0.75
-      },
-      "glm": {
-        "auc": 0.825,
-        "tss": 0,
-        "opt_threshold": 0.2
-      }
-    },
-    "ensemble": {
-      "weights": {
-        "maxent": 0.0,
-        "rf": 0.517,
-        "glm": 0.483
-      },
-      "auc": 0.86,
-      "tss": 0.743,
-      "status": "EXPLORATORY_HEURISTIC_SCREENING (Proxy Discrimination Only; Not Biological Validation)",
-      "disagreement_formula": "sigma_w = sqrt(sum_i w_i * (RHSI_i - weighted_mean_rhsi)^2)",
-      "advisory_formula": "raw_advisory_score = weighted_mean_rhsi - lambda * sigma_w (baseline lambda = 0.5)",
-      "weights_sum": 1.0,
-      "weight_provenance_status": "PROVISIONAL_ANALYST_SELECTED_WEIGHTS",
-      "weight_provenance_explanation": "Balanced linear proxy-skill weights across active heuristic response equations (Albakor Component 1 zeroed because circular proxy AUC = 0.507 <= 0.51). Labeled PROVISIONAL_ANALYST_SELECTED_WEIGHTS because underlying AUCs are evaluated against deterministic environmental proxy points rather than independent empirical field catch coordinates.",
-      "legacy_phase3_squared_auc_weights": {
-        "maxent": 0.0,
-        "rf": 0.554,
-        "glm": 0.446
-      }
-    },
-    "variable_importance_percent": {
-      "sst_celsius": 46.2,
-      "depth_m": 25.1,
-      "chlor_a_mg_m3": 15.3,
-      "thermal_front": 9.8,
-      "slope_deg": 3.6
-    },
-    "model_paradigm": "Heuristic Multi-Criteria Habitat Suitability Screening (RHSI)",
-    "ml_training_executed_in_code": false,
-    "spatial_cv_executed_in_code": false,
-    "methodological_caveat": "Component scores are evaluated via analytical heuristic response equations (Gaussian-Sigmoid Niche, Rule-Based Step Function, Polynomial Logistic) against deterministic presence-proxy points. No statistical machine learning fitting or spatial cross-validation was executed in code."
+  "tongkol_krai": {
+    "species_name": "Tongkol Krai (Auxis thazard)",
+    "model_paradigm": "Rule-Based Scientific Screening",
+    "status": "RULE_BASED_SCIENTIFIC_SCREENING",
+    "formula": "0.45 * SI_SST + 0.40 * SI_Chl-a + 0.15 * SI_depth",
+    "note": "Transparent coastal screening rule; no trained joblib artifact is used."
   }
 }
