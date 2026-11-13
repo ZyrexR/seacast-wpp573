@@ -45,4 +45,16 @@ class TctCommodityContractTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $service->normalizeSpecies('albakor');
     }
+
+    public function test_python_bridge_emits_tct_contract_only(): void
+    {
+        $bridge = file_get_contents(base_path('../scripts/bridge_inference_runner.py'));
+
+        $this->assertIsString($bridge);
+        $this->assertStringContainsString('tuna_sirip_kuning', $bridge);
+        $this->assertStringContainsString('tongkol_krai', $bridge);
+        $this->assertStringContainsString('hsi_tongkol', $bridge);
+        $this->assertStringNotContainsString('albakor', strtolower($bridge));
+        $this->assertStringNotContainsString('albacore', strtolower($bridge));
+    }
 }

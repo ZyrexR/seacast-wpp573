@@ -12,6 +12,8 @@ import argparse
 import datetime
 import warnings
 
+from species_contract import PUBLIC_SPECIES, PUBLIC_TO_INTERNAL, normalize_species
+
 # Suppress sklearn unpickle warnings from polluting stdout
 warnings.filterwarnings("ignore")
 
@@ -22,8 +24,7 @@ GEOJSON_PATH = os.path.join(BASE_DIR, "data", "geojson", "canonical_grid_8129_ce
 # Locked scientific baseline weights from model_evaluations_summary.json
 LOCKED_ENSEMBLE_WEIGHTS = {
     "cakalang": {"maxent": 0.320, "rf": 0.355, "glm": 0.325},
-    "madidihang": {"maxent": 0.295, "rf": 0.365, "glm": 0.340},
-    "albakor": {"maxent": 0.000, "rf": 0.517, "glm": 0.483}
+    "madidihang": {"maxent": 0.295, "rf": 0.365, "glm": 0.340}
 }
 
 PRIGI_LON = 111.7275
@@ -32,7 +33,7 @@ PRIGI_LAT = -8.2833
 def main():
     parser = argparse.ArgumentParser(description="SEACAST PRIGI Inference Runner")
     parser.add_argument("--date", type=str, default=datetime.date.today().strftime("%Y-%m-%d"), help="Target prediction date (YYYY-MM-DD)")
-    parser.add_argument("--species", type=str, default="all", help="Target species: all | cakalang | madidihang | albakor")
+    parser.add_argument("--species", type=str, default="all", help="Target species: all | tuna_sirip_kuning | cakalang | tongkol_krai")
     parser.add_argument("--limit", type=int, default=0, help="Optional limit on returned records")
     args = parser.parse_args()
 
@@ -130,9 +131,26 @@ def main():
     X_scaled = scaler.transform(X_raw)
     X_scaled = np.nan_to_num(X_scaled, nan=0.0)
 
-    target_species_list = ["cakalang", "madidihang", "albakor"] if args.species == "all" else [args.species]
+    if args.species == "all":
+        target_species_list = list(PUBLIC_SPECIES)
+    else:
+        try:
+            internal_species = normalize_species(args.species)
+        except ValueError as exc:
+            error_payload = {
+                "status": "ERROR",
+                "error_type": "INVALID_PARAMETER",
+                "message": str(exc),
+                "generated_at": datetime.datetime.now().isoformat()
+            }
+            sys.stdout.write(json.dumps(error_payload))
+            sys.exit(1)
+        target_species_list = [
+            public_species for public_species, internal_key in PUBLIC_TO_INTERNAL.items()
+            if internal_key == internal_species
+        ]
 
-    for sp in ["cakalang", "madidihang", "albakor"]:
+    for sp in ["cakalang", "madidihang"]:
         model_path = os.path.join(MODELS_DIR, f"{sp}_ensemble_model.joblib")
         bundle = joblib.load(model_path)
         # ENFORCE locked baseline weights!
@@ -146,6 +164,16 @@ def main():
         min_v, max_v = raw_hsi.min(), raw_hsi.max()
         hsi_norm = (raw_hsi - min_v) / (max_v - min_v) if max_v > min_v else raw_hsi
         df_grid[f"hsi_{sp}"] = np.round(hsi_norm, 3)
+
+    # Tongkol Krai (Auxis thazard) Coastal/Neritic HSI
+    si_sst_tongkol = np.exp(-((df_grid['sst'] - 28.75) / ((30.5 - 27.0) / 1.5)) ** 2)
+    si_chla_tongkol = np.exp(-((df_grid['chla'] - 0.35) / ((0.50 - 0.20) / 1.5)) ** 2)
+    si_depth_tongkol = np.where(df_grid['depth'] <= 150.0, 1.0, np.exp(-((df_grid['depth'] - 150.0) / 150.0) ** 2))
+    df_grid['hsi_tongkol'] = np.round(np.clip(
+        (0.45 * si_sst_tongkol) + (0.40 * si_chla_tongkol) + (0.15 * si_depth_tongkol),
+        0.0,
+        1.0,
+    ), 3)
 
     # Hotspot threshold
     df_grid['is_hotspot'] = (df_grid['hsi_cakalang'] >= 0.70) | (df_grid['hsi_madidihang'] >= 0.70)
@@ -183,7 +211,7 @@ def main():
     df_grid['sector'] = sector
 
     export_cols = [
-        "cell_id", "hsi_cakalang", "hsi_madidihang", "hsi_albakor",
+        "cell_id", "hsi_cakalang", "hsi_madidihang", "hsi_tongkol",
         "is_hotspot", "dom_zone", "bycatch_traffic_light", "wave_height_m",
         "safety_advisory", "sector", "sst", "chla", "depth", "dist_port_nm"
     ]
@@ -209,7 +237,7 @@ def main():
             "summary": {
                 "mean_hsi_cakalang": round(float(df_grid['hsi_cakalang'].mean()), 3),
                 "mean_hsi_madidihang": round(float(df_grid['hsi_madidihang'].mean()), 3),
-                "mean_hsi_albakor": round(float(df_grid['hsi_albakor'].mean()), 3),
+                "mean_hsi_tongkol": round(float(df_grid['hsi_tongkol'].mean()), 3),
                 "safe_cells_pct": round(float((df_grid['safety_advisory'] == 'AMAN_MELAUT').mean() * 100), 1),
                 "red_bycatch_cells": int((df_grid['bycatch_traffic_light'] == 'RED').sum()),
                 "yellow_bycatch_cells": int((df_grid['bycatch_traffic_light'] == 'YELLOW').sum()),

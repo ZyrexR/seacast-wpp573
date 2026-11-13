@@ -32,8 +32,7 @@ os.makedirs(STORAGE_INGEST_DIR, exist_ok=True)
 # Locked scientific ensemble baseline weights
 LOCKED_ENSEMBLE_WEIGHTS = {
     "cakalang": {"maxent": 0.320, "rf": 0.355, "glm": 0.325},
-    "madidihang": {"maxent": 0.295, "rf": 0.365, "glm": 0.340},
-    "albakor": {"maxent": 0.000, "rf": 0.517, "glm": 0.483}
+    "madidihang": {"maxent": 0.295, "rf": 0.365, "glm": 0.340}
 }
 
 PRIGI_LON = 111.7275
@@ -268,7 +267,7 @@ def run_pipeline(input_csv, target_date=None, limit=0, dry_run=False, output_jso
     X_scaled = np.nan_to_num(X_scaled, nan=0.0)
 
     # 3. Model Inference (Locked Baseline Weights)
-    for sp in ["cakalang", "madidihang", "albakor"]:
+    for sp in ["cakalang", "madidihang"]:
         model_path = os.path.join(MODELS_DIR, f"{sp}_ensemble_model.joblib")
         if not os.path.exists(model_path):
             raise FileNotFoundError(f"Model artifact missing at {model_path}")
@@ -284,6 +283,16 @@ def run_pipeline(input_csv, target_date=None, limit=0, dry_run=False, output_jso
         min_v, max_v = raw_hsi.min(), raw_hsi.max()
         hsi_norm = (raw_hsi - min_v) / (max_v - min_v) if max_v > min_v else raw_hsi
         df_std[f"hsi_{sp}"] = np.round(hsi_norm, 3)
+
+    # Tongkol Krai (Auxis thazard) Coastal/Neritic HSI
+    si_sst_tongkol = np.exp(-((df_std["sst"] - 28.75) / ((30.5 - 27.0) / 1.5)) ** 2)
+    si_chla_tongkol = np.exp(-((df_std["chla"] - 0.35) / ((0.50 - 0.20) / 1.5)) ** 2)
+    si_depth_tongkol = np.where(df_std["depth"] <= 150.0, 1.0, np.exp(-((df_std["depth"] - 150.0) / 150.0) ** 2))
+    df_std["hsi_tongkol"] = np.round(np.clip(
+        (0.45 * si_sst_tongkol) + (0.40 * si_chla_tongkol) + (0.15 * si_depth_tongkol),
+        0.0,
+        1.0,
+    ), 3)
 
     # Hotspot threshold
     df_std["is_hotspot"] = (df_std["hsi_cakalang"] >= 0.70) | (df_std["hsi_madidihang"] >= 0.70)
@@ -324,7 +333,7 @@ def run_pipeline(input_csv, target_date=None, limit=0, dry_run=False, output_jso
 
     # 5. Output Record Assembly
     export_cols = [
-        "cell_id", "hsi_cakalang", "hsi_madidihang", "hsi_albakor",
+        "cell_id", "hsi_cakalang", "hsi_madidihang", "hsi_tongkol",
         "is_hotspot", "dom_zone", "bycatch_traffic_light", "wave_height_m",
         "safety_advisory", "sector", "sst", "chla", "depth", "dist_port_nm"
     ]
@@ -339,7 +348,7 @@ def run_pipeline(input_csv, target_date=None, limit=0, dry_run=False, output_jso
     summary = {
         "mean_hsi_cakalang": round(float(df_std["hsi_cakalang"].mean()), 3),
         "mean_hsi_madidihang": round(float(df_std["hsi_madidihang"].mean()), 3),
-        "mean_hsi_albakor": round(float(df_std["hsi_albakor"].mean()), 3),
+        "mean_hsi_tongkol": round(float(df_std["hsi_tongkol"].mean()), 3),
         "safe_cells_pct": round(float((df_std["safety_advisory"] == "AMAN_MELAUT").mean() * 100), 1),
         "red_bycatch_cells": int((df_std["bycatch_traffic_light"] == "RED").sum()),
         "yellow_bycatch_cells": int((df_std["bycatch_traffic_light"] == "YELLOW").sum()),
@@ -404,14 +413,14 @@ def run_pipeline(input_csv, target_date=None, limit=0, dry_run=False, output_jso
                 # Upsert into daily_predictions
                 upsert_sql = """
                     INSERT INTO daily_predictions (
-                        prediction_date, cell_id, hsi_cakalang, hsi_madidihang, hsi_albakor,
+                        prediction_date, cell_id, hsi_cakalang, hsi_madidihang, hsi_tongkol,
                         is_hotspot, dom_zone, bycatch_traffic_light, sst_c, chla_mg_m3,
                         current_velocity_ms, wave_height_m, wind_speed_ms, safety_advisory, created_at
                     ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, NOW())
                     ON CONFLICT (prediction_date, cell_id) DO UPDATE SET
                         hsi_cakalang = EXCLUDED.hsi_cakalang,
                         hsi_madidihang = EXCLUDED.hsi_madidihang,
-                        hsi_albakor = EXCLUDED.hsi_albakor,
+                        hsi_tongkol = EXCLUDED.hsi_tongkol,
                         is_hotspot = EXCLUDED.is_hotspot,
                         dom_zone = EXCLUDED.dom_zone,
                         bycatch_traffic_light = EXCLUDED.bycatch_traffic_light,
@@ -426,7 +435,7 @@ def run_pipeline(input_csv, target_date=None, limit=0, dry_run=False, output_jso
                 db_rows = []
                 for _, r in df_std.iterrows():
                     db_rows.append((
-                        target_date, r["cell_id"], float(r["hsi_cakalang"]), float(r["hsi_madidihang"]), float(r["hsi_albakor"]),
+                        target_date, r["cell_id"], float(r["hsi_cakalang"]), float(r["hsi_madidihang"]), float(r["hsi_tongkol"]),
                         bool(r["is_hotspot"]), str(r["dom_zone"]), str(r["bycatch_traffic_light"]),
                         float(r["sst"]), float(r["chla"]), float(r["current_velocity"]), float(r["wave_height_m"]),
                         float(r["wind_speed"]), str(r["safety_advisory"])

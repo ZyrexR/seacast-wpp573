@@ -116,7 +116,7 @@ def run_inference(target_date=None):
     X_scaled = np.nan_to_num(X_scaled, nan=0.0)
     
     # 3. Model Predictions per Species
-    for sp in ["cakalang", "madidihang", "albakor"]:
+    for sp in ["cakalang", "madidihang"]:
         model_path = os.path.join(MODELS_DIR, f"{sp}_ensemble_model.joblib")
         bundle = joblib.load(model_path)
         w = bundle["weights"]
@@ -183,13 +183,14 @@ def run_inference(target_date=None):
     
     # 7. Export Compact JSON for Frontend Web Instant Load
     export_cols = [
-        "cell_id", "hsi_cakalang", "hsi_madidihang", "hsi_albakor", "hsi_tongkol",
+        "cell_id", "hsi_cakalang", "hsi_madidihang", "hsi_tongkol",
         "is_hotspot", "dom_zone", "bycatch_traffic_light", "wave_height_m",
         "safety_advisory", "sector", "sst", "chla", "depth", "dist_port_nm"
     ]
     records = df_daily[export_cols].to_dict(orient="records")
     
     output_json = {
+        "species": ["tuna_sirip_kuning", "cakalang", "tongkol_krai"],
         "prediction_date": target_date.strftime("%Y-%m-%d"),
         "generated_at": datetime.datetime.now().isoformat(),
         "total_cells": len(records),
@@ -197,7 +198,7 @@ def run_inference(target_date=None):
         "summary": {
             "mean_hsi_cakalang": round(float(df_daily['hsi_cakalang'].mean()), 3),
             "mean_hsi_madidihang": round(float(df_daily['hsi_madidihang'].mean()), 3),
-            "mean_hsi_albakor": round(float(df_daily['hsi_albakor'].mean()), 3),
+            "mean_hsi_tongkol": round(float(df_daily['hsi_tongkol'].mean()), 3),
             "safe_cells_pct": round(float((df_daily['safety_advisory'] == 'AMAN_MELAUT').mean() * 100), 1),
             "red_bycatch_cells": int((df_daily['bycatch_traffic_light'] == 'RED').sum())
         },
@@ -210,7 +211,7 @@ def run_inference(target_date=None):
         
     print(f"✅ Inferensi harian sukses! Data tersimpan di: {dest_path}")
     print(f"   • Hotspot ditemukan : {output_json['hotspots_count']} sel")
-    print(f"   • Rata-rata HSI     : Cakalang {output_json['summary']['mean_hsi_cakalang']} | Madidihang {output_json['summary']['mean_hsi_madidihang']}")
+    print(f"   • Rata-rata HSI     : Tuna Sirip Kuning {output_json['summary']['mean_hsi_madidihang']} | Cakalang {output_json['summary']['mean_hsi_cakalang']} | Tongkol Krai {output_json['summary']['mean_hsi_tongkol']}")
     print(f"   • Sel Aman Melaut   : {output_json['summary']['safe_cells_pct']}%")
     return output_json
 
