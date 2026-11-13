@@ -159,9 +159,9 @@
                             <select name="target_commodity" x-model="form.target_commodity" @change="recalculate()"
                                     class="w-full bg-[#071B2B] border border-[#244456] rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-400">
                                 <option value="Cakalang">Cakalang (Katsuwonus pelamis) — Rp 22.000/kg</option>
-                                <option value="Madidihang">Madidihang (Thunnus albacares) — Rp 45.000/kg</option>
+                                <option value="tuna_sirip_kuning">Tuna Sirip Kuning (Thunnus albacares) — Rp 45.000/kg</option>
                                 <option value="Tongkol">Tongkol Lisong / Krai (Auxis spp.) — Rp 28.000/kg</option>
-                                <option value="Albakor">Albakor (Thunnus alalunga) — Rp 38.000/kg</option>
+                                <option value="tongkol_krai">Tongkol Krai (Auxis thazard) — Rp 28.000/kg</option>
                             </select>
                         </div>
 

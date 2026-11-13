@@ -206,15 +206,15 @@
                 <div class="space-y-6 p-5 rounded-2xl bg-white dark:bg-[#0D2B3E] border border-slate-200 dark:border-[#244456]">
                     <div>
                         <p class="text-xs font-semibold text-slate-500 mb-2">15. Tabs Interaktif (Alpine.js)</p>
-                        <x-ui.tabs :tabs="[['id' => 'tab1', 'label' => 'Cakalang'], ['id' => 'tab2', 'label' => 'Madidihang'], ['id' => 'tab3', 'label' => 'Albakor']]">
+                        <x-ui.tabs :tabs="[['id' => 'tab1', 'label' => 'Cakalang'], ['id' => 'tab2', 'label' => 'Tuna Sirip Kuning'], ['id' => 'tab3', 'label' => 'Tongkol Krai']]">
                             <div x-show="activeTab === 'tab1'" class="text-xs text-slate-600 dark:text-slate-300 p-2">
                                 Konten kesesuaian habitat <strong>Cakalang</strong>.
                             </div>
                             <div x-show="activeTab === 'tab2'" class="text-xs text-slate-600 dark:text-slate-300 p-2">
-                                Konten kesesuaian habitat <strong>Madidihang</strong>.
+                                Konten kesesuaian habitat <strong>Tuna Sirip Kuning</strong>.
                             </div>
                             <div x-show="activeTab === 'tab3'" class="text-xs text-slate-600 dark:text-slate-300 p-2">
-                                Konten kesesuaian habitat <strong>Albakor</strong>.
+                                Konten kesesuaian habitat <strong>Tongkol Krai</strong>.
                             </div>
                         </x-ui.tabs>
                     </div>

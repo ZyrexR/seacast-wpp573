@@ -29,7 +29,7 @@
             <div class="p-5 rounded-2xl bg-white dark:bg-[#071B2B] border border-slate-200 dark:border-[#244456] shadow-sm">
                 <span class="text-2xl sm:text-3xl font-black font-mono text-amber-600 dark:text-amber-400">3 Spesies Utama</span>
                 <h3 class="text-sm font-bold text-slate-900 dark:text-white mt-1">Prediksi Presisi Pelagis</h3>
-                <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Pemodelan relung ekologi komposit terpisah untuk Tongkol (pesisir), Cakalang (upwelling), dan Madidihang (laut dalam).</p>
+                <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Pemodelan relung ekologi komposit terpisah untuk Tongkol Krai (pesisir), Cakalang (upwelling), dan Tuna Sirip Kuning (laut dalam).</p>
             </div>
         </div>
 

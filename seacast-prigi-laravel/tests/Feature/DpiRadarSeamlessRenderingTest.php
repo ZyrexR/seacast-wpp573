@@ -44,7 +44,7 @@ class DpiRadarSeamlessRenderingTest extends TestCase
         $response = $this->actingAs($this->user)->get('/dashboard/dpi-radar');
 
         $response->assertStatus(200);
-        $response->assertSee('Tongkol (Euthynnus spp.)');
+        $response->assertSee('Tongkol Krai');
         $response->assertSee('stroke: false');
         $response->assertSee('Rencanakan Melaut');
     }

@@ -70,7 +70,8 @@ class TripPlanningService
         'cakalang' => 22000,
         'madidihang' => 45000,
         'tongkol' => 28000,
-        'albakor' => 38000,
+        'tuna_sirip_kuning' => 45000,
+        'tongkol_krai' => 28000,
     ];
 
     public function calculateDistanceAndBearing(string $portCode, float $targetLat, float $targetLon): array

@@ -34,12 +34,6 @@ class SpeciesAndHsiEngineTest extends TestCase
         $this->assertEquals(0.340, $madidihangWeights->glm);
         $this->assertEquals(1.000, $madidihangWeights->total());
 
-        $albakorWeights = $this->speciesService->getEnsembleWeights('albakor');
-        // Albakor MaxEnt weight MUST be strictly 0.000
-        $this->assertEquals(0.000, $albakorWeights->maxent);
-        $this->assertEquals(0.517, $albakorWeights->rf);
-        $this->assertEquals(0.483, $albakorWeights->glm);
-        $this->assertEquals(1.000, $albakorWeights->total());
     }
 
     public function test_raw_ensemble_calculation_formula(): void
@@ -49,10 +43,9 @@ class SpeciesAndHsiEngineTest extends TestCase
         $score = $this->hsiService->calculateRawEnsemble('cakalang', 0.50, 0.60, 0.40);
         $this->assertEquals(0.503, round($score, 3));
 
-        // For Albakor: 0.000 * 0.999 + 0.517 * 0.60 + 0.483 * 0.50
-        // = 0.000 + 0.3102 + 0.2415 = 0.5517 -> 0.552
-        $scoreAlbakor = $this->hsiService->calculateRawEnsemble('albakor', 0.999, 0.60, 0.50);
-        $this->assertEquals(0.552, round($scoreAlbakor, 3));
+        // Public Tuna Sirip Kuning alias resolves to the existing internal ensemble key.
+        $scoreTunaSiripKuning = $this->hsiService->calculateRawEnsemble('tuna_sirip_kuning', 0.90, 0.80, 0.60);
+        $this->assertEquals(0.762, round($scoreTunaSiripKuning, 3));
     }
 
     public function test_hsi_normalization_and_clamping(): void
@@ -67,7 +60,7 @@ class SpeciesAndHsiEngineTest extends TestCase
 
     public function test_hotspot_and_potential_thresholds(): void
     {
-        // Hotspot: HSI Cakalang >= 0.70 or Madidihang >= 0.70
+        // Hotspot: HSI Cakalang >= 0.70 or Tuna Sirip Kuning >= 0.70
         $this->assertTrue($this->hsiService->isHotspot(0.72, 0.40));
         $this->assertTrue($this->hsiService->isHotspot(0.50, 0.75));
         $this->assertFalse($this->hsiService->isHotspot(0.68, 0.69));

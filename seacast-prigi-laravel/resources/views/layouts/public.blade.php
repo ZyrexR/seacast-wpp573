@@ -6,7 +6,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ $title ?? 'SEACAST — Scientific Ocean Intelligence & Fisheries Decision Support' }}</title>
-    <meta name="description" content="Platform Intelijen Oseanografi dan Prediksi Kesesuaian Daerah Penangkapan Ikan Pelagis (Tongkol, Cakalang, Madidihang) berbasiskan 8.129 sel kanonikal PostGIS WPPNRI 573.">
+    <meta name="description" content="Platform Intelijen Oseanografi dan Prediksi Kesesuaian Daerah Penangkapan Ikan TCT (Tongkol Krai, Cakalang, Tuna Sirip Kuning) berbasiskan 8.129 sel kanonikal PostGIS WPPNRI 573.">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">

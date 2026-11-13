@@ -47,7 +47,7 @@ def create_notebook():
 Notebook ini menjalankan seluruh alur analitik kecerdasan buatan (*AI/ML*) perikanan tangkap:
 1. **Ingestion 11 Tahun Data Satelit GEE:** Memuat 132 berkas CSV bulanan (1.073.028 sel) langsung dari Google Drive.
 2. **Koreksi Bias Armada (*Effort Bias Surface*):** Membatasi jangkauan kapal Prigi (<10 GT $\\le 12$ NM, 20-30 GT $\\le 60$ NM).
-3. **Pelatihan Model Ensemble SDM:** Melatih 3 algoritma (*MaxEnt, Random Forest, GLM*) untuk **Cakalang, Madidihang, dan Albakor**.
+3. **Pelatihan Model Ensemble SDM:** Melatih 3 algoritma (*MaxEnt, Random Forest, GLM*) untuk **Cakalang dan Tuna Sirip Kuning**, serta screening ilmiah Tongkol Krai.
 4. **Validasi Spasial Ketat:** *Spatial 5-Fold Cross Validation*, AUC-ROC, TSS, dan kurva respons ekologis.
 5. **Batch Inference 1 Juta Sel:** Menghitung skor kesesuaian habitat (HSI `0.00 - 1.00`) untuk seluruh sel 2015–2025.
 6. **Dynamic Ocean Management (5 Zona):** Klasifikasi Z1 (Inshore), Z2 (Offshore), Z3 (Feeding), Z4 (Nursery), dan Z5 (123 Poligon Skrining Bycatch).
@@ -261,17 +261,6 @@ suit_curr_madidihang = np.clip(df_all['current_velocity'] / 0.45, 0.0, 1.0)
 raw_prob_madidihang = (0.35 * suit_sst_madidihang + 0.30 * suit_chla_madidihang + 0.35 * suit_curr_madidihang) * (df_all['depth'] > 200.0)
 proxy_prob_madidihang = np.nan_to_num(np.power(raw_prob_madidihang, 2.5), nan=0.0)
 
-# ALBAKOR (Thunnus alalunga): Mesopelagis subtropis sejuk di Palung Samudra Hindia Dalam (> 1200m)
-# - SST sejuk: 18.5 - 23.5 C (tol=0.60)
-# - Chl-a jernih/sedang: 0.12 - 0.35 mg/m3 (tol=0.08)
-# - Palung dalam (> 1200m) dan lepas pantai (> 30 NM)
-suit_sst_albakor = gaussian_suitability(df_all['sst'], 18.5, 23.5, 0.60)
-suit_chla_albakor = gaussian_suitability(df_all['chla'], 0.12, 0.35, 0.08)
-suit_depth_albakor = np.clip((df_all['depth'] - 1200.0) / 1800.0, 0.0, 1.0)
-
-raw_prob_albakor = (0.50 * suit_sst_albakor + 0.25 * suit_chla_albakor + 0.25 * suit_depth_albakor) * (df_all['depth'] > 1200.0) * (df_all['dist_port_nm'] > 30.0)
-proxy_prob_albakor = np.nan_to_num(np.power(raw_prob_albakor, 2.5), nan=0.0)
-
 # 2. Sampling Controlled Presence-Proxy & Background Sampling (Protokol Baku MaxEnt Phillips & Elith)
 np.random.seed(42)
 N_SAMPLES = 2500
@@ -326,8 +315,7 @@ print("✅ Data sampling terkalibrasi siap untuk pelatihan 3 spesies (100% bebas
 Melatih 3 algoritma (*MaxEnt, Random Forest, GLM*) untuk masing-masing spesies dan mengkalkulasi metrik AUC-ROC serta TSS.""")
     add_code("""species_list = [
     {"name": "cakalang", "display": "Cakalang (Skipjack Tuna)", "probs": proxy_prob_cakalang},
-    {"name": "madidihang", "display": "Madidihang (Yellowfin Tuna)", "probs": proxy_prob_madidihang},
-    {"name": "albakor", "display": "Albakor (Albacore Tuna)", "probs": proxy_prob_albakor}
+    {"name": "madidihang", "display": "Tuna Sirip Kuning (Yellowfin Tuna)", "probs": proxy_prob_madidihang}
 ]
 
 models_dict = {}
@@ -419,7 +407,7 @@ Mengaplikasikan model ensemble terlatih ke seluruh 8.129 sel pada ke-132 bulan (
     add_code("""print("⏳ Menjalankan Batch Inference HSI ke 1.073.028 sel observasi...")
 
 # Prediksi per spesies menggunakan pembobotan ensemble
-for sp_name in ['cakalang', 'madidihang', 'albakor']:
+for sp_name in ['cakalang', 'madidihang']:
     m_bundle = models_dict[sp_name]
     w = m_bundle['weights']
     
@@ -433,6 +421,12 @@ for sp_name in ['cakalang', 'madidihang', 'albakor']:
     # Normalisasi skala HSI ke 0.000 s.d. 1.000
     hsi_scaled = (hsi_raw - hsi_raw.min()) / (hsi_raw.max() - hsi_raw.min())
     df_all[f'hsi_{sp_name}'] = np.round(hsi_scaled, 3)
+
+# Tongkol Krai: rule-based scientific screening (no trained model artifact)
+si_sst_tongkol = np.exp(-((df_all['sst'] - 28.75) / 2.33) ** 2)
+si_chla_tongkol = np.exp(-((df_all['chla'] - 0.35) / 0.20) ** 2)
+si_depth_tongkol = np.where(df_all['depth'] <= 150.0, 1.0, np.exp(-((df_all['depth'] - 150.0) / 150.0) ** 2))
+df_all['hsi_tongkol'] = np.round(np.clip(0.45 * si_sst_tongkol + 0.40 * si_chla_tongkol + 0.15 * si_depth_tongkol, 0.0, 1.0), 3)
     print(f"   ✓ Selesai prediksi HSI {sp_name.capitalize()}: Rata-rata = {df_all[f'hsi_{sp_name}'].mean():.3f}")
 
 # Tandai Hotspot Tangkapan Tuna Potensial (HSI >= 0.70)
@@ -571,7 +565,7 @@ print("\\n" + "="*70)
 print("🎉 SELURUH PIPELINE PEMODELAN SEACAST PRIGI v2.3.2 SELESAI DENGAN SEMPURNA!")
 print("="*70)
 print(f"📦 Berkas luaran lengkap tersimpan di Google Drive: {OUTPUT_DIR}")
-print("1. Model ML: cakalang, madidihang, albakor (.joblib)")
+print("1. Model ML: cakalang, madidihang (.joblib) + Tongkol Krai rule-based HSI")
 print("2. Master Data Prediksi: SEACAST_PRIGI_PREDICTIONS_2015_2025_FULL.parquet (1.073.028 baris)")
 print("3. Lapisan Spasial: canonical_grid_8129_cells.geojson")
 print("4. Metrik & Grafik: sdm_evaluation_metrics.json & cpue_vs_hsi_validation_plot.png")

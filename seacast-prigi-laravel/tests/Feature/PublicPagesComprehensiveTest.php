@@ -50,7 +50,7 @@ class PublicPagesComprehensiveTest extends TestCase
         $response->assertSee('Auxis thazard');
         $response->assertSee('Cakalang');
         $response->assertSee('Katsuwonus pelamis');
-        $response->assertSee('Madidihang');
+        $response->assertSee('Tuna Sirip Kuning');
         $response->assertSee('Thunnus albacares');
 
         // Mathematical formulation and algorithms

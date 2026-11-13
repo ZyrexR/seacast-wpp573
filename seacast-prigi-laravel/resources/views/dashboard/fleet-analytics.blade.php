@@ -180,8 +180,8 @@
                         <tr>
                             <th class="py-3 px-4">Tahun</th>
                             <th class="py-3 px-4 text-right">Cakalang (Ton)</th>
-                            <th class="py-3 px-4 text-right">{{ $selectedPort === 'PPS_CILACAP' ? 'Yellowfin Tuna (Ton)' : 'Madidihang (Ton)' }}</th>
-                            <th class="py-3 px-4 text-right">{{ $selectedPort === 'PPS_CILACAP' ? 'Tongkol Krai (Ton)' : 'Tongkol (Ton)' }}</th>
+                            <th class="py-3 px-4 text-right">Tuna Sirip Kuning (Ton)</th>
+                            <th class="py-3 px-4 text-right">Tongkol Krai (Ton)</th>
                             <th class="py-3 px-4 text-right font-bold text-white">Total Pelagis (Ton)</th>
                             <th class="py-3 px-4 text-right">Trip Melaut</th>
                             <th class="py-3 px-4 text-right">CPUE Proxy (kg/trip)</th>

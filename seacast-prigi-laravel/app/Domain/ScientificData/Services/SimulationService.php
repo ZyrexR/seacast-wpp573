@@ -49,7 +49,7 @@ class SimulationService
     }
 
     /**
-     * Madidihang / Yellowfin Tuna (Thunnus albacares) HSI Calibration.
+     * Tuna Sirip Kuning / Yellowfin Tuna (Thunnus albacares) HSI Calibration.
      * Literature: Vaihola et al., 2023; Yati et al., 2024.
      * Deep oceanic & slope preference: SST 23.0 - 31.5°C, Chl-a 0.05 - 0.35 mg/m³, depth > 200m.
      */
@@ -139,7 +139,6 @@ class SimulationService
             // Compute multi-species simulated HSIs
             $hsiCakalang = $this->calcGaussianHsi($simSst, $simChla, [28.0, 29.5], [0.20, 0.45]);
             $hsiMadidihang = $this->calcGaussianHsi($simSst, $simChla, [27.0, 29.0], [0.15, 0.40]);
-            $hsiAlbakor = $this->calcGaussianHsi($simSst, $simChla, [18.0, 22.0], [0.10, 0.35]);
             $hsiTongkol = $this->calcTongkolHsi($simSst, $simChla, 250.0);
 
             $isHotspot = ($hsiCakalang >= 0.70 || $hsiMadidihang >= 0.70);
@@ -174,7 +173,6 @@ class SimulationService
                 'sim_chla' => round($simChla, 3),
                 'hsi_cakalang' => $hsiCakalang,
                 'hsi_madidihang' => $hsiMadidihang,
-                'hsi_albakor' => $hsiAlbakor,
                 'hsi_tongkol' => $hsiTongkol,
                 'is_hotspot' => $isHotspot,
                 'dom_zone' => $domZone,
@@ -229,8 +227,9 @@ class SimulationService
         $tunaPrices = [
             'cakalang' => 22000,
             'madidihang' => 45000,
-            'albakor' => 38000,
+            'tuna_sirip_kuning' => 45000,
             'tongkol' => 28000,
+            'tongkol_krai' => 28000,
         ];
 
         $tunaPricePerKg = $tunaPrices[strtolower($targetSpecies)] ?? 22000;

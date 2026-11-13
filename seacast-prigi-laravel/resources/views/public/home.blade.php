@@ -123,7 +123,7 @@
                         <x-ui.badge variant="emerald" dot="true">Auxis thazard / Euthynnus</x-ui.badge>
                         <span class="text-xs font-mono font-bold text-emerald-500">Pendaratan Utama</span>
                     </div>
-                    <h3 class="text-lg font-black text-slate-900 dark:text-white mb-1">Tongkol (Lisong & Krai)</h3>
+                    <h3 class="text-lg font-black text-slate-900 dark:text-white mb-1">Tongkol Krai</h3>
                     <p class="text-xs text-slate-600 dark:text-slate-400 mb-4 leading-relaxed">
                         Spesies pelagis neritik dan epipelagis dengan volume pendaratan terbesar di selatan Jawa. Respon sangat kuat terhadap pengkayaan klorofil-a akibat upwelling musiman.
                     </p>
@@ -161,13 +161,13 @@
                     </div>
                 </x-ui.card>
 
-                <!-- Madidihang -->
+                <!-- Tuna Sirip Kuning -->
                 <x-ui.card hoverable="true">
                     <div class="flex items-center justify-between mb-3">
                         <x-ui.badge variant="amber" dot="true">Thunnus albacares</x-ui.badge>
                         <span class="text-xs font-mono font-bold text-slate-500">AUC 0.784</span>
                     </div>
-                    <h3 class="text-lg font-black text-slate-900 dark:text-white mb-1">Madidihang (Yellowfin)</h3>
+                    <h3 class="text-lg font-black text-slate-900 dark:text-white mb-1">Tuna Sirip Kuning (Yellowfin)</h3>
                     <p class="text-xs text-slate-600 dark:text-slate-400 mb-4 leading-relaxed">
                         Tuna epipelagis dan mesopelagis bernilai tinggi. Asosiasi kuat dengan thermal fronts (34,8%) dan koridor lereng benua paparan selatan Jawa.
                     </p>

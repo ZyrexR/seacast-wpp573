@@ -28,7 +28,7 @@
             <x-ui.stat-card
                 title="Hotspot Tangkap Hari Ini"
                 value="{{ $hotspotsCount }} Sel"
-                subtitle="Kriteria: HSI &ge; 0,70 (Tongkol, Cakalang, Madidihang)"
+                subtitle="Kriteria: HSI &ge; 0,70 (Tongkol Krai, Cakalang, Tuna Sirip Kuning)"
                 delta="Terkini"
                 deltaType="positive"
                 accent="rose"

@@ -67,7 +67,7 @@ class ExportApiController extends Controller
     {
         return $request->validate([
             'date' => 'nullable|date_format:Y-m-d',
-            'species' => 'nullable|in:cakalang,madidihang,albakor,all',
+            'species' => 'nullable|in:cakalang,tuna_sirip_kuning,madidihang,tongkol_krai,tongkol,all',
             'min_hsi' => 'nullable|numeric|between:0,1',
             'dom_zone' => 'nullable|string',
             'bycatch' => 'nullable|in:GREEN,YELLOW,RED',

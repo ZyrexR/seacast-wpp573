@@ -45,9 +45,8 @@ class DashboardController extends Controller
             'speciesList' => [
                 'all' => 'Semua Spesies (Komposit HSI)',
                 'cakalang' => 'Cakalang (Katsuwonus pelamis)',
-                'madidihang' => 'Madidihang (Thunnus albacares)',
-                'tongkol' => 'Tongkol (Euthynnus spp.)',
-                'albakor' => 'Albakor (Thunnus alalunga)',
+                'tuna_sirip_kuning' => 'Tuna Sirip Kuning (Thunnus albacares)',
+                'tongkol_krai' => 'Tongkol Krai (Auxis thazard)',
             ],
             'domZones' => [
                 'ALL' => 'Semua Zona DOM',
@@ -82,7 +81,6 @@ class DashboardController extends Controller
                 COUNT(*) FILTER (WHERE is_hotspot) as hotspots_count,
                 ROUND(AVG(wave_height_m)::numeric, 2) as avg_wave,
                 ROUND(AVG(COALESCE(hsi_tongkol, 0.556))::numeric, 3) as tongkol_hsi,
-                ROUND(AVG(hsi_albakor)::numeric, 3) as albakor_hsi,
                 ROUND(AVG(hsi_cakalang)::numeric, 3) as cakalang_hsi,
                 ROUND(AVG(hsi_madidihang)::numeric, 3) as madidihang_hsi,
                 COUNT(*) FILTER (WHERE bycatch_traffic_light = 'GREEN') as green_cells,
@@ -112,7 +110,6 @@ class DashboardController extends Controller
             'hotspotsCount' => $kpiData->hotspots_count ?? 342,
             'avgWave' => $kpiData->avg_wave ?? 2.15,
             'tongkolHsi' => $kpiData->tongkol_hsi ?? 0.556,
-            'albakorHsi' => $kpiData->albakor_hsi ?? 0.448,
             'cakalangHsi' => $kpiData->cakalang_hsi ?? 0.209,
             'madidihangHsi' => $kpiData->madidihang_hsi ?? 0.276,
             'safeBycatchPct' => $safePct,
@@ -173,7 +170,7 @@ class DashboardController extends Controller
                 'fleet' => 'Kapal Motor Kapasitas 20 - 30 GT (Purse Seine / Longline)',
                 'gear' => 'Pukat cincin (purse seine), rawai tuna bersertifikasi',
                 'status' => 'Monitoring Kuota Tangkap WPP 573',
-                'desc' => 'Daerah penangkapan ikan utama untuk armada penangkap skala menengah. Menyajikan kepadatan biomassa Madidihang dan Albakor tinggi di sepanjang lereng benua.'
+                'desc' => 'Daerah penangkapan ikan utama untuk armada penangkap skala menengah. Menyajikan kepadatan biomassa Tuna Sirip Kuning dan Cakalang tinggi di sepanjang lereng benua.'
             ],
             'Z3' => [
                 'code' => 'Z3',
@@ -377,7 +374,7 @@ class DashboardController extends Controller
                 'description' => 'Model Cakalang menunjukkan respon multimodal yang kuat terhadap batas pertemuan upwelling dingin dan perairan hangat sekitar Prigi. Bobot MaxEnt, Random Forest, dan GLM seimbang dalam ensemble.',
             ],
             'madidihang' => [
-                'name' => 'Madidihang (Yellowfin Tuna)',
+                'name' => 'Tuna Sirip Kuning (Yellowfin Tuna)',
                 'latin' => 'Thunnus albacares',
                 'auc' => '0.874',
                 'tss' => '0.648',
@@ -392,25 +389,23 @@ class DashboardController extends Controller
                     ['name' => 'Kedalaman Batimetri', 'pct' => 8.5, 'ideal' => '200 - 2500 m'],
                     ['name' => 'Kecepatan Arus Osean', 'pct' => 3.2, 'ideal' => '0.2 - 0.6 m/s'],
                 ],
-                'description' => 'Madidihang sangat sensitif terhadap dinamika front termal di sepanjang lereng benua (shelf break) selatan Jawa Timur, dengan preferensi kedalaman termoklin yang lebih dalam.',
+                'description' => 'Tuna Sirip Kuning sangat sensitif terhadap dinamika front termal di sepanjang lereng benua (shelf break) selatan Jawa Timur, dengan preferensi kedalaman termoklin yang lebih dalam.',
             ],
-            'albakor' => [
-                'name' => 'Albakor (Albacore Tuna)',
-                'latin' => 'Thunnus alalunga',
-                'auc' => '0.908',
-                'tss' => '0.712',
-                'target_prd' => '0.6840',
-                'weights' => ['maxent' => 0.280, 'rf' => 0.390, 'glm' => 0.330],
-                'presence_points' => 312,
+            'tongkol_krai' => [
+                'name' => 'Tongkol Krai',
+                'latin' => 'Auxis thazard',
+                'auc' => 'RULE-BASED',
+                'tss' => 'N/A',
+                'target_prd' => '0.556',
+                'weights' => ['sst' => 0.45, 'chla' => 0.40, 'depth' => 0.15],
+                'presence_points' => 0,
                 'opt_threshold' => '0.70',
                 'variables' => [
-                    ['name' => 'Suhu Permukaan Laut (SST)', 'pct' => 45.2, 'ideal' => '18.0 - 23.5 °C'],
-                    ['name' => 'Kedalaman Batimetri', 'pct' => 26.3, 'ideal' => '500 - 3500 m'],
-                    ['name' => 'Gradien Termal & Front', 'pct' => 14.5, 'ideal' => '>= 0.030 °C/km'],
-                    ['name' => 'Klorofil-a (Chl-a)', 'pct' => 10.8, 'ideal' => '0.10 - 0.35 mg/m³'],
-                    ['name' => 'Kecepatan Arus Osean', 'pct' => 3.2, 'ideal' => '0.1 - 0.5 m/s'],
+                    ['name' => 'Suhu Permukaan Laut (SST)', 'pct' => 45.0, 'ideal' => '27.0 - 30.5 °C'],
+                    ['name' => 'Klorofil-a (Chl-a)', 'pct' => 40.0, 'ideal' => '0.20 - 0.50 mg/m³'],
+                    ['name' => 'Kedalaman Batimetri', 'pct' => 15.0, 'ideal' => '<= 150 m optimum'],
                 ],
-                'description' => 'Albakor merupakan spesies pelagis air dingin (sub-tropis hingga oseanik dalam). Menghuni perairan lepas pantai dalam (>50 NM) dengan toleransi suhu optimal jauh lebih rendah dibanding Cakalang.',
+                'description' => 'Tongkol Krai merupakan komoditas neritik pesisir dengan HSI rule-based yang menggabungkan SST, klorofil-a, dan kedalaman perairan.',
             ],
         ];
 

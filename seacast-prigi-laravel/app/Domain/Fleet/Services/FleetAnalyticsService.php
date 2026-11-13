@@ -23,7 +23,7 @@ class FleetAnalyticsService
                 'lat' => -8.2833,
                 'lon' => 111.7275,
                 'years_range' => '2015 – 2025 (11 Tahun)',
-                'commodities' => 'Cakalang, Madidihang, Tongkol',
+                'commodities' => 'Cakalang, Tuna Sirip Kuning, Tongkol Krai',
             ],
             'PPS_CILACAP' => [
                 'code' => 'PPS_CILACAP',

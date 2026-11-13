@@ -23,7 +23,6 @@ class DailyPrediction extends Model
         'prediction_date' => 'date:Y-m-d',
         'hsi_cakalang' => 'float',
         'hsi_madidihang' => 'float',
-        'hsi_albakor' => 'float',
         'hsi_tongkol' => 'float',
         'is_hotspot' => 'boolean',
         'sst_c' => 'float',

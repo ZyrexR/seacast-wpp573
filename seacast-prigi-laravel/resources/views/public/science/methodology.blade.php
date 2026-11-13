@@ -47,11 +47,11 @@
                         <span class="text-base font-bold text-cyan-600 dark:text-cyan-400">AUC 0.892 &bull; TSS 0.684</span>
                     </div>
                     <div class="p-3 rounded-xl bg-slate-50 dark:bg-[#071B2B] border border-slate-200 dark:border-slate-800">
-                        <span class="text-slate-500 block text-[11px]">Madidihang:</span>
+                        <span class="text-slate-500 block text-[11px]">Tuna Sirip Kuning:</span>
                         <span class="text-base font-bold text-emerald-600 dark:text-emerald-400">AUC 0.874 &bull; TSS 0.648</span>
                     </div>
                     <div class="p-3 rounded-xl bg-slate-50 dark:bg-[#071B2B] border border-slate-200 dark:border-slate-800">
-                        <span class="text-slate-500 block text-[11px]">Albakor:</span>
+                        <span class="text-slate-500 block text-[11px]">Tongkol Krai:</span>
                         <span class="text-base font-bold text-sky-600 dark:text-sky-400">AUC 0.908 &bull; TSS 0.712</span>
                     </div>
                 </div>

@@ -6,7 +6,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ $title ?? 'SEACAST — Scientific Ocean Intelligence & Fisheries Decision Support' }}</title>
-    <meta name="description" content="Platform Intelijen Oseanografi dan Prediksi Kesesuaian Daerah Penangkapan Ikan Pelagis (Cakalang, Madidihang, Albakor) berbasiskan 8.129 sel kanonikal PostGIS WPP 573.">
+    <meta name="description" content="Platform Intelijen Oseanografi dan Prediksi Kesesuaian Daerah Penangkapan Ikan TCT (Tongkol Krai, Cakalang, Tuna Sirip Kuning) berbasiskan 8.129 sel kanonikal PostGIS WPP 573.">
 
     <!-- Favicon & Brand Icons -->
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">

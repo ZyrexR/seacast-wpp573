@@ -24,9 +24,9 @@ class ScientificToleranceRegressionTest extends TestCase
         $this->bycatchService = app(BycatchRiskService::class);
     }
 
-    public function test_ensemble_weights_sum_to_exact_unity_for_all_three_species(): void
+    public function test_ensemble_weights_sum_to_exact_unity_for_modelled_tct_species(): void
     {
-        $speciesList = ['cakalang', 'madidihang', 'albakor'];
+        $speciesList = ['cakalang', 'tuna_sirip_kuning'];
 
         foreach ($speciesList as $sp) {
             $weights = $this->speciesService->getEnsembleWeights($sp);
@@ -41,15 +41,6 @@ class ScientificToleranceRegressionTest extends TestCase
 
             $this->assertEquals(1.000, $weights->total(), "Total method for '{$sp}' must return 1.000.");
         }
-    }
-
-    public function test_albakor_maxent_weight_is_strictly_zero_due_to_uninformative_proxy(): void
-    {
-        $weights = $this->speciesService->getEnsembleWeights('albakor');
-
-        $this->assertSame(0.000, $weights->maxent, 'Albakor MaxEnt weight must be strictly 0.000.');
-        $this->assertGreaterThan(0.50, $weights->rf, 'Albakor RF weight must be >= 0.50.');
-        $this->assertGreaterThan(0.40, $weights->glm, 'Albakor GLM weight must be >= 0.40.');
     }
 
     public function test_hsi_values_are_strictly_clamped_in_zero_to_one_range(): void
@@ -71,9 +62,8 @@ class ScientificToleranceRegressionTest extends TestCase
         $rawCakalang = $this->hsiService->calculateRawEnsemble('cakalang', 0.8, 0.9, 0.7);
         $this->assertEqualsWithDelta(0.803, $rawCakalang, 0.001);
 
-        $rawAlbakor = $this->hsiService->calculateRawEnsemble('albakor', 0.9, 0.8, 0.6);
-        // MaxEnt is 0.000, RF is 0.517 * 0.8 = 0.4136, GLM is 0.483 * 0.6 = 0.2898 -> 0.7034
-        $this->assertEqualsWithDelta(0.7034, $rawAlbakor, 0.001);
+        $rawTunaSiripKuning = $this->hsiService->calculateRawEnsemble('tuna_sirip_kuning', 0.9, 0.8, 0.6);
+        $this->assertEqualsWithDelta(0.7615, $rawTunaSiripKuning, 0.001);
 
         // Verification of hotspot and tuna potential thresholds
         $this->assertTrue($this->hsiService->isHotspot(0.75, 0.50));

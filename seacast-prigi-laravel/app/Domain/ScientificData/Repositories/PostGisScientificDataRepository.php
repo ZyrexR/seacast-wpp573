@@ -46,7 +46,7 @@ class PostGisScientificDataRepository implements ScientificDataRepositoryInterfa
                     ROUND(AVG(wave_height_m), 2) as mean_wave_m,
                     ROUND(AVG(hsi_cakalang), 3) as cakalang_mean_hsi,
                     ROUND(AVG(hsi_madidihang), 3) as madidihang_mean_hsi,
-                    ROUND(AVG(hsi_albakor), 3) as albakor_mean_hsi,
+                    ROUND(AVG(hsi_tongkol), 3) as tongkol_mean_hsi,
                     COUNT(CASE WHEN bycatch_traffic_light = 'GREEN' THEN 1 END) as green_count,
                     ROUND(COUNT(CASE WHEN bycatch_traffic_light = 'GREEN' THEN 1 END) * 100.0 / NULLIF(COUNT(*), 0), 1) as green_pct,
                     COUNT(CASE WHEN bycatch_traffic_light = 'YELLOW' THEN 1 END) as yellow_count,
@@ -63,8 +63,8 @@ class PostGisScientificDataRepository implements ScientificDataRepositoryInterfa
 
         $speciesAverages = [
             'Cakalang' => (float)$raw->cakalang_mean_hsi,
-            'Madidihang' => (float)$raw->madidihang_mean_hsi,
-            'Albakor' => (float)$raw->albakor_mean_hsi,
+            'Tuna Sirip Kuning' => (float)$raw->madidihang_mean_hsi,
+            'Tongkol Krai' => (float)$raw->tongkol_mean_hsi,
         ];
         arsort($speciesAverages);
         $highestSpecies = key($speciesAverages);
@@ -82,7 +82,7 @@ class PostGisScientificDataRepository implements ScientificDataRepositoryInterfa
                 'species' => [
                     'cakalang_mean_hsi' => (float)$raw->cakalang_mean_hsi,
                     'madidihang_mean_hsi' => (float)$raw->madidihang_mean_hsi,
-                    'albakor_mean_hsi' => (float)$raw->albakor_mean_hsi,
+                    'tongkol_mean_hsi' => (float)$raw->tongkol_mean_hsi,
                     'highest_species' => $highestSpecies,
                     'highest_score' => (float)$highestScore,
                 ],
@@ -111,7 +111,7 @@ class PostGisScientificDataRepository implements ScientificDataRepositoryInterfa
                 cg.cell_id, cg.cell_class, cg.center_lon, cg.center_lat, 
                 cg.depth_m, cg.dist_port_km, cg.dist_port_nm,
                 cg.is_shelf_break, cg.is_prigi_inshore, cg.is_prigi_offshore, cg.sector,
-                dp.prediction_date, dp.hsi_cakalang, dp.hsi_madidihang, dp.hsi_albakor, dp.hsi_tongkol,
+                dp.prediction_date, dp.hsi_cakalang, dp.hsi_madidihang, dp.hsi_tongkol,
                 dp.is_hotspot, dp.dom_zone, dp.bycatch_traffic_light,
                 dp.sst_c, dp.chla_mg_m3, dp.current_velocity_ms, dp.wave_height_m, dp.wind_speed_ms,
                 dp.safety_advisory,
@@ -143,10 +143,11 @@ class PostGisScientificDataRepository implements ScientificDataRepositoryInterfa
         }
 
         if (!empty($filters['species']) && isset($filters['min_hsi'])) {
-            $col = match (strtolower($filters['species'])) {
+            $col = match (strtolower(str_replace('-', '_', $filters['species']))) {
                 'cakalang' => 'dp.hsi_cakalang',
+                'tuna_sirip_kuning' => 'dp.hsi_madidihang',
                 'madidihang' => 'dp.hsi_madidihang',
-                'albakor' => 'dp.hsi_albakor',
+                'tongkol_krai' => 'dp.hsi_tongkol',
                 'tongkol' => 'dp.hsi_tongkol',
                 default => null,
             };
@@ -191,7 +192,6 @@ class PostGisScientificDataRepository implements ScientificDataRepositoryInterfa
                     'prediction_date' => $row->prediction_date,
                     'hsi_cakalang' => (float)$row->hsi_cakalang,
                     'hsi_madidihang' => (float)$row->hsi_madidihang,
-                    'hsi_albakor' => (float)$row->hsi_albakor,
                     'hsi_tongkol' => (float)($row->hsi_tongkol ?? 0.0),
                     'waypoint_dms' => sprintf(
                         "%02d°%02d'%02d\"S, %03d°%02d'%02d\"E",

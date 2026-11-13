@@ -40,10 +40,10 @@ class PublicScienceKnowledgePagesTest extends TestCase
         $response->assertSee('Model Prediksi Spesies Tuna');
         $response->assertSee('Cakalang');
         $response->assertSee('Katsuwonus pelamis');
-        $response->assertSee('Madidihang');
+        $response->assertSee('Tuna Sirip Kuning');
         $response->assertSee('Thunnus albacares');
-        $response->assertSee('Albakor');
-        $response->assertSee('Thunnus alalunga');
+        $response->assertSee('Tongkol Krai');
+        $response->assertSee('Auxis thazard');
     }
 }
 

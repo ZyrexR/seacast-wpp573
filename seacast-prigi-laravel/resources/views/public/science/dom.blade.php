@@ -35,7 +35,7 @@
                             <span class="font-bold text-blue-600 dark:text-blue-400 font-mono">Armada Kapal Menengah</span>
                         </div>
                         <p class="text-slate-600 dark:text-slate-400 leading-relaxed">
-                            Jarak 12–60 NM dari pelabuhan di atas kedalaman tubir benua (&gt;200 m). Menghadirkan biomassa tuna madidihang dan albakor dewasa untuk kapal pukat cincin (*purse seine*).
+                            Jarak 12–60 NM dari pelabuhan di atas kedalaman tubir benua (&gt;200 m). Menghadirkan biomassa Tuna Sirip Kuning dan Cakalang dewasa untuk kapal pukat cincin (*purse seine*).
                         </p>
                     </div>
                 </x-ui.card>

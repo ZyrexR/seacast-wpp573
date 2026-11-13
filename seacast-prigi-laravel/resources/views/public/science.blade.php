@@ -27,7 +27,7 @@
                 <span class="text-[11px] text-slate-500 dark:text-slate-400">Front Upwelling &bull; 12-50 NM</span>
             </div>
             <div class="p-4 rounded-2xl bg-white dark:bg-[#071B2B] border border-slate-200 dark:border-[#244456] shadow-sm">
-                <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block">Kesesuaian Rata-rata Madidihang</span>
+                <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 block">Kesesuaian Rata-rata Tuna Sirip Kuning</span>
                 <span class="text-2xl font-black font-mono text-amber-600 dark:text-amber-400 mt-1 block">{{ $avgMadidihangHsi }}</span>
                 <span class="text-[11px] text-slate-500 dark:text-slate-400">Samudera Dalam &bull; &gt;50 NM</span>
             </div>
@@ -57,7 +57,7 @@
                         <span class="text-xs text-slate-500 dark:text-slate-400 font-mono">0 – 12 NM</span>
                     </div>
                     <h3 class="text-lg font-bold text-slate-900 dark:text-white">
-                        Tongkol (<em class="font-normal text-slate-500 dark:text-slate-400">Auxis thazard / Euthynnus</em>)
+                        Tongkol Krai (<em class="font-normal text-slate-500 dark:text-slate-400">Auxis thazard</em>)
                     </h3>
                     <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
                         Spesies pelagis neritik yang mendominasi lebih dari 60% volume pendaratan di koridor selatan Jawa. Berkelompok aktif di kolom air hangat-sedang (26,5°C – 29,5°C) dengan konsentrasi biomassa klorofil-a pesisir yang tinggi (> 0,30 mg/m³).
@@ -88,14 +88,14 @@
                     </div>
                 </div>
 
-                <!-- Madidihang -->
+                <!-- Tuna Sirip Kuning -->
                 <div class="p-5 rounded-2xl bg-white dark:bg-[#071B2B] border border-slate-200 dark:border-[#244456] space-y-3">
                     <div class="flex items-center justify-between">
                         <span class="px-2.5 py-1 rounded-lg bg-amber-500/10 text-amber-400 text-xs font-bold font-mono">SAMUDERA DALAM</span>
                         <span class="text-xs text-slate-500 dark:text-slate-400 font-mono">&gt; 50 NM</span>
                     </div>
                     <h3 class="text-lg font-bold text-slate-900 dark:text-white">
-                        Madidihang (<em class="font-normal text-slate-500 dark:text-slate-400">Thunnus albacares</em>)
+                        Tuna Sirip Kuning (<em class="font-normal text-slate-500 dark:text-slate-400">Thunnus albacares</em>)
                     </h3>
                     <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
                         Tuna sirip kuning oseanik bernilai ekonomis tinggi yang bermigrasi di laut lepas hingga ZEEI. Mampu menyelam melintasi lapisan termoklin dan menyukai konvergensi arus laut dalam serta struktur vortisitas mesoskala (*eddies*).
@@ -147,7 +147,7 @@
                     <strong class="text-cyan-800 dark:text-cyan-300 font-bold block">Kriteria Penentuan Hotspot Penangkapan:</strong>
                     <p class="leading-relaxed">
                         Sebuah sel grid 0,10° diklasifikasikan sebagai <code>is_hotspot = true</code> apabila nilai kesesuaian habitat tertinggi di antara ketiga spesies memenuhi batas ambang: 
-                        <code class="font-bold text-cyan-600 dark:text-cyan-400">max(HSI<sub>Tongkol</sub>, HSI<sub>Cakalang</sub>, HSI<sub>Madidihang</sub>) &ge; 0,70</code>.
+                        <code class="font-bold text-cyan-600 dark:text-cyan-400">max(HSI<sub>Tongkol Krai</sub>, HSI<sub>Cakalang</sub>, HSI<sub>Tuna Sirip Kuning</sub>) &ge; 0,70</code>.
                     </p>
                 </div>
             </div>
@@ -157,7 +157,7 @@
         <x-ui.card title="Hasil Audit Evaluasi Performa Model (10-Fold Spatial Cross-Validation)">
             <x-ui.table :headers="['Spesies Target', 'Bobot MaxEnt', 'Bobot Random Forest', 'Bobot GLM', 'Ensemble AUC', 'Ensemble TSS', 'Status Validasi']">
                 <tr>
-                    <td class="px-5 py-3.5 font-bold">Tongkol (<em>Auxis thazard</em>)</td>
+                    <td class="px-5 py-3.5 font-bold">Tongkol Krai (<em>Auxis thazard</em>)</td>
                     <td class="px-5 py-3.5 font-mono">0.330</td>
                     <td class="px-5 py-3.5 font-mono">0.370</td>
                     <td class="px-5 py-3.5 font-mono">0.300</td>
@@ -175,7 +175,7 @@
                     <td class="px-5 py-3.5 text-xs text-emerald-600 dark:text-emerald-400 font-semibold">Tervalidasi (Akurat)</td>
                 </tr>
                 <tr>
-                    <td class="px-5 py-3.5 font-bold">Madidihang (<em>Thunnus albacares</em>)</td>
+                    <td class="px-5 py-3.5 font-bold">Tuna Sirip Kuning (<em>Thunnus albacares</em>)</td>
                     <td class="px-5 py-3.5 font-mono">0.295</td>
                     <td class="px-5 py-3.5 font-mono">0.365</td>
                     <td class="px-5 py-3.5 font-mono">0.340</td>
@@ -213,7 +213,7 @@
                     <span class="px-2 py-0.5 rounded bg-sky-500/10 text-sky-400 font-mono font-bold text-xs">ZONA Z2</span>
                     <h3 class="text-sm font-bold text-slate-900 dark:text-white">Offshore Pelagic Fishing Ground</h3>
                     <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                        Wilayah laut lepas (&gt; 12 NM hingga ZEEI) untuk armada kapal penangkap 10–30 GT dan &gt; 30 GT. Sasaran utama: Cakalang dan Madidihang.
+                        Wilayah laut lepas (&gt; 12 NM hingga ZEEI) untuk armada kapal penangkap 10–30 GT dan &gt; 30 GT. Sasaran utama: Cakalang dan Tuna Sirip Kuning.
                     </p>
                 </div>
 

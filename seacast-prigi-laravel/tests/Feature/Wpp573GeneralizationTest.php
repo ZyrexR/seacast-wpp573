@@ -37,10 +37,10 @@ class Wpp573GeneralizationTest extends TestCase
         $response->assertSee('PPS Cilacap');
         $response->assertSee('PPN Palabuhanratu');
 
-        // Species dossiers: Tongkol, Cakalang, Madidihang
+        // Species dossiers: Tongkol Krai, Cakalang, Tuna Sirip Kuning
         $response->assertSee('Tongkol');
         $response->assertSee('Cakalang');
-        $response->assertSee('Madidihang');
+        $response->assertSee('Tuna Sirip Kuning');
 
         // Aggregated multi-port fleet
         $response->assertSee('2.450');

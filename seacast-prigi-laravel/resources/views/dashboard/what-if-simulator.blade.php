@@ -23,7 +23,7 @@
                 return this.fuelLiters * this.solarPrice;
             },
             get tunaPricePerKg() {
-                const prices = { cakalang: 22000, madidihang: 45000, albakor: 38000 };
+                const prices = { cakalang: 22000, tuna_sirip_kuning: 45000, tongkol_krai: 28000 };
                 return prices[this.targetSpecies] || 22000;
             },
             get grossRevenueRp() {
@@ -120,8 +120,8 @@
                         class="w-full bg-[#071B2B] border border-[#16445A] rounded-xl px-3 py-2 text-white font-mono focus:border-cyan-400 focus:outline-none"
                     >
                         <option value="cakalang">Cakalang (Rp 22.000 / kg)</option>
-                        <option value="madidihang">Madidihang (Rp 45.000 / kg)</option>
-                        <option value="albakor">Albakor (Rp 38.000 / kg)</option>
+                        <option value="tuna_sirip_kuning">Tuna Sirip Kuning (Rp 45.000 / kg)</option>
+                        <option value="tongkol_krai">Tongkol Krai (Rp 28.000 / kg)</option>
                     </select>
                 </div>
 

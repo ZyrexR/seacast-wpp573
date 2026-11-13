@@ -164,7 +164,7 @@
                             <span class="font-bold text-slate-700 dark:text-slate-300">GEBCO 2024 Global Grid</span>
                         </div>
                         <p class="text-slate-600 dark:text-slate-400 leading-relaxed pt-1">
-                            Kedalaman laut statis kanonikal yang membedakan zona paparan benua dangkal (&le; 200 m) tempat berkumpulnya Tongkol dari jurang tubir benua samudera dalam (&gt; 1.000 m) habitat utama Madidihang.
+                            Kedalaman laut statis kanonikal yang membedakan zona paparan benua dangkal (&le; 200 m) tempat berkumpulnya Tongkol Krai dari jurang tubir benua samudera dalam (&gt; 1.000 m) habitat utama Tuna Sirip Kuning.
                         </p>
                     </div>
                 </x-ui.card>

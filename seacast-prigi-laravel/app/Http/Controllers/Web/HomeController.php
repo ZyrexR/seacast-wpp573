@@ -25,7 +25,6 @@ class HomeController extends Controller
                 ROUND(AVG(wave_height_m)::numeric, 2) as avg_wave,
                 ROUND(AVG(hsi_cakalang)::numeric, 3) as cakalang_hsi,
                 ROUND(AVG(hsi_madidihang)::numeric, 3) as madidihang_hsi,
-                ROUND(AVG(hsi_albakor)::numeric, 3) as albakor_hsi,
                 ROUND(AVG(COALESCE(hsi_tongkol, 0.556))::numeric, 3) as tongkol_hsi,
                 COUNT(*) FILTER (WHERE bycatch_traffic_light = 'GREEN') as green_bycatch,
                 COUNT(*) as total_daily
@@ -56,7 +55,6 @@ class HomeController extends Controller
             'tongkolHsi' => $dailySummary->tongkol_hsi ?? 0.556,
             'cakalangHsi' => $dailySummary->cakalang_hsi ?? 0.209,
             'madidihangHsi' => $dailySummary->madidihang_hsi ?? 0.276,
-            'albakorHsi' => $dailySummary->albakor_hsi ?? 0.448,
             'bycatchSafePct' => $bycatchPct,
             'multiPortFleet' => $multiPortFleet,
             'totalFleet' => $multiPortFleet['total'],

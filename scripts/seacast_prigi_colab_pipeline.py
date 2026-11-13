@@ -157,13 +157,6 @@ def main():
     raw_prob_mad = (0.35 * suit_sst_mad + 0.30 * suit_chla_mad + 0.35 * suit_curr_mad) * (df_all['depth'] > 200.0)
     prob_mad = np.nan_to_num(np.power(raw_prob_mad, 2.5), nan=0.0)
 
-    # Albakor
-    suit_sst_alb = gaussian_suitability(df_all['sst'], 18.5, 23.5, 0.60)
-    suit_chla_alb = gaussian_suitability(df_all['chla'], 0.12, 0.35, 0.08)
-    suit_depth_alb = np.clip((df_all['depth'] - 1200.0) / 1800.0, 0.0, 1.0)
-    raw_prob_alb = (0.50 * suit_sst_alb + 0.25 * suit_chla_alb + 0.25 * suit_depth_alb) * (df_all['depth'] > 1200.0) * (df_all['dist_port_nm'] > 30.0)
-    prob_alb = np.nan_to_num(np.power(raw_prob_alb, 2.5), nan=0.0)
-
     # 5. Features & Scaler
     feature_cols = [
         'sst', 'grad_sst', 'front_indicator', 'chla', 'current_velocity', 
@@ -200,8 +193,7 @@ def main():
 
     species_configs = [
         ("cakalang", prob_cak),
-        ("madidihang", prob_mad),
-        ("albakor", prob_alb)
+        ("madidihang", prob_mad)
     ]
 
     kf = KFold(n_splits=5, shuffle=True, random_state=42)
@@ -247,6 +239,20 @@ def main():
         hsi_raw = 0.40 * p_m + 0.35 * p_r + 0.25 * p_g
         hsi_scaled = (hsi_raw - hsi_raw.min()) / (hsi_raw.max() - hsi_raw.min())
         df_all[f'hsi_{name}'] = np.round(hsi_scaled, 3)
+
+    # Tongkol Krai uses a transparent scientific screening rule, not a trained joblib model.
+    si_sst_tongkol = np.exp(-((df_all['sst'] - 28.75) / 2.33) ** 2)
+    si_chl_tongkol = np.exp(-((df_all['chla'] - 0.35) / 0.20) ** 2)
+    si_depth_tongkol = np.where(
+        df_all['depth'] <= 150.0,
+        1.0,
+        np.exp(-((df_all['depth'] - 150.0) / 150.0) ** 2),
+    )
+    df_all['hsi_tongkol'] = np.round(np.clip(
+        0.45 * si_sst_tongkol + 0.40 * si_chl_tongkol + 0.15 * si_depth_tongkol,
+        0.0,
+        1.0,
+    ), 3)
 
     # Hotspot Flag
     df_all['is_hotspot'] = (df_all['hsi_cakalang'] >= 0.70) | (df_all['hsi_madidihang'] >= 0.70)

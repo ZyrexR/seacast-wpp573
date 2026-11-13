@@ -27,7 +27,7 @@ def run_test():
     scaler = joblib.load(scaler_path)
     
     models = {}
-    for sp in ["cakalang", "madidihang", "albakor"]:
+    for sp in ["cakalang", "madidihang"]:
         mpath = os.path.join(MODELS_DIR, f"{sp}_ensemble_model.joblib")
         models[sp] = joblib.load(mpath)
 
@@ -126,7 +126,7 @@ def run_test():
 
         # Inference per species
         hsi_results = {}
-        for sp in ["cakalang", "madidihang", "albakor"]:
+        for sp in ["cakalang", "madidihang"]:
             bundle = models[sp]
             w = bundle["weights"]
             
@@ -151,7 +151,7 @@ def run_test():
         # Decision 1: Hotspot Status
         is_cakalang_hotspot = hsi_results["cakalang"]["ensemble"] >= 0.70
         is_madidihang_hotspot = hsi_results["madidihang"]["ensemble"] >= 0.70
-        composite_hsi = round((hsi_results["cakalang"]["ensemble"]*0.45 + hsi_results["madidihang"]["ensemble"]*0.40 + hsi_results["albakor"]["ensemble"]*0.15), 3)
+        composite_hsi = round((hsi_results["cakalang"]["ensemble"]*0.45 + hsi_results["madidihang"]["ensemble"]*0.40 + hsi_tongkol*0.15), 3)
         hotspot_label = "âœ… HOTSPOT POTENSIAL TINGGI" if (is_cakalang_hotspot or is_madidihang_hotspot or composite_hsi >= 0.70) else "âšª Zona Reguler / Potensi Sedang"
 
         # Decision 2: 5 DOM Zones
@@ -195,9 +195,8 @@ def run_test():
         # Print outputs
         print("  HASIL KEPUTUSAN MODEL SPASIAL:")
         print(f"  â€¢ HSI Cakalang    : {hsi_results['cakalang']['ensemble']} (MaxEnt:{hsi_results['cakalang']['maxent']}, RF:{hsi_results['cakalang']['rf']}, GLM:{hsi_results['cakalang']['glm']})")
-        print(f"  â€¢ HSI Madidihang  : {hsi_results['madidihang']['ensemble']} (MaxEnt:{hsi_results['madidihang']['maxent']}, RF:{hsi_results['madidihang']['rf']}, GLM:{hsi_results['madidihang']['glm']})")
-        print(f"  â€¢ HSI Albakor     : {hsi_results['albakor']['ensemble']} (RF:{hsi_results['albakor']['rf']}, GLM:{hsi_results['albakor']['glm']})")
-        print(f"  â€¢ HSI Tongkol     : {hsi_tongkol}")
+        print(f"  â€¢ HSI Tuna Sirip Kuning: {hsi_results['madidihang']['ensemble']} (MaxEnt:{hsi_results['madidihang']['maxent']}, RF:{hsi_results['madidihang']['rf']}, GLM:{hsi_results['madidihang']['glm']})")
+        print(f"  â€¢ HSI Tongkol Krai : {hsi_tongkol}")
         print(f"  â€¢ Komposit HSI    : {composite_hsi} â†’ Status: {hotspot_label}")
         print(f"  â€¢ Zonasi DOM      : {dom_zone}")
         print(f"  â€¢ Status Bycatch  : {bycatch_light}")

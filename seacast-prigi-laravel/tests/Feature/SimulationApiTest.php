@@ -40,7 +40,7 @@ class SimulationApiTest extends TestCase
                         'sim_chla',
                         'hsi_cakalang',
                         'hsi_madidihang',
-                        'hsi_albakor',
+                        'hsi_tongkol',
                         'is_hotspot',
                         'dom_zone',
                         'dist_port_nm',

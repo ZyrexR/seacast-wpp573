@@ -36,7 +36,7 @@ class ScientificHsiFormulaTest extends TestCase
 
     public function test_madidihang_hsi_is_optimal_in_deep_oceanic_bounds(): void
     {
-        // Optimal Madidihang: SST 23.0 - 31.5°C, oceanic Chl-a, deep bathymetry > 200m (Vaihola et al., 2023; Yati et al., 2024)
+        // Optimal Tuna Sirip Kuning: SST 23.0 - 31.5°C, oceanic Chl-a, deep bathymetry > 200m (Vaihola et al., 2023; Yati et al., 2024)
         $optimalHsi = $this->simulationService->calcMadidihangHsi(
             sst: 28.0,
             chla: 0.15,

@@ -51,7 +51,7 @@ class ScientificExportService
             'prediction_date',
             'hsi_cakalang',
             'hsi_madidihang',
-            'hsi_albakor',
+            'hsi_tongkol',
             'is_hotspot',
             'dom_zone',
             'bycatch_traffic_light',
@@ -79,7 +79,7 @@ class ScientificExportService
                 $p['prediction_date'] ?? $date,
                 $p['hsi_cakalang'] ?? '',
                 $p['hsi_madidihang'] ?? '',
-                $p['hsi_albakor'] ?? '',
+                $p['hsi_tongkol'] ?? '',
                 ($p['is_hotspot'] ?? false) ? 'true' : 'false',
                 $p['dom_zone'] ?? '',
                 $p['bycatch_traffic_light'] ?? '',
@@ -159,8 +159,8 @@ DATA PROVENANCE & METHODOLOGY:
    Ensemble Species Distribution Model (Random Forest, Extra Trees, Gradient Boosting, MaxEnt).
    Species Covered:
    - Cakalang / Skipjack Tuna (Katsuwonus pelamis)
-   - Madidihang / Yellowfin Tuna (Thunnus albacares)
-   - Albakor / Albacore Tuna (Thunnus alalunga)
+   - Tuna Sirip Kuning / Yellowfin Tuna (Thunnus albacares)
+   - Tongkol Krai / Frigate Tuna (Auxis thazard)
 
 2. Dynamic Ocean Management (DOM) Zones:
    - Z1_PFG_INSHORE: Distance <= 12 NM, HSI >= 0.55

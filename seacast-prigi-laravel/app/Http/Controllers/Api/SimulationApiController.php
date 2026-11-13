@@ -26,7 +26,7 @@ class SimulationApiController extends Controller
             // Vessel economics params
             'vesselClass' => 'nullable|string|in:< 10 GT,10 - 20 GT,20 - 30 GT',
             'targetDistanceNm' => 'nullable|numeric|between:1,100',
-            'targetSpecies' => 'nullable|string|in:cakalang,madidihang,albakor',
+            'targetSpecies' => 'nullable|string|in:cakalang,tuna_sirip_kuning,madidihang,tongkol_krai,tongkol',
             'solarPrice' => 'nullable|numeric|min:1000',
         ]);
 

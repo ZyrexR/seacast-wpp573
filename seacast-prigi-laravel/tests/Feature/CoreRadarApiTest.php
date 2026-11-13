@@ -24,7 +24,7 @@ class CoreRadarApiTest extends TestCase
                 'species' => [
                     'cakalang_mean_hsi',
                     'madidihang_mean_hsi',
-                    'albakor_mean_hsi',
+                    'tongkol_mean_hsi',
                     'highest_species',
                     'highest_score',
                 ],
@@ -75,7 +75,7 @@ class CoreRadarApiTest extends TestCase
                         'sector',
                         'hsi_cakalang',
                         'hsi_madidihang',
-                        'hsi_albakor',
+                        'hsi_tongkol',
                         'is_hotspot',
                         'dom_zone',
                         'bycatch_traffic_light',

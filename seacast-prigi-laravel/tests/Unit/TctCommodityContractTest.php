@@ -57,4 +57,37 @@ class TctCommodityContractTest extends TestCase
         $this->assertStringNotContainsString('albakor', strtolower($bridge));
         $this->assertStringNotContainsString('albacore', strtolower($bridge));
     }
+
+    public function test_active_laravel_surfaces_do_not_expose_albakor(): void
+    {
+        $roots = [
+            base_path('app'),
+            base_path('resources'),
+            base_path('routes'),
+        ];
+
+        foreach ($roots as $root) {
+            $iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($root));
+            foreach ($iterator as $file) {
+                if (!$file->isFile() || !str_ends_with($file->getFilename(), '.php')) {
+                    continue;
+                }
+
+                $contents = strtolower((string) file_get_contents($file->getPathname()));
+                $this->assertStringNotContainsString('albakor', $contents, $file->getPathname());
+                $this->assertStringNotContainsString('albacore', $contents, $file->getPathname());
+            }
+        }
+    }
+
+    public function test_dashboard_species_list_uses_tct_labels(): void
+    {
+        $dashboard = file_get_contents(base_path('app/Http/Controllers/Web/DashboardController.php'));
+
+        $this->assertIsString($dashboard);
+        $this->assertStringContainsString("'tuna_sirip_kuning'", $dashboard);
+        $this->assertStringContainsString("'tongkol_krai'", $dashboard);
+        $this->assertStringContainsString('Tuna Sirip Kuning', $dashboard);
+        $this->assertStringContainsString('Tongkol Krai', $dashboard);
+    }
 }

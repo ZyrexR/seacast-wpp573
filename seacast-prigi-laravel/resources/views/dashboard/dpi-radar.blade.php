@@ -69,7 +69,7 @@
                                 Leaflet GIS
                             </span>
                         </div>
-                        <p class="text-xs text-slate-400">8.129 Poligon PostGIS • Batimetri GEBCO • Ensemble SDM Cakalang, Madidihang & Albakor</p>
+                        <p class="text-xs text-slate-400">8.129 Poligon PostGIS • Batimetri GEBCO • Komoditas TCT: Cakalang, Tuna Sirip Kuning & Tongkol Krai</p>
                     </div>
                 </div>
 
@@ -364,7 +364,7 @@
                             </div>
                         </div>
 
-                        <!-- Species HSI breakdown -->
+                        <!-- TCT commodity HSI breakdown -->
                         <div class="pt-1.5 border-t border-slate-800/80 space-y-1">
                             <span class="text-[10px] text-slate-400 font-semibold uppercase block">Skor Kesesuaian Habitat (HSI)</span>
                             <div class="flex items-center justify-between text-xs">
@@ -372,12 +372,12 @@
                                 <span class="font-mono font-bold text-cyan-400" x-text="selectedCell?.hsi_cakalang"></span>
                             </div>
                             <div class="flex items-center justify-between text-xs">
-                                <span class="text-slate-300">Madidihang:</span>
+                                <span class="text-slate-300">Tuna Sirip Kuning:</span>
                                 <span class="font-mono font-bold text-amber-400" x-text="selectedCell?.hsi_madidihang"></span>
                             </div>
                             <div class="flex items-center justify-between text-xs">
-                                <span class="text-slate-300">Albakor:</span>
-                                <span class="font-mono font-bold text-emerald-400" x-text="selectedCell?.hsi_albakor"></span>
+                                <span class="text-slate-300">Tongkol Krai:</span>
+                                <span class="font-mono font-bold text-emerald-400" x-text="selectedCell?.hsi_tongkol"></span>
                             </div>
                         </div>
 
@@ -596,7 +596,7 @@
                     'Awal Angin Muson Tenggara • Mulai Penurunan SST Pesisir',
                     'Upwelling Berkembang • SST Turun ke 26.5°C • Klorofil Meningkat',
                     'Upwelling Kuat • SST 24.8°C • Blooming Klorofil Shelf Break (>0.8 mg/m³)',
-                    'Puncak Upwelling Tahunan • HSI Cakalang & Madidihang Mencapai Titik Tertinggi',
+                    'Puncak Upwelling Tahunan • HSI Cakalang & Tuna Sirip Kuning Mencapai Titik Tertinggi',
                     'Upwelling Berkelanjutan • Front Termal Kuat • Agregasi Pelagis Besar',
                     'Akhir Musim Upwelling • SST Berangsur Menghangat (27.5°C)',
                     'Kondisi Oseanografi Transisi • Snapshot Data Satelit GEE Terkini',
@@ -1205,14 +1205,12 @@
                 getSpeciesHsiValue(p) {
                     const cakalang = parseFloat(p.hsi_cakalang) || 0;
                     const madidihang = parseFloat(p.hsi_madidihang) || 0;
-                    const albakor = parseFloat(p.hsi_albakor) || 0;
                     const tongkol = parseFloat(p.hsi_tongkol) || 0;
 
                     if (this.selectedSpecies === 'cakalang') return cakalang;
-                    if (this.selectedSpecies === 'madidihang') return madidihang;
-                    if (this.selectedSpecies === 'albakor') return albakor;
-                    if (this.selectedSpecies === 'tongkol') return tongkol;
-                    return (cakalang + madidihang + albakor) / 3;
+                    if (this.selectedSpecies === 'tuna_sirip_kuning' || this.selectedSpecies === 'madidihang') return madidihang;
+                    if (this.selectedSpecies === 'tongkol_krai' || this.selectedSpecies === 'tongkol') return tongkol;
+                    return (cakalang + madidihang + tongkol) / 3;
                 },
 
                 getSeasonalModulation() {

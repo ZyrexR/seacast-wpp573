@@ -46,7 +46,7 @@ class EnvironmentTest extends TestCase
         $response = $this->get('/science');
         $response->assertStatus(200);
         $response->assertSee('MaxEnt');
-        $response->assertSee('0.000'); // Albakor weight check
+        $response->assertSee('Tongkol Krai');
 
         $response = $this->get('/documentation');
         $response->assertStatus(200);

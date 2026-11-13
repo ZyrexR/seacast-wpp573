@@ -4,7 +4,7 @@
             <div class="md:col-span-2 space-y-3">
                 <x-ui.brand-logo size="sm" :withText="true" :withLink="true" />
                 <p class="text-xs text-slate-600 dark:text-slate-400 max-w-md leading-relaxed">
-                    Platform Intelijen Oseanografi dan Prediksi Kesesuaian Daerah Penangkapan Ikan Pelagis (Tongkol, Cakalang, Madidihang) berbasiskan 8.129 sel kanonikal WPPNRI 573.
+                    Platform Intelijen Oseanografi dan Prediksi Kesesuaian Daerah Penangkapan Ikan TCT (Tongkol Krai, Cakalang, Tuna Sirip Kuning) berbasiskan 8.129 sel kanonikal WPPNRI 573.
                 </p>
                 <div class="flex items-center gap-2 text-floor text-slate-500 font-mono">
                     <span class="w-2 h-2 rounded-full bg-emerald-500"></span>

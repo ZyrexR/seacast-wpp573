@@ -89,10 +89,10 @@
             </div>
         </div>
 
-        <!-- Madidihang -->
+        <!-- Tuna Sirip Kuning -->
         <div>
             <div class="flex justify-between text-[11px] mb-0.5">
-                <span class="text-slate-300">Madidihang (YFT)</span>
+                <span class="text-slate-300">Tuna Sirip Kuning (YFT)</span>
                 <span class="font-mono font-medium text-amber-300" x-text="Number({{ $cellVar }}?.hsi_madidihang || 0).toFixed(3)"></span>
             </div>
             <div class="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
@@ -100,14 +100,14 @@
             </div>
         </div>
 
-        <!-- Albakor -->
+        <!-- Tongkol Krai -->
         <div>
             <div class="flex justify-between text-[11px] mb-0.5">
-                <span class="text-slate-300">Albakor (ALB)</span>
-                <span class="font-mono font-medium text-indigo-300" x-text="Number({{ $cellVar }}?.hsi_albakor || 0).toFixed(3)"></span>
+                <span class="text-slate-300">Tongkol Krai</span>
+                <span class="font-mono font-medium text-indigo-300" x-text="Number({{ $cellVar }}?.hsi_tongkol || 0).toFixed(3)"></span>
             </div>
             <div class="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
-                <div class="h-full bg-indigo-400 rounded-full transition-all duration-300" :style="`width: ${Math.min(100, ({{ $cellVar }}?.hsi_albakor || 0) * 100)}%`"></div>
+                <div class="h-full bg-indigo-400 rounded-full transition-all duration-300" :style="`width: ${Math.min(100, ({{ $cellVar }}?.hsi_tongkol || 0) * 100)}%`"></div>
             </div>
         </div>
     </div>

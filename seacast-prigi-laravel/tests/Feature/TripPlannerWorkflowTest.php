@@ -148,7 +148,7 @@ class TripPlannerWorkflowTest extends TestCase
                 'gear_code' => 'LLD-RT',
                 'gear_name' => 'Rawai Tuna',
                 'departure_date' => '2026-11-21',
-                'target_commodity' => 'Madidihang',
+                'target_commodity' => 'Tuna Sirip Kuning',
                 'target_lat' => -9.5,
                 'target_lon' => 109.0,
                 'target_dms' => "09°30'00\"S, 109°00'00\"E",

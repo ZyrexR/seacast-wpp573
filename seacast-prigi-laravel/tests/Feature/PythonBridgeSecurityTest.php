@@ -56,20 +56,16 @@ class PythonBridgeSecurityTest extends TestCase
         $this->assertArrayHasKey('applied_weights', $result->provenance);
 
         $applied = $result->provenance['applied_weights'];
-        // Strict baseline verification: Albakor MaxEnt weight MUST be 0.000!
-        $this->assertEquals(0.000, $applied['albakor']['maxent']);
-        $this->assertEquals(0.517, $applied['albakor']['rf']);
-        $this->assertEquals(0.483, $applied['albakor']['glm']);
-
         // Cakalang baseline weights
         $this->assertEquals(0.320, $applied['cakalang']['maxent']);
         $this->assertEquals(0.355, $applied['cakalang']['rf']);
         $this->assertEquals(0.325, $applied['cakalang']['glm']);
 
-        // Madidihang baseline weights
+        // Tuna Sirip Kuning baseline weights (internal key: madidihang)
         $this->assertEquals(0.295, $applied['madidihang']['maxent']);
         $this->assertEquals(0.365, $applied['madidihang']['rf']);
         $this->assertEquals(0.340, $applied['madidihang']['glm']);
+        $this->assertArrayNotHasKey('albakor', $applied);
     }
 }
 
