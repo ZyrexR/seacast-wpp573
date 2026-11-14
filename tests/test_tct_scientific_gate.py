@@ -40,11 +40,11 @@ class TctScientificGateTests(unittest.TestCase):
         self.assertEqual(result["validation_scope"], "operational_60nm")
         self.assertEqual(result["web_status"], "HOLD")
 
-    def test_approves_when_real_or_log_r2_reaches_target_and_beats_seasonal(self):
+    def test_approves_when_real_scale_r2_reaches_target_and_beats_seasonal(self):
         result = evaluate_species(
             species="tuna_sirip_kuning",
             model_rmse=10.0,
-            model_r2=0.20,
+            model_r2=0.55,
             model_r2_log=0.55,
             median_baseline_rmse=15.0,
             seasonal_baseline_rmse=12.0,
@@ -52,12 +52,27 @@ class TctScientificGateTests(unittest.TestCase):
                 "evidence_status": "EMPIRICALLY_VALIDATED",
                 "validation_scope": "full_grid",
             },
+            temporal_calibration_status="ENABLED",
         )
         self.assertEqual(result["temporal_status"], "APPROVED_FOR_RELEASE")
         self.assertTrue(result["meets_target_r2_log"])
-        self.assertFalse(result["meets_target_r2_real"])
+        self.assertTrue(result["meets_target_r2_real"])
         self.assertEqual(result["spatial_status"], "EMPIRICALLY_VALIDATED")
-        self.assertEqual(result["web_status"], "CANDIDATE_HIGH_CONFIDENCE")
+        self.assertEqual(result["spatial_release_allowed"], False)
+        self.assertEqual(result["web_status"], "HOLD")
+
+    def test_log_scale_r2_alone_cannot_approve_temporal_release(self):
+        result = evaluate_species(
+            species="cakalang",
+            model_rmse=10.0,
+            model_r2=0.20,
+            model_r2_log=0.55,
+            median_baseline_rmse=15.0,
+            seasonal_baseline_rmse=12.0,
+        )
+        self.assertEqual(result["temporal_status"], "REJECT")
+        self.assertTrue(result["meets_target_r2_log"])
+        self.assertFalse(result["meets_target_r2_real"])
 
 
 if __name__ == "__main__":

@@ -22,7 +22,7 @@ class FleetAnalyticsTest extends TestCase
         $response->assertSee('Analitik Armada');
         $response->assertSee('18,405.33');
         $response->assertSee('1,269');
-        $response->assertSee('Keterbatasan Ilmiah: CPUE Nominal vs. Standardized CPUE');
+        $response->assertSee('CPUE PROXY NOMINAL');
     }
 
     public function test_fleet_composition_api_returns_baseline_numbers(): void

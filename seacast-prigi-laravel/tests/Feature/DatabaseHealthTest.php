@@ -32,8 +32,8 @@ class DatabaseHealthTest extends TestCase
         $this->assertTrue($health['spatial_baseline']['gist_index_active']);
 
         // Exact baseline records verification
-        $this->assertEquals(8129, $health['data_records']['daily_predictions_count']);
-        $this->assertEquals('2026-11-03', $health['data_records']['latest_prediction_date']);
+        $this->assertEquals(16258, $health['data_records']['daily_predictions_count']);
+        $this->assertEquals('2026-11-07', $health['data_records']['latest_prediction_date']);
         $this->assertEquals(97548, $health['data_records']['grid_monthly_predictions_count']);
         $this->assertEquals(132, $health['data_records']['prigi_port_landings_count']);
         $this->assertEquals(3, $health['data_records']['prigi_fleet_rows_count']);
@@ -60,7 +60,7 @@ class DatabaseHealthTest extends TestCase
     public function test_eloquent_models_read_only_access(): void
     {
         $this->assertEquals(8129, CanonicalGrid::count());
-        $this->assertEquals(8129, DailyPrediction::count());
+        $this->assertEquals(16258, DailyPrediction::count());
         $this->assertEquals(97548, GridMonthlyPrediction::count());
         $this->assertEquals(132, PrigiPortLanding::count());
         $this->assertEquals(3, PrigiFleetByGt::count());

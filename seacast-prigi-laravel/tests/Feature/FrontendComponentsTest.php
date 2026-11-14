@@ -66,11 +66,11 @@ class FrontendComponentsTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee('SEACAST');
         $response->assertSee('Scientific Ocean Intelligence');
-        $response->assertSee('build/assets/app-');
+        $response->assertSee('resources/css/app.css');
         $response->assertSee('Beranda');
         $response->assertSee('Tentang SEACAST');
-        $response->assertSee('Sains & Metodologi', false);
-        $response->assertSee('Data & Dokumentasi', false);
+        $response->assertSee('Sains & Model', false);
+        $response->assertSee('Data Oseanografi', false);
         $response->assertSee('Login');
         $response->assertDontSee('Masuk Platform');
         $response->assertDontSee('Akses Dashboard');

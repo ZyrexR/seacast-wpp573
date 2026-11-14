@@ -29,11 +29,11 @@ class ComprehensiveRouteCoverageTest extends TestCase
     {
         $publicRoutes = [
             '/' => 'SEACAST',
-            '/about' => 'PPN Prigi',
-            '/science' => 'Ensemble SDM',
+            '/about' => 'Tentang Platform SEACAST',
+            '/science' => 'Metodologi Bio-Oseanografi',
             '/science/dynamic-ocean-management' => 'Dynamic Ocean Management',
             '/science/methodology' => 'Metodologi Ensemble',
-            '/science/prediction-models' => 'Model Prediksi Spesies',
+            '/science/prediction-models' => 'Model Prediksi Komoditas TCT',
             '/documentation' => 'Dokumentasi',
             '/design-system' => 'Design System',
             '/ocean-data' => 'Katalog Data Oseanografi',

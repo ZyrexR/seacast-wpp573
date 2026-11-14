@@ -305,6 +305,39 @@ class TripPlanningService
         ];
     }
 
+    private function temporalCorrectionFactor(string $commodityKey): ?float
+    {
+        $manifestPath = base_path('../outputs/tct_hybrid_2015_2025/reports/tct_hybrid_model_validation_2015_2025.json');
+        if (!is_file($manifestPath)) {
+            return null;
+        }
+
+        $manifest = json_decode((string)file_get_contents($manifestPath), true);
+        $calibration = $manifest['temporal_calibration'][$commodityKey] ?? null;
+        $rollingOriginFolds = (int)($calibration['validation_context']['rolling_origin_folds'] ?? 0);
+        $correctionFactor = $calibration['correction_factor'] ?? null;
+
+        if (
+            is_array($calibration)
+            && ($calibration['calibration_status'] ?? null) === 'ENABLED'
+            && ($calibration['correction_enabled'] ?? false) === true
+            && $rollingOriginFolds > 0
+            && is_numeric($correctionFactor)
+            && (float)$correctionFactor > 0
+        ) {
+            return (float)$correctionFactor;
+        }
+
+        return null;
+    }
+
+    private function resolveEstimateSource(string $requestedSource, ?float $temporalCorrectionFactor): string
+    {
+        return $requestedSource === 'TEMPORAL_CPUE_CALIBRATED' && $temporalCorrectionFactor !== null
+            ? 'TEMPORAL_CPUE_CALIBRATED'
+            : 'FORMULA_SCENARIO';
+    }
+
     public function generateCompleteTripPlan(array $params): array
     {
         $portCode = $params['port_code'] ?? 'PPN_PRIGI';
@@ -340,10 +373,12 @@ class TripPlanningService
         $selectedWave = $selectedCell['wave_height_m'] ?? null;
         $waveFallback = $selectedWave === null && !array_key_exists('wave_height_m', $params);
         $waveHeightM = (float)($selectedWave ?? $params['wave_height_m'] ?? 1.3);
-        $estimateSource = in_array($params['estimate_source'] ?? null, [
+        $requestedEstimateSource = in_array($params['estimate_source'] ?? null, [
             'FORMULA_SCENARIO',
             'TEMPORAL_CPUE_CALIBRATED',
         ], true) ? $params['estimate_source'] : 'FORMULA_SCENARIO';
+        $temporalCorrectionFactor = $this->temporalCorrectionFactor($commodityKey);
+        $estimateSource = $this->resolveEstimateSource($requestedEstimateSource, $temporalCorrectionFactor);
         $spatialEvidenceLevel = (string)($selectedCell['spatial_evidence_level']
             ?? $params['spatial_evidence_level']
             ?? 'PROXY_HSI');
@@ -360,6 +395,12 @@ class TripPlanningService
         $waveSafety = $this->evaluateWaveSafety($waveHeightM);
         $moon = $this->calculateMoonPhase($departureDate);
         $catch = $this->calculateCatchProjection($commodity, $gtClass, $hsiScore, $departureDate);
+        if ($estimateSource === 'TEMPORAL_CPUE_CALIBRATED' && $temporalCorrectionFactor !== null) {
+            $catch['projected_kg'] = (int)round($catch['projected_kg'] * $temporalCorrectionFactor);
+            $catch['gross_revenue_rp'] = (int)round(
+                $catch['projected_kg'] * $catch['benchmark_price_per_kg']
+            );
+        }
         $catch['estimate_source'] = $estimateSource;
         $catch['spatial_evidence_level'] = $spatialEvidenceLevel;
 

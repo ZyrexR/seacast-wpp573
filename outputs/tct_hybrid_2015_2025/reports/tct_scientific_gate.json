@@ -7,6 +7,7 @@
     {
       "species": "tuna_sirip_kuning",
       "temporal_status": "REJECT",
+      "temporal_calibration_status": "ENABLED",
       "spatial_status": "PARTIAL_SPATIAL_VALIDATION",
       "validation_scope": "operational_60nm",
       "spatial_release_allowed": false,
@@ -16,8 +17,8 @@
       "meets_target_r2_log": false,
       "meets_target_r2": false,
       "model_rmse_2025": 274.10260063027937,
-      "model_r2_2025": -0.2818134115819373,
-      "model_r2_log_2025": 0.0889937300517541,
+      "model_r2_2025": -0.2818134115819375,
+      "model_r2_log_2025": 0.0889937300517539,
       "median_baseline_rmse_2025": 312.2658588517945,
       "seasonal_baseline_rmse_2025": 305.5716416040572,
       "beats_median_baseline": true,
@@ -26,6 +27,7 @@
     {
       "species": "cakalang",
       "temporal_status": "REJECT",
+      "temporal_calibration_status": "BASELINE_ONLY",
       "spatial_status": "PARTIAL_SPATIAL_VALIDATION",
       "validation_scope": "operational_60nm",
       "spatial_release_allowed": false,
@@ -45,6 +47,7 @@
     {
       "species": "tongkol_krai",
       "temporal_status": "REJECT",
+      "temporal_calibration_status": "BASELINE_ONLY",
       "spatial_status": "PARTIAL_SPATIAL_VALIDATION",
       "validation_scope": "operational_60nm",
       "spatial_release_allowed": false,
@@ -63,7 +66,7 @@
     }
   ],
   "interpretation": {
-    "temporal_candidate": "Approved only when real or log R2 reaches 0.50 and RMSE beats the seasonal baseline.",
+    "temporal_candidate": "Approved only when real-scale R2 reaches 0.50 and RMSE beats the seasonal baseline; log R2 is diagnostic only.",
     "spatial_proxy": "Spatial release is controlled only by the occurrence validator and its explicit scope; temporal R² cannot approve a spatial claim.",
     "allowed_use": "Research review and exploratory maps with an explicit proxy label.",
     "prohibited_use": "Operational fish-location claim or replacement of production HSI models."

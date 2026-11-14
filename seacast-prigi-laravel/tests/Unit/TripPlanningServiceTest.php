@@ -153,6 +153,17 @@ class TripPlanningServiceTest extends TestCase
         $this->assertTrue($plan['fallbacks']['wave']);
     }
 
+    public function test_temporal_correction_requires_an_enabled_calibration_manifest(): void
+    {
+        $plan = $this->planner->generateCompleteTripPlan([
+            'port_code' => 'PPN_PRIGI',
+            'target_commodity' => 'Cakalang',
+            'estimate_source' => 'TEMPORAL_CPUE_CALIBRATED',
+        ]);
+
+        $this->assertSame('FORMULA_SCENARIO', $plan['estimate_source']);
+    }
+
     public function test_palabuhanratu_remains_internal_legacy_port_but_not_public_port_list(): void
     {
         $plan = $this->planner->generateCompleteTripPlan([

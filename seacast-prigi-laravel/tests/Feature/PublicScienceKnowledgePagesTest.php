@@ -37,7 +37,7 @@ class PublicScienceKnowledgePagesTest extends TestCase
         $response = $this->get('/science/prediction-models');
 
         $response->assertStatus(200);
-        $response->assertSee('Model Prediksi Spesies Tuna');
+        $response->assertSee('Model Prediksi Komoditas TCT');
         $response->assertSee('Cakalang');
         $response->assertSee('Katsuwonus pelamis');
         $response->assertSee('Tuna Sirip Kuning');

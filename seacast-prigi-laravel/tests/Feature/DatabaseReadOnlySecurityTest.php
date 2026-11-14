@@ -34,7 +34,7 @@ class DatabaseReadOnlySecurityTest extends TestCase
         $this->assertEquals(8129, $count);
 
         $dailyCount = DB::connection('pgsql')->table('daily_predictions')->count();
-        $this->assertEquals(8129, $dailyCount);
+        $this->assertEquals(16258, $dailyCount);
 
         $monthlyCount = DB::connection('pgsql')->table('grid_monthly_predictions')->count();
         $this->assertEquals(97548, $monthlyCount);

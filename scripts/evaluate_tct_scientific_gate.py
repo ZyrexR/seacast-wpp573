@@ -28,21 +28,33 @@ def evaluate_species(
     model_r2_log: float | None = None,
     target_r2_threshold: float = 0.50,
     spatial_validation: dict[str, object] | None = None,
+    temporal_calibration_status: str | None = None,
 ) -> dict[str, object]:
     beats_median = model_rmse < median_baseline_rmse
     beats_seasonal = model_rmse < seasonal_baseline_rmse
     meets_target_r2_real = model_r2 >= target_r2_threshold
     meets_target_r2_log = model_r2_log is not None and model_r2_log >= target_r2_threshold
     meets_target_r2 = meets_target_r2_real or meets_target_r2_log
-    temporal_approved = beats_seasonal and meets_target_r2
+    # Production temporal release is decided on the real CPUE scale. A log-scale
+    # R² remains diagnostic and cannot authorize a catch correction by itself.
+    temporal_approved = (
+        beats_seasonal
+        and meets_target_r2_real
+        and temporal_calibration_status == "ENABLED"
+    )
     spatial_status, validation_scope = _spatial_gate_result(spatial_validation)
+    spatial_release_allowed = (
+        spatial_status == "EMPIRICALLY_VALIDATED"
+        and validation_scope == "operational_60nm"
+    )
     return {
         "species": species,
         "temporal_status": "APPROVED_FOR_RELEASE" if temporal_approved else "REJECT",
+        "temporal_calibration_status": temporal_calibration_status or "UNSPECIFIED",
         "spatial_status": spatial_status,
         "validation_scope": validation_scope,
-        "spatial_release_allowed": spatial_status == "EMPIRICALLY_VALIDATED",
-        "web_status": "CANDIDATE_HIGH_CONFIDENCE" if temporal_approved and spatial_status == "EMPIRICALLY_VALIDATED" else "HOLD",
+        "spatial_release_allowed": spatial_release_allowed,
+        "web_status": "CANDIDATE_HIGH_CONFIDENCE" if temporal_approved and spatial_release_allowed else "HOLD",
         "target_r2_threshold": target_r2_threshold,
         "meets_target_r2_real": meets_target_r2_real,
         "meets_target_r2_log": meets_target_r2_log,
@@ -80,6 +92,11 @@ def main() -> None:
     if args.spatial_report.exists():
         spatial_payload = json.loads(args.spatial_report.read_text(encoding="utf-8"))
         spatial_validation = spatial_payload.get("operational_60nm", spatial_payload)
+    calibration_report = args.output_dir / "tct_hybrid_model_validation_2015_2025.json"
+    calibration_by_species: dict[str, object] = {}
+    if calibration_report.exists():
+        calibration_payload = json.loads(calibration_report.read_text(encoding="utf-8"))
+        calibration_by_species = calibration_payload.get("temporal_calibration", {})
     decisions = [
         evaluate_species(
             species=row.species,
@@ -89,6 +106,11 @@ def main() -> None:
             seasonal_baseline_rmse=float(row.seasonal_baseline_rmse_2025),
             model_r2_log=float(row.ensemble_r2_log_2025) if hasattr(row, "ensemble_r2_log_2025") else None,
             spatial_validation=spatial_validation,
+            temporal_calibration_status=(
+                calibration_by_species.get(row.species, {}).get("calibration_status")
+                if isinstance(calibration_by_species.get(row.species), dict)
+                else None
+            ),
         )
         for row in metrics.itertuples(index=False)
     ]
@@ -99,7 +121,7 @@ def main() -> None:
         "validation_year": 2025,
         "species": decisions,
         "interpretation": {
-            "temporal_candidate": "Approved only when real or log R2 reaches 0.50 and RMSE beats the seasonal baseline.",
+            "temporal_candidate": "Approved only when real-scale R2 reaches 0.50 and RMSE beats the seasonal baseline; log R2 is diagnostic only.",
             "spatial_proxy": "Spatial release is controlled only by the occurrence validator and its explicit scope; temporal R² cannot approve a spatial claim.",
             "allowed_use": "Research review and exploratory maps with an explicit proxy label.",
             "prohibited_use": "Operational fish-location claim or replacement of production HSI models.",
@@ -117,7 +139,10 @@ def main() -> None:
     rows = [
         f"| {labels.get(item['species'], item['species'])} | {item['model_rmse_2025']:.3f} | "
         f"{item['median_baseline_rmse_2025']:.3f} | {item['seasonal_baseline_rmse_2025']:.3f} | "
-        f"{item['model_r2_2025']:.3f} | {item['temporal_status']} | {item['web_status']} |"
+        f"{item['model_r2_2025']:.3f} | "
+        f"{item['model_r2_log_2025'] if item['model_r2_log_2025'] is not None else float('nan'):.3f} | "
+        f"{item['temporal_status']} | {item['temporal_calibration_status']} | "
+        f"{item['spatial_status']} | {item['validation_scope']} | {item['web_status']} |"
         for item in decisions
     ]
     temporal_summary = "; ".join(
@@ -130,12 +155,13 @@ def main() -> None:
             "",
             "**Overall decision:** HOLD_FOR_SCIENTIFIC_REVIEW",
             "",
-            "| Komoditas | RMSE model | Baseline median | Baseline musiman | R² | Temporal | Web |",
-            "|---|---:|---:|---:|---:|---|---|",
+            "| Komoditas | RMSE model | Baseline median | Baseline musiman | R² riil | R² log | Temporal | Calibration | Spatial | Scope | Web |",
+            "|---|---:|---:|---:|---:|---:|---|---|---|---|---|",
             *rows,
             "",
             "MaxEnt belum dijalankan; occurrence tersedia untuk run terpisah dengan spatial-block cross-validation.",
             "Cakupan peta operasional saat ini masih parsial dan seluruh hasil tetap berstatus proxy spasial.",
+            "Status spatial per komoditas dan scope operasional tercantum pada tabel; full-grid proximity tidak mengizinkan release operasional.",
             f"Status temporal holdout 2025: {temporal_summary}.",
         ]
     )

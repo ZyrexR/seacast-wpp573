@@ -41,7 +41,7 @@ class EnvironmentTest extends TestCase
 
         $response = $this->get('/about');
         $response->assertStatus(200);
-        $response->assertSee('PPN Prigi');
+        $response->assertSee('Tentang Platform SEACAST');
 
         $response = $this->get('/science');
         $response->assertStatus(200);
