@@ -1,7 +1,7 @@
 {
   "status": "HOLD_FOR_SCIENTIFIC_REVIEW",
   "web_integration_allowed": false,
-  "maxent_status": "SKIPPED_NO_SPATIAL_OCCURRENCE",
+  "maxent_status": "AVAILABLE_FOR_SEPARATE_OCCURRENCE_RUN",
   "validation_year": 2025,
   "species": [
     {
@@ -12,9 +12,10 @@
       "target_r2_threshold": 0.5,
       "meets_target_r2_real": false,
       "meets_target_r2_log": false,
-      "model_rmse_2025": 264.8483281523253,
-      "model_r2_2025": -0.1967211617833648,
-      "model_r2_log_2025": -0.7499384648174536,
+      "meets_target_r2": false,
+      "model_rmse_2025": 274.10260063027937,
+      "model_r2_2025": -0.2818134115819373,
+      "model_r2_log_2025": 0.0889937300517541,
       "median_baseline_rmse_2025": 312.2658588517945,
       "seasonal_baseline_rmse_2025": 305.5716416040572,
       "beats_median_baseline": true,
@@ -27,10 +28,11 @@
       "web_status": "HOLD",
       "target_r2_threshold": 0.5,
       "meets_target_r2_real": false,
-      "meets_target_r2_log": false,
-      "model_rmse_2025": 179.0269554541311,
-      "model_r2_2025": 0.1435143334747719,
-      "model_r2_log_2025": -1.839426290464945,
+      "meets_target_r2_log": true,
+      "meets_target_r2": true,
+      "model_rmse_2025": 178.80948338906654,
+      "model_r2_2025": 0.1455938926775134,
+      "model_r2_log_2025": 0.5092741107378398,
       "median_baseline_rmse_2025": 232.3466195907697,
       "seasonal_baseline_rmse_2025": 178.80948338906654,
       "beats_median_baseline": true,
@@ -44,18 +46,19 @@
       "target_r2_threshold": 0.5,
       "meets_target_r2_real": false,
       "meets_target_r2_log": false,
-      "model_rmse_2025": 13.40105730562796,
-      "model_r2_2025": -0.0554940002290649,
-      "model_r2_log_2025": -1.197289122618712,
+      "meets_target_r2": false,
+      "model_rmse_2025": 13.537171956051962,
+      "model_r2_2025": -0.0770442127395263,
+      "model_r2_log_2025": -1.212136419409758,
       "median_baseline_rmse_2025": 17.10200346443295,
       "seasonal_baseline_rmse_2025": 13.537171956051962,
       "beats_median_baseline": true,
-      "beats_seasonal_baseline": true
+      "beats_seasonal_baseline": false
     }
   ],
   "interpretation": {
-    "temporal_candidate": "Beats median and same-month climatology baselines with positive R2.",
-    "spatial_proxy": "No species-specific catch coordinates exist for spatial validation.",
+    "temporal_candidate": "Approved only when real or log R2 reaches 0.50 and RMSE beats the seasonal baseline.",
+    "spatial_proxy": "Occurrence coordinates are available, but the current 60 NM operational output provides only partial spatial coverage; MaxEnt remains a separate spatial-block-CV run.",
     "allowed_use": "Research review and exploratory maps with an explicit proxy label.",
     "prohibited_use": "Operational fish-location claim or replacement of production HSI models."
   }

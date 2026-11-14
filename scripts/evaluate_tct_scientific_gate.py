@@ -18,15 +18,19 @@ def evaluate_species(
 ) -> dict[str, object]:
     beats_median = model_rmse < median_baseline_rmse
     beats_seasonal = model_rmse < seasonal_baseline_rmse
-    temporal_candidate = beats_median and beats_seasonal and model_r2 > 0
+    meets_target_r2_real = model_r2 >= target_r2_threshold
+    meets_target_r2_log = model_r2_log is not None and model_r2_log >= target_r2_threshold
+    meets_target_r2 = meets_target_r2_real or meets_target_r2_log
+    temporal_approved = beats_seasonal and meets_target_r2
     return {
         "species": species,
-        "temporal_status": "CANDIDATE" if temporal_candidate else "REJECT",
+        "temporal_status": "APPROVED_FOR_RELEASE" if temporal_approved else "REJECT",
         "spatial_status": "PROXY_ONLY_NO_COORDINATES",
         "web_status": "HOLD",
         "target_r2_threshold": target_r2_threshold,
-        "meets_target_r2_real": model_r2 > target_r2_threshold,
-        "meets_target_r2_log": model_r2_log is not None and model_r2_log > target_r2_threshold,
+        "meets_target_r2_real": meets_target_r2_real,
+        "meets_target_r2_log": meets_target_r2_log,
+        "meets_target_r2": meets_target_r2,
         "model_rmse_2025": model_rmse,
         "model_r2_2025": model_r2,
         "model_r2_log_2025": model_r2_log,
@@ -65,12 +69,12 @@ def main() -> None:
     payload = {
         "status": "HOLD_FOR_SCIENTIFIC_REVIEW",
         "web_integration_allowed": False,
-        "maxent_status": "SKIPPED_NO_SPATIAL_OCCURRENCE",
+        "maxent_status": "AVAILABLE_FOR_SEPARATE_OCCURRENCE_RUN",
         "validation_year": 2025,
         "species": decisions,
         "interpretation": {
-            "temporal_candidate": "Beats median and same-month climatology baselines with positive R2.",
-            "spatial_proxy": "No species-specific catch coordinates exist for spatial validation.",
+            "temporal_candidate": "Approved only when real or log R2 reaches 0.50 and RMSE beats the seasonal baseline.",
+            "spatial_proxy": "Occurrence coordinates are available, but the current 60 NM operational output provides only partial spatial coverage; MaxEnt remains a separate spatial-block-CV run.",
             "allowed_use": "Research review and exploratory maps with an explicit proxy label.",
             "prohibited_use": "Operational fish-location claim or replacement of production HSI models.",
         },
@@ -104,8 +108,8 @@ def main() -> None:
             "|---|---:|---:|---:|---:|---|---|",
             *rows,
             "",
-            "MaxEnt tidak dijalankan karena tidak tersedia occurrence berkoordinat per spesies.",
-            "Semua peta tetap berstatus proxy spasial. Hasil belum boleh dipublikasikan sebagai lokasi ikan operasional.",
+            "MaxEnt belum dijalankan; occurrence tersedia untuk run terpisah dengan spatial-block cross-validation.",
+            "Cakupan peta operasional saat ini masih parsial dan seluruh hasil tetap berstatus proxy spasial.",
             f"Status temporal holdout 2025: {temporal_summary}.",
         ]
     )

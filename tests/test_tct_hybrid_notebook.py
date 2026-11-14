@@ -2,11 +2,14 @@ import json
 import ast
 import re
 import tempfile
+import sys
 import unittest
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
+
+sys.path.insert(0, str(Path(__file__).parents[1] / "scripts"))
 
 
 NOTEBOOK = Path(__file__).parents[1] / "notebooks" / "SEACAST_TCT_HYBRID_MODELING_2015_2025.ipynb"
@@ -20,6 +23,7 @@ class TctHybridNotebookTest(unittest.TestCase):
         from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
         from sklearn.model_selection import TimeSeriesSplit
         from sklearn.preprocessing import StandardScaler
+        from tct_local_modeling import FEATURE_COLS as MODEL_FEATURE_COLS
 
         payload = json.loads(NOTEBOOK.read_text(encoding="utf-8"))
         code = next("".join(cell["source"]) for cell in payload["cells"]
@@ -38,6 +42,9 @@ class TctHybridNotebookTest(unittest.TestCase):
             "vbd_pct_detect": raw["total_trip_alat"] / 1000,
             "cakalang_cpue_kg_trip": raw["cakalang_kg"] / raw["total_trip_alat"],
         })
+        for index, column in enumerate(MODEL_FEATURE_COLS, start=1):
+            if column not in monthly:
+                monthly[column] = raw["month"] / (12.0 * index)
         namespace = dict(np=np, pd=pd, LinearGAM=LinearGAM, s=s,
                          RandomForestRegressor=RandomForestRegressor,
                          GradientBoostingRegressor=GradientBoostingRegressor,
@@ -45,7 +52,8 @@ class TctHybridNotebookTest(unittest.TestCase):
                          TimeSeriesSplit=TimeSeriesSplit,
                          mean_absolute_error=mean_absolute_error,
                          mean_squared_error=mean_squared_error, r2_score=r2_score,
-                         monthly=monthly, FEATURE_COLS=["sst_c", "chla_mg_m3", "sst_gradient", "vbd_pct_detect"],
+                         monthly=monthly, FEATURE_COLS=MODEL_FEATURE_COLS,
+                         GAM_FEATURES=["sst_c", "chla_mg_m3", "upwelling_contrast_index"],
                          RANDOM_STATE=42, train_last_year=2024, final_validation_year=2025,
                          maxent_status={"status": "skipped"})
         exec(compile(functions, "model", "exec"), namespace)
@@ -123,6 +131,12 @@ class TctHybridNotebookTest(unittest.TestCase):
         self.assertIn("MAX_OPERATIONAL_NM = 60.0", source)
         self.assertIn("CILACAP_RAW_PATH", source)
         self.assertIn("residual_shrinkage", source)
+        self.assertIn("apply_oceanographic_qc", source)
+        self.assertIn("fleet_gt_30gt", source)
+        self.assertIn("GAM_FEATURES", source)
+        self.assertIn("n_splines=3", source)
+        self.assertIn("shrinkage_grid = np.array([0.0", source)
+        self.assertIn("tct_occurrence_hsi_matches.csv", source)
         self.assertNotIn("monthly_env = df.groupby('month_key')[FEATURE_COLS].mean()", source)
         self.assertNotIn("legacy_species_removed", source)
 

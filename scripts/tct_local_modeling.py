@@ -45,6 +45,13 @@ FEATURE_COLS = [
     "wind_speed",
     "wind_stress",
     "ekman_upwelling",
+    # Fleet capacity and literature-informed physiological suitability.
+    "fleet_gt_30gt",
+    "fleet_lt_10gt",
+    "yft_sst_suit",
+    "yft_chla_suit",
+    "skj_sst_suit",
+    "skj_chla_suit",
     # VIIRS vessel activity.
     "vbd_pct_detect",
     "local_active_cell_share",
@@ -55,6 +62,42 @@ FEATURE_COLS = [
     "sin_month",
     "cos_month",
 ]
+
+
+OCEANOGRAPHIC_QC_LIMITS = {
+    "wind_speed": (0.0, 15.0),
+    "wind_stress": (0.0, 0.30),
+    "ekman_upwelling": (-0.002, 0.002),
+}
+
+
+def apply_oceanographic_qc(frame: pd.DataFrame) -> pd.DataFrame:
+    """Apply explicit physical bounds to known GEE scaling outliers."""
+
+    result = frame.copy()
+    clipped_counts: dict[str, int] = {}
+    for column, (lower, upper) in OCEANOGRAPHIC_QC_LIMITS.items():
+        if column not in result.columns:
+            continue
+        values = pd.to_numeric(result[column], errors="coerce")
+        mask = values.notna() & ((values < lower) | (values > upper))
+        clipped_counts[column] = int(mask.sum())
+        result[column] = values.clip(lower=lower, upper=upper)
+    result.attrs["oceanographic_qc_clipped_counts"] = clipped_counts
+    return result
+
+
+def add_physiological_suitability_features(frame: pd.DataFrame) -> pd.DataFrame:
+    """Add transparent Gaussian suitability curves from the literature priors."""
+
+    result = frame.copy()
+    sst = pd.to_numeric(result.get("sst_c"), errors="coerce")
+    chla = pd.to_numeric(result.get("chla_mg_m3"), errors="coerce")
+    result["yft_sst_suit"] = np.exp(-0.5 * ((sst - 27.5) / 1.5) ** 2)
+    result["yft_chla_suit"] = np.exp(-0.5 * ((chla - 0.16) / 0.05) ** 2)
+    result["skj_sst_suit"] = np.exp(-0.5 * ((sst - 27.0) / 1.5) ** 2)
+    result["skj_chla_suit"] = np.exp(-0.5 * ((chla - 0.30) / 0.10) ** 2)
+    return result
 
 
 def add_temporal_model_features(frame: pd.DataFrame) -> pd.DataFrame:

@@ -99,8 +99,10 @@ GEE_DIR = DATA_DIR / 'oceanographic' / 'monthly_csv'
 EOG_DIR = DATA_DIR / 'eog' / 'vbd' / 'processed'
 MASTER_PATH = DATA_DIR / 'master_prigi_all_inclusive.csv'
 CILACAP_RAW_PATH = PROJECT_ROOT / 'seacast-prigi-laravel' / 'database' / 'data' / 'raw' / 'pps_cilacap_statistics_2016_2025.csv'
+PRIGI_FLEET_PATH = DATA_DIR / 'prigi_fleet_by_gt_2015_2025.csv'
 GRID_PATH = DATA_DIR / 'geojson' / 'canonical_grid_8129_cells.geojson'
 OCCURRENCE_PATH = DATA_DIR / 'modeling' / 'tct_occurrences.parquet'
+OCCURRENCE_CSV_PATH = DATA_DIR / 'modeling' / 'tct_occurrences.csv'
 OUTPUT_DIR = PROJECT_ROOT / 'outputs' / 'tct_hybrid_2015_2025'
 MODEL_DIR = OUTPUT_DIR / 'models'
 PREDICTION_DIR = OUTPUT_DIR / 'predictions'
@@ -114,7 +116,9 @@ sys.path.insert(0, str(PROJECT_ROOT / 'scripts'))
 from tct_local_modeling import (
     FEATURE_COLS,
     add_anomaly_and_lag_features,
+    add_physiological_suitability_features,
     add_temporal_model_features,
+    apply_oceanographic_qc,
     build_local_features,
     haversine_nm,
     parse_cilacap_statistics,
@@ -221,6 +225,8 @@ df = gee.merge(
 df['vbd_n_detect'] = df['vbd_n_detect'].fillna(0)
 df['vbd_pct_detect'] = df['vbd_pct_detect'].fillna(0)
 df['vbd_partial_period'] = df['vbd_partial_period'].fillna(True).astype(bool)
+df = apply_oceanographic_qc(df)
+print('Oceanographic QC clipped:', df.attrs.get('oceanographic_qc_clipped_counts', {}))
 
 if not MASTER_PATH.exists():
     raise FileNotFoundError(MASTER_PATH)
@@ -257,6 +263,16 @@ def make_prigi_panel():
     for species, catch_column in TCT_SPECIES.items():
         result[species + '_catch_kg'] = pd.to_numeric(master[catch_column], errors='coerce').fillna(0)
         result[species + '_cpue_kg_trip'] = result[species + '_catch_kg'] / result['effort_trips'].clip(lower=1)
+    if not PRIGI_FLEET_PATH.exists():
+        raise FileNotFoundError(PRIGI_FLEET_PATH)
+    fleet = pd.read_csv(PRIGI_FLEET_PATH).rename(columns={
+        'gt_lt_10': 'fleet_lt_10gt',
+        'gt_gt_30': 'fleet_gt_30gt',
+    })
+    result = result.merge(
+        fleet[['year', 'fleet_lt_10gt', 'fleet_gt_30gt']],
+        on='year', how='left', validate='many_to_one',
+    )
     result['port'] = 'prigi'
     return result
 
@@ -292,6 +308,7 @@ monthly = local_features.merge(
     how='inner',
     validate='one_to_one',
 ).sort_values(['port', 'month_key']).reset_index(drop=True)
+monthly = add_physiological_suitability_features(monthly)
 monthly = add_anomaly_and_lag_features(
     monthly,
     value_columns=PORT_VALUE_COLS,
@@ -324,25 +341,36 @@ print('Feature columns:', FEATURE_COLS)
     'enabled': False,
     'status': 'skipped',
     'reason': 'NO SPATIAL OCCURRENCE: belum ada koordinat tangkapan/occurrence per spesies TCT.',
-    'input_path': str(OCCURRENCE_PATH),
+    'input_path': str(OCCURRENCE_CSV_PATH),
 }
-if OCCURRENCE_PATH.exists():
-    occurrence = pd.read_parquet(OCCURRENCE_PATH)
-    if {'species', 'lat', 'lon'}.issubset(occurrence.columns) and occurrence['species'].isin(TCT_SPECIES).any():
-        maxent_status = {
-            'enabled': True,
-            'status': 'available_for_separate_occurrence_run',
-            'reason': 'Occurrence tersedia; jalankan MaxEnt dengan spatial block CV terpisah.',
-            'input_path': str(OCCURRENCE_PATH),
-        }
+occurrence = pd.DataFrame()
+occurrence_path = OCCURRENCE_CSV_PATH if OCCURRENCE_CSV_PATH.exists() else OCCURRENCE_PATH
+if occurrence_path.exists():
+    occurrence = pd.read_csv(occurrence_path) if occurrence_path.suffix.lower() == '.csv' else pd.read_parquet(occurrence_path)
+    required_occurrence_cols = {'species', 'lat', 'lon'}
+    if required_occurrence_cols.issubset(occurrence.columns):
+        occurrence = occurrence.dropna(subset=['species', 'lat', 'lon']).copy()
+        occurrence = occurrence[occurrence['species'].isin(TCT_SPECIES)]
+        if not occurrence.empty:
+            maxent_status = {
+                'enabled': False,
+                'status': 'available_for_separate_occurrence_run',
+                'reason': 'Occurrence tersedia; MaxEnt tetap terpisah dan memerlukan spatial block CV.',
+                'input_path': str(occurrence_path),
+            }
 print('MaxEnt gate:', maxent_status)
 
 
-def make_gam(n_features):
-    terms = s(0, n_splines=5)
-    for index in range(1, n_features):
-        terms += s(index, n_splines=5)
-    return LinearGAM(terms, max_iter=300)
+GAM_FEATURES = ['sst_c', 'chla_mg_m3', 'upwelling_contrast_index']
+
+
+def make_gam(feature_cols):
+    terms = None
+    for feature_name in GAM_FEATURES:
+        index = feature_cols.index(feature_name)
+        term = s(index, n_splines=3, spline_order=2)
+        terms = term if terms is None else terms + term
+    return LinearGAM(terms, lam=1.0, max_iter=300)
 
 
 def metrics(y_true, y_pred):
@@ -407,7 +435,7 @@ def fit_species(species):
         fold_imputer, fold_scaler = SimpleImputer(strategy='median'), StandardScaler()
         x_fold_train = fold_scaler.fit_transform(fold_imputer.fit_transform(x_train_raw))
         x_fold_val = fold_scaler.transform(fold_imputer.transform(x_val_raw))
-        gam = make_gam(len(FEATURE_COLS)).fit(x_fold_train, y_residual)
+        gam = make_gam(FEATURE_COLS).fit(x_fold_train, y_residual)
         rf = RandomForestRegressor(
             n_estimators=300, max_depth=4, max_features='sqrt', min_samples_leaf=4,
             random_state=RANDOM_STATE + fold, n_jobs=-1
@@ -432,7 +460,7 @@ def fit_species(species):
     gbr_rmse = np.mean([x['rmse'] for x in gbr_cv])
     inverse = np.array([1 / max(gam_rmse, 1e-9), 1 / max(rf_rmse, 1e-9), 1 / max(gbr_rmse, 1e-9)])
     weights = inverse / inverse.sum()
-    shrinkage_grid = np.array([0.2, 0.4, 0.6, 0.8, 1.0])
+    shrinkage_grid = np.array([0.0, 0.2, 0.4, 0.6, 0.8, 1.0])
     shrinkage_scores = {}
     for shrinkage in shrinkage_grid:
         scores = []
@@ -455,7 +483,7 @@ def fit_species(species):
     imputer, scaler = SimpleImputer(strategy='median'), StandardScaler()
     x_train = scaler.fit_transform(imputer.fit_transform(train_frame[FEATURE_COLS].to_numpy()))
     x_holdout = scaler.transform(imputer.transform(holdout_frame[FEATURE_COLS].to_numpy()))
-    gam = make_gam(len(FEATURE_COLS)).fit(x_train, y_residual)
+    gam = make_gam(FEATURE_COLS).fit(x_train, y_residual)
     rf = RandomForestRegressor(
         n_estimators=300, max_depth=4, max_features='sqrt', min_samples_leaf=4,
         random_state=RANDOM_STATE, n_jobs=-1
@@ -557,9 +585,10 @@ for port_name, port in PORTS.items():
         on=['port', 'month_key'], how='left', validate='many_to_one',
     )
     local = local.merge(
-        monthly[['port', 'month_key', 'effort_trips', 'effort_trips_log', 'sin_month', 'cos_month']],
+        monthly[['port', 'month_key', 'effort_trips', 'effort_trips_log', 'sin_month', 'cos_month', 'fleet_gt_30gt', 'fleet_lt_10gt']],
         on=['port', 'month_key'], how='left', validate='many_to_one',
     )
+    local = add_physiological_suitability_features(local)
     local = local.sort_values(['cell_id', 'month_key']).reset_index(drop=True)
     for column in PORT_VALUE_COLS:
         climate = (
@@ -626,6 +655,66 @@ for port_name, port in PORTS.items():
     spatial_frames.append(local)
 
 spatial_df = pd.concat(spatial_frames, ignore_index=True)
+occurrence_validation = {
+    'status': 'NO_OCCURRENCE_INPUT',
+    'total_records': int(len(occurrence)),
+    'matched_records': 0,
+    'matched_rate': 0.0,
+    'by_species': {},
+}
+if not occurrence.empty:
+    spatial_cells = spatial_df[['cell_id', 'lon_center', 'lat_center', 'port']].drop_duplicates()
+    hsi_columns = ['hsi_' + species for species in TCT_SPECIES]
+    hsi_means = spatial_df.groupby(['port', 'cell_id'], as_index=False)[hsi_columns].mean()
+    matches = []
+    for _, point in occurrence.iterrows():
+        distances = haversine_nm(
+            spatial_cells['lon_center'].to_numpy(),
+            spatial_cells['lat_center'].to_numpy(),
+            float(point['lon']), float(point['lat']),
+        )
+        nearest_index = int(np.argmin(distances))
+        nearest = spatial_cells.iloc[nearest_index]
+        matched = float(distances[nearest_index]) <= 8.0
+        hsi_row = hsi_means[
+            (hsi_means['port'] == nearest['port']) & (hsi_means['cell_id'] == nearest['cell_id'])
+        ]
+        record = {
+            'source_id': point.get('source_id'),
+            'species': point['species'],
+            'nearest_port': nearest['port'],
+            'nearest_cell_id': nearest['cell_id'],
+            'nearest_distance_nm': float(distances[nearest_index]),
+            'matched_to_operational_hsi': bool(matched),
+        }
+        for column in hsi_columns:
+            record[column] = float(hsi_row[column].iloc[0]) if matched and not hsi_row.empty else np.nan
+        matches.append(record)
+    occurrence_matches = pd.DataFrame(matches)
+    occurrence_validation = {
+        'status': 'EMPIRICALLY_VALIDATED' if (
+            len(occurrence_matches) > 0
+            and occurrence_matches['matched_to_operational_hsi'].mean() >= 0.50
+            and int(occurrence_matches['matched_to_operational_hsi'].sum()) >= 5
+        ) else 'PARTIAL_OCCURRENCE_CHECK_INSUFFICIENT_OPERATIONAL_COVERAGE',
+        'total_records': int(len(occurrence_matches)),
+        'matched_records': int(occurrence_matches['matched_to_operational_hsi'].sum()),
+        'matched_rate': float(occurrence_matches['matched_to_operational_hsi'].mean()),
+        'by_species': {
+            species: {
+                'total_records': int((occurrence_matches['species'] == species).sum()),
+                'matched_records': int(occurrence_matches.loc[occurrence_matches['species'] == species, 'matched_to_operational_hsi'].sum()),
+            }
+            for species in occurrence_matches['species'].unique()
+        },
+    }
+    occurrence_matches.to_csv(REPORT_DIR / 'tct_occurrence_hsi_matches.csv', index=False)
+for species in TCT_SPECIES:
+    species_info = occurrence_validation['by_species'].get(species, {})
+    if species_info.get('matched_records', 0) >= 5 and occurrence_validation['status'] == 'EMPIRICALLY_VALIDATED':
+        evaluations[species]['spatial_evidence'] = 'EMPIRICALLY_VALIDATED'
+    elif species_info.get('total_records', 0):
+        evaluations[species]['spatial_evidence'] = 'PARTIAL_OCCURRENCE_CHECK_INSUFFICIENT_OPERATIONAL_COVERAGE'
 df = spatial_df
 
 
@@ -653,6 +742,7 @@ print(df['zone_label'].value_counts())
     'final_validation_period': '2025-01 to 2025-12',
     'models': evaluations,
     'maxent_gate': maxent_status,
+    'occurrence_validation': occurrence_validation,
     'limitations': [
         'Statistik pelabuhan adalah agregat bulanan tanpa koordinat tangkapan per spesies.',
         'EOG VIIRS VBD adalah proxy aktivitas kapal, bukan identifikasi spesies.',
@@ -727,6 +817,7 @@ manifest = {
     'operational_radius_nm': MAX_OPERATIONAL_NM,
     'spatial_rows_are_local_port_zones': True,
     'maxent_status': maxent_status,
+    'occurrence_validation': occurrence_validation,
     'spatial_evidence_level': 'LOW_PROXY_NO_COORDINATED_CATCH',
     'web_integration_status': 'HOLD_FOR_SCIENTIFIC_REVIEW',
 }

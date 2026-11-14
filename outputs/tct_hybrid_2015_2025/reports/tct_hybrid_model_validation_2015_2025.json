@@ -11,44 +11,44 @@
     "tuna_sirip_kuning": {
       "species": "tuna_sirip_kuning",
       "cv_gam": {
-        "rmse": 117.94159111678886,
-        "mae": 47.6920982256998,
-        "r2": -322.01241627873804
+        "rmse": 53.150595567191914,
+        "mae": 32.10596589751792,
+        "r2": -0.6045646781891194
       },
       "cv_random_forest": {
-        "rmse": 50.086295031158095,
-        "mae": 29.45074778373283,
-        "r2": -0.39871913692846706
+        "rmse": 50.16288740957907,
+        "mae": 29.419365045757093,
+        "r2": -0.41102470283118075
       },
       "cv_gradient_boosting": {
-        "rmse": 49.346566166816004,
-        "mae": 29.91190024736028,
-        "r2": -0.3879832996292562
+        "rmse": 48.64408305568206,
+        "mae": 29.299264622284866,
+        "r2": -0.3870982634058436
       },
       "holdout_2025_gam": {
-        "rmse": 265.23745577854476,
-        "mae": 169.83396381225427,
-        "r2": -0.20024030321542607
+        "rmse": 301.82550527803403,
+        "mae": 194.74320398967325,
+        "r2": -0.554212408170845
       },
       "holdout_2025_random_forest": {
-        "rmse": 277.8996824429614,
-        "mae": 182.1908961680036,
-        "r2": -0.3175727378499307
+        "rmse": 270.84903487496575,
+        "mae": 177.9317967253793,
+        "r2": -0.25156406151921895
       },
       "holdout_2025_gradient_boosting": {
-        "rmse": 223.84113728295057,
-        "mae": 146.63961733176822,
-        "r2": 0.1451728513524001
+        "rmse": 221.24874126995186,
+        "mae": 142.8806877089259,
+        "r2": 0.16485840177357314
       },
       "holdout_2025_ensemble": {
-        "rmse": 264.8483281523253,
-        "mae": 174.2693005074965,
-        "r2": -0.19672116178336485
+        "rmse": 274.10260063027937,
+        "mae": 178.159757773375,
+        "r2": -0.2818134115819373
       },
       "holdout_2025_ensemble_log": {
-        "rmse": 2.079124533883031,
-        "mae": 1.6098401573969845,
-        "r2": -0.7499384648174536
+        "rmse": 1.5001331129442328,
+        "mae": 1.319615042514734,
+        "r2": 0.08899373005175415
       },
       "holdout_2025_baseline_train_median": {
         "rmse": 312.2658588517945,
@@ -66,69 +66,70 @@
         "r2": -0.5930323450175865
       },
       "beats_baseline_2025": true,
-      "ensemble_r2_log_2025": -0.7499384648174536,
+      "ensemble_r2_log_2025": 0.08899373005175415,
       "ensemble_weights": {
-        "gam": 0.174069416536901,
-        "random_forest": 0.4098930443619696,
-        "gradient_boosting": 0.4160375391011294
+        "gam": 0.3172384827730163,
+        "random_forest": 0.33613324844212067,
+        "gradient_boosting": 0.34662826878486314
       },
       "residual_shrinkage": 1.0,
       "residual_cv_rmse_by_shrinkage": {
-        "0.2": 52.27374177425406,
-        "0.4": 51.45033598207233,
-        "0.6": 50.58942701576633,
-        "0.8": 49.68452908728008,
-        "1.0": 48.73985191060645
+        "0.0": 53.072441716784724,
+        "0.2": 52.58326840338601,
+        "0.4": 52.092144351079625,
+        "0.6": 51.59260524785702,
+        "0.8": 51.07993114899992,
+        "1.0": 50.55170711586832
       },
       "maxent": {
         "enabled": false,
-        "status": "skipped",
-        "reason": "NO SPATIAL OCCURRENCE: belum ada koordinat tangkapan/occurrence per spesies TCT.",
-        "input_path": "C:\\Users\\ThinkPad\\.gemini\\antigravity\\scratch\\prigi-pelagis\\data\\modeling\\tct_occurrences.parquet"
+        "status": "available_for_separate_occurrence_run",
+        "reason": "Occurrence tersedia; MaxEnt tetap terpisah dan memerlukan spatial block CV.",
+        "input_path": "C:\\Users\\ThinkPad\\.gemini\\antigravity\\scratch\\prigi-pelagis\\data\\modeling\\tct_occurrences.csv"
       },
-      "spatial_evidence": "dual_port_local_aggregate_proxy_no_catch_coordinates"
+      "spatial_evidence": "PARTIAL_OCCURRENCE_CHECK_INSUFFICIENT_OPERATIONAL_COVERAGE"
     },
     "cakalang": {
       "species": "cakalang",
       "cv_gam": {
-        "rmse": 170.51543749003153,
-        "mae": 102.55756165337894,
-        "r2": -0.9389303839551498
+        "rmse": 171.035282841498,
+        "mae": 106.04927173021835,
+        "r2": -0.3891751197166146
       },
       "cv_random_forest": {
-        "rmse": 164.88643050224138,
-        "mae": 100.23561770910061,
-        "r2": -0.34037393826966494
+        "rmse": 166.40852937116094,
+        "mae": 101.01059134982864,
+        "r2": -0.3825975117643854
       },
       "cv_gradient_boosting": {
-        "rmse": 167.17299056828227,
-        "mae": 100.82144916569547,
-        "r2": -0.4471055602645434
+        "rmse": 169.73065967728257,
+        "mae": 103.4191613774259,
+        "r2": -0.43561512992752766
       },
       "holdout_2025_gam": {
-        "rmse": 221.8550136526594,
-        "mae": 145.04719685383165,
-        "r2": -0.31529067937857214
+        "rmse": 178.80948338906654,
+        "mae": 119.04893242943298,
+        "r2": 0.14559389267751344
       },
       "holdout_2025_random_forest": {
-        "rmse": 136.4321475497929,
-        "mae": 93.19610972253997,
-        "r2": 0.5025875195657388
+        "rmse": 178.80948338906654,
+        "mae": 119.04893242943298,
+        "r2": 0.14559389267751344
       },
       "holdout_2025_gradient_boosting": {
-        "rmse": 177.85408894074266,
-        "mae": 116.75799380255751,
-        "r2": 0.15469983123648479
+        "rmse": 178.80948338906654,
+        "mae": 119.04893242943298,
+        "r2": 0.14559389267751344
       },
       "holdout_2025_ensemble": {
-        "rmse": 179.0269554541311,
-        "mae": 121.6997539597619,
-        "r2": 0.14351433347477194
+        "rmse": 178.80948338906654,
+        "mae": 119.04893242943298,
+        "r2": 0.14559389267751344
       },
       "holdout_2025_ensemble_log": {
-        "rmse": 2.486928699252285,
-        "mae": 1.7083722845324338,
-        "r2": -1.839426290464945
+        "rmse": 1.0338737765203068,
+        "mae": 0.8872217469482023,
+        "r2": 0.5092741107378398
       },
       "holdout_2025_baseline_train_median": {
         "rmse": 232.3466195907697,
@@ -146,69 +147,70 @@
         "r2": 0.14559389267751344
       },
       "beats_baseline_2025": false,
-      "ensemble_r2_log_2025": -1.839426290464945,
+      "ensemble_r2_log_2025": 0.5092741107378398,
       "ensemble_weights": {
-        "gam": 0.32742520391140756,
-        "random_forest": 0.3386030719456778,
-        "gradient_boosting": 0.3339717241429147
+        "gam": 0.32943610252561,
+        "random_forest": 0.3385956067672167,
+        "gradient_boosting": 0.3319682907071733
       },
-      "residual_shrinkage": 1.0,
+      "residual_shrinkage": 0.0,
       "residual_cv_rmse_by_shrinkage": {
-        "0.2": 167.39659081928022,
-        "0.4": 165.826798653502,
-        "0.6": 164.12479617263173,
-        "0.8": 162.45733910585872,
-        "1.0": 161.08567689114585
+        "0.0": 168.74030961892493,
+        "0.2": 168.9957714415921,
+        "0.4": 169.1915327329324,
+        "0.6": 169.32800094300515,
+        "0.8": 169.41232108934133,
+        "1.0": 169.4578813873008
       },
       "maxent": {
         "enabled": false,
-        "status": "skipped",
-        "reason": "NO SPATIAL OCCURRENCE: belum ada koordinat tangkapan/occurrence per spesies TCT.",
-        "input_path": "C:\\Users\\ThinkPad\\.gemini\\antigravity\\scratch\\prigi-pelagis\\data\\modeling\\tct_occurrences.parquet"
+        "status": "available_for_separate_occurrence_run",
+        "reason": "Occurrence tersedia; MaxEnt tetap terpisah dan memerlukan spatial block CV.",
+        "input_path": "C:\\Users\\ThinkPad\\.gemini\\antigravity\\scratch\\prigi-pelagis\\data\\modeling\\tct_occurrences.csv"
       },
       "spatial_evidence": "dual_port_local_aggregate_proxy_no_catch_coordinates"
     },
     "tongkol_krai": {
       "species": "tongkol_krai",
       "cv_gam": {
-        "rmse": 28.626684564543694,
-        "mae": 13.51324696834094,
-        "r2": -2.812789357244341
+        "rmse": 24.43987719347162,
+        "mae": 11.516734608605077,
+        "r2": -0.32142330766281146
       },
       "cv_random_forest": {
-        "rmse": 25.756807154341807,
-        "mae": 11.942911669382255,
-        "r2": -0.6400215885059805
+        "rmse": 24.905292238008332,
+        "mae": 11.554416945015614,
+        "r2": -0.4915798895534329
       },
       "cv_gradient_boosting": {
-        "rmse": 26.17130268898081,
-        "mae": 12.26652971003107,
-        "r2": -0.8031737431498569
+        "rmse": 26.08314260792511,
+        "mae": 12.221662691785482,
+        "r2": -0.7900904682351699
       },
       "holdout_2025_gam": {
-        "rmse": 13.513562261933934,
-        "mae": 9.385113103218478,
-        "r2": -0.07329062079721083
+        "rmse": 13.537171956051962,
+        "mae": 9.437496097024146,
+        "r2": -0.07704421273952633
       },
       "holdout_2025_random_forest": {
-        "rmse": 13.440584760277718,
-        "mae": 9.36969083904704,
-        "r2": -0.061729705355745734
+        "rmse": 13.537171956051962,
+        "mae": 9.437496097024146,
+        "r2": -0.07704421273952633
       },
       "holdout_2025_gradient_boosting": {
-        "rmse": 13.148362442361757,
-        "mae": 9.360549258928668,
-        "r2": -0.016063790430132174
+        "rmse": 13.537171956051962,
+        "mae": 9.437496097024146,
+        "r2": -0.07704421273952633
       },
       "holdout_2025_ensemble": {
-        "rmse": 13.40105730562796,
-        "mae": 9.435477900878187,
-        "r2": -0.05549400022906492
+        "rmse": 13.537171956051962,
+        "mae": 9.437496097024146,
+        "r2": -0.07704421273952633
       },
       "holdout_2025_ensemble_log": {
-        "rmse": 1.6150521737328896,
-        "mae": 1.3335098444412334,
-        "r2": -1.1972891226187121
+        "rmse": 1.620499519649338,
+        "mae": 1.3329428671065335,
+        "r2": -1.2121364194097581
       },
       "holdout_2025_baseline_train_median": {
         "rmse": 17.10200346443295,
@@ -225,35 +227,48 @@
         "mae": 9.437496097024146,
         "r2": -0.07704421273952633
       },
-      "beats_baseline_2025": true,
-      "ensemble_r2_log_2025": -1.1972891226187121,
+      "beats_baseline_2025": false,
+      "ensemble_r2_log_2025": -1.2121364194097581,
       "ensemble_weights": {
-        "gam": 0.3119889501466781,
-        "random_forest": 0.34675141254713215,
-        "gradient_boosting": 0.3412596373061898
+        "gam": 0.34266389378459994,
+        "random_forest": 0.33626039809931346,
+        "gradient_boosting": 0.3210757081160866
       },
-      "residual_shrinkage": 0.2,
+      "residual_shrinkage": 0.0,
       "residual_cv_rmse_by_shrinkage": {
-        "0.2": 23.60759994920403,
-        "0.4": 23.89224141183382,
-        "0.6": 24.34875959019825,
-        "0.8": 25.00787580269783,
-        "1.0": 25.903334631020613
+        "0.0": 23.46300049472442,
+        "0.2": 23.576295182425504,
+        "0.4": 23.756143019902424,
+        "0.6": 24.01448486954723,
+        "0.8": 24.36228131874963,
+        "1.0": 24.809542250406622
       },
       "maxent": {
         "enabled": false,
-        "status": "skipped",
-        "reason": "NO SPATIAL OCCURRENCE: belum ada koordinat tangkapan/occurrence per spesies TCT.",
-        "input_path": "C:\\Users\\ThinkPad\\.gemini\\antigravity\\scratch\\prigi-pelagis\\data\\modeling\\tct_occurrences.parquet"
+        "status": "available_for_separate_occurrence_run",
+        "reason": "Occurrence tersedia; MaxEnt tetap terpisah dan memerlukan spatial block CV.",
+        "input_path": "C:\\Users\\ThinkPad\\.gemini\\antigravity\\scratch\\prigi-pelagis\\data\\modeling\\tct_occurrences.csv"
       },
       "spatial_evidence": "dual_port_local_aggregate_proxy_no_catch_coordinates"
     }
   },
   "maxent_gate": {
     "enabled": false,
-    "status": "skipped",
-    "reason": "NO SPATIAL OCCURRENCE: belum ada koordinat tangkapan/occurrence per spesies TCT.",
-    "input_path": "C:\\Users\\ThinkPad\\.gemini\\antigravity\\scratch\\prigi-pelagis\\data\\modeling\\tct_occurrences.parquet"
+    "status": "available_for_separate_occurrence_run",
+    "reason": "Occurrence tersedia; MaxEnt tetap terpisah dan memerlukan spatial block CV.",
+    "input_path": "C:\\Users\\ThinkPad\\.gemini\\antigravity\\scratch\\prigi-pelagis\\data\\modeling\\tct_occurrences.csv"
+  },
+  "occurrence_validation": {
+    "status": "PARTIAL_OCCURRENCE_CHECK_INSUFFICIENT_OPERATIONAL_COVERAGE",
+    "total_records": 31,
+    "matched_records": 3,
+    "matched_rate": 0.0967741935483871,
+    "by_species": {
+      "tuna_sirip_kuning": {
+        "total_records": 31,
+        "matched_records": 3
+      }
+    }
   },
   "limitations": [
     "Statistik pelabuhan adalah agregat bulanan tanpa koordinat tangkapan per spesies.",

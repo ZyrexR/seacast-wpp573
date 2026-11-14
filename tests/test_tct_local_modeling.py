@@ -109,6 +109,30 @@ class TctLocalModelingTest(unittest.TestCase):
         self.assertIn("effort_trips_log", FEATURE_COLS)
         self.assertIn("sin_month", FEATURE_COLS)
 
+    def test_oceanographic_qc_clips_known_physical_outliers(self):
+        from tct_local_modeling import apply_oceanographic_qc
+
+        frame = pd.DataFrame({
+            "wind_speed": [49.57, -1.0],
+            "wind_stress": [46.65, -0.1],
+            "ekman_upwelling": [0.01, -0.01],
+        })
+        result = apply_oceanographic_qc(frame)
+        self.assertEqual(result["wind_speed"].tolist(), [15.0, 0.0])
+        self.assertEqual(result["wind_stress"].tolist(), [0.30, 0.0])
+        self.assertEqual(result["ekman_upwelling"].tolist(), [0.002, -0.002])
+
+    def test_physiological_features_are_species_specific(self):
+        from tct_local_modeling import FEATURE_COLS, add_physiological_suitability_features
+
+        result = add_physiological_suitability_features(
+            pd.DataFrame({"sst_c": [27.5], "chla_mg_m3": [0.16]})
+        )
+        self.assertAlmostEqual(result.loc[0, "yft_sst_suit"], 1.0)
+        self.assertAlmostEqual(result.loc[0, "yft_chla_suit"], 1.0)
+        self.assertIn("fleet_gt_30gt", FEATURE_COLS)
+        self.assertIn("yft_sst_suit", FEATURE_COLS)
+
 
 if __name__ == "__main__":
     unittest.main()

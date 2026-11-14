@@ -29,9 +29,22 @@ class TctScientificGateTests(unittest.TestCase):
             median_baseline_rmse=19.6,
             seasonal_baseline_rmse=14.0,
         )
-        self.assertEqual(result["temporal_status"], "CANDIDATE")
+        self.assertEqual(result["temporal_status"], "REJECT")
         self.assertEqual(result["spatial_status"], "PROXY_ONLY_NO_COORDINATES")
         self.assertEqual(result["web_status"], "HOLD")
+
+    def test_approves_when_real_or_log_r2_reaches_target_and_beats_seasonal(self):
+        result = evaluate_species(
+            species="tuna_sirip_kuning",
+            model_rmse=10.0,
+            model_r2=0.20,
+            model_r2_log=0.55,
+            median_baseline_rmse=15.0,
+            seasonal_baseline_rmse=12.0,
+        )
+        self.assertEqual(result["temporal_status"], "APPROVED_FOR_RELEASE")
+        self.assertTrue(result["meets_target_r2_log"])
+        self.assertFalse(result["meets_target_r2_real"])
 
 
 if __name__ == "__main__":

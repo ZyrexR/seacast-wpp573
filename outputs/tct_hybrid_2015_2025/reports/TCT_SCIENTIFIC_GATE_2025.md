@@ -4,10 +4,10 @@
 
 | Komoditas | RMSE model | Baseline median | Baseline musiman | R² | Temporal | Web |
 |---|---:|---:|---:|---:|---|---|
-| Tuna Sirip Kuning | 264.848 | 312.266 | 305.572 | -0.197 | REJECT | HOLD |
-| Cakalang | 179.027 | 232.347 | 178.809 | 0.144 | REJECT | HOLD |
-| Tongkol Krai | 13.401 | 17.102 | 13.537 | -0.055 | REJECT | HOLD |
+| Tuna Sirip Kuning | 274.103 | 312.266 | 305.572 | -0.282 | REJECT | HOLD |
+| Cakalang | 178.809 | 232.347 | 178.809 | 0.146 | REJECT | HOLD |
+| Tongkol Krai | 13.537 | 17.102 | 13.537 | -0.077 | REJECT | HOLD |
 
-MaxEnt tidak dijalankan karena tidak tersedia occurrence berkoordinat per spesies.
-Semua peta tetap berstatus proxy spasial. Hasil belum boleh dipublikasikan sebagai lokasi ikan operasional.
+MaxEnt belum dijalankan; occurrence tersedia untuk run terpisah dengan spatial-block cross-validation.
+Cakupan peta operasional saat ini masih parsial dan seluruh hasil tetap berstatus proxy spasial.
 Status temporal holdout 2025: Tuna Sirip Kuning: REJECT; Cakalang: REJECT; Tongkol Krai: REJECT.

@@ -14,9 +14,21 @@
   "spatial_rows_are_local_port_zones": true,
   "maxent_status": {
     "enabled": false,
-    "status": "skipped",
-    "reason": "NO SPATIAL OCCURRENCE: belum ada koordinat tangkapan/occurrence per spesies TCT.",
-    "input_path": "C:\\Users\\ThinkPad\\.gemini\\antigravity\\scratch\\prigi-pelagis\\data\\modeling\\tct_occurrences.parquet"
+    "status": "available_for_separate_occurrence_run",
+    "reason": "Occurrence tersedia; MaxEnt tetap terpisah dan memerlukan spatial block CV.",
+    "input_path": "C:\\Users\\ThinkPad\\.gemini\\antigravity\\scratch\\prigi-pelagis\\data\\modeling\\tct_occurrences.csv"
+  },
+  "occurrence_validation": {
+    "status": "PARTIAL_OCCURRENCE_CHECK_INSUFFICIENT_OPERATIONAL_COVERAGE",
+    "total_records": 31,
+    "matched_records": 3,
+    "matched_rate": 0.0967741935483871,
+    "by_species": {
+      "tuna_sirip_kuning": {
+        "total_records": 31,
+        "matched_records": 3
+      }
+    }
   },
   "spatial_evidence_level": "LOW_PROXY_NO_COORDINATED_CATCH",
   "web_integration_status": "HOLD_FOR_SCIENTIFIC_REVIEW"
