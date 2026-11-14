@@ -367,6 +367,11 @@ def run_pipeline(input_csv, target_date=None, limit=0, dry_run=False, output_jso
         "execution_duration_ms": duration_ms,
         "summary": summary,
         "provenance": {
+            "evidence_level": "PROXY_HSI",
+            "source_mode": "GEE_INGESTED_WITH_LOCAL_FALLBACKS",
+            "model_version": "2.3.2",
+            "prediction_timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+            "validation_status": "UNVERIFIED_NO_OCCURRENCE_AUDIT",
             "applied_weights": LOCKED_ENSEMBLE_WEIGHTS,
             "homeport_coordinates": {"lat": PRIGI_LAT, "lon": PRIGI_LON},
             "satellite_sources": {
@@ -388,6 +393,7 @@ def run_pipeline(input_csv, target_date=None, limit=0, dry_run=False, output_jso
             json.dump({
                 "prediction_date": target_date,
                 "generated_at": datetime.datetime.now().isoformat(),
+                "provenance": output_payload["provenance"],
                 "total_cells": len(records_out),
                 "hotspots_count": output_payload["hotspots_count"],
                 "summary": summary,

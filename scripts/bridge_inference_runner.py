@@ -251,6 +251,11 @@ def main():
         },
         "warnings": [],
         "provenance": {
+            "evidence_level": "PROXY_HSI",
+            "source_mode": "LOCAL_SIMULATION_FALLBACK",
+            "model_version": "2.3.2",
+            "prediction_timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+            "validation_status": "UNVERIFIED_NO_OCCURRENCE_AUDIT",
             "python_runtime": sys.version,
             "applied_weights": LOCKED_ENSEMBLE_WEIGHTS,
             "homeport_coordinates": {"lat": PRIGI_LAT, "lon": PRIGI_LON},

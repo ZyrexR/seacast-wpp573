@@ -15,8 +15,34 @@ import joblib
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MODELS_DIR = os.path.join(BASE_DIR, "models")
 
+REQUIRED_PROVENANCE_FIELDS = {
+    "evidence_level",
+    "source_mode",
+    "model_version",
+    "prediction_timestamp",
+    "validation_status",
+}
+
+
+def validate_provenance_contract(provenance):
+    """Fail fast when an inference payload loses its scientific provenance."""
+    missing = REQUIRED_PROVENANCE_FIELDS.difference(provenance)
+    if missing:
+        raise AssertionError(f"Missing provenance fields: {sorted(missing)}")
+    for field in REQUIRED_PROVENANCE_FIELDS:
+        if provenance[field] in (None, ""):
+            raise AssertionError(f"Provenance field is empty: {field}")
+
 def run_test():
     print("=" * 80)
+
+    validate_provenance_contract({
+        "evidence_level": "PROXY_HSI",
+        "source_mode": "LOCAL_SIMULATION_FALLBACK",
+        "model_version": "2.3.2",
+        "prediction_timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+        "validation_status": "UNVERIFIED_NO_OCCURRENCE_AUDIT",
+    })
     print(" SEACAST WPPNRI 573 â€” SCIENTIFIC ENSEMBLE DECISION ENGINE TEST")
     print(" Evaluasi Keputusan Model Machine Learning (MaxEnt + RF + GLM)")
     print(f" Waktu Pengujian : {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')} WIB")

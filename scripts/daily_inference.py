@@ -197,6 +197,13 @@ def run_inference(target_date=None):
         "species": ["tuna_sirip_kuning", "cakalang", "tongkol_krai"],
         "prediction_date": target_date.strftime("%Y-%m-%d"),
         "generated_at": datetime.datetime.now().isoformat(),
+        "provenance": {
+            "evidence_level": "PROXY_HSI",
+            "source_mode": "LOCAL_SIMULATION_FALLBACK",
+            "model_version": "2.3.2",
+            "prediction_timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+            "validation_status": "UNVERIFIED_NO_OCCURRENCE_AUDIT",
+        },
         "total_cells": len(records),
         "hotspots_count": int(df_daily['is_hotspot'].sum()),
         "summary": {

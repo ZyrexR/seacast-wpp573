@@ -58,7 +58,7 @@ class PredictionApiController extends Controller
                     ->header('Cache-Control', 'public, max-age=300, stale-while-revalidate=1800');
             }
 
-            $summary = $this->repository->getDailySummary($date);
+            $summary = $this->service->getDailySummary($date);
             if (!$summary) {
                 return response()->json([
                     'status' => 'ERROR',

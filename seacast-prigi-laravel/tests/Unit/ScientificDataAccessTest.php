@@ -63,6 +63,38 @@ class ScientificDataAccessTest extends TestCase
         $this->assertEquals('Polygon', $features[0]['geometry']['type']);
     }
 
+    public function test_service_exposes_spatial_provenance_without_changing_legacy_summary_fields(): void
+    {
+        $summary = $this->service->getDailySummary('2026-11-03');
+
+        $this->assertNotNull($summary);
+        $this->assertArrayHasKey('sources', $summary['summary']);
+        $this->assertArrayHasKey('provenance', $summary);
+        $this->assertSame(
+            [
+                'evidence_level',
+                'source_mode',
+                'model_version',
+                'prediction_timestamp',
+                'validation_status',
+            ],
+            array_keys($summary['provenance'])
+        );
+        $this->assertNotEmpty($summary['provenance']['model_version']);
+        $this->assertNotEmpty($summary['provenance']['prediction_timestamp']);
+    }
+
+    public function test_geojson_places_provenance_in_top_level_metadata(): void
+    {
+        $geoJson = $this->service->getDailyGeoJson('2026-11-03', ['limit' => 1]);
+
+        $this->assertArrayHasKey('metadata', $geoJson);
+        $this->assertSame('2026-11-03', $geoJson['metadata']['prediction_date']);
+        $this->assertArrayHasKey('provenance', $geoJson['metadata']);
+        $this->assertArrayHasKey('validation_status', $geoJson['metadata']['provenance']);
+        $this->assertCount(1, $geoJson['features']);
+    }
+
     public function test_geodesic_distance_to_prigi_port(): void
     {
         // Cell near Prigi entrance (e.g. CELL_0001 or closest cell)
