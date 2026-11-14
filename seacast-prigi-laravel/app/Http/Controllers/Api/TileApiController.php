@@ -21,6 +21,7 @@ class TileApiController extends Controller
     public const ALLOWED_LAYERS = ['predictions', 'canonical_grids', 'hotspots'];
     public const MIN_ZOOM = 4;
     public const MAX_ZOOM = 16;
+    public const CACHE_VERSION = 'v2';
 
     public function __construct(
         protected GeospatialCacheManager $cacheManager
@@ -52,7 +53,7 @@ class TileApiController extends Controller
         }
 
         // 3. Cache lookup
-        $cacheKey = sprintf('%s:tile:v1:%s:%s:%d:%d:%d', GeospatialCacheManager::NAMESPACE_PREFIX, $layer, $date, $z, $x, $y);
+        $cacheKey = sprintf('%s:tile:%s:%s:%s:%d:%d:%d', GeospatialCacheManager::NAMESPACE_PREFIX, self::CACHE_VERSION, $layer, $date, $z, $x, $y);
         $cached = $this->cacheManager->get($cacheKey);
 
         if ($cached !== null && isset($cached['data']['mvt'])) {
@@ -174,6 +175,8 @@ class TileApiController extends Controller
                         dp.hsi_cakalang,
                         dp.hsi_madidihang,
                         dp.hsi_tongkol,
+                        dp.hsi_madidihang AS hsi_tuna_sirip_kuning,
+                        dp.hsi_tongkol AS hsi_tongkol_krai,
                         dp.dom_zone,
                         dp.bycatch_traffic_light,
                         dp.sst_c,
@@ -213,6 +216,8 @@ class TileApiController extends Controller
                         dp.hsi_cakalang,
                         dp.hsi_madidihang,
                         dp.hsi_tongkol,
+                        dp.hsi_madidihang AS hsi_tuna_sirip_kuning,
+                        dp.hsi_tongkol AS hsi_tongkol_krai,
                         dp.is_hotspot,
                         dp.dom_zone,
                         dp.bycatch_traffic_light,

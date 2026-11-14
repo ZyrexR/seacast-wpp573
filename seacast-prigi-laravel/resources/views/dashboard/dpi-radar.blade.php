@@ -373,11 +373,11 @@
                             </div>
                             <div class="flex items-center justify-between text-xs">
                                 <span class="text-slate-300">Tuna Sirip Kuning:</span>
-                                <span class="font-mono font-bold text-amber-400" x-text="selectedCell?.hsi_madidihang"></span>
+                                <span class="font-mono font-bold text-amber-400" x-text="selectedCell?.hsi_tuna_sirip_kuning ?? selectedCell?.hsi_madidihang"></span>
                             </div>
                             <div class="flex items-center justify-between text-xs">
                                 <span class="text-slate-300">Tongkol Krai:</span>
-                                <span class="font-mono font-bold text-emerald-400" x-text="selectedCell?.hsi_tongkol"></span>
+                                <span class="font-mono font-bold text-emerald-400" x-text="selectedCell?.hsi_tongkol_krai ?? selectedCell?.hsi_tongkol"></span>
                             </div>
                         </div>
 
@@ -1204,8 +1204,8 @@
 
                 getSpeciesHsiValue(p) {
                     const cakalang = parseFloat(p.hsi_cakalang) || 0;
-                    const madidihang = parseFloat(p.hsi_madidihang) || 0;
-                    const tongkol = parseFloat(p.hsi_tongkol) || 0;
+                    const madidihang = parseFloat(p.hsi_tuna_sirip_kuning ?? p.hsi_madidihang) || 0;
+                    const tongkol = parseFloat(p.hsi_tongkol_krai ?? p.hsi_tongkol) || 0;
 
                     if (this.selectedSpecies === 'cakalang') return cakalang;
                     if (this.selectedSpecies === 'tuna_sirip_kuning' || this.selectedSpecies === 'madidihang') return madidihang;

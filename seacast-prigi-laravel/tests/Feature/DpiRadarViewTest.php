@@ -30,6 +30,9 @@ class DpiRadarViewTest extends TestCase
         // Assert Dual-Hub Corridor buttons are present (Task 2.3)
         $response->assertSee('PPN Prigi');
         $response->assertSee('PPS Cilacap');
+        $response->assertSee('Tuna Sirip Kuning');
+        $response->assertSee('Tongkol Krai');
+        $response->assertSee('cell_id=');
 
         // Assert Live BMKG Widget is present (Task 2.4)
         $response->assertSee('BMKG Live:');

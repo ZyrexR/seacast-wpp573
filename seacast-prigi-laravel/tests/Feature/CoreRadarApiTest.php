@@ -25,6 +25,8 @@ class CoreRadarApiTest extends TestCase
                     'cakalang_mean_hsi',
                     'madidihang_mean_hsi',
                     'tongkol_mean_hsi',
+                    'tuna_sirip_kuning_mean_hsi',
+                    'tongkol_krai_mean_hsi',
                     'highest_species',
                     'highest_score',
                 ],
@@ -43,12 +45,21 @@ class CoreRadarApiTest extends TestCase
                     'bycatch',
                 ],
             ],
+            'provenance' => [
+                'evidence_level',
+                'source_mode',
+                'model_version',
+                'prediction_timestamp',
+                'validation_status',
+            ],
         ]);
 
         $data = $response->json();
         $this->assertEquals('2026-11-03', $data['date']);
         $this->assertEquals(8129, $data['summary']['total_cells']);
         $this->assertEquals('Simulasi Oseanografi Musiman BMKG Terkalibrasi (Fallback Lokal)', $data['summary']['sources']['wave']);
+        $this->assertSame($data['summary']['species']['madidihang_mean_hsi'], $data['summary']['species']['tuna_sirip_kuning_mean_hsi']);
+        $this->assertSame($data['summary']['species']['tongkol_mean_hsi'], $data['summary']['species']['tongkol_krai_mean_hsi']);
     }
 
     public function test_predictions_geojson_endpoint_returns_valid_features(): void
@@ -76,6 +87,8 @@ class CoreRadarApiTest extends TestCase
                         'hsi_cakalang',
                         'hsi_madidihang',
                         'hsi_tongkol',
+                        'hsi_tuna_sirip_kuning',
+                        'hsi_tongkol_krai',
                         'is_hotspot',
                         'dom_zone',
                         'bycatch_traffic_light',
@@ -88,6 +101,16 @@ class CoreRadarApiTest extends TestCase
                         'type',
                         'coordinates',
                     ],
+                ],
+            ],
+            'metadata' => [
+                'prediction_date',
+                'provenance' => [
+                    'evidence_level',
+                    'source_mode',
+                    'model_version',
+                    'prediction_timestamp',
+                    'validation_status',
                 ],
             ],
         ]);

@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
+use App\Http\Controllers\Api\TileApiController;
 
 class VectorTileApiTest extends TestCase
 {
@@ -62,6 +63,14 @@ class VectorTileApiTest extends TestCase
         // 3. Conditional revalidation
         $res3 = $this->withHeaders(['If-None-Match' => $etag])->get($uri);
         $res3->assertStatus(304);
+    }
+
+    public function test_prediction_tiles_use_v2_cache_namespace_for_public_tct_aliases(): void
+    {
+        $response = $this->get('/api/tiles/predictions/7/103/66.pbf');
+
+        $this->assertContains($response->getStatusCode(), [200, 204]);
+        $this->assertSame('v2', TileApiController::CACHE_VERSION);
     }
 }
 

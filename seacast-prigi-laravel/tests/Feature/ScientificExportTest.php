@@ -36,6 +36,9 @@ class ScientificExportTest extends TestCase
         // Assert CSV headers
         $this->assertStringContainsString('cell_id,cell_class,center_longitude,center_latitude,depth_m', $content);
         $this->assertStringContainsString('hsi_cakalang,hsi_madidihang,hsi_tongkol', $content);
+        $this->assertStringContainsString('hsi_tuna_sirip_kuning', $content);
+        $this->assertStringContainsString('hsi_tongkol_krai', $content);
+        $this->assertStringContainsString('evidence_level', $content);
         $this->assertStringContainsString('dom_zone,bycatch_traffic_light', $content);
     }
 

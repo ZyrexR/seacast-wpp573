@@ -30,6 +30,7 @@ class ScientificExportService
     public function exportCsv(string $date, array $filters = []): string
     {
         $features = $this->repository->getDailyGeoJsonFeatures($date, $filters);
+        $provenance = $this->scientificDataService->getSpatialProvenance($date);
 
         $output = fopen('php://temp', 'r+');
         // Add UTF-8 Byte Order Mark (BOM) for seamless Excel & QGIS ingestion
@@ -52,6 +53,8 @@ class ScientificExportService
             'hsi_cakalang',
             'hsi_madidihang',
             'hsi_tongkol',
+            'hsi_tuna_sirip_kuning',
+            'hsi_tongkol_krai',
             'is_hotspot',
             'dom_zone',
             'bycatch_traffic_light',
@@ -59,7 +62,12 @@ class ScientificExportService
             'chla_mg_m3',
             'wave_height_m',
             'wind_speed_ms',
-            'safety_advisory'
+            'safety_advisory',
+            'evidence_level',
+            'source_mode',
+            'model_version',
+            'prediction_timestamp',
+            'validation_status',
         ]);
 
         foreach ($features as $f) {
@@ -80,6 +88,8 @@ class ScientificExportService
                 $p['hsi_cakalang'] ?? '',
                 $p['hsi_madidihang'] ?? '',
                 $p['hsi_tongkol'] ?? '',
+                $p['hsi_tuna_sirip_kuning'] ?? $p['hsi_madidihang'] ?? '',
+                $p['hsi_tongkol_krai'] ?? $p['hsi_tongkol'] ?? '',
                 ($p['is_hotspot'] ?? false) ? 'true' : 'false',
                 $p['dom_zone'] ?? '',
                 $p['bycatch_traffic_light'] ?? '',
@@ -87,7 +97,12 @@ class ScientificExportService
                 $p['chla_mg_m3'] ?? '',
                 $p['wave_height_m'] ?? '',
                 $p['wind_speed_ms'] ?? '',
-                $p['safety_advisory'] ?? ''
+                $p['safety_advisory'] ?? '',
+                $provenance['evidence_level'],
+                $provenance['source_mode'],
+                $provenance['model_version'],
+                $provenance['prediction_timestamp'],
+                $provenance['validation_status'],
             ]);
         }
 

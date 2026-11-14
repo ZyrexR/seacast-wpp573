@@ -108,6 +108,11 @@ class GridApiController extends Controller
 
         $geoJson = [
             'type' => 'FeatureCollection',
+            'metadata' => [
+                'validation_scope' => 'full_grid',
+                'source_mode' => 'CANONICAL_GRID_GEOMETRY',
+                'evidence_level' => 'GRID_GEOMETRY_ONLY',
+            ],
             'crs' => [
                 'type' => 'name',
                 'properties' => [

@@ -26,6 +26,9 @@ class GeospatialCacheManager
     public const DEFAULT_SUMMARY_TTL = 86400;     // 24 hours
     public const DEFAULT_GRID_TTL = 604800;       // 7 days (canonical grids are immutable)
     public const VIEWPORT_QUERY_TTL = 3600;       // 1 hour for dynamic spatial bounding boxes
+    public const PREDICTION_CACHE_VERSION = 'v2';
+    public const SUMMARY_CACHE_VERSION = 'v2';
+    public const GRID_CACHE_VERSION = 'v2';
 
     protected string $store;
 
@@ -60,7 +63,7 @@ class GeospatialCacheManager
         $normalized = $this->normalizeFilters($filters);
         $filterHash = md5(json_encode($normalized));
 
-        return sprintf('%s:pred:v1:%s:%s', self::NAMESPACE_PREFIX, $date, $filterHash);
+        return sprintf('%s:pred:%s:%s:%s', self::NAMESPACE_PREFIX, self::PREDICTION_CACHE_VERSION, $date, $filterHash);
     }
 
     /**
@@ -68,7 +71,7 @@ class GeospatialCacheManager
      */
     public function buildSummaryKey(string $date): string
     {
-        return sprintf('%s:summary:v1:%s', self::NAMESPACE_PREFIX, $date);
+        return sprintf('%s:summary:%s:%s', self::NAMESPACE_PREFIX, self::SUMMARY_CACHE_VERSION, $date);
     }
 
     /**
@@ -79,7 +82,7 @@ class GeospatialCacheManager
         $normalized = $this->normalizeFilters($filters);
         $filterHash = md5(json_encode($normalized));
 
-        return sprintf('%s:grid:v1:%s', self::NAMESPACE_PREFIX, $filterHash);
+        return sprintf('%s:grid:%s:%s', self::NAMESPACE_PREFIX, self::GRID_CACHE_VERSION, $filterHash);
     }
 
     /**

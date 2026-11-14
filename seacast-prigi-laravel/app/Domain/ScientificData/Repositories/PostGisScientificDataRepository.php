@@ -83,6 +83,8 @@ class PostGisScientificDataRepository implements ScientificDataRepositoryInterfa
                     'cakalang_mean_hsi' => (float)$raw->cakalang_mean_hsi,
                     'madidihang_mean_hsi' => (float)$raw->madidihang_mean_hsi,
                     'tongkol_mean_hsi' => (float)$raw->tongkol_mean_hsi,
+                    'tuna_sirip_kuning_mean_hsi' => (float)$raw->madidihang_mean_hsi,
+                    'tongkol_krai_mean_hsi' => (float)$raw->tongkol_mean_hsi,
                     'highest_species' => $highestSpecies,
                     'highest_score' => (float)$highestScore,
                 ],
@@ -193,6 +195,8 @@ class PostGisScientificDataRepository implements ScientificDataRepositoryInterfa
                     'hsi_cakalang' => (float)$row->hsi_cakalang,
                     'hsi_madidihang' => (float)$row->hsi_madidihang,
                     'hsi_tongkol' => (float)($row->hsi_tongkol ?? 0.0),
+                    'hsi_tuna_sirip_kuning' => (float)$row->hsi_madidihang,
+                    'hsi_tongkol_krai' => (float)($row->hsi_tongkol ?? 0.0),
                     'waypoint_dms' => sprintf(
                         "%02d°%02d'%02d\"S, %03d°%02d'%02d\"E",
                         floor(abs((float)$row->center_lat)),
