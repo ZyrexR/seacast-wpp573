@@ -1,0 +1,51 @@
+[
+  {
+    "type": "directory",
+    "name": "/wwwdata/viirs_products/vbd/v23/idn",
+    "contents": [
+      {
+        "type": "link",
+        "name": "complete",
+        "target": "nrt",
+        "size": 3,
+        "time": "2021-09-19T20:40:31Z",
+        "contents": []
+      },
+      {
+        "type": "directory",
+        "name": "current",
+        "size": 7,
+        "time": "2026-11-11T21:02:07Z",
+        "contents": []
+      },
+      {
+        "type": "link",
+        "name": "final",
+        "target": "fnl",
+        "size": 3,
+        "time": "2021-09-19T20:41:09Z",
+        "contents": []
+      },
+      {
+        "type": "directory",
+        "name": "fnl",
+        "size": 6,
+        "time": "2026-11-11T19:30:34Z",
+        "contents": []
+      },
+      {
+        "type": "directory",
+        "name": "nrt",
+        "size": 10677,
+        "time": "2026-11-11T19:30:34Z",
+        "contents": []
+      }
+    ]
+  },
+  {
+    "type": "report",
+    "directories": 5,
+    "files": 0,
+    "time": "2026-11-11T21:02:36Z"
+  }
+]

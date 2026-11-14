@@ -3,5 +3,24 @@ seacast-prigi-laravel/node_modules/
 .superpowers/sdd/
 *.pyc
 __pycache__/
+.venv-tct/
 .env
+
+# EOG VBD raw archives and derived bulk tables are local data artifacts.
+data/eog/vbd/*.zip
+data/eog/vbd/monthly/*.zip
+data/eog/vbd/monthly/download_progress.json
+data/eog/vbd/processed/*.csv
+data/eog/vbd/processed/*.parquet
+data/eog/vbd/processed/*.log
+data/eog/vbd/processed/parts/*.csv
+data/eog/vbd/processed/parts/*.parquet
+data/eog/vbd/processed/parts/*.log
+data/eog/vbd/processed/*.json
+data/eog/vbd/processed/parts/*.json
+outputs/tct_hybrid_2015_2025/models/*.joblib
+outputs/tct_hybrid_2015_2025/predictions/*.parquet
+outputs/tct_hybrid_2015_2025/predictions/*.csv
+outputs/tct_hybrid_2015_2025/geojson/*.geojson
+outputs/tct_hybrid_2015_2025/reports/*.log
 

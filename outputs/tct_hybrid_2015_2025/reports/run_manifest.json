@@ -1,0 +1,17 @@
+{
+  "prediction_path": "C:\\Users\\ThinkPad\\.gemini\\antigravity\\scratch\\prigi-pelagis\\outputs\\tct_hybrid_2015_2025\\predictions\\SEACAST_TCT_HSI_2015_2025.parquet",
+  "model_dir": "C:\\Users\\ThinkPad\\.gemini\\antigravity\\scratch\\prigi-pelagis\\outputs\\tct_hybrid_2015_2025\\models",
+  "report_dir": "C:\\Users\\ThinkPad\\.gemini\\antigravity\\scratch\\prigi-pelagis\\outputs\\tct_hybrid_2015_2025\\reports",
+  "geojson_dir": "C:\\Users\\ThinkPad\\.gemini\\antigravity\\scratch\\prigi-pelagis\\outputs\\tct_hybrid_2015_2025\\geojson",
+  "rows": 1073028,
+  "months": 132,
+  "cells": 8129,
+  "maxent_status": {
+    "enabled": false,
+    "status": "skipped",
+    "reason": "NO SPATIAL OCCURRENCE: belum ada koordinat tangkapan/occurrence per spesies TCT.",
+    "input_path": "C:\\Users\\ThinkPad\\.gemini\\antigravity\\scratch\\prigi-pelagis\\data\\modeling\\tct_occurrences.parquet"
+  },
+  "spatial_evidence_level": "LOW_PROXY_NO_COORDINATED_CATCH",
+  "web_integration_status": "HOLD_FOR_SCIENTIFIC_REVIEW"
+}
