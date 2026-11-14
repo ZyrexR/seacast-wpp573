@@ -125,6 +125,7 @@ from tct_local_modeling import (
     select_radius,
 )
 from validate_spatial_occurrences import validate_occurrence_coverage
+from tct_calibration_contract import build_temporal_calibration_payload
 
 print('Runtime:', 'Google Colab' if IN_COLAB else 'local/Jupyter')
 print('PROJECT_ROOT:', PROJECT_ROOT)
@@ -530,6 +531,27 @@ def fit_species(species):
         'maxent': maxent_status,
         'spatial_evidence': 'dual_port_local_aggregate_proxy_no_catch_coordinates',
     }
+    evaluation['temporal_calibration'] = build_temporal_calibration_payload(
+        {
+            'port': 'dual_port',
+            'commodity': species,
+            'rolling_origin': {
+                'model_rmse': float(min(shrinkage_scores.values())),
+                'seasonal_baseline_rmse': float(shrinkage_scores.get(0.0, np.nan)),
+            },
+            'holdout_2025': {
+                'model_rmse': float(ensemble_evaluation['rmse']),
+                'seasonal_baseline_rmse': float(seasonal_evaluation['rmse']),
+                'model_r2': float(ensemble_evaluation['r2']),
+                'model_r2_log': float(ensemble_log_evaluation['r2']),
+            },
+        },
+        {
+            'train_period': '2015-01 to 2024-12',
+            'holdout_period': '2025-01 to 2025-12',
+            'rolling_origin_folds': 4,
+        },
+    )
     seasonal_table = train_frame.assign(_y_log=y_train_log).groupby(['port', 'month'])['_y_log'].median().reset_index(name='baseline_log')
     port_table = train_frame.assign(_y_log=y_train_log).groupby('port')['_y_log'].median().reset_index(name='baseline_log')
     bundle = {
@@ -548,6 +570,7 @@ def fit_species(species):
         'port_baseline_table': port_table,
         'global_baseline_log': float(np.median(y_train_log)),
         'correction_shrinkage': float(correction_shrinkage),
+        'temporal_calibration': evaluation['temporal_calibration'],
     }
     return bundle, evaluation
 
@@ -703,6 +726,12 @@ print(df['zone_label'].value_counts())
     'training_period': '2015-01 to 2024-12',
     'final_validation_period': '2025-01 to 2025-12',
     'models': evaluations,
+    'temporal_calibration': {species: evaluations[species]['temporal_calibration'] for species in TCT_SPECIES},
+    'validation_context': {
+        'train_period': '2015-01 to 2024-12',
+        'holdout_period': '2025-01 to 2025-12',
+        'rolling_origin_folds': 4,
+    },
     'maxent_gate': maxent_status,
     'occurrence_validation': occurrence_validation,
     'full_grid_occurrence_validation': full_grid_occurrence_validation,

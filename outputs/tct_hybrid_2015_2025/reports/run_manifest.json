@@ -19,17 +19,1168 @@
     "input_path": "C:\\Users\\ThinkPad\\.gemini\\antigravity\\scratch\\prigi-pelagis\\data\\modeling\\tct_occurrences.csv"
   },
   "occurrence_validation": {
-    "status": "PARTIAL_OCCURRENCE_CHECK_INSUFFICIENT_OPERATIONAL_COVERAGE",
+    "validation_scope": "operational_60nm",
+    "scope": "operational_60nm",
+    "source": "tct_hybrid_operational_60nm_outputs",
+    "max_distance_nm": 8.0,
+    "total": 31,
     "total_records": 31,
+    "matched": 3,
     "matched_records": 3,
-    "matched_rate": 0.0967741935483871,
+    "match_rate": 0.0967741935483871,
     "by_species": {
       "tuna_sirip_kuning": {
-        "total_records": 31,
-        "matched_records": 3
+        "total": 31,
+        "matched": 3
       }
-    }
+    },
+    "nearest_cell_distances": [
+      {
+        "source_id": "SULIS_2022_SET_01",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C056_R060",
+        "nearest_distance_nm": 286.1060844416444,
+        "matched": false,
+        "hsi_tuna_sirip_kuning": 0.9704142011834319,
+        "hsi_cakalang": 0.5029585798816568,
+        "hsi_tongkol_krai": 0.5029585798816568,
+        "hsi_tct_max": 0.9704142011834319
+      },
+      {
+        "source_id": "SULIS_2022_SET_02",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C056_R060",
+        "nearest_distance_nm": 272.27106907042815,
+        "matched": false,
+        "hsi_tuna_sirip_kuning": 0.9704142011834319,
+        "hsi_cakalang": 0.5029585798816568,
+        "hsi_tongkol_krai": 0.5029585798816568,
+        "hsi_tct_max": 0.9704142011834319
+      },
+      {
+        "source_id": "SULIS_2022_SET_03",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C056_R060",
+        "nearest_distance_nm": 259.051553976474,
+        "matched": false,
+        "hsi_tuna_sirip_kuning": 0.9704142011834319,
+        "hsi_cakalang": 0.5029585798816568,
+        "hsi_tongkol_krai": 0.5029585798816568,
+        "hsi_tct_max": 0.9704142011834319
+      },
+      {
+        "source_id": "SULIS_2022_SET_04",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C056_R060",
+        "nearest_distance_nm": 246.02713998044698,
+        "matched": false,
+        "hsi_tuna_sirip_kuning": 0.9704142011834319,
+        "hsi_cakalang": 0.5029585798816568,
+        "hsi_tongkol_krai": 0.5029585798816568,
+        "hsi_tct_max": 0.9704142011834319
+      },
+      {
+        "source_id": "SULIS_2022_SET_05",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C056_R060",
+        "nearest_distance_nm": 233.03702512346325,
+        "matched": false,
+        "hsi_tuna_sirip_kuning": 0.9704142011834319,
+        "hsi_cakalang": 0.5029585798816568,
+        "hsi_tongkol_krai": 0.5029585798816568,
+        "hsi_tct_max": 0.9704142011834319
+      },
+      {
+        "source_id": "SULIS_2022_SET_06",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C056_R060",
+        "nearest_distance_nm": 220.17262507560008,
+        "matched": false,
+        "hsi_tuna_sirip_kuning": 0.9704142011834319,
+        "hsi_cakalang": 0.5029585798816568,
+        "hsi_tongkol_krai": 0.5029585798816568,
+        "hsi_tct_max": 0.9704142011834319
+      },
+      {
+        "source_id": "SULIS_2022_SET_07",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C056_R060",
+        "nearest_distance_nm": 207.45694464652163,
+        "matched": false,
+        "hsi_tuna_sirip_kuning": 0.9704142011834319,
+        "hsi_cakalang": 0.5029585798816568,
+        "hsi_tongkol_krai": 0.5029585798816568,
+        "hsi_tct_max": 0.9704142011834319
+      },
+      {
+        "source_id": "SULIS_2022_SET_08",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C056_R060",
+        "nearest_distance_nm": 194.91867905559732,
+        "matched": false,
+        "hsi_tuna_sirip_kuning": 0.9704142011834319,
+        "hsi_cakalang": 0.5029585798816568,
+        "hsi_tongkol_krai": 0.5029585798816568,
+        "hsi_tct_max": 0.9704142011834319
+      },
+      {
+        "source_id": "SULIS_2022_SET_09",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C056_R060",
+        "nearest_distance_nm": 182.59393456846806,
+        "matched": false,
+        "hsi_tuna_sirip_kuning": 0.9704142011834319,
+        "hsi_cakalang": 0.5029585798816568,
+        "hsi_tongkol_krai": 0.5029585798816568,
+        "hsi_tct_max": 0.9704142011834319
+      },
+      {
+        "source_id": "SULIS_2022_SET_10",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C056_R060",
+        "nearest_distance_nm": 170.2587235538266,
+        "matched": false,
+        "hsi_tuna_sirip_kuning": 0.9704142011834319,
+        "hsi_cakalang": 0.5029585798816568,
+        "hsi_tongkol_krai": 0.5029585798816568,
+        "hsi_tct_max": 0.9704142011834319
+      },
+      {
+        "source_id": "SULIS_2022_SET_11",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C056_R060",
+        "nearest_distance_nm": 158.15864131910573,
+        "matched": false,
+        "hsi_tuna_sirip_kuning": 0.9704142011834319,
+        "hsi_cakalang": 0.5029585798816568,
+        "hsi_tongkol_krai": 0.5029585798816568,
+        "hsi_tct_max": 0.9704142011834319
+      },
+      {
+        "source_id": "SULIS_2022_SET_12",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C056_R060",
+        "nearest_distance_nm": 146.0050658652226,
+        "matched": false,
+        "hsi_tuna_sirip_kuning": 0.9704142011834319,
+        "hsi_cakalang": 0.5029585798816568,
+        "hsi_tongkol_krai": 0.5029585798816568,
+        "hsi_tct_max": 0.9704142011834319
+      },
+      {
+        "source_id": "SULIS_2022_SET_13",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C056_R060",
+        "nearest_distance_nm": 139.4290292163266,
+        "matched": false,
+        "hsi_tuna_sirip_kuning": 0.9704142011834319,
+        "hsi_cakalang": 0.5029585798816568,
+        "hsi_tongkol_krai": 0.5029585798816568,
+        "hsi_tct_max": 0.9704142011834319
+      },
+      {
+        "source_id": "SULIS_2022_SET_14",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C056_R060",
+        "nearest_distance_nm": 132.93593042938016,
+        "matched": false,
+        "hsi_tuna_sirip_kuning": 0.9704142011834319,
+        "hsi_cakalang": 0.5029585798816568,
+        "hsi_tongkol_krai": 0.5029585798816568,
+        "hsi_tct_max": 0.9704142011834319
+      },
+      {
+        "source_id": "WULAN_2022_SET_01",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C061_R057",
+        "nearest_distance_nm": 2.815432075027274,
+        "matched": true,
+        "hsi_tuna_sirip_kuning": 0.34911242603550297,
+        "hsi_cakalang": 0.5029585798816568,
+        "hsi_tongkol_krai": 0.5029585798816568,
+        "hsi_tct_max": 0.5029585798816568
+      },
+      {
+        "source_id": "WULAN_2022_SET_02",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C062_R056",
+        "nearest_distance_nm": 2.232757792360131,
+        "matched": true,
+        "hsi_tuna_sirip_kuning": 0.33727810650887574,
+        "hsi_cakalang": 0.5029585798816568,
+        "hsi_tongkol_krai": 0.5029585798816568,
+        "hsi_tct_max": 0.5029585798816568
+      },
+      {
+        "source_id": "WULAN_2022_SET_03",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C060_R055",
+        "nearest_distance_nm": 4.947766444990939,
+        "matched": true,
+        "hsi_tuna_sirip_kuning": 0.21301775147928995,
+        "hsi_cakalang": 0.5029585798816568,
+        "hsi_tongkol_krai": 0.5029585798816568,
+        "hsi_tct_max": 0.5029585798816568
+      },
+      {
+        "source_id": "WULAN_2022_SET_04",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C060_R055",
+        "nearest_distance_nm": 13.785129688599133,
+        "matched": false,
+        "hsi_tuna_sirip_kuning": 0.21301775147928995,
+        "hsi_cakalang": 0.5029585798816568,
+        "hsi_tongkol_krai": 0.5029585798816568,
+        "hsi_tct_max": 0.5029585798816568
+      },
+      {
+        "source_id": "WULAN_2022_SET_05",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C064_R054",
+        "nearest_distance_nm": 12.048752425775858,
+        "matched": false,
+        "hsi_tuna_sirip_kuning": 0.24260355029585798,
+        "hsi_cakalang": 0.5029585798816568,
+        "hsi_tongkol_krai": 0.5029585798816568,
+        "hsi_tct_max": 0.5029585798816568
+      },
+      {
+        "source_id": "WULAN_2022_SET_06",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C063_R054",
+        "nearest_distance_nm": 23.01550857473755,
+        "matched": false,
+        "hsi_tuna_sirip_kuning": 0.23668639053254437,
+        "hsi_cakalang": 0.5029585798816568,
+        "hsi_tongkol_krai": 0.5029585798816568,
+        "hsi_tct_max": 0.5029585798816568
+      },
+      {
+        "source_id": "WULAN_2022_SET_07",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C062_R054",
+        "nearest_distance_nm": 34.19978798894481,
+        "matched": false,
+        "hsi_tuna_sirip_kuning": 0.21893491124260356,
+        "hsi_cakalang": 0.5029585798816568,
+        "hsi_tongkol_krai": 0.5029585798816568,
+        "hsi_tct_max": 0.5029585798816568
+      },
+      {
+        "source_id": "WULAN_2022_SET_08",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C062_R054",
+        "nearest_distance_nm": 44.202880626168415,
+        "matched": false,
+        "hsi_tuna_sirip_kuning": 0.21893491124260356,
+        "hsi_cakalang": 0.5029585798816568,
+        "hsi_tongkol_krai": 0.5029585798816568,
+        "hsi_tct_max": 0.5029585798816568
+      },
+      {
+        "source_id": "WULAN_2022_SET_09",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C065_R054",
+        "nearest_distance_nm": 46.07343196262202,
+        "matched": false,
+        "hsi_tuna_sirip_kuning": 0.2485207100591716,
+        "hsi_cakalang": 0.5029585798816568,
+        "hsi_tongkol_krai": 0.5029585798816568,
+        "hsi_tct_max": 0.5029585798816568
+      },
+      {
+        "source_id": "WULAN_2022_SET_10",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C062_R054",
+        "nearest_distance_nm": 53.11851229699059,
+        "matched": false,
+        "hsi_tuna_sirip_kuning": 0.21893491124260356,
+        "hsi_cakalang": 0.5029585798816568,
+        "hsi_tongkol_krai": 0.5029585798816568,
+        "hsi_tct_max": 0.5029585798816568
+      },
+      {
+        "source_id": "WULAN_2022_SET_11",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C062_R054",
+        "nearest_distance_nm": 60.03163924856744,
+        "matched": false,
+        "hsi_tuna_sirip_kuning": 0.21893491124260356,
+        "hsi_cakalang": 0.5029585798816568,
+        "hsi_tongkol_krai": 0.5029585798816568,
+        "hsi_tct_max": 0.5029585798816568
+      },
+      {
+        "source_id": "WULAN_2022_SET_12",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C062_R054",
+        "nearest_distance_nm": 68.45258752461902,
+        "matched": false,
+        "hsi_tuna_sirip_kuning": 0.21893491124260356,
+        "hsi_cakalang": 0.5029585798816568,
+        "hsi_tongkol_krai": 0.5029585798816568,
+        "hsi_tct_max": 0.5029585798816568
+      },
+      {
+        "source_id": "WULAN_2022_SET_13",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C062_R054",
+        "nearest_distance_nm": 72.79796237938275,
+        "matched": false,
+        "hsi_tuna_sirip_kuning": 0.21893491124260356,
+        "hsi_cakalang": 0.5029585798816568,
+        "hsi_tongkol_krai": 0.5029585798816568,
+        "hsi_tct_max": 0.5029585798816568
+      },
+      {
+        "source_id": "WULAN_2022_SET_14",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C062_R054",
+        "nearest_distance_nm": 73.00243984059811,
+        "matched": false,
+        "hsi_tuna_sirip_kuning": 0.21893491124260356,
+        "hsi_cakalang": 0.5029585798816568,
+        "hsi_tongkol_krai": 0.5029585798816568,
+        "hsi_tct_max": 0.5029585798816568
+      },
+      {
+        "source_id": "WULAN_2022_SET_15",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C062_R054",
+        "nearest_distance_nm": 56.04646941347629,
+        "matched": false,
+        "hsi_tuna_sirip_kuning": 0.21893491124260356,
+        "hsi_cakalang": 0.5029585798816568,
+        "hsi_tongkol_krai": 0.5029585798816568,
+        "hsi_tct_max": 0.5029585798816568
+      },
+      {
+        "source_id": "WULAN_2022_SET_16",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C064_R054",
+        "nearest_distance_nm": 41.039549097770596,
+        "matched": false,
+        "hsi_tuna_sirip_kuning": 0.24260355029585798,
+        "hsi_cakalang": 0.5029585798816568,
+        "hsi_tongkol_krai": 0.5029585798816568,
+        "hsi_tct_max": 0.5029585798816568
+      },
+      {
+        "source_id": "WULAN_2022_SET_17",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C065_R054",
+        "nearest_distance_nm": 19.038510041046425,
+        "matched": false,
+        "hsi_tuna_sirip_kuning": 0.2485207100591716,
+        "hsi_cakalang": 0.5029585798816568,
+        "hsi_tongkol_krai": 0.5029585798816568,
+        "hsi_tct_max": 0.5029585798816568
+      }
+    ],
+    "matches": [
+      {
+        "source_id": "SULIS_2022_SET_01",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C056_R060",
+        "nearest_distance_nm": 286.1060844416444,
+        "matched": false,
+        "hsi_tuna_sirip_kuning": 0.9704142011834319,
+        "hsi_cakalang": 0.5029585798816568,
+        "hsi_tongkol_krai": 0.5029585798816568,
+        "hsi_tct_max": 0.9704142011834319
+      },
+      {
+        "source_id": "SULIS_2022_SET_02",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C056_R060",
+        "nearest_distance_nm": 272.27106907042815,
+        "matched": false,
+        "hsi_tuna_sirip_kuning": 0.9704142011834319,
+        "hsi_cakalang": 0.5029585798816568,
+        "hsi_tongkol_krai": 0.5029585798816568,
+        "hsi_tct_max": 0.9704142011834319
+      },
+      {
+        "source_id": "SULIS_2022_SET_03",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C056_R060",
+        "nearest_distance_nm": 259.051553976474,
+        "matched": false,
+        "hsi_tuna_sirip_kuning": 0.9704142011834319,
+        "hsi_cakalang": 0.5029585798816568,
+        "hsi_tongkol_krai": 0.5029585798816568,
+        "hsi_tct_max": 0.9704142011834319
+      },
+      {
+        "source_id": "SULIS_2022_SET_04",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C056_R060",
+        "nearest_distance_nm": 246.02713998044698,
+        "matched": false,
+        "hsi_tuna_sirip_kuning": 0.9704142011834319,
+        "hsi_cakalang": 0.5029585798816568,
+        "hsi_tongkol_krai": 0.5029585798816568,
+        "hsi_tct_max": 0.9704142011834319
+      },
+      {
+        "source_id": "SULIS_2022_SET_05",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C056_R060",
+        "nearest_distance_nm": 233.03702512346325,
+        "matched": false,
+        "hsi_tuna_sirip_kuning": 0.9704142011834319,
+        "hsi_cakalang": 0.5029585798816568,
+        "hsi_tongkol_krai": 0.5029585798816568,
+        "hsi_tct_max": 0.9704142011834319
+      },
+      {
+        "source_id": "SULIS_2022_SET_06",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C056_R060",
+        "nearest_distance_nm": 220.17262507560008,
+        "matched": false,
+        "hsi_tuna_sirip_kuning": 0.9704142011834319,
+        "hsi_cakalang": 0.5029585798816568,
+        "hsi_tongkol_krai": 0.5029585798816568,
+        "hsi_tct_max": 0.9704142011834319
+      },
+      {
+        "source_id": "SULIS_2022_SET_07",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C056_R060",
+        "nearest_distance_nm": 207.45694464652163,
+        "matched": false,
+        "hsi_tuna_sirip_kuning": 0.9704142011834319,
+        "hsi_cakalang": 0.5029585798816568,
+        "hsi_tongkol_krai": 0.5029585798816568,
+        "hsi_tct_max": 0.9704142011834319
+      },
+      {
+        "source_id": "SULIS_2022_SET_08",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C056_R060",
+        "nearest_distance_nm": 194.91867905559732,
+        "matched": false,
+        "hsi_tuna_sirip_kuning": 0.9704142011834319,
+        "hsi_cakalang": 0.5029585798816568,
+        "hsi_tongkol_krai": 0.5029585798816568,
+        "hsi_tct_max": 0.9704142011834319
+      },
+      {
+        "source_id": "SULIS_2022_SET_09",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C056_R060",
+        "nearest_distance_nm": 182.59393456846806,
+        "matched": false,
+        "hsi_tuna_sirip_kuning": 0.9704142011834319,
+        "hsi_cakalang": 0.5029585798816568,
+        "hsi_tongkol_krai": 0.5029585798816568,
+        "hsi_tct_max": 0.9704142011834319
+      },
+      {
+        "source_id": "SULIS_2022_SET_10",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C056_R060",
+        "nearest_distance_nm": 170.2587235538266,
+        "matched": false,
+        "hsi_tuna_sirip_kuning": 0.9704142011834319,
+        "hsi_cakalang": 0.5029585798816568,
+        "hsi_tongkol_krai": 0.5029585798816568,
+        "hsi_tct_max": 0.9704142011834319
+      },
+      {
+        "source_id": "SULIS_2022_SET_11",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C056_R060",
+        "nearest_distance_nm": 158.15864131910573,
+        "matched": false,
+        "hsi_tuna_sirip_kuning": 0.9704142011834319,
+        "hsi_cakalang": 0.5029585798816568,
+        "hsi_tongkol_krai": 0.5029585798816568,
+        "hsi_tct_max": 0.9704142011834319
+      },
+      {
+        "source_id": "SULIS_2022_SET_12",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C056_R060",
+        "nearest_distance_nm": 146.0050658652226,
+        "matched": false,
+        "hsi_tuna_sirip_kuning": 0.9704142011834319,
+        "hsi_cakalang": 0.5029585798816568,
+        "hsi_tongkol_krai": 0.5029585798816568,
+        "hsi_tct_max": 0.9704142011834319
+      },
+      {
+        "source_id": "SULIS_2022_SET_13",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C056_R060",
+        "nearest_distance_nm": 139.4290292163266,
+        "matched": false,
+        "hsi_tuna_sirip_kuning": 0.9704142011834319,
+        "hsi_cakalang": 0.5029585798816568,
+        "hsi_tongkol_krai": 0.5029585798816568,
+        "hsi_tct_max": 0.9704142011834319
+      },
+      {
+        "source_id": "SULIS_2022_SET_14",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C056_R060",
+        "nearest_distance_nm": 132.93593042938016,
+        "matched": false,
+        "hsi_tuna_sirip_kuning": 0.9704142011834319,
+        "hsi_cakalang": 0.5029585798816568,
+        "hsi_tongkol_krai": 0.5029585798816568,
+        "hsi_tct_max": 0.9704142011834319
+      },
+      {
+        "source_id": "WULAN_2022_SET_01",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C061_R057",
+        "nearest_distance_nm": 2.815432075027274,
+        "matched": true,
+        "hsi_tuna_sirip_kuning": 0.34911242603550297,
+        "hsi_cakalang": 0.5029585798816568,
+        "hsi_tongkol_krai": 0.5029585798816568,
+        "hsi_tct_max": 0.5029585798816568
+      },
+      {
+        "source_id": "WULAN_2022_SET_02",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C062_R056",
+        "nearest_distance_nm": 2.232757792360131,
+        "matched": true,
+        "hsi_tuna_sirip_kuning": 0.33727810650887574,
+        "hsi_cakalang": 0.5029585798816568,
+        "hsi_tongkol_krai": 0.5029585798816568,
+        "hsi_tct_max": 0.5029585798816568
+      },
+      {
+        "source_id": "WULAN_2022_SET_03",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C060_R055",
+        "nearest_distance_nm": 4.947766444990939,
+        "matched": true,
+        "hsi_tuna_sirip_kuning": 0.21301775147928995,
+        "hsi_cakalang": 0.5029585798816568,
+        "hsi_tongkol_krai": 0.5029585798816568,
+        "hsi_tct_max": 0.5029585798816568
+      },
+      {
+        "source_id": "WULAN_2022_SET_04",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C060_R055",
+        "nearest_distance_nm": 13.785129688599133,
+        "matched": false,
+        "hsi_tuna_sirip_kuning": 0.21301775147928995,
+        "hsi_cakalang": 0.5029585798816568,
+        "hsi_tongkol_krai": 0.5029585798816568,
+        "hsi_tct_max": 0.5029585798816568
+      },
+      {
+        "source_id": "WULAN_2022_SET_05",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C064_R054",
+        "nearest_distance_nm": 12.048752425775858,
+        "matched": false,
+        "hsi_tuna_sirip_kuning": 0.24260355029585798,
+        "hsi_cakalang": 0.5029585798816568,
+        "hsi_tongkol_krai": 0.5029585798816568,
+        "hsi_tct_max": 0.5029585798816568
+      },
+      {
+        "source_id": "WULAN_2022_SET_06",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C063_R054",
+        "nearest_distance_nm": 23.01550857473755,
+        "matched": false,
+        "hsi_tuna_sirip_kuning": 0.23668639053254437,
+        "hsi_cakalang": 0.5029585798816568,
+        "hsi_tongkol_krai": 0.5029585798816568,
+        "hsi_tct_max": 0.5029585798816568
+      },
+      {
+        "source_id": "WULAN_2022_SET_07",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C062_R054",
+        "nearest_distance_nm": 34.19978798894481,
+        "matched": false,
+        "hsi_tuna_sirip_kuning": 0.21893491124260356,
+        "hsi_cakalang": 0.5029585798816568,
+        "hsi_tongkol_krai": 0.5029585798816568,
+        "hsi_tct_max": 0.5029585798816568
+      },
+      {
+        "source_id": "WULAN_2022_SET_08",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C062_R054",
+        "nearest_distance_nm": 44.202880626168415,
+        "matched": false,
+        "hsi_tuna_sirip_kuning": 0.21893491124260356,
+        "hsi_cakalang": 0.5029585798816568,
+        "hsi_tongkol_krai": 0.5029585798816568,
+        "hsi_tct_max": 0.5029585798816568
+      },
+      {
+        "source_id": "WULAN_2022_SET_09",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C065_R054",
+        "nearest_distance_nm": 46.07343196262202,
+        "matched": false,
+        "hsi_tuna_sirip_kuning": 0.2485207100591716,
+        "hsi_cakalang": 0.5029585798816568,
+        "hsi_tongkol_krai": 0.5029585798816568,
+        "hsi_tct_max": 0.5029585798816568
+      },
+      {
+        "source_id": "WULAN_2022_SET_10",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C062_R054",
+        "nearest_distance_nm": 53.11851229699059,
+        "matched": false,
+        "hsi_tuna_sirip_kuning": 0.21893491124260356,
+        "hsi_cakalang": 0.5029585798816568,
+        "hsi_tongkol_krai": 0.5029585798816568,
+        "hsi_tct_max": 0.5029585798816568
+      },
+      {
+        "source_id": "WULAN_2022_SET_11",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C062_R054",
+        "nearest_distance_nm": 60.03163924856744,
+        "matched": false,
+        "hsi_tuna_sirip_kuning": 0.21893491124260356,
+        "hsi_cakalang": 0.5029585798816568,
+        "hsi_tongkol_krai": 0.5029585798816568,
+        "hsi_tct_max": 0.5029585798816568
+      },
+      {
+        "source_id": "WULAN_2022_SET_12",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C062_R054",
+        "nearest_distance_nm": 68.45258752461902,
+        "matched": false,
+        "hsi_tuna_sirip_kuning": 0.21893491124260356,
+        "hsi_cakalang": 0.5029585798816568,
+        "hsi_tongkol_krai": 0.5029585798816568,
+        "hsi_tct_max": 0.5029585798816568
+      },
+      {
+        "source_id": "WULAN_2022_SET_13",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C062_R054",
+        "nearest_distance_nm": 72.79796237938275,
+        "matched": false,
+        "hsi_tuna_sirip_kuning": 0.21893491124260356,
+        "hsi_cakalang": 0.5029585798816568,
+        "hsi_tongkol_krai": 0.5029585798816568,
+        "hsi_tct_max": 0.5029585798816568
+      },
+      {
+        "source_id": "WULAN_2022_SET_14",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C062_R054",
+        "nearest_distance_nm": 73.00243984059811,
+        "matched": false,
+        "hsi_tuna_sirip_kuning": 0.21893491124260356,
+        "hsi_cakalang": 0.5029585798816568,
+        "hsi_tongkol_krai": 0.5029585798816568,
+        "hsi_tct_max": 0.5029585798816568
+      },
+      {
+        "source_id": "WULAN_2022_SET_15",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C062_R054",
+        "nearest_distance_nm": 56.04646941347629,
+        "matched": false,
+        "hsi_tuna_sirip_kuning": 0.21893491124260356,
+        "hsi_cakalang": 0.5029585798816568,
+        "hsi_tongkol_krai": 0.5029585798816568,
+        "hsi_tct_max": 0.5029585798816568
+      },
+      {
+        "source_id": "WULAN_2022_SET_16",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C064_R054",
+        "nearest_distance_nm": 41.039549097770596,
+        "matched": false,
+        "hsi_tuna_sirip_kuning": 0.24260355029585798,
+        "hsi_cakalang": 0.5029585798816568,
+        "hsi_tongkol_krai": 0.5029585798816568,
+        "hsi_tct_max": 0.5029585798816568
+      },
+      {
+        "source_id": "WULAN_2022_SET_17",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C065_R054",
+        "nearest_distance_nm": 19.038510041046425,
+        "matched": false,
+        "hsi_tuna_sirip_kuning": 0.2485207100591716,
+        "hsi_cakalang": 0.5029585798816568,
+        "hsi_tongkol_krai": 0.5029585798816568,
+        "hsi_tct_max": 0.5029585798816568
+      }
+    ],
+    "evidence_status": "PARTIAL_SPATIAL_VALIDATION",
+    "status": "PARTIAL_SPATIAL_VALIDATION"
   },
+  "full_grid_occurrence_validation": {
+    "validation_scope": "full_grid",
+    "scope": "full_grid",
+    "source": "canonical_grid_8129_cells.geojson",
+    "max_distance_nm": 8.0,
+    "total": 31,
+    "total_records": 31,
+    "matched": 31,
+    "matched_records": 31,
+    "match_rate": 1.0,
+    "by_species": {
+      "tuna_sirip_kuning": {
+        "total": 31,
+        "matched": 31
+      }
+    },
+    "nearest_cell_distances": [
+      {
+        "source_id": "SULIS_2022_SET_01",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C009_R058",
+        "nearest_distance_nm": 5.916410461470525,
+        "matched": true
+      },
+      {
+        "source_id": "SULIS_2022_SET_02",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C010_R057",
+        "nearest_distance_nm": 3.2176427974643422,
+        "matched": true
+      },
+      {
+        "source_id": "SULIS_2022_SET_03",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C013_R057",
+        "nearest_distance_nm": 2.4633573652295015,
+        "matched": true
+      },
+      {
+        "source_id": "SULIS_2022_SET_04",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C015_R056",
+        "nearest_distance_nm": 0.6022444050815376,
+        "matched": true
+      },
+      {
+        "source_id": "SULIS_2022_SET_05",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C017_R055",
+        "nearest_distance_nm": 2.551316306116425,
+        "matched": true
+      },
+      {
+        "source_id": "SULIS_2022_SET_06",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C019_R055",
+        "nearest_distance_nm": 2.929400727517982,
+        "matched": true
+      },
+      {
+        "source_id": "SULIS_2022_SET_07",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C022_R054",
+        "nearest_distance_nm": 1.9734259563559307,
+        "matched": true
+      },
+      {
+        "source_id": "SULIS_2022_SET_08",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C024_R054",
+        "nearest_distance_nm": 2.908691484056147,
+        "matched": true
+      },
+      {
+        "source_id": "SULIS_2022_SET_09",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C026_R053",
+        "nearest_distance_nm": 1.529750481699074,
+        "matched": true
+      },
+      {
+        "source_id": "SULIS_2022_SET_10",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C029_R052",
+        "nearest_distance_nm": 3.9456947486518605,
+        "matched": true
+      },
+      {
+        "source_id": "SULIS_2022_SET_11",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C031_R052",
+        "nearest_distance_nm": 1.3923371991789322,
+        "matched": true
+      },
+      {
+        "source_id": "SULIS_2022_SET_12",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C033_R052",
+        "nearest_distance_nm": 1.9115361359928333,
+        "matched": true
+      },
+      {
+        "source_id": "SULIS_2022_SET_13",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C034_R052",
+        "nearest_distance_nm": 3.0877685601646476,
+        "matched": true
+      },
+      {
+        "source_id": "SULIS_2022_SET_14",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C035_R051",
+        "nearest_distance_nm": 3.945086161561934,
+        "matched": true
+      },
+      {
+        "source_id": "WULAN_2022_SET_01",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C061_R057",
+        "nearest_distance_nm": 3.6600385272294154,
+        "matched": true
+      },
+      {
+        "source_id": "WULAN_2022_SET_02",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C062_R056",
+        "nearest_distance_nm": 3.0458777470939165,
+        "matched": true
+      },
+      {
+        "source_id": "WULAN_2022_SET_03",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C059_R055",
+        "nearest_distance_nm": 1.6932844052542564,
+        "matched": true
+      },
+      {
+        "source_id": "WULAN_2022_SET_04",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C058_R054",
+        "nearest_distance_nm": 0.7159067585363326,
+        "matched": true
+      },
+      {
+        "source_id": "WULAN_2022_SET_05",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C064_R052",
+        "nearest_distance_nm": 0.7189610913829754,
+        "matched": true
+      },
+      {
+        "source_id": "WULAN_2022_SET_06",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C063_R050",
+        "nearest_distance_nm": 1.7073448627238008,
+        "matched": true
+      },
+      {
+        "source_id": "WULAN_2022_SET_07",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C061_R049",
+        "nearest_distance_nm": 3.374720678514533,
+        "matched": true
+      },
+      {
+        "source_id": "WULAN_2022_SET_08",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C059_R048",
+        "nearest_distance_nm": 3.374248379581438,
+        "matched": true
+      },
+      {
+        "source_id": "WULAN_2022_SET_09",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C065_R046",
+        "nearest_distance_nm": 2.9460117374403625,
+        "matched": true
+      },
+      {
+        "source_id": "WULAN_2022_SET_10",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C063_R045",
+        "nearest_distance_nm": 2.858771160367827,
+        "matched": true
+      },
+      {
+        "source_id": "WULAN_2022_SET_11",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C060_R044",
+        "nearest_distance_nm": 2.2483159084818283,
+        "matched": true
+      },
+      {
+        "source_id": "WULAN_2022_SET_12",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C058_R044",
+        "nearest_distance_nm": 3.3723091912382284,
+        "matched": true
+      },
+      {
+        "source_id": "WULAN_2022_SET_13",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C057_R043",
+        "nearest_distance_nm": 0.71840236222965,
+        "matched": true
+      },
+      {
+        "source_id": "WULAN_2022_SET_14",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C058_R043",
+        "nearest_distance_nm": 2.473429697223756,
+        "matched": true
+      },
+      {
+        "source_id": "WULAN_2022_SET_15",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C062_R045",
+        "nearest_distance_nm": 1.4554827579639382,
+        "matched": true
+      },
+      {
+        "source_id": "WULAN_2022_SET_16",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C064_R047",
+        "nearest_distance_nm": 2.2492871698458003,
+        "matched": true
+      },
+      {
+        "source_id": "WULAN_2022_SET_17",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C065_R051",
+        "nearest_distance_nm": 1.6313929988203093,
+        "matched": true
+      }
+    ],
+    "matches": [
+      {
+        "source_id": "SULIS_2022_SET_01",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C009_R058",
+        "nearest_distance_nm": 5.916410461470525,
+        "matched": true
+      },
+      {
+        "source_id": "SULIS_2022_SET_02",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C010_R057",
+        "nearest_distance_nm": 3.2176427974643422,
+        "matched": true
+      },
+      {
+        "source_id": "SULIS_2022_SET_03",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C013_R057",
+        "nearest_distance_nm": 2.4633573652295015,
+        "matched": true
+      },
+      {
+        "source_id": "SULIS_2022_SET_04",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C015_R056",
+        "nearest_distance_nm": 0.6022444050815376,
+        "matched": true
+      },
+      {
+        "source_id": "SULIS_2022_SET_05",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C017_R055",
+        "nearest_distance_nm": 2.551316306116425,
+        "matched": true
+      },
+      {
+        "source_id": "SULIS_2022_SET_06",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C019_R055",
+        "nearest_distance_nm": 2.929400727517982,
+        "matched": true
+      },
+      {
+        "source_id": "SULIS_2022_SET_07",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C022_R054",
+        "nearest_distance_nm": 1.9734259563559307,
+        "matched": true
+      },
+      {
+        "source_id": "SULIS_2022_SET_08",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C024_R054",
+        "nearest_distance_nm": 2.908691484056147,
+        "matched": true
+      },
+      {
+        "source_id": "SULIS_2022_SET_09",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C026_R053",
+        "nearest_distance_nm": 1.529750481699074,
+        "matched": true
+      },
+      {
+        "source_id": "SULIS_2022_SET_10",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C029_R052",
+        "nearest_distance_nm": 3.9456947486518605,
+        "matched": true
+      },
+      {
+        "source_id": "SULIS_2022_SET_11",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C031_R052",
+        "nearest_distance_nm": 1.3923371991789322,
+        "matched": true
+      },
+      {
+        "source_id": "SULIS_2022_SET_12",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C033_R052",
+        "nearest_distance_nm": 1.9115361359928333,
+        "matched": true
+      },
+      {
+        "source_id": "SULIS_2022_SET_13",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C034_R052",
+        "nearest_distance_nm": 3.0877685601646476,
+        "matched": true
+      },
+      {
+        "source_id": "SULIS_2022_SET_14",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C035_R051",
+        "nearest_distance_nm": 3.945086161561934,
+        "matched": true
+      },
+      {
+        "source_id": "WULAN_2022_SET_01",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C061_R057",
+        "nearest_distance_nm": 3.6600385272294154,
+        "matched": true
+      },
+      {
+        "source_id": "WULAN_2022_SET_02",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C062_R056",
+        "nearest_distance_nm": 3.0458777470939165,
+        "matched": true
+      },
+      {
+        "source_id": "WULAN_2022_SET_03",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C059_R055",
+        "nearest_distance_nm": 1.6932844052542564,
+        "matched": true
+      },
+      {
+        "source_id": "WULAN_2022_SET_04",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C058_R054",
+        "nearest_distance_nm": 0.7159067585363326,
+        "matched": true
+      },
+      {
+        "source_id": "WULAN_2022_SET_05",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C064_R052",
+        "nearest_distance_nm": 0.7189610913829754,
+        "matched": true
+      },
+      {
+        "source_id": "WULAN_2022_SET_06",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C063_R050",
+        "nearest_distance_nm": 1.7073448627238008,
+        "matched": true
+      },
+      {
+        "source_id": "WULAN_2022_SET_07",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C061_R049",
+        "nearest_distance_nm": 3.374720678514533,
+        "matched": true
+      },
+      {
+        "source_id": "WULAN_2022_SET_08",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C059_R048",
+        "nearest_distance_nm": 3.374248379581438,
+        "matched": true
+      },
+      {
+        "source_id": "WULAN_2022_SET_09",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C065_R046",
+        "nearest_distance_nm": 2.9460117374403625,
+        "matched": true
+      },
+      {
+        "source_id": "WULAN_2022_SET_10",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C063_R045",
+        "nearest_distance_nm": 2.858771160367827,
+        "matched": true
+      },
+      {
+        "source_id": "WULAN_2022_SET_11",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C060_R044",
+        "nearest_distance_nm": 2.2483159084818283,
+        "matched": true
+      },
+      {
+        "source_id": "WULAN_2022_SET_12",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C058_R044",
+        "nearest_distance_nm": 3.3723091912382284,
+        "matched": true
+      },
+      {
+        "source_id": "WULAN_2022_SET_13",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C057_R043",
+        "nearest_distance_nm": 0.71840236222965,
+        "matched": true
+      },
+      {
+        "source_id": "WULAN_2022_SET_14",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C058_R043",
+        "nearest_distance_nm": 2.473429697223756,
+        "matched": true
+      },
+      {
+        "source_id": "WULAN_2022_SET_15",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C062_R045",
+        "nearest_distance_nm": 1.4554827579639382,
+        "matched": true
+      },
+      {
+        "source_id": "WULAN_2022_SET_16",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C064_R047",
+        "nearest_distance_nm": 2.2492871698458003,
+        "matched": true
+      },
+      {
+        "source_id": "WULAN_2022_SET_17",
+        "species": "tuna_sirip_kuning",
+        "nearest_cell_id": "WPP573_R010_C065_R051",
+        "nearest_distance_nm": 1.6313929988203093,
+        "matched": true
+      }
+    ],
+    "evidence_status": "EMPIRICALLY_VALIDATED",
+    "status": "EMPIRICALLY_VALIDATED"
+  },
+  "validation_scope": "operational_60nm",
   "spatial_evidence_level": "LOW_PROXY_NO_COORDINATED_CATCH",
   "web_integration_status": "HOLD_FOR_SCIENTIFIC_REVIEW"
 }

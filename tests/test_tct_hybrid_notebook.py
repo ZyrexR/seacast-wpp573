@@ -23,6 +23,7 @@ class TctHybridNotebookTest(unittest.TestCase):
         from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
         from sklearn.model_selection import TimeSeriesSplit
         from sklearn.preprocessing import StandardScaler
+        from tct_calibration_contract import build_temporal_calibration_payload
         from tct_local_modeling import FEATURE_COLS as MODEL_FEATURE_COLS
 
         payload = json.loads(NOTEBOOK.read_text(encoding="utf-8"))
@@ -53,6 +54,7 @@ class TctHybridNotebookTest(unittest.TestCase):
                          mean_absolute_error=mean_absolute_error,
                          mean_squared_error=mean_squared_error, r2_score=r2_score,
                          monthly=monthly, FEATURE_COLS=MODEL_FEATURE_COLS,
+                         build_temporal_calibration_payload=build_temporal_calibration_payload,
                          GAM_FEATURES=["sst_c", "chla_mg_m3", "upwelling_contrast_index"],
                          RANDOM_STATE=42, train_last_year=2024, final_validation_year=2025,
                          maxent_status={"status": "skipped"})
@@ -140,6 +142,8 @@ class TctHybridNotebookTest(unittest.TestCase):
         self.assertIn("validate_occurrence_coverage", source)
         self.assertIn("full_grid_occurrence_validation", source)
         self.assertIn("scope='operational_60nm'", source)
+        self.assertIn("build_temporal_calibration_payload", source)
+        self.assertIn("temporal_calibration", source)
         self.assertNotIn("monthly_env = df.groupby('month_key')[FEATURE_COLS].mean()", source)
         self.assertNotIn("legacy_species_removed", source)
 
