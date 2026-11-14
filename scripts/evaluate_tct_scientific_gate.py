@@ -83,6 +83,10 @@ def main() -> None:
         f"{item['model_r2_2025']:.3f} | {item['temporal_status']} | {item['web_status']} |"
         for item in decisions
     ]
+    temporal_summary = "; ".join(
+        f"{labels.get(item['species'], item['species'])}: {item['temporal_status']}"
+        for item in decisions
+    )
     report = "\n".join(
         [
             "# SEACAST TCT Scientific Gate — 2025 Holdout",
@@ -95,7 +99,7 @@ def main() -> None:
             "",
             "MaxEnt tidak dijalankan karena tidak tersedia occurrence berkoordinat per spesies.",
             "Semua peta tetap berstatus proxy spasial. Hasil belum boleh dipublikasikan sebagai lokasi ikan operasional.",
-            "Tongkol Krai adalah kandidat temporal; Tuna Sirip Kuning dan Cakalang ditolak oleh holdout 2025.",
+            f"Status temporal holdout 2025: {temporal_summary}.",
         ]
     )
     (args.output_dir / "TCT_SCIENTIFIC_GATE_2025.md").write_text(report + "\n", encoding="utf-8")

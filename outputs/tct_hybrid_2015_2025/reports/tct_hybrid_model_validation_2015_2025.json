@@ -11,44 +11,57 @@
     "tuna_sirip_kuning": {
       "species": "tuna_sirip_kuning",
       "cv_gam": {
-        "rmse": 22.540259483183,
-        "mae": 14.481683998754894,
-        "r2": -0.3339000121789414
+        "rmse": 47.93992166376011,
+        "mae": 29.552633239472833,
+        "r2": -1.9907061928782048
       },
       "cv_random_forest": {
-        "rmse": 21.437643138895453,
-        "mae": 13.843557317219016,
-        "r2": -0.1469839306641734
+        "rmse": 47.681542819503704,
+        "mae": 28.29716456227505,
+        "r2": -0.521999358214282
       },
       "holdout_2025_gam": {
-        "rmse": 22.151393971737566,
-        "mae": 14.772416438420779,
-        "r2": -0.25590184945398997
+        "rmse": 271.9621809429561,
+        "mae": 171.82444392013778,
+        "r2": -0.26187265630193424
       },
       "holdout_2025_random_forest": {
-        "rmse": 25.022934137582975,
-        "mae": 18.13754453967315,
-        "r2": -0.6026180989770697
+        "rmse": 282.9037695394599,
+        "mae": 181.65157589593727,
+        "r2": -0.36545052144488555
       },
       "holdout_2025_ensemble": {
-        "rmse": 23.432840175415073,
-        "mae": 16.329045300390924,
-        "r2": -0.4054112908817986
+        "rmse": 261.68630573712386,
+        "mae": 167.8558318088671,
+        "r2": -0.16831645002854612
       },
       "holdout_2025_baseline_train_median": {
-        "rmse": 22.044774649479084,
-        "mae": 12.641257952024523,
-        "r2": -0.24384110496570277
+        "rmse": 312.2658588517945,
+        "mae": 199.00619246034117,
+        "r2": -0.6635946187157082
+      },
+      "holdout_2025_baseline_port_median": {
+        "rmse": 311.4080348649719,
+        "mae": 198.37002778673642,
+        "r2": -0.6544670680881968
       },
       "holdout_2025_baseline_month_climatology": {
-        "rmse": 22.111972257927302,
-        "mae": 15.8790233189506,
-        "r2": -0.25143569727399284
+        "rmse": 305.57127985541763,
+        "mae": 197.3534508370697,
+        "r2": -0.5930285732216205
       },
-      "beats_baseline_2025": false,
+      "beats_baseline_2025": true,
       "ensemble_weights": {
-        "gam": 0.48746397305752825,
-        "random_forest": 0.5125360269424717
+        "gam": 0.49864894955514083,
+        "random_forest": 0.5013510504448592
+      },
+      "residual_shrinkage": 1.0,
+      "residual_cv_rmse_by_shrinkage": {
+        "0.0": 53.2101934808676,
+        "0.25": 51.199315611000245,
+        "0.5": 49.54783215137289,
+        "0.75": 48.21532134443552,
+        "1.0": 47.140312586782784
       },
       "maxent": {
         "enabled": false,
@@ -56,49 +69,62 @@
         "reason": "NO SPATIAL OCCURRENCE: belum ada koordinat tangkapan/occurrence per spesies TCT.",
         "input_path": "C:\\Users\\ThinkPad\\.gemini\\antigravity\\scratch\\prigi-pelagis\\data\\modeling\\tct_occurrences.parquet"
       },
-      "spatial_evidence": "monthly_port_aggregate_proxy_no_catch_coordinates"
+      "spatial_evidence": "dual_port_local_aggregate_proxy_no_catch_coordinates"
     },
     "cakalang": {
       "species": "cakalang",
       "cv_gam": {
-        "rmse": 53.53483621939827,
-        "mae": 36.554126231525345,
-        "r2": -0.28324133894941145
+        "rmse": 170.74070737787036,
+        "mae": 101.28344026477029,
+        "r2": -0.7602137389247499
       },
       "cv_random_forest": {
-        "rmse": 50.49228990968655,
-        "mae": 34.88040771714623,
-        "r2": -0.1773708000635127
+        "rmse": 150.81796159940228,
+        "mae": 91.65421597254226,
+        "r2": -0.1015190854673397
       },
       "holdout_2025_gam": {
-        "rmse": 24.32271095606203,
-        "mae": 21.78588722036992,
-        "r2": -0.3331607746074161
+        "rmse": 191.90556865608056,
+        "mae": 124.56177319393623,
+        "r2": 0.015856561100866196
       },
       "holdout_2025_random_forest": {
-        "rmse": 29.878917370657014,
-        "mae": 25.25187925754453,
-        "r2": -1.0118161209062273
+        "rmse": 188.56067646407914,
+        "mae": 124.47628020609437,
+        "r2": 0.049864593384353895
       },
       "holdout_2025_ensemble": {
-        "rmse": 26.926044911338774,
-        "mae": 23.569569255550196,
-        "r2": -0.6338180926207997
+        "rmse": 138.66965438926192,
+        "mae": 97.55938641405999,
+        "r2": 0.4861384607395428
       },
       "holdout_2025_baseline_train_median": {
-        "rmse": 21.72092121056726,
-        "mae": 19.031377567768693,
-        "r2": -0.06320020065769993
+        "rmse": 232.3466195907697,
+        "mae": 153.89090921053545,
+        "r2": -0.4426333369086599
+      },
+      "holdout_2025_baseline_port_median": {
+        "rmse": 199.98093026198765,
+        "mae": 123.71459977457373,
+        "r2": -0.0687113352413109
       },
       "holdout_2025_baseline_month_climatology": {
-        "rmse": 22.38448654772326,
-        "mae": 19.219119157820714,
-        "r2": -0.12915313192852307
+        "rmse": 178.80097142076275,
+        "mae": 119.01116222308406,
+        "r2": 0.1456752362893129
       },
-      "beats_baseline_2025": false,
+      "beats_baseline_2025": true,
       "ensemble_weights": {
-        "gam": 0.4853761878130887,
-        "random_forest": 0.5146238121869112
+        "gam": 0.4690216005654069,
+        "random_forest": 0.530978399434593
+      },
+      "residual_shrinkage": 0.75,
+      "residual_cv_rmse_by_shrinkage": {
+        "0.0": 168.18140752093979,
+        "0.25": 160.99222132923296,
+        "0.5": 156.4880082570651,
+        "0.75": 154.93589107947955,
+        "1.0": 155.71922942418414
       },
       "maxent": {
         "enabled": false,
@@ -106,49 +132,62 @@
         "reason": "NO SPATIAL OCCURRENCE: belum ada koordinat tangkapan/occurrence per spesies TCT.",
         "input_path": "C:\\Users\\ThinkPad\\.gemini\\antigravity\\scratch\\prigi-pelagis\\data\\modeling\\tct_occurrences.parquet"
       },
-      "spatial_evidence": "monthly_port_aggregate_proxy_no_catch_coordinates"
+      "spatial_evidence": "dual_port_local_aggregate_proxy_no_catch_coordinates"
     },
     "tongkol_krai": {
       "species": "tongkol_krai",
       "cv_gam": {
-        "rmse": 38.999571370995795,
-        "mae": 21.317089028410113,
-        "r2": -1.5176072438780839
+        "rmse": 24.568375649872475,
+        "mae": 13.126526727747596,
+        "r2": -0.4648758944586961
       },
       "cv_random_forest": {
-        "rmse": 32.02661858890686,
-        "mae": 16.985640120397207,
-        "r2": 0.020686170224740952
+        "rmse": 23.971436874341077,
+        "mae": 12.10336885418333,
+        "r2": -0.25290661160223227
       },
       "holdout_2025_gam": {
-        "rmse": 13.419471549420578,
-        "mae": 9.7572240196514,
-        "r2": 0.3450018526151447
+        "rmse": 13.353108682366566,
+        "mae": 9.73731021298812,
+        "r2": -0.047954454157188575
       },
       "holdout_2025_random_forest": {
-        "rmse": 14.531374169256566,
-        "mae": 9.9852487929819,
-        "r2": 0.23196216457213548
+        "rmse": 14.573890868026984,
+        "mae": 10.540403491813127,
+        "r2": -0.2483278698678817
       },
       "holdout_2025_ensemble": {
-        "rmse": 13.88692741977236,
-        "mae": 9.88242950268348,
-        "r2": 0.29857446010456534
+        "rmse": 12.420269383032034,
+        "mae": 8.66773717459907,
+        "r2": 0.09334998927303417
       },
       "holdout_2025_baseline_train_median": {
-        "rmse": 19.680616867430956,
-        "mae": 11.785472995505415,
-        "r2": -0.40879128830794853
+        "rmse": 17.10200346443295,
+        "mae": 11.163167553492519,
+        "r2": -0.7189831533929134
+      },
+      "holdout_2025_baseline_port_median": {
+        "rmse": 16.80589415209836,
+        "mae": 11.260827459552068,
+        "r2": -0.659972480185258
       },
       "holdout_2025_baseline_month_climatology": {
-        "rmse": 14.0147065481852,
-        "mae": 8.41404421847931,
-        "r2": 0.28560688409470425
+        "rmse": 13.481302178716781,
+        "mae": 9.423890916200483,
+        "r2": -0.06817233804015199
       },
       "beats_baseline_2025": true,
       "ensemble_weights": {
-        "gam": 0.45091280564235897,
-        "random_forest": 0.549087194357641
+        "gam": 0.4938510395437393,
+        "random_forest": 0.5061489604562608
+      },
+      "residual_shrinkage": 0.25,
+      "residual_cv_rmse_by_shrinkage": {
+        "0.0": 23.723749978139075,
+        "0.25": 23.699609272320295,
+        "0.5": 23.775264772271107,
+        "0.75": 23.94013401025253,
+        "1.0": 24.182719828137262
       },
       "maxent": {
         "enabled": false,
@@ -156,7 +195,7 @@
         "reason": "NO SPATIAL OCCURRENCE: belum ada koordinat tangkapan/occurrence per spesies TCT.",
         "input_path": "C:\\Users\\ThinkPad\\.gemini\\antigravity\\scratch\\prigi-pelagis\\data\\modeling\\tct_occurrences.parquet"
       },
-      "spatial_evidence": "monthly_port_aggregate_proxy_no_catch_coordinates"
+      "spatial_evidence": "dual_port_local_aggregate_proxy_no_catch_coordinates"
     }
   },
   "maxent_gate": {

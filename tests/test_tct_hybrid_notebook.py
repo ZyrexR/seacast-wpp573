@@ -30,6 +30,8 @@ class TctHybridNotebookTest(unittest.TestCase):
         monthly = pd.DataFrame({
             "year": raw["year"],
             "month": raw["month"],
+            "month_key": raw["year"].astype(str) + "-" + raw["month"].astype(str).str.zfill(2),
+            "port": "prigi",
             "sst_c": raw["sst_mean"],
             "chla_mg_m3": raw["chl_mean"],
             "sst_gradient": raw["month"] / 12,
@@ -52,7 +54,7 @@ class TctHybridNotebookTest(unittest.TestCase):
         self.assertEqual(set(evaluation["holdout_2025_ensemble"]), {"rmse", "mae", "r2"})
         self.assertIn("holdout_2025_baseline_train_median", evaluation)
         self.assertIn("holdout_2025_baseline_month_climatology", evaluation)
-        self.assertEqual(evaluation["spatial_evidence"], "monthly_port_aggregate_proxy_no_catch_coordinates")
+        self.assertEqual(evaluation["spatial_evidence"], "dual_port_local_aggregate_proxy_no_catch_coordinates")
 
     def test_eog_loader_ignores_stale_unfinished_final_file(self):
         payload = json.loads(NOTEBOOK.read_text(encoding="utf-8"))
@@ -112,6 +114,10 @@ class TctHybridNotebookTest(unittest.TestCase):
         self.assertIn("LinearGAM", source)
         self.assertIn("MaxEnt", source)
         self.assertIn("NO SPATIAL OCCURRENCE", source)
+        self.assertIn("MAX_OPERATIONAL_NM = 60.0", source)
+        self.assertIn("CILACAP_RAW_PATH", source)
+        self.assertIn("residual_shrinkage", source)
+        self.assertNotIn("monthly_env = df.groupby('month_key')[FEATURE_COLS].mean()", source)
         self.assertNotIn("legacy_species_removed", source)
 
 

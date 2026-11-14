@@ -3,9 +3,15 @@
   "model_dir": "C:\\Users\\ThinkPad\\.gemini\\antigravity\\scratch\\prigi-pelagis\\outputs\\tct_hybrid_2015_2025\\models",
   "report_dir": "C:\\Users\\ThinkPad\\.gemini\\antigravity\\scratch\\prigi-pelagis\\outputs\\tct_hybrid_2015_2025\\reports",
   "geojson_dir": "C:\\Users\\ThinkPad\\.gemini\\antigravity\\scratch\\prigi-pelagis\\outputs\\tct_hybrid_2015_2025\\geojson",
-  "rows": 1073028,
+  "rows": 44616,
   "months": 132,
-  "cells": 8129,
+  "cells": 338,
+  "ports": [
+    "cilacap",
+    "prigi"
+  ],
+  "operational_radius_nm": 60.0,
+  "spatial_rows_are_local_port_zones": true,
   "maxent_status": {
     "enabled": false,
     "status": "skipped",
