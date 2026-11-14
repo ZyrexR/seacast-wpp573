@@ -104,6 +104,7 @@
 
                     <form action="{{ route('dashboard.trip-planner.store') }}" method="POST" class="space-y-4">
                         @csrf
+                        <input type="hidden" name="cell_id" :value="form.cell_id || plan.cell_id || ''">
                         <input type="hidden" name="hsi_score" :value="form.hsi_score">
                         <input type="hidden" name="wave_height_m" :value="form.wave_height_m">
 
@@ -424,8 +425,10 @@
                         </div>
 
                         <div class="p-3 rounded-xl bg-[#071B2B]/70 border border-[#244456]/60 text-[11px] text-slate-400 flex items-center justify-between">
-                            <span>Formula CPUE: <em>Base Tonase × Pengali Musim × HSI Factor</em> terkalibrasi statistik empiris pendaratan ikan WPP 573.</span>
-                            <span class="text-cyan-300 font-mono text-floor">Tingkat Keyakinan: 84.7%</span>
+                            <span>Formula CPUE: <em>Base Tonase × Pengali Musim × HSI Factor</em> adalah skenario estimasi, bukan jaminan hasil tangkap.</span>
+                            <span class="text-cyan-300 font-mono text-floor">
+                                <span x-text="plan.estimate_source"></span> · <span x-text="plan.spatial_evidence_level"></span>
+                            </span>
                         </div>
                     </div>
 

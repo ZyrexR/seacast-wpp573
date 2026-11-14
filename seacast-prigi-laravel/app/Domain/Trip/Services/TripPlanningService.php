@@ -74,6 +74,17 @@ class TripPlanningService
         'tongkol_krai' => 28000,
     ];
 
+    /**
+     * Public dual-hub list. PPN_PALABUHANRATU stays in PORTS for legacy calls.
+     */
+    public static function availablePorts(): array
+    {
+        return array_intersect_key(self::PORTS, array_flip([
+            'PPN_PRIGI',
+            'PPS_CILACAP',
+        ]));
+    }
+
     public function calculateDistanceAndBearing(string $portCode, float $targetLat, float $targetLon): array
     {
         $port = self::PORTS[$portCode] ?? self::PORTS['PPN_PRIGI'];
@@ -300,12 +311,48 @@ class TripPlanningService
         $port = self::PORTS[$portCode] ?? self::PORTS['PPN_PRIGI'];
         $gtClass = $params['gt_class'] ?? '< 10 GT';
         $spec = self::GT_SPECS[$gtClass] ?? self::GT_SPECS['< 10 GT'];
-        $targetLat = (float)($params['target_lat'] ?? -8.5);
-        $targetLon = (float)($params['target_lon'] ?? 111.75);
+        $cellId = isset($params['cell_id']) && $params['cell_id'] !== '' ? (string)$params['cell_id'] : null;
+        $selectedCell = is_array($params['selected_cell'] ?? null) ? $params['selected_cell'] : null;
+        $selectedCellLat = $selectedCell['lat'] ?? $selectedCell['center_lat'] ?? $selectedCell['lat_dec'] ?? null;
+        $selectedCellLon = $selectedCell['lon'] ?? $selectedCell['center_lon'] ?? $selectedCell['lon_dec'] ?? null;
+        $coordinatesFallback = $selectedCellLat === null && !array_key_exists('target_lat', $params);
+        $targetLat = (float)($selectedCellLat ?? $params['target_lat'] ?? -8.5);
+        $targetLon = (float)($selectedCellLon ?? $params['target_lon'] ?? 111.75);
         $departureDate = $params['departure_date'] ?? date('Y-m-d');
         $commodity = $params['target_commodity'] ?? 'Cakalang';
-        $hsiScore = (float)($params['hsi_score'] ?? 0.75);
-        $waveHeightM = (float)($params['wave_height_m'] ?? 1.3);
+        $commodityKey = str_replace([' ', '-'], '_', strtolower($commodity));
+        $hsiKeys = [
+            'tuna_sirip_kuning' => ['hsi_tuna_sirip_kuning', 'hsi_madidihang'],
+            'madidihang' => ['hsi_madidihang', 'hsi_tuna_sirip_kuning'],
+            'cakalang' => ['hsi_cakalang'],
+            'tongkol' => ['hsi_tongkol', 'hsi_tongkol_krai'],
+            'tongkol_krai' => ['hsi_tongkol_krai', 'hsi_tongkol'],
+        ][$commodityKey] ?? ['hsi_score'];
+        $selectedHsi = null;
+        foreach ($hsiKeys as $hsiKey) {
+            if ($selectedCell !== null && array_key_exists($hsiKey, $selectedCell)) {
+                $selectedHsi = $selectedCell[$hsiKey];
+                break;
+            }
+        }
+        $hsiFallback = $selectedHsi === null && !array_key_exists('hsi_score', $params);
+        $hsiScore = (float)($selectedHsi ?? $params['hsi_score'] ?? 0.75);
+        $selectedWave = $selectedCell['wave_height_m'] ?? null;
+        $waveFallback = $selectedWave === null && !array_key_exists('wave_height_m', $params);
+        $waveHeightM = (float)($selectedWave ?? $params['wave_height_m'] ?? 1.3);
+        $estimateSource = in_array($params['estimate_source'] ?? null, [
+            'FORMULA_SCENARIO',
+            'TEMPORAL_CPUE_CALIBRATED',
+        ], true) ? $params['estimate_source'] : 'FORMULA_SCENARIO';
+        $spatialEvidenceLevel = (string)($selectedCell['spatial_evidence_level']
+            ?? $params['spatial_evidence_level']
+            ?? 'PROXY_HSI');
+        $dataSourceMode = $selectedCell !== null
+            ? 'SELECTED_SPATIAL_CELL'
+            : ($coordinatesFallback || $hsiFallback || $waveFallback ? 'FALLBACK_DEFAULT' : 'PARAMETERS');
+        $targetSource = $selectedCell !== null
+            ? 'SELECTED_SPATIAL_CELL'
+            : ($dataSourceMode === 'FALLBACK_DEFAULT' ? 'FALLBACK_DEFAULT' : 'PARAMETERS');
 
         $nav = $this->calculateDistanceAndBearing($portCode, $targetLat, $targetLon);
         $fuel = $this->calculateFuelEconomics($nav['distance_nm'], $gtClass);
@@ -313,6 +360,8 @@ class TripPlanningService
         $waveSafety = $this->evaluateWaveSafety($waveHeightM);
         $moon = $this->calculateMoonPhase($departureDate);
         $catch = $this->calculateCatchProjection($commodity, $gtClass, $hsiScore, $departureDate);
+        $catch['estimate_source'] = $estimateSource;
+        $catch['spatial_evidence_level'] = $spatialEvidenceLevel;
 
         $netProfitRp = $catch['gross_revenue_rp'] - $fuel['total_fuel_cost_rp'];
 
@@ -340,6 +389,16 @@ class TripPlanningService
 
         return [
             'reference_no' => $referenceNo,
+            'cell_id' => $cellId,
+            'estimate_source' => $estimateSource,
+            'spatial_evidence_level' => $spatialEvidenceLevel,
+            'data_source_mode' => $dataSourceMode,
+            'target_source' => $targetSource,
+            'fallbacks' => [
+                'coordinates' => $coordinatesFallback,
+                'hsi' => $hsiFallback,
+                'wave' => $waveFallback,
+            ],
             'port' => $port,
             'vessel_name' => $params['vessel_name'] ?? 'KM Nelayan Bahari',
             'skipper_name' => $params['skipper_name'] ?? 'Nakhoda Sukirno',

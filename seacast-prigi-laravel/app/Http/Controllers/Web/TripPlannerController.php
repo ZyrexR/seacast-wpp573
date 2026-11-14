@@ -24,6 +24,7 @@ class TripPlannerController extends Controller
         // Defaults from query params (e.g. from DPI Radar shortcut)
         $initialTarget = [
             'port_code' => $request->query('port', 'PPN_PRIGI'),
+            'cell_id' => $request->query('cell_id'),
             'vessel_name' => $request->query('vessel_name', $user->name ? "KM {$user->name}" : 'KM Nelayan Bahari'),
             'skipper_name' => $request->query('skipper_name', $user->name ?? 'Nakhoda Sukirno'),
             'gt_class' => $request->query('gt_class', '< 10 GT'),
@@ -60,7 +61,7 @@ class TripPlannerController extends Controller
         }
 
         return view('dashboard.trip-planner', [
-            'ports' => TripPlanningService::PORTS,
+            'ports' => TripPlanningService::availablePorts(),
             'gtSpecs' => TripPlanningService::GT_SPECS,
             'commodityPrices' => TripPlanningService::COMMODITY_PRICES,
             'initialTarget' => $initialTarget,
@@ -78,6 +79,7 @@ class TripPlannerController extends Controller
             'target_commodity' => 'required|string',
             'target_lat' => 'required|numeric',
             'target_lon' => 'required|numeric',
+            'cell_id' => 'nullable|string|max:100',
             'departure_date' => 'required|date',
             'hsi_score' => 'nullable|numeric|between:0,1',
             'wave_height_m' => 'nullable|numeric|min:0',
@@ -100,6 +102,7 @@ class TripPlannerController extends Controller
             'target_commodity' => 'required|string',
             'target_lat' => 'required|numeric',
             'target_lon' => 'required|numeric',
+            'cell_id' => 'nullable|string|max:100',
             'departure_date' => 'required|date',
             'hsi_score' => 'nullable|numeric|between:0,1',
             'wave_height_m' => 'nullable|numeric|min:0',

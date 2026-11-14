@@ -64,6 +64,11 @@ class TripPlannerWorkflowTest extends TestCase
         $response->assertStatus(200);
         $response->assertJsonStructure([
             'reference_no',
+            'cell_id',
+            'estimate_source',
+            'spatial_evidence_level',
+            'data_source_mode',
+            'target_source',
             'navigation' => ['distance_nm', 'compass_direction'],
             'fuel' => ['base_fuel_liters', 'safety_reserve_liters', 'total_fuel_liters', 'total_fuel_cost_rp'],
             'permen_kp' => ['status', 'is_compliant', 'citation'],
@@ -71,6 +76,25 @@ class TripPlannerWorkflowTest extends TestCase
             'moon_phase' => ['phase_name', 'fishing_advisory'],
             'catch_projection' => ['projected_kg', 'gross_revenue_rp'],
         ]);
+    }
+
+    public function test_selected_cell_id_is_propagated_through_trip_planner(): void
+    {
+        $response = $this->actingAs($this->nelayan)->postJson('/dashboard/trip-planner/calculate', [
+            'port_code' => 'PPN_PRIGI',
+            'gt_class' => '10 - 20 GT',
+            'target_commodity' => 'Cakalang',
+            'target_lat' => -8.75,
+            'target_lon' => 111.75,
+            'departure_date' => '2026-11-20',
+            'hsi_score' => 0.78,
+            'wave_height_m' => 1.3,
+            'cell_id' => 'WPP573_TEST_CELL_001',
+        ]);
+
+        $response->assertStatus(200);
+        $response->assertJsonPath('cell_id', 'WPP573_TEST_CELL_001');
+        $response->assertJsonPath('target_source', 'PARAMETERS');
     }
 
     public function test_user_can_save_trip_plan_and_view_it_in_history(): void

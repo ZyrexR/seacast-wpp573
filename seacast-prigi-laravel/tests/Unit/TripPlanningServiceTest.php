@@ -108,5 +108,62 @@ class TripPlanningServiceTest extends TestCase
         $this->assertGreaterThan(0, $plan['catch_projection']['gross_revenue_rp']);
         $this->assertTrue($plan['wave_safety']['is_safe_to_sail']);
     }
+
+    public function test_selected_cell_overrides_defaults_and_is_returned_as_spatial_source(): void
+    {
+        $plan = $this->planner->generateCompleteTripPlan([
+            'port_code' => 'PPS_CILACAP',
+            'gt_class' => '> 30 GT',
+            'target_commodity' => 'Tuna Sirip Kuning',
+            'departure_date' => '2026-11-20',
+            'cell_id' => 'WPP573_TEST_CELL_001',
+            'selected_cell' => [
+                'center_lat' => -8.9123,
+                'center_lon' => 109.4567,
+                'hsi_tuna_sirip_kuning' => 0.91,
+                'wave_height_m' => 1.8,
+                'spatial_evidence_level' => 'PARTIAL_SPATIAL_VALIDATION',
+            ],
+        ]);
+
+        $this->assertSame('WPP573_TEST_CELL_001', $plan['cell_id']);
+        $this->assertSame(-8.9123, $plan['target_coordinates']['lat_dec']);
+        $this->assertSame(109.4567, $plan['target_coordinates']['lon_dec']);
+        $this->assertSame(0.91, $plan['catch_projection']['hsi_score']);
+        $this->assertSame(1.8, $plan['wave_safety']['wave_height_m']);
+        $this->assertSame('SELECTED_SPATIAL_CELL', $plan['data_source_mode']);
+        $this->assertSame('SELECTED_SPATIAL_CELL', $plan['target_source']);
+        $this->assertSame('PARTIAL_SPATIAL_VALIDATION', $plan['spatial_evidence_level']);
+    }
+
+    public function test_formula_fallbacks_are_explicitly_labeled(): void
+    {
+        $plan = $this->planner->generateCompleteTripPlan([
+            'port_code' => 'PPN_PRIGI',
+            'gt_class' => '< 10 GT',
+            'target_commodity' => 'Cakalang',
+            'departure_date' => '2026-11-20',
+        ]);
+
+        $this->assertSame('FORMULA_SCENARIO', $plan['estimate_source']);
+        $this->assertSame('FALLBACK_DEFAULT', $plan['data_source_mode']);
+        $this->assertSame('FALLBACK_DEFAULT', $plan['target_source']);
+        $this->assertTrue($plan['fallbacks']['coordinates']);
+        $this->assertTrue($plan['fallbacks']['hsi']);
+        $this->assertTrue($plan['fallbacks']['wave']);
+    }
+
+    public function test_palabuhanratu_remains_internal_legacy_port_but_not_public_port_list(): void
+    {
+        $plan = $this->planner->generateCompleteTripPlan([
+            'port_code' => 'PPN_PALABUHANRATU',
+            'target_lat' => -7.2,
+            'target_lon' => 106.8,
+        ]);
+
+        $this->assertSame('PPN_PALABUHANRATU', $plan['port']['code']);
+        $this->assertArrayHasKey('PPN_PALABUHANRATU', TripPlanningService::PORTS);
+        $this->assertArrayNotHasKey('PPN_PALABUHANRATU', TripPlanningService::availablePorts());
+    }
 }
 
