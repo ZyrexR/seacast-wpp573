@@ -33,10 +33,10 @@ Komoditas aktif:
 Metode baru:
 - GAM untuk hubungan non-linear CPUE bulanan dan prediktor oseanografi.
 - Random Forest sebagai model pembanding.
-- Ensemble hanya GAM + Random Forest, dengan bobot dari error validasi time-series.
+- Ensemble GAM + Random Forest + Gradient Boosting, dengan bobot dari error validasi time-series.
 - Panel dual-hub PPN Prigi + PPS Cilacap; fitur lingkungan dibatasi pada radius operasional 60 NM.
 - Fitur anomali klimatologis, lag-1 bulan, dan Upwelling Contrast Index (SST inshore - SST offshore).
-- Target residual terhadap baseline musiman per pelabuhan; shrinkage koreksi dipilih dari CV, bukan dijamin otomatis unggul.
+- Target residual pada skala log1p terhadap baseline musiman per pelabuhan; shrinkage koreksi dipilih dari CV, bukan dijamin otomatis unggul.
 - EOG VIIRS VBD sebagai proxy aktivitas kapal/effort, bukan label spesies.
 - MaxEnt **tidak dilatih** karena **NO SPATIAL OCCURRENCE**: belum ada koordinat tangkapan/occurrence per spesies.
 
@@ -64,7 +64,7 @@ import joblib
 import numpy as np
 import pandas as pd
 from tqdm.auto import tqdm
-from sklearn.ensemble import RandomForestRegressor
+from sklearn.ensemble import GradientBoostingRegressor, RandomForestRegressor
 from sklearn.impute import SimpleImputer
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 from sklearn.model_selection import TimeSeriesSplit
@@ -112,7 +112,9 @@ for directory in (MODEL_DIR, PREDICTION_DIR, REPORT_DIR, GEOJSON_DIR):
 import sys
 sys.path.insert(0, str(PROJECT_ROOT / 'scripts'))
 from tct_local_modeling import (
+    FEATURE_COLS,
     add_anomaly_and_lag_features,
+    add_temporal_model_features,
     build_local_features,
     haversine_nm,
     parse_cilacap_statistics,
@@ -246,13 +248,6 @@ MAX_OPERATIONAL_NM = 60.0
 INSHORE_NM = 12.0
 OFFSHORE_MIN_NM = 30.0
 
-FEATURE_COLS = [
-    'sst_c', 'chla_mg_m3', 'sst_gradient', 'upwelling_contrast_index',
-    'anom_sst', 'anom_chla_mg_m3', 'anom_upwelling_contrast_index',
-    'sst_lag1', 'chla_lag1', 'upwelling_lag1',
-    'vbd_pct_detect', 'local_active_cell_share', 'vbd_active_pct_detect',
-    'port_cilacap',
-]
 PORT_VALUE_COLS = ['sst_c', 'chla_mg_m3', 'upwelling_contrast_index']
 
 
@@ -310,6 +305,7 @@ monthly['sst_lag1'] = monthly['sst_c_lag1']
 monthly['chla_lag1'] = monthly['chla_mg_m3_lag1']
 monthly['upwelling_lag1'] = monthly['upwelling_contrast_index_lag1']
 monthly['port_cilacap'] = monthly['port'].eq('cilacap').astype(float)
+monthly = add_temporal_model_features(monthly)
 monthly = monthly.sort_values(['month_key', 'port']).reset_index(drop=True)
 
 if monthly['port'].nunique() != 2 or len(monthly) != 252:
@@ -369,6 +365,19 @@ def baseline_values(frame, reference, target):
     return result['seasonal_baseline'].to_numpy(dtype=float)
 
 
+def baseline_log_values(frame, reference, target):
+    # Return a port/month median baseline in log1p(CPUE) space.
+    reference = reference.copy()
+    reference['_y_log'] = np.log1p(reference[target].clip(lower=0))
+    seasonal = reference.groupby(['port', 'month'])['_y_log'].median().rename('baseline_log').reset_index()
+    port_median = reference.groupby('port')['_y_log'].median().rename('port_baseline_log').reset_index()
+    result = frame[['port', 'month']].merge(seasonal, on=['port', 'month'], how='left')
+    result = result.merge(port_median, on='port', how='left')
+    result['baseline_log'] = result['baseline_log'].fillna(result['port_baseline_log'])
+    result['baseline_log'] = result['baseline_log'].fillna(reference['_y_log'].median())
+    return result['baseline_log'].to_numpy(dtype=float)
+
+
 def fit_species(species):
     target = species + '_cpue_kg_trip'
     train_mask = monthly['year'] <= train_last_year
@@ -383,14 +392,16 @@ def fit_species(species):
             monthly.index[monthly['month_key'].isin(fold_train_months)].to_numpy(),
             monthly.index[monthly['month_key'].isin(fold_val_months)].to_numpy(),
         ))
-    gam_cv, rf_cv, fold_ensemble_predictions = [], [], []
+    gam_cv, rf_cv, gbr_cv, fold_ensemble_predictions = [], [], [], []
     for fold, (tr, va) in enumerate(folds, start=1):
         train_frame, val_frame = monthly.loc[tr], monthly.loc[va]
         y_train_actual = train_frame[target].clip(lower=0).to_numpy()
         y_val = val_frame[target].clip(lower=0).to_numpy()
-        baseline_train = baseline_values(train_frame, train_frame, target)
-        baseline_val = baseline_values(val_frame, train_frame, target)
-        y_residual = y_train_actual - baseline_train
+        y_train_log = np.log1p(y_train_actual)
+        y_val_log = np.log1p(y_val)
+        baseline_train_log = baseline_log_values(train_frame, train_frame, target)
+        baseline_val_log = baseline_log_values(val_frame, train_frame, target)
+        y_residual = y_train_log - baseline_train_log
         x_train_raw = train_frame[FEATURE_COLS].to_numpy()
         x_val_raw = val_frame[FEATURE_COLS].to_numpy()
         fold_imputer, fold_scaler = SimpleImputer(strategy='median'), StandardScaler()
@@ -398,28 +409,37 @@ def fit_species(species):
         x_fold_val = fold_scaler.transform(fold_imputer.transform(x_val_raw))
         gam = make_gam(len(FEATURE_COLS)).fit(x_fold_train, y_residual)
         rf = RandomForestRegressor(
-            n_estimators=250, max_features='sqrt', min_samples_leaf=4,
+            n_estimators=300, max_depth=4, max_features='sqrt', min_samples_leaf=4,
             random_state=RANDOM_STATE + fold, n_jobs=-1
+        ).fit(x_fold_train, y_residual)
+        gbr = GradientBoostingRegressor(
+            n_estimators=300, learning_rate=0.03, max_depth=3, min_samples_leaf=4,
+            random_state=RANDOM_STATE + fold,
         ).fit(x_fold_train, y_residual)
         gam_correction = gam.predict(x_fold_val)
         rf_correction = rf.predict(x_fold_val)
-        gam_prediction = np.clip(baseline_val + gam_correction, 0, None)
-        rf_prediction = np.clip(baseline_val + rf_correction, 0, None)
+        gbr_correction = gbr.predict(x_fold_val)
+        gam_prediction = np.clip(np.expm1(baseline_val_log + gam_correction), 0, None)
+        rf_prediction = np.clip(np.expm1(baseline_val_log + rf_correction), 0, None)
+        gbr_prediction = np.clip(np.expm1(baseline_val_log + gbr_correction), 0, None)
         gam_cv.append(metrics(y_val, gam_prediction))
         rf_cv.append(metrics(y_val, rf_prediction))
-        fold_ensemble_predictions.append((y_val, baseline_val, gam_correction, rf_correction))
+        gbr_cv.append(metrics(y_val, gbr_prediction))
+        fold_ensemble_predictions.append((y_val, y_val_log, baseline_val_log, gam_correction, rf_correction, gbr_correction))
 
     gam_rmse = np.mean([x['rmse'] for x in gam_cv])
     rf_rmse = np.mean([x['rmse'] for x in rf_cv])
-    inverse = np.array([1 / max(gam_rmse, 1e-9), 1 / max(rf_rmse, 1e-9)])
+    gbr_rmse = np.mean([x['rmse'] for x in gbr_cv])
+    inverse = np.array([1 / max(gam_rmse, 1e-9), 1 / max(rf_rmse, 1e-9), 1 / max(gbr_rmse, 1e-9)])
     weights = inverse / inverse.sum()
-    shrinkage_grid = np.array([0.0, 0.25, 0.50, 0.75, 1.0])
+    shrinkage_grid = np.array([0.2, 0.4, 0.6, 0.8, 1.0])
     shrinkage_scores = {}
     for shrinkage in shrinkage_grid:
         scores = []
-        for y_val, baseline_val, gam_correction, rf_correction in fold_ensemble_predictions:
-            correction = weights[0] * gam_correction + weights[1] * rf_correction
-            scores.append(metrics(y_val, np.clip(baseline_val + shrinkage * correction, 0, None))['rmse'])
+        for y_val, y_val_log, baseline_val_log, gam_correction, rf_correction, gbr_correction in fold_ensemble_predictions:
+            correction = weights[0] * gam_correction + weights[1] * rf_correction + weights[2] * gbr_correction
+            prediction_log = baseline_val_log + shrinkage * correction
+            scores.append(metrics(y_val, np.clip(np.expm1(prediction_log), 0, None))['rmse'])
         shrinkage_scores[float(shrinkage)] = float(np.mean(scores))
     correction_shrinkage = min(shrinkage_scores, key=shrinkage_scores.get)
 
@@ -427,45 +447,62 @@ def fit_species(species):
     holdout_frame = monthly.loc[holdout_mask]
     y_train_actual = train_frame[target].clip(lower=0).to_numpy()
     y_holdout = holdout_frame[target].clip(lower=0).to_numpy()
-    baseline_train = baseline_values(train_frame, train_frame, target)
-    baseline_holdout = baseline_values(holdout_frame, train_frame, target)
-    y_residual = y_train_actual - baseline_train
+    y_train_log = np.log1p(y_train_actual)
+    y_holdout_log = np.log1p(y_holdout)
+    baseline_train_log = baseline_log_values(train_frame, train_frame, target)
+    baseline_holdout_log = baseline_log_values(holdout_frame, train_frame, target)
+    y_residual = y_train_log - baseline_train_log
     imputer, scaler = SimpleImputer(strategy='median'), StandardScaler()
     x_train = scaler.fit_transform(imputer.fit_transform(train_frame[FEATURE_COLS].to_numpy()))
     x_holdout = scaler.transform(imputer.transform(holdout_frame[FEATURE_COLS].to_numpy()))
     gam = make_gam(len(FEATURE_COLS)).fit(x_train, y_residual)
     rf = RandomForestRegressor(
-        n_estimators=400, max_features='sqrt', min_samples_leaf=4,
+        n_estimators=300, max_depth=4, max_features='sqrt', min_samples_leaf=4,
         random_state=RANDOM_STATE, n_jobs=-1
+    ).fit(x_train, y_residual)
+    gbr = GradientBoostingRegressor(
+        n_estimators=300, learning_rate=0.03, max_depth=3, min_samples_leaf=4,
+        random_state=RANDOM_STATE,
     ).fit(x_train, y_residual)
     gam_holdout = gam.predict(x_holdout)
     rf_holdout = rf.predict(x_holdout)
-    ensemble_correction = weights[0] * gam_holdout + weights[1] * rf_holdout
-    ensemble_holdout = np.clip(baseline_holdout + correction_shrinkage * ensemble_correction, 0, None)
+    gbr_holdout = gbr.predict(x_holdout)
+    ensemble_correction = weights[0] * gam_holdout + weights[1] * rf_holdout + weights[2] * gbr_holdout
+    ensemble_holdout_log = np.clip(baseline_holdout_log + correction_shrinkage * ensemble_correction, 0, None)
+    ensemble_holdout = np.clip(np.expm1(ensemble_holdout_log), 0, None)
+    gam_holdout_actual = np.clip(np.expm1(baseline_holdout_log + correction_shrinkage * gam_holdout), 0, None)
+    rf_holdout_actual = np.clip(np.expm1(baseline_holdout_log + correction_shrinkage * rf_holdout), 0, None)
+    gbr_holdout_actual = np.clip(np.expm1(baseline_holdout_log + correction_shrinkage * gbr_holdout), 0, None)
     baseline_evaluation = metrics(y_holdout, np.full(len(y_holdout), np.median(y_train_actual)))
     port_median_holdout = metrics(y_holdout, train_frame.groupby('port')[target].median().reindex(holdout_frame['port']).to_numpy())
-    seasonal_evaluation = metrics(y_holdout, baseline_holdout)
+    seasonal_holdout = np.clip(np.expm1(baseline_holdout_log), 0, None)
+    seasonal_evaluation = metrics(y_holdout, seasonal_holdout)
+    ensemble_log_evaluation = metrics(y_holdout_log, ensemble_holdout_log)
     ensemble_evaluation = metrics(y_holdout, ensemble_holdout)
 
     evaluation = {
         'species': species,
         'cv_gam': {key: float(np.mean([x[key] for x in gam_cv])) for key in ['rmse', 'mae', 'r2']},
         'cv_random_forest': {key: float(np.mean([x[key] for x in rf_cv])) for key in ['rmse', 'mae', 'r2']},
-        'holdout_2025_gam': metrics(y_holdout, gam_holdout),
-        'holdout_2025_random_forest': metrics(y_holdout, rf_holdout),
+        'cv_gradient_boosting': {key: float(np.mean([x[key] for x in gbr_cv])) for key in ['rmse', 'mae', 'r2']},
+        'holdout_2025_gam': metrics(y_holdout, gam_holdout_actual),
+        'holdout_2025_random_forest': metrics(y_holdout, rf_holdout_actual),
+        'holdout_2025_gradient_boosting': metrics(y_holdout, gbr_holdout_actual),
         'holdout_2025_ensemble': ensemble_evaluation,
+        'holdout_2025_ensemble_log': ensemble_log_evaluation,
         'holdout_2025_baseline_train_median': baseline_evaluation,
         'holdout_2025_baseline_port_median': port_median_holdout,
         'holdout_2025_baseline_month_climatology': seasonal_evaluation,
         'beats_baseline_2025': bool(ensemble_evaluation['rmse'] < seasonal_evaluation['rmse']),
-        'ensemble_weights': {'gam': float(weights[0]), 'random_forest': float(weights[1])},
+        'ensemble_r2_log_2025': ensemble_log_evaluation['r2'],
+        'ensemble_weights': {'gam': float(weights[0]), 'random_forest': float(weights[1]), 'gradient_boosting': float(weights[2])},
         'residual_shrinkage': float(correction_shrinkage),
         'residual_cv_rmse_by_shrinkage': shrinkage_scores,
         'maxent': maxent_status,
         'spatial_evidence': 'dual_port_local_aggregate_proxy_no_catch_coordinates',
     }
-    seasonal_table = train_frame.groupby(['port', 'month'])[target].median().reset_index(name='baseline')
-    port_table = train_frame.groupby('port')[target].median().reset_index(name='baseline')
+    seasonal_table = train_frame.assign(_y_log=y_train_log).groupby(['port', 'month'])['_y_log'].median().reset_index(name='baseline_log')
+    port_table = train_frame.assign(_y_log=y_train_log).groupby('port')['_y_log'].median().reset_index(name='baseline_log')
     bundle = {
         'species': species,
         'feature_cols': FEATURE_COLS,
@@ -473,13 +510,14 @@ def fit_species(species):
         'scaler': scaler,
         'gam': gam,
         'random_forest': rf,
-        'weights': {'gam': float(weights[0]), 'random_forest': float(weights[1])},
-        'method': 'Seasonal residual GAM + Random Forest with CV shrinkage; MaxEnt gated off without occurrence coordinates',
+        'gradient_boosting': gbr,
+        'weights': {'gam': float(weights[0]), 'random_forest': float(weights[1]), 'gradient_boosting': float(weights[2])},
+        'method': 'Log-scale seasonal residual GAM + Random Forest + Gradient Boosting with CV shrinkage; MaxEnt gated off without occurrence coordinates',
         'train_last_year': train_last_year,
         'final_validation_year': final_validation_year,
         'seasonal_baseline_table': seasonal_table,
         'port_baseline_table': port_table,
-        'global_baseline': float(np.median(y_train_actual)),
+        'global_baseline_log': float(np.median(y_train_log)),
         'correction_shrinkage': float(correction_shrinkage),
     }
     return bundle, evaluation
@@ -516,6 +554,10 @@ for port_name, port in PORTS.items():
     local_month_features = local_features[local_features['port'] == port_name]
     local = local.merge(
         local_month_features[['port', 'month_key', 'local_active_cell_share', 'vbd_active_pct_detect', 'upwelling_contrast_index']],
+        on=['port', 'month_key'], how='left', validate='many_to_one',
+    )
+    local = local.merge(
+        monthly[['port', 'month_key', 'effort_trips', 'effort_trips_log', 'sin_month', 'cos_month']],
         on=['port', 'month_key'], how='left', validate='many_to_one',
     )
     local = local.sort_values(['cell_id', 'month_key']).reset_index(drop=True)
@@ -557,18 +599,19 @@ for port_name, port in PORTS.items():
         correction = (
             bundle['weights']['gam'] * bundle['gam'].predict(x_cells)
             + bundle['weights']['random_forest'] * bundle['random_forest'].predict(x_cells)
+            + bundle['weights']['gradient_boosting'] * bundle['gradient_boosting'].predict(x_cells)
         )
         seasonal = bundle['seasonal_baseline_table']
-        local = local.merge(seasonal.rename(columns={'baseline': '_baseline'}), on=['port', 'month'], how='left')
-        port_base = bundle['port_baseline_table'].rename(columns={'baseline': '_port_baseline'})
+        local = local.merge(seasonal.rename(columns={'baseline_log': '_baseline_log'}), on=['port', 'month'], how='left')
+        port_base = bundle['port_baseline_table'].rename(columns={'baseline_log': '_port_baseline_log'})
         local = local.merge(port_base, on='port', how='left')
-        baseline = local['_baseline'].fillna(local['_port_baseline']).fillna(bundle['global_baseline'])
-        pred = np.clip(baseline.to_numpy() + bundle['correction_shrinkage'] * correction, 0, None)
+        baseline_log = local['_baseline_log'].fillna(local['_port_baseline_log']).fillna(bundle['global_baseline_log'])
+        pred = np.clip(np.expm1(baseline_log.to_numpy() + bundle['correction_shrinkage'] * correction), 0, None)
         raw_col, hsi_col = 'predicted_cpue_' + species, 'hsi_' + species
         local[raw_col] = pred
         local[hsi_col] = local.groupby(['port', 'month_key'])[raw_col].rank(pct=True).fillna(0).clip(0, 1)
         local['fishery_ground_' + species] = (local[hsi_col] * (0.5 + 0.5 * local['activity_score'])).clip(0, 1)
-        local.drop(columns=['_baseline', '_port_baseline'], inplace=True)
+        local.drop(columns=['_baseline_log', '_port_baseline_log'], inplace=True)
     local['hsi_tct_max'] = local[['hsi_' + species for species in TCT_SPECIES]].max(axis=1)
     local['fishery_ground_score'] = local[['fishery_ground_' + species for species in TCT_SPECIES]].max(axis=1)
     local['fishery_ground_flag'] = (local['fishery_ground_score'] >= 0.70) & (local['activity_score'] >= 0.50)
@@ -579,7 +622,7 @@ for port_name, port in PORTS.items():
     local['feeding_evidence_level'] = 'POTENTIAL_PROXY_NO_FEEDING_OBSERVATION'
     local['nursery_evidence_level'] = 'POTENTIAL_PROXY_NO_JUVENILE_OBSERVATION'
     local['maxent_status'] = maxent_status['status']
-    local['model_ensemble'] = 'SEASONAL_RESIDUAL_GAM_RF'
+    local['model_ensemble'] = 'LOG_SEASONAL_RESIDUAL_GAM_RF_GBR'
     spatial_frames.append(local)
 
 spatial_df = pd.concat(spatial_frames, ignore_index=True)
@@ -628,6 +671,7 @@ pd.DataFrame([
         'ensemble_rmse_2025': evaluations[species]['holdout_2025_ensemble']['rmse'],
         'ensemble_mae_2025': evaluations[species]['holdout_2025_ensemble']['mae'],
         'ensemble_r2_2025': evaluations[species]['holdout_2025_ensemble']['r2'],
+        'ensemble_r2_log_2025': evaluations[species]['ensemble_r2_log_2025'],
         'baseline_rmse_2025': evaluations[species]['holdout_2025_baseline_train_median']['rmse'],
         'port_median_baseline_rmse_2025': evaluations[species]['holdout_2025_baseline_port_median']['rmse'],
         'seasonal_baseline_rmse_2025': evaluations[species]['holdout_2025_baseline_month_climatology']['rmse'],
@@ -690,7 +734,7 @@ manifest = {
     json.dumps(manifest, indent=2, ensure_ascii=False), encoding='utf-8'
 )
 print(json.dumps(manifest, indent=2, ensure_ascii=False))
-print('SELESAI: artefak TCT GAM + RF siap untuk scientific review; integrasi web tetap HOLD.')
+print('SELESAI: artefak TCT log-residual GAM + RF + GBR siap untuk scientific review; integrasi web tetap HOLD.')
 """
     ),
 ]

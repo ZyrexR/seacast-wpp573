@@ -13,6 +13,8 @@ def evaluate_species(
     model_r2: float,
     median_baseline_rmse: float,
     seasonal_baseline_rmse: float,
+    model_r2_log: float | None = None,
+    target_r2_threshold: float = 0.50,
 ) -> dict[str, object]:
     beats_median = model_rmse < median_baseline_rmse
     beats_seasonal = model_rmse < seasonal_baseline_rmse
@@ -22,8 +24,12 @@ def evaluate_species(
         "temporal_status": "CANDIDATE" if temporal_candidate else "REJECT",
         "spatial_status": "PROXY_ONLY_NO_COORDINATES",
         "web_status": "HOLD",
+        "target_r2_threshold": target_r2_threshold,
+        "meets_target_r2_real": model_r2 > target_r2_threshold,
+        "meets_target_r2_log": model_r2_log is not None and model_r2_log > target_r2_threshold,
         "model_rmse_2025": model_rmse,
         "model_r2_2025": model_r2,
+        "model_r2_log_2025": model_r2_log,
         "median_baseline_rmse_2025": median_baseline_rmse,
         "seasonal_baseline_rmse_2025": seasonal_baseline_rmse,
         "beats_median_baseline": beats_median,
@@ -52,6 +58,7 @@ def main() -> None:
             model_r2=float(row.ensemble_r2_2025),
             median_baseline_rmse=float(row.baseline_rmse_2025),
             seasonal_baseline_rmse=float(row.seasonal_baseline_rmse_2025),
+            model_r2_log=float(row.ensemble_r2_log_2025) if hasattr(row, "ensemble_r2_log_2025") else None,
         )
         for row in metrics.itertuples(index=False)
     ]

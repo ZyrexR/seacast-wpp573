@@ -15,7 +15,7 @@ NOTEBOOK = Path(__file__).parents[1] / "notebooks" / "SEACAST_TCT_HYBRID_MODELIN
 class TctHybridNotebookTest(unittest.TestCase):
     def test_model_fits_monthly_data_and_holds_out_2025(self):
         from pygam import LinearGAM, s
-        from sklearn.ensemble import RandomForestRegressor
+        from sklearn.ensemble import GradientBoostingRegressor, RandomForestRegressor
         from sklearn.impute import SimpleImputer
         from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
         from sklearn.model_selection import TimeSeriesSplit
@@ -40,6 +40,7 @@ class TctHybridNotebookTest(unittest.TestCase):
         })
         namespace = dict(np=np, pd=pd, LinearGAM=LinearGAM, s=s,
                          RandomForestRegressor=RandomForestRegressor,
+                         GradientBoostingRegressor=GradientBoostingRegressor,
                          SimpleImputer=SimpleImputer, StandardScaler=StandardScaler,
                          TimeSeriesSplit=TimeSeriesSplit,
                          mean_absolute_error=mean_absolute_error,
@@ -54,6 +55,8 @@ class TctHybridNotebookTest(unittest.TestCase):
         self.assertEqual(set(evaluation["holdout_2025_ensemble"]), {"rmse", "mae", "r2"})
         self.assertIn("holdout_2025_baseline_train_median", evaluation)
         self.assertIn("holdout_2025_baseline_month_climatology", evaluation)
+        self.assertIn("holdout_2025_ensemble_log", evaluation)
+        self.assertIn("ensemble_r2_log_2025", evaluation)
         self.assertEqual(evaluation["spatial_evidence"], "dual_port_local_aggregate_proxy_no_catch_coordinates")
 
     def test_eog_loader_ignores_stale_unfinished_final_file(self):
@@ -111,6 +114,9 @@ class TctHybridNotebookTest(unittest.TestCase):
         self.assertIn("tongkol_krai", source)
         self.assertIn("final_validation_year = 2025", source)
         self.assertIn("RandomForestRegressor", source)
+        self.assertIn("GradientBoostingRegressor", source)
+        self.assertIn("np.log1p", source)
+        self.assertIn("np.expm1", source)
         self.assertIn("LinearGAM", source)
         self.assertIn("MaxEnt", source)
         self.assertIn("NO SPATIAL OCCURRENCE", source)

@@ -29,6 +29,49 @@ MONTHS = {
 }
 
 
+FEATURE_COLS = [
+    # Thermal, chlorophyll, and upwelling features.
+    "sst_c",
+    "chla_mg_m3",
+    "sst_gradient",
+    "upwelling_contrast_index",
+    "anom_sst",
+    "anom_chla_mg_m3",
+    "anom_upwelling_contrast_index",
+    "sst_lag1",
+    "chla_lag1",
+    "upwelling_lag1",
+    # Wind and Ekman dynamics.
+    "wind_speed",
+    "wind_stress",
+    "ekman_upwelling",
+    # VIIRS vessel activity.
+    "vbd_pct_detect",
+    "local_active_cell_share",
+    "vbd_active_pct_detect",
+    # Port effort and harmonic seasonality.
+    "port_cilacap",
+    "effort_trips_log",
+    "sin_month",
+    "cos_month",
+]
+
+
+def add_temporal_model_features(frame: pd.DataFrame) -> pd.DataFrame:
+    """Add effort normalization and a twelve-month harmonic cycle."""
+
+    result = frame.copy()
+    if "effort_trips" not in result.columns or "month" not in result.columns:
+        raise ValueError("effort_trips dan month wajib tersedia untuk fitur model")
+    result["effort_trips_log"] = np.log1p(
+        pd.to_numeric(result["effort_trips"], errors="coerce").fillna(0).clip(lower=0)
+    )
+    month = pd.to_numeric(result["month"], errors="coerce")
+    result["sin_month"] = np.sin(2.0 * np.pi * month / 12.0)
+    result["cos_month"] = np.cos(2.0 * np.pi * month / 12.0)
+    return result
+
+
 def haversine_nm(
     lon: pd.Series | np.ndarray | float,
     lat: pd.Series | np.ndarray | float,

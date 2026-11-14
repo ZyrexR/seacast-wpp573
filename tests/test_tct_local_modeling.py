@@ -97,6 +97,18 @@ class TctLocalModelingTest(unittest.TestCase):
         self.assertTrue((result[["tuna_sirip_kuning_catch_kg", "cakalang_catch_kg", "tongkol_krai_catch_kg"]] >= 0).all().all())
         self.assertTrue(result[["tuna_sirip_kuning_cpue_kg_trip", "cakalang_cpue_kg_trip", "tongkol_krai_cpue_kg_trip"]].notna().all().all())
 
+    def test_add_temporal_model_features_adds_effort_log_and_harmonics(self):
+        from tct_local_modeling import FEATURE_COLS, add_temporal_model_features
+
+        frame = pd.DataFrame({"effort_trips": [0, 10], "month": [3, 6]})
+        result = add_temporal_model_features(frame)
+        self.assertAlmostEqual(result.loc[1, "effort_trips_log"], np.log1p(10))
+        self.assertAlmostEqual(result.loc[0, "sin_month"], np.sin(2 * np.pi * 3 / 12.0))
+        self.assertAlmostEqual(result.loc[1, "cos_month"], np.cos(2 * np.pi * 6 / 12.0))
+        self.assertIn("wind_speed", FEATURE_COLS)
+        self.assertIn("effort_trips_log", FEATURE_COLS)
+        self.assertIn("sin_month", FEATURE_COLS)
+
 
 if __name__ == "__main__":
     unittest.main()
