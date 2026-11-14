@@ -20,17 +20,24 @@ class TctScientificGateTests(unittest.TestCase):
         )
         self.assertEqual(result["temporal_status"], "REJECT")
         self.assertEqual(result["web_status"], "HOLD")
+        self.assertEqual(result["spatial_status"], "PROXY_HSI")
+        self.assertEqual(result["validation_scope"], "operational_60nm")
 
-    def test_marks_better_temporal_model_as_proxy_only_without_coordinates(self):
+    def test_marks_partial_spatial_coverage_without_releasing_the_model(self):
         result = evaluate_species(
             species="tongkol_krai",
             model_rmse=13.8,
             model_r2=0.29,
             median_baseline_rmse=19.6,
             seasonal_baseline_rmse=14.0,
+            spatial_validation={
+                "evidence_status": "PARTIAL_SPATIAL_VALIDATION",
+                "validation_scope": "operational_60nm",
+            },
         )
         self.assertEqual(result["temporal_status"], "REJECT")
-        self.assertEqual(result["spatial_status"], "PROXY_ONLY_NO_COORDINATES")
+        self.assertEqual(result["spatial_status"], "PARTIAL_SPATIAL_VALIDATION")
+        self.assertEqual(result["validation_scope"], "operational_60nm")
         self.assertEqual(result["web_status"], "HOLD")
 
     def test_approves_when_real_or_log_r2_reaches_target_and_beats_seasonal(self):
@@ -41,10 +48,16 @@ class TctScientificGateTests(unittest.TestCase):
             model_r2_log=0.55,
             median_baseline_rmse=15.0,
             seasonal_baseline_rmse=12.0,
+            spatial_validation={
+                "evidence_status": "EMPIRICALLY_VALIDATED",
+                "validation_scope": "full_grid",
+            },
         )
         self.assertEqual(result["temporal_status"], "APPROVED_FOR_RELEASE")
         self.assertTrue(result["meets_target_r2_log"])
         self.assertFalse(result["meets_target_r2_real"])
+        self.assertEqual(result["spatial_status"], "EMPIRICALLY_VALIDATED")
+        self.assertEqual(result["web_status"], "CANDIDATE_HIGH_CONFIDENCE")
 
 
 if __name__ == "__main__":

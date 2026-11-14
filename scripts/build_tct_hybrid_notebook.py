@@ -124,6 +124,7 @@ from tct_local_modeling import (
     parse_cilacap_statistics,
     select_radius,
 )
+from validate_spatial_occurrences import validate_occurrence_coverage
 
 print('Runtime:', 'Google Colab' if IN_COLAB else 'local/Jupyter')
 print('PROJECT_ROOT:', PROJECT_ROOT)
@@ -655,65 +656,26 @@ for port_name, port in PORTS.items():
     spatial_frames.append(local)
 
 spatial_df = pd.concat(spatial_frames, ignore_index=True)
-occurrence_validation = {
-    'status': 'NO_OCCURRENCE_INPUT',
-    'total_records': int(len(occurrence)),
-    'matched_records': 0,
-    'matched_rate': 0.0,
-    'by_species': {},
-}
-if not occurrence.empty:
-    spatial_cells = spatial_df[['cell_id', 'lon_center', 'lat_center', 'port']].drop_duplicates()
-    hsi_columns = ['hsi_' + species for species in TCT_SPECIES]
-    hsi_means = spatial_df.groupby(['port', 'cell_id'], as_index=False)[hsi_columns].mean()
-    matches = []
-    for _, point in occurrence.iterrows():
-        distances = haversine_nm(
-            spatial_cells['lon_center'].to_numpy(),
-            spatial_cells['lat_center'].to_numpy(),
-            float(point['lon']), float(point['lat']),
-        )
-        nearest_index = int(np.argmin(distances))
-        nearest = spatial_cells.iloc[nearest_index]
-        matched = float(distances[nearest_index]) <= 8.0
-        hsi_row = hsi_means[
-            (hsi_means['port'] == nearest['port']) & (hsi_means['cell_id'] == nearest['cell_id'])
-        ]
-        record = {
-            'source_id': point.get('source_id'),
-            'species': point['species'],
-            'nearest_port': nearest['port'],
-            'nearest_cell_id': nearest['cell_id'],
-            'nearest_distance_nm': float(distances[nearest_index]),
-            'matched_to_operational_hsi': bool(matched),
-        }
-        for column in hsi_columns:
-            record[column] = float(hsi_row[column].iloc[0]) if matched and not hsi_row.empty else np.nan
-        matches.append(record)
-    occurrence_matches = pd.DataFrame(matches)
-    occurrence_validation = {
-        'status': 'EMPIRICALLY_VALIDATED' if (
-            len(occurrence_matches) > 0
-            and occurrence_matches['matched_to_operational_hsi'].mean() >= 0.50
-            and int(occurrence_matches['matched_to_operational_hsi'].sum()) >= 5
-        ) else 'PARTIAL_OCCURRENCE_CHECK_INSUFFICIENT_OPERATIONAL_COVERAGE',
-        'total_records': int(len(occurrence_matches)),
-        'matched_records': int(occurrence_matches['matched_to_operational_hsi'].sum()),
-        'matched_rate': float(occurrence_matches['matched_to_operational_hsi'].mean()),
-        'by_species': {
-            species: {
-                'total_records': int((occurrence_matches['species'] == species).sum()),
-                'matched_records': int(occurrence_matches.loc[occurrence_matches['species'] == species, 'matched_to_operational_hsi'].sum()),
-            }
-            for species in occurrence_matches['species'].unique()
-        },
-    }
-    occurrence_matches.to_csv(REPORT_DIR / 'tct_occurrence_hsi_matches.csv', index=False)
+occurrence_validation = validate_occurrence_coverage(
+    occurrence,
+    spatial_df,
+    scope='operational_60nm',
+    max_distance_nm=8.0,
+)
+full_grid_occurrence_validation = validate_occurrence_coverage(
+    occurrence,
+    GRID_PATH,
+    scope='full_grid',
+    max_distance_nm=8.0,
+)
+pd.DataFrame(occurrence_validation['matches']).to_csv(
+    REPORT_DIR / 'tct_occurrence_hsi_matches.csv', index=False
+)
 for species in TCT_SPECIES:
     species_info = occurrence_validation['by_species'].get(species, {})
-    if species_info.get('matched_records', 0) >= 5 and occurrence_validation['status'] == 'EMPIRICALLY_VALIDATED':
+    if species_info.get('matched', 0) >= 5 and occurrence_validation['status'] == 'EMPIRICALLY_VALIDATED':
         evaluations[species]['spatial_evidence'] = 'EMPIRICALLY_VALIDATED'
-    elif species_info.get('total_records', 0):
+    elif species_info.get('total', 0):
         evaluations[species]['spatial_evidence'] = 'PARTIAL_OCCURRENCE_CHECK_INSUFFICIENT_OPERATIONAL_COVERAGE'
 df = spatial_df
 
@@ -743,6 +705,8 @@ print(df['zone_label'].value_counts())
     'models': evaluations,
     'maxent_gate': maxent_status,
     'occurrence_validation': occurrence_validation,
+    'full_grid_occurrence_validation': full_grid_occurrence_validation,
+    'validation_scope': 'operational_60nm',
     'limitations': [
         'Statistik pelabuhan adalah agregat bulanan tanpa koordinat tangkapan per spesies.',
         'EOG VIIRS VBD adalah proxy aktivitas kapal, bukan identifikasi spesies.',
@@ -818,6 +782,8 @@ manifest = {
     'spatial_rows_are_local_port_zones': True,
     'maxent_status': maxent_status,
     'occurrence_validation': occurrence_validation,
+    'full_grid_occurrence_validation': full_grid_occurrence_validation,
+    'validation_scope': 'operational_60nm',
     'spatial_evidence_level': 'LOW_PROXY_NO_COORDINATED_CATCH',
     'web_integration_status': 'HOLD_FOR_SCIENTIFIC_REVIEW',
 }

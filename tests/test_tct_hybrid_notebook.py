@@ -137,6 +137,9 @@ class TctHybridNotebookTest(unittest.TestCase):
         self.assertIn("n_splines=3", source)
         self.assertIn("shrinkage_grid = np.array([0.0", source)
         self.assertIn("tct_occurrence_hsi_matches.csv", source)
+        self.assertIn("validate_occurrence_coverage", source)
+        self.assertIn("full_grid_occurrence_validation", source)
+        self.assertIn("scope='operational_60nm'", source)
         self.assertNotIn("monthly_env = df.groupby('month_key')[FEATURE_COLS].mean()", source)
         self.assertNotIn("legacy_species_removed", source)
 

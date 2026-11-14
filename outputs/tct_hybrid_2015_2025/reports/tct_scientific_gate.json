@@ -7,7 +7,9 @@
     {
       "species": "tuna_sirip_kuning",
       "temporal_status": "REJECT",
-      "spatial_status": "PROXY_ONLY_NO_COORDINATES",
+      "spatial_status": "PARTIAL_SPATIAL_VALIDATION",
+      "validation_scope": "operational_60nm",
+      "spatial_release_allowed": false,
       "web_status": "HOLD",
       "target_r2_threshold": 0.5,
       "meets_target_r2_real": false,
@@ -24,7 +26,9 @@
     {
       "species": "cakalang",
       "temporal_status": "REJECT",
-      "spatial_status": "PROXY_ONLY_NO_COORDINATES",
+      "spatial_status": "PARTIAL_SPATIAL_VALIDATION",
+      "validation_scope": "operational_60nm",
+      "spatial_release_allowed": false,
       "web_status": "HOLD",
       "target_r2_threshold": 0.5,
       "meets_target_r2_real": false,
@@ -41,7 +45,9 @@
     {
       "species": "tongkol_krai",
       "temporal_status": "REJECT",
-      "spatial_status": "PROXY_ONLY_NO_COORDINATES",
+      "spatial_status": "PARTIAL_SPATIAL_VALIDATION",
+      "validation_scope": "operational_60nm",
+      "spatial_release_allowed": false,
       "web_status": "HOLD",
       "target_r2_threshold": 0.5,
       "meets_target_r2_real": false,
@@ -58,7 +64,7 @@
   ],
   "interpretation": {
     "temporal_candidate": "Approved only when real or log R2 reaches 0.50 and RMSE beats the seasonal baseline.",
-    "spatial_proxy": "Occurrence coordinates are available, but the current 60 NM operational output provides only partial spatial coverage; MaxEnt remains a separate spatial-block-CV run.",
+    "spatial_proxy": "Spatial release is controlled only by the occurrence validator and its explicit scope; temporal R² cannot approve a spatial claim.",
     "allowed_use": "Research review and exploratory maps with an explicit proxy label.",
     "prohibited_use": "Operational fish-location claim or replacement of production HSI models."
   }
