@@ -175,6 +175,10 @@ def main():
         1.0,
     ), 3)
 
+    # Public TCT aliases; legacy DB keys remain the source of truth above.
+    df_grid['hsi_tuna_sirip_kuning'] = df_grid['hsi_madidihang']
+    df_grid['hsi_tongkol_krai'] = df_grid['hsi_tongkol']
+
     # Hotspot threshold
     df_grid['is_hotspot'] = (df_grid['hsi_cakalang'] >= 0.70) | (df_grid['hsi_madidihang'] >= 0.70)
 
@@ -211,7 +215,7 @@ def main():
     df_grid['sector'] = sector
 
     export_cols = [
-        "cell_id", "hsi_cakalang", "hsi_madidihang", "hsi_tongkol",
+        "cell_id", "hsi_cakalang", "hsi_madidihang", "hsi_tuna_sirip_kuning", "hsi_tongkol", "hsi_tongkol_krai",
         "is_hotspot", "dom_zone", "bycatch_traffic_light", "wave_height_m",
         "safety_advisory", "sector", "sst", "chla", "depth", "dist_port_nm"
     ]

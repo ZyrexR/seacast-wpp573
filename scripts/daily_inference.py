@@ -137,6 +137,10 @@ def run_inference(target_date=None):
     si_depth_tongkol = np.where(df_daily['depth'] <= 150.0, 1.0, np.exp(-((df_daily['depth'] - 150.0) / 150.0) ** 2))
     hsi_tongkol = (0.45 * si_sst_tongkol) + (0.40 * si_chla_tongkol) + (0.15 * si_depth_tongkol)
     df_daily['hsi_tongkol'] = np.round(np.clip(hsi_tongkol, 0.0, 1.0), 3)
+
+    # Public TCT aliases; legacy DB keys remain available for existing clients.
+    df_daily['hsi_tuna_sirip_kuning'] = df_daily['hsi_madidihang']
+    df_daily['hsi_tongkol_krai'] = df_daily['hsi_tongkol']
     
     # Hotspot threshold
     df_daily['is_hotspot'] = (df_daily['hsi_cakalang'] >= 0.70) | (df_daily['hsi_madidihang'] >= 0.70)
@@ -183,7 +187,7 @@ def run_inference(target_date=None):
     
     # 7. Export Compact JSON for Frontend Web Instant Load
     export_cols = [
-        "cell_id", "hsi_cakalang", "hsi_madidihang", "hsi_tongkol",
+        "cell_id", "hsi_cakalang", "hsi_madidihang", "hsi_tuna_sirip_kuning", "hsi_tongkol", "hsi_tongkol_krai",
         "is_hotspot", "dom_zone", "bycatch_traffic_light", "wave_height_m",
         "safety_advisory", "sector", "sst", "chla", "depth", "dist_port_nm"
     ]

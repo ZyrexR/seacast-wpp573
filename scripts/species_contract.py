@@ -39,3 +39,17 @@ def normalize_species(value: str) -> str:
         f"Unsupported species '{value}'. "
         "Approved public species: tuna_sirip_kuning, cakalang, tongkol_krai."
     )
+
+
+INTERNAL_TO_PUBLIC = {
+    "madidihang": "tuna_sirip_kuning",
+    "cakalang": "cakalang",
+    "tongkol": "tongkol_krai",
+}
+
+
+def to_public_species(value: str) -> str:
+    """Map an internal database key or public alias to the public TCT key."""
+
+    internal_key = normalize_species(value)
+    return INTERNAL_TO_PUBLIC[internal_key]

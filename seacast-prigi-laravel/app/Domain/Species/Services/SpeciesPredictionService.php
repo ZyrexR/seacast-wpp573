@@ -117,5 +117,14 @@ class SpeciesPredictionService
             "Unknown species: '{$species}'. Approved public species: tuna_sirip_kuning, cakalang, tongkol_krai."
         );
     }
+
+    public function toPublicSpecies(string $species): string
+    {
+        return match ($this->normalizeSpecies($species)) {
+            'madidihang' => 'tuna_sirip_kuning',
+            'cakalang' => 'cakalang',
+            'tongkol' => 'tongkol_krai',
+        };
+    }
 }
 

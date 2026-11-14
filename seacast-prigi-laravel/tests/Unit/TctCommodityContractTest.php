@@ -38,6 +38,16 @@ class TctCommodityContractTest extends TestCase
         $this->assertSame('cakalang', $service->normalizeSpecies('cakalang'));
     }
 
+    public function test_public_species_adapter_is_separate_from_internal_normalization(): void
+    {
+        $service = app(SpeciesPredictionService::class);
+
+        $this->assertSame('tuna_sirip_kuning', $service->toPublicSpecies('madidihang'));
+        $this->assertSame('cakalang', $service->toPublicSpecies('cakalang'));
+        $this->assertSame('tongkol_krai', $service->toPublicSpecies('tongkol'));
+        $this->assertSame('madidihang', $service->normalizeSpecies('tuna_sirip_kuning'));
+    }
+
     public function test_legacy_species_is_rejected(): void
     {
         $service = app(SpeciesPredictionService::class);
@@ -54,6 +64,8 @@ class TctCommodityContractTest extends TestCase
         $this->assertIsString($bridge);
         $this->assertStringContainsString('tuna_sirip_kuning', $bridge);
         $this->assertStringContainsString('tongkol_krai', $bridge);
+        $this->assertStringContainsString('hsi_tuna_sirip_kuning', $bridge);
+        $this->assertStringContainsString('hsi_tongkol_krai', $bridge);
         $this->assertStringContainsString('hsi_tongkol', $bridge);
         $this->assertStringNotContainsString('alba' . 'kor', strtolower($bridge));
         $this->assertStringNotContainsString('alba' . 'core', strtolower($bridge));
