@@ -9,7 +9,7 @@
                         Ruang Kendali Operasional Kelautan WPPNRI 573
                     </h1>
                     <p class="text-xs text-slate-600 dark:text-slate-400 mt-2 leading-relaxed">
-                        Akses sistem intelijen oseanografi terintegrasi rujukan Pelabuhan Perikanan Nusantara (PPN) Prigi.
+                        Akses sistem intelijen oseanografi terintegrasi untuk koridor operasi PPN Prigi (Jawa Timur) &amp; PPS Cilacap (Jawa Tengah).
                     </p>
                 </div>
 

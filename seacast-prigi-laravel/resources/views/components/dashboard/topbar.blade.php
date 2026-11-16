@@ -18,11 +18,11 @@
     </div>
 
     <!-- Right Controls -->
-    <div class="flex items-center gap-3">
-        <!-- System Live Status -->
-        <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#0D2B3E] border border-[#244456] text-floor text-slate-300">
-            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span class="font-mono text-emerald-400">Sistem Aktif</span>
+    <div class="flex items-center gap-3 shrink-0">
+        <!-- Dual Hub Scope Badge -->
+        <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#0D2B3E] border border-[#244456] text-[11px] text-slate-300">
+            <span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
+            <span class="font-mono text-cyan-300">PPN Prigi &bull; PPS Cilacap</span>
         </div>
 
         <!-- User Persona / Session -->

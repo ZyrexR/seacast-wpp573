@@ -1,4 +1,4 @@
-<x-layouts.dashboard title="Ruang Kendali Eksekutif">
+<x-layouts.dashboard title="Ruang Kendali Eksekutif" :withMap="true">
     <div class="space-y-6">
         <!-- Header & Live Timestamp -->
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#244456]">
@@ -7,7 +7,7 @@
                     Ruang Kendali Eksekutif Oseanografi
                 </h1>
                 <p class="text-xs text-slate-400 mt-1">
-                    Telemetri harian per tanggal <span class="font-mono font-bold text-cyan-400">{{ $latestDate }}</span> &bull; WPPNRI 573 (PPN Prigi, PPS Cilacap, PPN Palabuhanratu)
+                    Telemetri harian per tanggal <span class="font-mono font-bold text-cyan-400">{{ $latestDate }}</span> &bull; WPPNRI 573 (PPN Prigi &amp; PPS Cilacap)
                 </p>
             </div>
 

@@ -1,6 +1,7 @@
 @props([
     'title' => 'SEACAST — Ruang Kendali Operasional Kelautan',
-    'fullBleed' => false
+    'fullBleed' => false,
+    'withMap' => false
 ])
 <!DOCTYPE html>
 <html lang="id" data-theme="dashboard" class="dark">
@@ -21,9 +22,11 @@
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700,800,900|jetbrains-mono:400,600,700&display=swap" rel="stylesheet" />
 
+    @if($withMap)
     <!-- Leaflet Engine & Map Styling -->
     <link rel="stylesheet" href="{{ asset('vendor/leaflet/leaflet.css') }}" />
     <script src="{{ asset('vendor/leaflet/leaflet.js') }}"></script>
+    @endif
 
     <!-- Compiled Assets -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -35,7 +38,7 @@
     <x-dashboard.sidebar />
 
     <!-- Main Operational Workspace -->
-    <div class="flex-1 lg:pl-64 flex flex-col min-h-screen">
+    <div class="flex-1 min-w-0 lg:pl-64 flex flex-col min-h-screen">
         <!-- Topbar -->
         <x-dashboard.topbar :title="$title ?? 'Operational Deck'" />
 

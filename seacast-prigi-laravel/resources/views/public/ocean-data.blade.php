@@ -18,7 +18,7 @@
         <div class="p-6 rounded-3xl bg-slate-900 text-white border border-cyan-500/30 shadow-xl space-y-4">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-4">
                 <div class="flex items-center gap-2.5">
-                    <span class="w-3 h-3 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span class="w-2.5 h-2.5 rounded-full bg-cyan-400"></span>
                     <span class="text-xs font-mono font-bold tracking-wider uppercase text-cyan-400">TELEMETRI HARIAN AKTIF BASIS DATA POSTGIS</span>
                 </div>
                 <div class="text-xs font-mono text-slate-400">

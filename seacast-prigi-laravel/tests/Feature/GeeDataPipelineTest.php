@@ -148,6 +148,10 @@ class GeeDataPipelineTest extends TestCase
         $this->assertEquals(0.365, $weights['madidihang']['rf'] ?? null);
         $this->assertEquals(0.340, $weights['madidihang']['glm'] ?? null);
 
+        $this->assertEquals(0.332, $weights['tongkol_krai']['maxent'] ?? null);
+        $this->assertEquals(0.335, $weights['tongkol_krai']['rf'] ?? null);
+        $this->assertEquals(0.333, $weights['tongkol_krai']['glm'] ?? null);
+
         $this->assertArrayNotHasKey('alba' . 'kor', $weights);
         $this->assertArrayHasKey('hsi_tongkol', $result->data[0] ?? []);
     }

@@ -23,9 +23,15 @@
         class="fixed top-0 bottom-0 left-0 w-64 bg-[#091F30] border-r border-[#244456] z-50 flex flex-col transition-transform duration-200 ease-in-out"
     >
         <!-- Sidebar Brand -->
-        <div class="h-16 px-4 border-b border-[#244456] flex items-center justify-between">
-            <x-ui.brand-logo variant="full" theme="dark" size="sm" :withLink="true" />
-            <button @click="mobileOpen = false" class="lg:hidden text-slate-400 hover:text-white p-1">
+        <div class="h-16 px-4 border-b border-[#244456] flex items-center justify-between gap-2 shrink-0">
+            <a href="{{ route('home') }}" class="flex items-center gap-2.5 min-w-0 group focus:outline-none">
+                <x-ui.brand-logo variant="symbol" theme="dark" size="sm" :withLink="false" />
+                <div class="flex flex-col leading-none min-w-0">
+                    <span class="font-black tracking-tight text-base text-white uppercase truncate">SEACAST</span>
+                    <span class="text-[10px] font-mono text-cyan-400/90 tracking-wider uppercase truncate mt-0.5">WPPNRI 573</span>
+                </div>
+            </a>
+            <button @click="mobileOpen = false" class="lg:hidden text-slate-400 hover:text-white p-1 shrink-0" aria-label="Tutup Menu">
                 <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
             </button>
         </div>
@@ -67,17 +73,28 @@
                 </nav>
             </div>
             @endif
+            <!-- Portal & Referensi -->
+            <div>
+                <p class="px-2 text-[11px] font-mono font-bold uppercase tracking-wider text-slate-400 mb-2">Portal & Sains</p>
+                <nav class="space-y-1">
+                    <a href="{{ route('home') }}" class="flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-semibold text-slate-300 hover:bg-[#0D2B3E] hover:text-white transition-colors">
+                        <svg class="w-4 h-4 shrink-0 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                        <span>Beranda Publik</span>
+                    </a>
+                    <a href="{{ route('science') }}" class="flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-semibold text-slate-300 hover:bg-[#0D2B3E] hover:text-white transition-colors">
+                        <svg class="w-4 h-4 shrink-0 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+                        <span>Metodologi & Model</span>
+                    </a>
+                </nav>
+            </div>
         </div>
 
         <!-- Sidebar Footer Status -->
         <div class="p-4 border-t border-[#244456] bg-[#071B2B]">
             <div class="flex items-center gap-2.5">
-                <span class="relative flex h-2 w-2">
-                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                    <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                </span>
-                <div class="text-floor text-slate-300 font-mono">
-                    <span class="text-white font-bold">PostGIS 3.6</span> &bull; 8.129 Sel
+                <span class="inline-flex rounded-full h-2 w-2 bg-cyan-400 shrink-0"></span>
+                <div class="text-[11px] text-slate-300 font-mono truncate">
+                    <span class="text-white font-bold">PostGIS</span> &bull; 8.129 Sel Grid
                 </div>
             </div>
         </div>

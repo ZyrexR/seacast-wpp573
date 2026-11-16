@@ -1,4 +1,4 @@
-<x-layouts.dashboard title="DPI Radar Geospasial WPPNRI 573 — SEACAST" :fullBleed="true">
+<x-layouts.dashboard title="DPI Radar Geospasial WPPNRI 573 — SEACAST" :fullBleed="true" :withMap="true">
     
     @push('styles')
     <style>
@@ -99,17 +99,14 @@
                     </button>
                 </div>
 
-                <!-- Ocean Current Streamlines 60 FPS Toggle (Task 2.1) -->
+                <!-- Ocean Current Streamlines Toggle (Default OFF for crisp map & performance) -->
                 <button 
                     type="button"
                     @click="toggleOceanCurrents()" 
-                    :class="oceanCurrentsActive ? 'bg-cyan-500/20 border-cyan-500/60 text-cyan-300 shadow-[0_0_12px_rgba(34,211,238,0.25)]' : 'bg-slate-800/60 border-slate-700/60 text-slate-400 hover:text-slate-200'"
+                    :class="oceanCurrentsActive ? 'bg-cyan-500/20 border-cyan-500/60 text-cyan-300 shadow-[0_0_12px_rgba(34,211,238,0.2)]' : 'bg-slate-800/60 border-slate-700/60 text-slate-400 hover:text-slate-200'"
                     class="hidden md:flex items-center gap-2 px-2.5 py-1.5 rounded-lg border text-xs font-medium transition active:scale-95 select-none"
-                    title="Toggle Vektor Arus Laut Dinamis (HTML5 Canvas 60 FPS)">
-                    <span class="relative flex h-2 w-2">
-                        <span :class="oceanCurrentsActive ? 'animate-ping opacity-75' : 'opacity-0'" class="absolute inline-flex h-full w-full rounded-full bg-cyan-400"></span>
-                        <span :class="oceanCurrentsActive ? 'bg-cyan-400' : 'bg-slate-500'" class="relative inline-flex rounded-full h-2 w-2"></span>
-                    </span>
+                    title="Aktifkan/Nonaktifkan Lapisan Arus Laut">
+                    <span :class="oceanCurrentsActive ? 'bg-cyan-400' : 'bg-slate-500'" class="inline-flex rounded-full h-2 w-2"></span>
                     <span>Arus Laut 60 FPS</span>
                 </button>
 
@@ -574,12 +571,12 @@
                     cilacap: { lat: -7.7470, lon: 109.0067, name: 'PPS Cilacap (Jateng)' }
                 },
 
-                // Ocean Current Streamlines State (Task 2.1)
-                oceanCurrentsActive: true,
+                // Ocean Current Streamlines State (Default OFF to avoid visual clutter & CPU overhead)
+                oceanCurrentsActive: false,
                 currentCanvas: null,
                 currentCtx: null,
                 particles: [],
-                numParticles: 200,
+                numParticles: 90,
                 animFrameId: null,
 
                 // Seasonal Time-Slider Playback State (Task 2.2)
@@ -988,7 +985,9 @@
                     });
 
                     this.initParticles();
-                    this.animateParticles();
+                    if (this.oceanCurrentsActive) {
+                        this.animateParticles();
+                    }
                 },
 
                 resizeCurrentCanvas() {
@@ -1086,7 +1085,7 @@
                                 for (let t = 1; t < p.trail.length; t++) {
                                     const pt0 = this.map.latLngToContainerPoint(p.trail[t - 1]);
                                     const pt1 = this.map.latLngToContainerPoint(p.trail[t]);
-                                    const alpha = (t / p.trail.length) * 0.78;
+                                    const alpha = (t / p.trail.length) * 0.42;
                                     ctx.strokeStyle = `rgba(34, 211, 238, ${alpha.toFixed(2)})`;
                                     ctx.beginPath();
                                     ctx.moveTo(pt0.x, pt0.y);
