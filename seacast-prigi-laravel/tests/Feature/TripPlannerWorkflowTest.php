@@ -65,6 +65,10 @@ class TripPlannerWorkflowTest extends TestCase
         $response->assertJsonStructure([
             'reference_no',
             'cell_id',
+            'trip_days',
+            'effective_fishing_hours',
+            'duration_feasibility_status',
+            'duration_warning',
             'estimate_source',
             'spatial_evidence_level',
             'data_source_mode',
@@ -75,7 +79,110 @@ class TripPlannerWorkflowTest extends TestCase
             'wave_safety' => ['status', 'is_safe_to_sail'],
             'moon_phase' => ['phase_name', 'fishing_advisory'],
             'catch_projection' => ['projected_kg', 'gross_revenue_rp'],
+            'economics' => ['total_operational_cost_rp', 'provisions_cost_rp', 'net_profit_rp'],
         ]);
+        $response->assertJsonPath('trip_days', 1);
+        $response->assertJsonPath('vessel_readiness', 'OPTIMAL');
+        $this->assertEquals(1.0, $response->json('readiness_factor'));
+        $response->assertJsonPath('estimate_source', 'FORMULA_SCENARIO');
+    }
+
+    public function test_trip_planner_three_day_calculation_returns_operational_economics(): void
+    {
+        $response = $this->actingAs($this->nelayan)->postJson('/dashboard/trip-planner/calculate', [
+            'port_code' => 'PPS_CILACAP',
+            'gt_class' => '10 - 20 GT',
+            'target_commodity' => 'Tuna Sirip Kuning',
+            'target_lat' => -8.75,
+            'target_lon' => 109.10,
+            'departure_date' => '2026-11-20',
+            'hsi_score' => 0.82,
+            'wave_height_m' => 1.3,
+            'trip_days' => 3,
+        ]);
+
+        $response->assertStatus(200);
+        $response->assertJsonPath('trip_days', 3);
+        $response->assertJsonPath('estimate_source', 'FORMULA_SCENARIO');
+        $this->assertGreaterThan(0, $response->json('effective_fishing_hours'));
+        $this->assertGreaterThan(0, $response->json('economics.provisions_cost_rp'));
+        $this->assertGreaterThan(0, $response->json('economics.total_operational_cost_rp'));
+        $this->assertGreaterThan(0, $response->json('catch_projection.projected_kg'));
+        $response->assertJsonPath('daily_provisions_cost_rp', 350000);
+        $response->assertJsonPath('economics.daily_provisions_cost_rp', 350000);
+        $response->assertJsonPath('provisions_cost_rp', 1050000);
+    }
+
+    public function test_calculate_endpoint_scales_provisions_for_large_vessel(): void
+    {
+        $response = $this->actingAs($this->nelayan)->postJson('/dashboard/trip-planner/calculate', [
+            'port_code' => 'PPS_CILACAP',
+            'gt_class' => '> 30 GT',
+            'target_commodity' => 'Cakalang',
+            'target_lat' => -8.75,
+            'target_lon' => 109.10,
+            'departure_date' => '2026-11-20',
+            'trip_days' => 2,
+        ]);
+
+        $response->assertStatus(200);
+        $response->assertJsonPath('daily_provisions_cost_rp', 1200000);
+        $response->assertJsonPath('economics.daily_provisions_cost_rp', 1200000);
+        $response->assertJsonPath('provisions_cost_rp', 2400000);
+        $this->assertSame(
+            $response->json('catch_projection.gross_revenue_rp') - $response->json('total_operational_cost_rp'),
+            $response->json('economics.net_profit_rp')
+        );
+    }
+
+    public function test_calculate_endpoint_reports_vessel_readiness_and_capacity(): void
+    {
+        $response = $this->actingAs($this->nelayan)->postJson('/dashboard/trip-planner/calculate', [
+            'port_code' => 'PPN_PRIGI', 'gt_class' => '10 - 20 GT',
+            'target_commodity' => 'Cakalang', 'target_lat' => -8.35,
+            'target_lon' => 111.7275, 'departure_date' => '2026-11-20',
+            'trip_days' => 2, 'vessel_readiness' => 'TERBATAS',
+            'wave_height_m' => 1.0,
+        ]);
+
+        $response->assertStatus(200);
+        $response->assertJsonPath('vessel_readiness', 'TERBATAS');
+        $response->assertJsonPath('readiness_factor', 0.65);
+        $response->assertJsonPath('readiness_status', 'TIDAK_DISARANKAN');
+        $response->assertJsonPath('max_hold_capacity_kg', 1500);
+        $response->assertJsonPath('max_endurance_days', 5);
+        $this->assertIsArray($response->json('readiness_notes'));
+        $response->assertJsonPath('estimate_source', 'FORMULA_SCENARIO');
+    }
+
+    public function test_calculate_endpoint_rejects_unknown_vessel_readiness(): void
+    {
+        $response = $this->actingAs($this->nelayan)->postJson('/dashboard/trip-planner/calculate', [
+            'port_code' => 'PPN_PRIGI', 'gt_class' => '10 - 20 GT',
+            'target_commodity' => 'Cakalang', 'target_lat' => -8.35,
+            'target_lon' => 111.7275, 'departure_date' => '2026-11-20',
+            'vessel_readiness' => 'RUSAK',
+        ]);
+
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors('vessel_readiness');
+    }
+
+    public function test_trip_planner_rejects_trip_days_outside_one_to_fourteen(): void
+    {
+        foreach ([0, 15] as $tripDays) {
+            $response = $this->actingAs($this->nelayan)->postJson('/dashboard/trip-planner/calculate', [
+                'port_code' => 'PPN_PRIGI',
+                'gt_class' => '10 - 20 GT',
+                'target_commodity' => 'Cakalang',
+                'target_lat' => -8.75,
+                'target_lon' => 111.75,
+                'departure_date' => '2026-11-20',
+                'trip_days' => $tripDays,
+            ]);
+
+            $response->assertStatus(422);
+        }
     }
 
     public function test_selected_cell_id_is_propagated_through_trip_planner(): void

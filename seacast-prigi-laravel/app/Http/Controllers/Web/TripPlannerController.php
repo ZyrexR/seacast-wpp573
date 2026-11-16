@@ -34,6 +34,8 @@ class TripPlannerController extends Controller
             'departure_date' => $request->query('date', date('Y-m-d')),
             'hsi_score' => (float)$request->query('hsi', 0.78),
             'wave_height_m' => (float)$request->query('wave', 1.3),
+            'trip_days' => max(1, min(14, (int)$request->query('trip_days', 1))),
+            'vessel_readiness' => $request->query('vessel_readiness', 'OPTIMAL'),
         ];
 
         // Initial calculation
@@ -83,6 +85,8 @@ class TripPlannerController extends Controller
             'departure_date' => 'required|date',
             'hsi_score' => 'nullable|numeric|between:0,1',
             'wave_height_m' => 'nullable|numeric|min:0',
+            'trip_days' => 'sometimes|integer|between:1,14',
+            'vessel_readiness' => 'sometimes|in:OPTIMAL,CUKUP,TERBATAS',
             'vessel_name' => 'nullable|string',
             'skipper_name' => 'nullable|string',
         ]);
@@ -106,6 +110,8 @@ class TripPlannerController extends Controller
             'departure_date' => 'required|date',
             'hsi_score' => 'nullable|numeric|between:0,1',
             'wave_height_m' => 'nullable|numeric|min:0',
+            'trip_days' => 'sometimes|integer|between:1,14',
+            'vessel_readiness' => 'sometimes|in:OPTIMAL,CUKUP,TERBATAS',
             'notes' => 'nullable|string|max:500',
         ]);
 

@@ -154,15 +154,34 @@
                             </div>
                         </div>
 
-                        <!-- Target Commodity -->
+                        <!-- Target Commodity & Trip Days -->
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <div class="sm:col-span-2">
+                                <label class="block text-xs font-semibold text-slate-300 mb-1.5">Komoditas Sasaran</label>
+                                <select name="target_commodity" x-model="form.target_commodity" @change="recalculate()"
+                                        class="w-full bg-[#071B2B] border border-[#244456] rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-400">
+                                    <option value="Cakalang">Cakalang (Katsuwonus pelamis) — Rp 22.000/kg</option>
+                                    <option value="tuna_sirip_kuning">Tuna Sirip Kuning (Thunnus albacares) — Rp 45.000/kg</option>
+                                    <option value="Tongkol">Tongkol Lisong / Krai (Auxis spp.) — Rp 28.000/kg</option>
+                                    <option value="tongkol_krai">Tongkol Krai (Auxis thazard) — Rp 28.000/kg</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-300 mb-1.5">Lama Melaut (Hari)</label>
+                                <input type="number" min="1" max="14" step="1" name="trip_days" x-model.number="form.trip_days" @change="recalculate()"
+                                       class="w-full bg-[#071B2B] border border-[#244456] rounded-xl px-3 py-2 text-xs font-mono text-white focus:outline-none focus:border-cyan-400"
+                                       title="Durasi rencana melaut (1 - 14 hari)">
+                            </div>
+                        </div>
+
+                        <!-- Vessel Readiness -->
                         <div>
-                            <label class="block text-xs font-semibold text-slate-300 mb-1.5">Komoditas Sasaran</label>
-                            <select name="target_commodity" x-model="form.target_commodity" @change="recalculate()"
+                            <label class="block text-xs font-semibold text-slate-300 mb-1.5">Kesiapan Kapal &amp; Alat Tangkap</label>
+                            <select name="vessel_readiness" x-model="form.vessel_readiness" @change="recalculate()"
                                     class="w-full bg-[#071B2B] border border-[#244456] rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-400">
-                                <option value="Cakalang">Cakalang (Katsuwonus pelamis) — Rp 22.000/kg</option>
-                                <option value="tuna_sirip_kuning">Tuna Sirip Kuning (Thunnus albacares) — Rp 45.000/kg</option>
-                                <option value="Tongkol">Tongkol Lisong / Krai (Auxis spp.) — Rp 28.000/kg</option>
-                                <option value="tongkol_krai">Tongkol Krai (Auxis thazard) — Rp 28.000/kg</option>
+                                <option value="OPTIMAL">Optimal (100% — Mesin, Palka Es &amp; Alat Tangkap Prima)</option>
+                                <option value="CUKUP">Cukup (85% — Layak Jalan, Perlu Penyesuaian Ringan)</option>
+                                <option value="TERBATAS">Terbatas (65% — Kurang Prima, Hanya Trip Dekat 1 Hari)</option>
                             </select>
                         </div>
 
@@ -292,9 +311,9 @@
                                 </div>
                             </div>
 
-                            <div class="text-[11px] text-slate-400 flex items-center justify-between border-t border-[#244456]/60 pt-2">
-                                <span>Konsumsi Basis PP:</span>
-                                <span class="font-mono text-slate-300"><span x-text="plan.fuel.base_fuel_liters"></span> L</span>
+                            <div class="text-[11px] text-slate-400 flex flex-wrap items-center justify-between gap-2 border-t border-[#244456]/60 pt-2">
+                                <span>Basis PP: <strong class="font-mono text-slate-300" x-text="plan.fuel.base_fuel_liters + ' L'"></strong> &bull; Ops/Hari: <strong class="font-mono text-cyan-300" x-text="(plan.daily_ops_fuel_liters ?? 0) + ' L'"></strong></span>
+                                <span>Logistik (<span x-text="plan.trip_days ?? 1"></span> hr): <strong class="font-mono text-amber-300" x-text="formatRupiah(plan.provisions_cost_rp ?? 0)"></strong></span>
                             </div>
                         </div>
                     </div>
@@ -377,6 +396,69 @@
                         </div>
                     </div>
 
+                    <!-- Duration Feasibility, Vessel Size & Readiness Card -->
+                    <div class="bg-[#091F30] border rounded-2xl p-4 sm:p-5 space-y-3"
+                         :class="{
+                             'border-[#244456]': (plan.readiness_status ?? 'SIAP_MELAUT') === 'SIAP_MELAUT',
+                             'border-amber-500/50': (plan.readiness_status ?? 'SIAP_MELAUT') === 'SIAP_DENGAN_CATATAN',
+                             'border-rose-500/60': (plan.readiness_status ?? 'SIAP_MELAUT') === 'TIDAK_DISARANKAN'
+                         }">
+                        <div class="flex flex-wrap items-center justify-between gap-2">
+                            <span class="text-xs font-bold text-slate-200 flex items-center gap-2">
+                                <svg class="w-4 h-4 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                                Kelayakan Durasi (<span x-text="plan.trip_days ?? 1"></span> Hari), Kapasitas &amp; Kesiapan Kapal
+                            </span>
+                            <div class="flex items-center gap-1.5">
+                                <span class="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider"
+                                      :class="(plan.duration_feasibility_status ?? 'LAYAK') === 'LAYAK' ? 'bg-slate-800 text-slate-300 border border-slate-700' : 'bg-amber-500/20 text-amber-300 border border-amber-500/40'"
+                                      x-text="plan.duration_feasibility_status ?? 'LAYAK'">
+                                </span>
+                                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider"
+                                      :class="{
+                                          'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40': (plan.readiness_status ?? 'SIAP_MELAUT') === 'SIAP_MELAUT',
+                                          'bg-amber-500/20 text-amber-300 border border-amber-500/40': (plan.readiness_status ?? 'SIAP_MELAUT') === 'SIAP_DENGAN_CATATAN',
+                                          'bg-rose-500/20 text-rose-300 border border-rose-500/40': (plan.readiness_status ?? 'SIAP_MELAUT') === 'TIDAK_DISARANKAN'
+                                      }"
+                                      x-text="plan.readiness_status ?? 'SIAP_MELAUT'">
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs">
+                            <div class="p-2.5 rounded-xl bg-[#071B2B] border border-[#244456]/60">
+                                <div class="text-[10px] text-slate-400">Jam Tangkap Efektif</div>
+                                <div class="font-mono font-bold text-white mt-0.5"><span x-text="plan.effective_fishing_hours ?? 0"></span> jam</div>
+                            </div>
+                            <div class="p-2.5 rounded-xl bg-[#071B2B] border border-[#244456]/60">
+                                <div class="text-[10px] text-slate-400">Kapasitas Palka GT</div>
+                                <div class="font-mono font-bold text-cyan-300 mt-0.5">
+                                    <span x-text="(plan.max_hold_capacity_kg ?? 400).toLocaleString('id-ID')"></span> kg
+                                    <span x-show="plan.is_hold_capped" class="ml-1 text-[9px] px-1 py-0.5 rounded bg-amber-500/20 text-amber-300">PENUH</span>
+                                </div>
+                            </div>
+                            <div class="p-2.5 rounded-xl bg-[#071B2B] border border-[#244456]/60">
+                                <div class="text-[10px] text-slate-400">Daya Tahan / Kesiapan</div>
+                                <div class="font-mono font-bold text-amber-300 mt-0.5">
+                                    Maks <span x-text="plan.max_endurance_days ?? 2"></span> hr &bull; <span x-text="Math.round((plan.readiness_factor ?? 1) * 100)"></span>%
+                                </div>
+                            </div>
+                            <div class="p-2.5 rounded-xl bg-[#071B2B] border border-[#244456]/60">
+                                <div class="text-[10px] text-slate-400">Total Biaya Operasional</div>
+                                <div class="font-mono font-bold text-rose-300 mt-0.5" x-text="formatRupiah(plan.total_operational_cost_rp ?? plan.fuel.total_fuel_cost_rp)"></div>
+                            </div>
+                        </div>
+
+                        <template x-if="(plan.readiness_notes ?? []).length > 0">
+                            <ul class="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-[11px] text-amber-200 space-y-1 list-disc list-inside">
+                                <template x-for="(note, idx) in (plan.readiness_notes ?? [])" :key="idx">
+                                    <li x-text="note"></li>
+                                </template>
+                            </ul>
+                        </template>
+                    </div>
+
                     <!-- Metric Row 3: HSI Catch & Economic Profit Projection -->
                     <div class="bg-gradient-to-br from-[#091F30] to-[#0D2B3E] border border-cyan-500/30 rounded-2xl p-5 space-y-4">
                         <div class="flex items-center justify-between border-b border-[#244456] pb-3">
@@ -420,16 +502,62 @@
                                     <span x-text="formatRupiah(plan.economics.net_profit_rp)"></span>
                                 </div>
                                 <div class="text-[10px] text-slate-400 mt-1 font-mono">
-                                    ROI: <span class="font-bold text-white" x-text="plan.economics.roi_pct"></span>%
+                                    ROI: <span class="font-bold text-white" x-text="plan.economics.roi_pct"></span>% &bull; Biaya Ops: <span class="text-slate-300" x-text="formatRupiah(plan.total_operational_cost_rp ?? plan.economics.total_operational_cost_rp ?? plan.fuel.total_fuel_cost_rp)"></span>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="p-3 rounded-xl bg-[#071B2B]/70 border border-[#244456]/60 text-[11px] text-slate-400 flex items-center justify-between">
-                            <span>Formula CPUE: <em>Base Tonase × Pengali Musim × HSI Factor</em> adalah skenario estimasi, bukan jaminan hasil tangkap.</span>
-                            <span class="text-cyan-300 font-mono text-floor">
-                                <span x-text="plan.estimate_source"></span> · <span x-text="plan.spatial_evidence_level"></span>
-                            </span>
+                        <!-- Rincian Transparansi Hitungan -->
+                        <div class="p-3.5 rounded-xl bg-[#071B2B]/80 border border-[#244456]/70 space-y-2.5 text-[11px]">
+                            <div class="flex flex-wrap items-center justify-between gap-2 border-b border-[#244456]/60 pb-2">
+                                <span class="font-bold text-slate-200 uppercase tracking-wider text-[10px]">Rincian Transparansi Hitungan</span>
+                                <span class="text-cyan-300 font-mono text-[10px]">
+                                    <span x-text="plan.estimate_source"></span> &bull; <span x-text="plan.spatial_evidence_level"></span>
+                                </span>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 font-mono text-[11px]">
+                                <div class="space-y-1 text-slate-300">
+                                    <div class="text-[10px] font-sans font-semibold text-slate-400 uppercase">Komponen Biaya Operasional</div>
+                                    <div class="flex justify-between">
+                                        <span>BBM PP (+15% safety, <span x-text="plan.fuel.total_fuel_liters"></span> L):</span>
+                                        <span class="text-white" x-text="formatRupiah(plan.fuel.total_fuel_cost_rp)"></span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span>BBM Ops (<span x-text="plan.daily_ops_fuel_liters ?? 0"></span> L/hr &times; <span x-text="plan.trip_days ?? 1"></span> hr):</span>
+                                        <span class="text-white" x-text="formatRupiah(plan.economics.operational_fuel_cost_rp ?? 0)"></span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span>Logistik (<span x-text="formatRupiah(plan.daily_provisions_cost_rp ?? plan.economics.daily_provisions_cost_rp ?? 150000)"></span>/hr &times; <span x-text="plan.trip_days ?? 1"></span> hr):</span>
+                                        <span class="text-amber-300" x-text="formatRupiah(plan.provisions_cost_rp ?? 0)"></span>
+                                    </div>
+                                    <div class="flex justify-between border-t border-[#244456]/60 pt-1 font-bold text-rose-300">
+                                        <span>Total Biaya Operasional:</span>
+                                        <span x-text="formatRupiah(plan.total_operational_cost_rp ?? plan.economics.total_operational_cost_rp ?? plan.fuel.total_fuel_cost_rp)"></span>
+                                    </div>
+                                </div>
+                                <div class="space-y-1 text-slate-300">
+                                    <div class="text-[10px] font-sans font-semibold text-slate-400 uppercase">Rumus Skenario Tangkapan &amp; Margin</div>
+                                    <div class="flex justify-between">
+                                        <span>Basis GT &times; HSI &times; Musim:</span>
+                                        <span class="text-white"><span x-text="plan.catch_projection.base_capacity_kg"></span> kg &times; <span x-text="Number(plan.catch_projection.hsi_score).toFixed(2)"></span> &times; <span x-text="plan.catch_projection.seasonal_factor"></span></span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span>Pengali Durasi &times; Kesiapan:</span>
+                                        <span class="text-cyan-300 font-bold"><span x-text="(plan.catch_projection.duration_factor ?? 1) + 'x'"></span> &times; <span x-text="(plan.readiness_factor ?? 1) + 'x'"></span></span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span>Proyeksi (<span x-text="plan.catch_projection.projected_kg"></span> / maks <span x-text="plan.max_hold_capacity_kg ?? '-'"></span> kg):</span>
+                                        <span class="text-emerald-400" x-text="formatRupiah(plan.catch_projection.gross_revenue_rp)"></span>
+                                    </div>
+                                    <div class="flex justify-between border-t border-[#244456]/60 pt-1 font-bold" :class="plan.economics.net_profit_rp >= 0 ? 'text-cyan-400' : 'text-rose-400'">
+                                        <span>Margin Bersih (Kotor &minus; Ops):</span>
+                                        <span x-text="formatRupiah(plan.economics.net_profit_rp)"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="text-[10px] text-slate-400 font-sans pt-1">
+                                Catatan: Skenario formula bersifat simulasi perencanaan operasional, bukan jaminan hasil tangkapan aktual.
+                            </p>
                         </div>
                     </div>
 
@@ -617,7 +745,7 @@
         function tripPlanner(config) {
             return {
                 activeTab: 'planner',
-                form: { ...config.initialTarget },
+                form: { trip_days: 1, vessel_readiness: 'OPTIMAL', ...config.initialTarget },
                 plan: { ...config.initialPlan },
                 calcUrl: config.calcUrl,
                 csrf: config.csrf,

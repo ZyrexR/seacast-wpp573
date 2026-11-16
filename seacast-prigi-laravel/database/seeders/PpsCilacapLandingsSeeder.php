@@ -50,17 +50,20 @@ class PpsCilacapLandingsSeeder extends Seeder
             $row = str_getcsv($line);
             if (empty($row)) continue;
 
+            // Stop trips section when reaching landings section
+            if ($inTripsSection
+                && isset($row[0], $row[3])
+                && preg_match('/^20\d\d$/', trim($row[0]))
+                && str_contains($row[3], 'Yellowfin Tuna')) {
+                $inTripsSection = false;
+                break;
+            }
+
             // Check for header like "2016,No,Bulan,KM < 10 GT,..."
             if (isset($row[0]) && preg_match('/^20\d\d$/', trim($row[0])) && isset($row[2]) && trim($row[2]) === 'Bulan') {
                 $currentYear = (int)trim($row[0]);
                 $inTripsSection = true;
                 continue;
-            }
-
-            // Stop trips section when reaching landings section
-            if (isset($row[3]) && str_contains($row[3], 'Yellowfin Tuna')) {
-                $inTripsSection = false;
-                break;
             }
 
             if ($inTripsSection && $currentYear && isset($row[2])) {

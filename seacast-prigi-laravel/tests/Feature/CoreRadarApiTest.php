@@ -133,6 +133,19 @@ class CoreRadarApiTest extends TestCase
         }
     }
 
+    public function test_predictions_filter_accepts_canonical_z1_dom_zone_code(): void
+    {
+        $response = $this->getJson('/api/predictions?format=geojson&date=2026-11-03&dom_zone=Z1_PFG_INSHORE&limit=10');
+
+        $response->assertStatus(200);
+        $features = $response->json('features');
+
+        $this->assertNotEmpty($features);
+        foreach ($features as $feature) {
+            $this->assertSame('Z1_PFG_INSHORE', $feature['properties']['dom_zone']);
+        }
+    }
+
     public function test_canonical_grid_api_returns_features(): void
     {
         $response = $this->getJson('/api/grid?sector=JATIM&limit=10');

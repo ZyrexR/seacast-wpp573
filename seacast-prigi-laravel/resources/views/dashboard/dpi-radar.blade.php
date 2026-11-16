@@ -44,58 +44,61 @@
         .custom-leaflet-tooltip::before {
             border-top-color: rgba(2, 6, 23, 0.95) !important;
         }
+        .leaflet-container a.seacast-popup-cta {
+            color: #020617 !important;
+        }
     </style>
     @endpush
 
     <div x-data="dpiRadarApp()" x-ref="radarRoot" x-init="initRadar()" class="flex flex-col h-[calc(100vh-4rem)] overflow-hidden bg-slate-950" :class="isFullscreen ? '!h-screen' : ''">
         
         <!-- Header Controls & Provenance Banner -->
-        <header class="relative z-[1100] flex-shrink-0 bg-slate-900/90 border-b border-slate-800/80 px-4 py-2.5 backdrop-blur-md">
-            <div class="flex flex-wrap items-center justify-between gap-3">
-                <div class="flex items-center gap-3">
-                    <div class="w-8 h-8 rounded-lg bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400">
+        <header class="relative z-[1100] flex-shrink-0 bg-slate-900/90 border-b border-slate-800/80 px-3 sm:px-4 py-2 backdrop-blur-md">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+                <div class="flex items-center gap-2.5 min-w-0">
+                    <div class="w-8 h-8 rounded-lg bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 shrink-0">
                         <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
                         </svg>
                     </div>
-                    <div>
-                        <div class="flex items-center gap-2">
-                            <h1 class="text-sm font-semibold tracking-wide text-white uppercase">DPI Radar Spasial WPPNRI 573</h1>
-                            <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-mono bg-cyan-500/10 border border-cyan-500/30 text-cyan-300">
-                                <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
+                    <div class="min-w-0">
+                        <div class="flex flex-wrap items-center gap-1.5">
+                            <h1 class="text-xs sm:text-sm font-semibold tracking-wide text-white uppercase truncate">DPI Radar Spasial WPPNRI 573</h1>
+                            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-mono bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 shrink-0">
                                 Snapshot: {{ $latestDate }}
                             </span>
-                            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-mono bg-emerald-500/10 border border-emerald-500/30 text-emerald-400">
+                            <span class="hidden xl:inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-mono bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 shrink-0">
                                 Leaflet GIS
                             </span>
                             <span
-                                class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-mono bg-amber-500/10 border border-amber-500/30 text-amber-300"
+                                class="hidden md:inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-mono bg-amber-500/10 border border-amber-500/30 text-amber-300 shrink-0"
                                 :title="'Bukti spasial: ' + (provenance.validation_status || 'UNVERIFIED_NO_OCCURRENCE_AUDIT') + ' | Sumber: ' + (provenance.source_mode || 'DATABASE_SNAPSHOT_SOURCE_UNVERIFIED')"
                                 x-text="provenance.evidence_level || 'PROXY_HSI'">
                                 PROXY_HSI
                             </span>
                         </div>
-                        <p class="text-xs text-slate-400">8.129 Poligon PostGIS • Batimetri GEBCO • Komoditas TCT: Cakalang, Tuna Sirip Kuning & Tongkol Krai</p>
+                        <p class="hidden 2xl:block text-[11px] text-slate-400 truncate">8.129 Poligon PostGIS &bull; Batimetri GEBCO &bull; Komoditas TCT: Cakalang, Tuna Sirip Kuning &amp; Tongkol Krai</p>
                     </div>
                 </div>
 
+                <div class="flex flex-wrap items-center gap-2 shrink-0">
                 <!-- Dual-Hub Corridor Switcher (Task 2.3) -->
-                <div class="hidden sm:flex items-center p-0.5 rounded-lg bg-slate-950/80 border border-slate-800 text-xs font-semibold select-none">
+                <div class="flex items-center p-0.5 rounded-lg bg-slate-950/80 border border-slate-800 text-xs font-semibold select-none">
                     <button 
                         type="button"
                         @click="setHub('prigi')" 
                         :class="activeHub === 'prigi' ? 'bg-cyan-500 text-slate-950 shadow-md font-bold' : 'text-slate-400 hover:text-white'"
-                        class="px-2.5 py-1 rounded-md transition flex items-center gap-1.5 text-xs">
+                        class="px-2 py-1 rounded-md transition flex items-center gap-1 text-[11px] sm:text-xs">
                         <span>⚓ PPN Prigi</span>
-                        <span class="text-[10px] font-mono opacity-80">(Jatim)</span>
+                        <span class="hidden xl:inline text-[10px] font-mono opacity-80">(Jatim)</span>
                     </button>
                     <button 
                         type="button"
                         @click="setHub('cilacap')" 
                         :class="activeHub === 'cilacap' ? 'bg-cyan-500 text-slate-950 shadow-md font-bold' : 'text-slate-400 hover:text-white'"
-                        class="px-2.5 py-1 rounded-md transition flex items-center gap-1.5 text-xs">
+                        class="px-2 py-1 rounded-md transition flex items-center gap-1 text-[11px] sm:text-xs">
                         <span>⚓ PPS Cilacap</span>
-                        <span class="text-[10px] font-mono opacity-80">(Jateng)</span>
+                        <span class="hidden xl:inline text-[10px] font-mono opacity-80">(Jateng)</span>
                     </button>
                 </div>
 
@@ -104,7 +107,7 @@
                     type="button"
                     @click="toggleOceanCurrents()" 
                     :class="oceanCurrentsActive ? 'bg-cyan-500/20 border-cyan-500/60 text-cyan-300 shadow-[0_0_12px_rgba(34,211,238,0.2)]' : 'bg-slate-800/60 border-slate-700/60 text-slate-400 hover:text-slate-200'"
-                    class="hidden md:flex items-center gap-2 px-2.5 py-1.5 rounded-lg border text-xs font-medium transition active:scale-95 select-none"
+                    class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg border text-[11px] sm:text-xs font-medium transition active:scale-95 select-none"
                     title="Aktifkan/Nonaktifkan Lapisan Arus Laut">
                     <span :class="oceanCurrentsActive ? 'bg-cyan-400' : 'bg-slate-500'" class="inline-flex rounded-full h-2 w-2"></span>
                     <span>Arus Laut 60 FPS</span>
@@ -168,12 +171,13 @@
                 </div>
 
                 <!-- Reset Filters Button -->
-                <button @click="resetFilters()" class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded-md text-xs font-medium border border-slate-700 transition active:scale-95 select-none">
+                <button @click="resetFilters()" class="inline-flex items-center gap-1.5 px-2.5 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded-md text-[11px] sm:text-xs font-medium border border-slate-700 transition active:scale-95 select-none">
                     <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                     </svg>
-                    Reset Filter
+                    <span class="hidden sm:inline">Reset Filter</span>
                 </button>
+                </div>
             </div>
         </header>
 
@@ -183,10 +187,10 @@
             <!-- Mobile Backdrop -->
             <div x-show="mobileFiltersOpen" @click="mobileFiltersOpen = false" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-40 lg:hidden" x-transition.opacity style="display: none;"></div>
 
-            <!-- Filter Sidebar (Slide-over on Mobile, Static Sidebar on Desktop) -->
+            <!-- Filter Sidebar (Slide-over on Mobile, Compact Static Sidebar on Desktop) -->
             <aside 
                 :class="mobileFiltersOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'"
-                class="fixed inset-y-0 left-0 z-50 w-80 md:w-88 xl:w-96 flex-shrink-0 bg-slate-900/95 border-r border-slate-800 flex flex-col overflow-y-auto transition-transform duration-300 ease-out lg:relative lg:z-20">
+                class="fixed inset-y-0 left-0 z-50 w-72 xl:w-80 flex-shrink-0 bg-slate-900/95 border-r border-slate-800 flex flex-col overflow-y-auto transition-transform duration-300 ease-out lg:relative lg:z-20">
                 
                 <!-- Mobile Drawer Header -->
                 <div class="lg:hidden flex items-center justify-between p-3 border-b border-slate-800 bg-slate-950">
@@ -349,10 +353,10 @@
                         </div>
                         
                         <div class="grid grid-cols-2 gap-x-2 gap-y-1.5 text-xs font-mono">
-                            <div><span class="text-slate-500 block">Kedalaman:</span><span class="text-slate-200" x-text="selectedCell?.depth_m + ' m'"></span></div>
-                            <div><span class="text-slate-500 block">Suhu (SST):</span><span class="text-slate-200" x-text="selectedCell?.sst_c + ' °C'"></span></div>
-                            <div><span class="text-slate-500 block">Klorofil-a:</span><span class="text-slate-200" x-text="selectedCell?.chla_mg_m3 + ' mg/m³'"></span></div>
-                            <div><span class="text-slate-500 block">Gelombang:</span><span class="text-slate-200" x-text="selectedCell?.wave_height_m + ' m'"></span></div>
+                            <div><span class="text-slate-500 block">Kedalaman:</span><span class="text-slate-200" x-text="selectedCell?.depth_m != null ? Number(selectedCell.depth_m).toFixed(1) + ' m' : '-'"></span></div>
+                            <div><span class="text-slate-500 block">Suhu (SST):</span><span class="text-slate-200" x-text="selectedCell?.sst_c != null ? Number(selectedCell.sst_c).toFixed(2) + ' °C' : '-'"></span></div>
+                            <div><span class="text-slate-500 block">Klorofil-a:</span><span class="text-slate-200" x-text="selectedCell?.chla_mg_m3 != null ? Number(selectedCell.chla_mg_m3).toFixed(2) + ' mg/m³' : '-'"></span></div>
+                            <div><span class="text-slate-500 block">Gelombang:</span><span class="text-slate-200" x-text="selectedCell?.wave_height_m != null ? Number(selectedCell.wave_height_m).toFixed(1) + ' m' : '-'"></span></div>
                             <div class="col-span-2 flex items-center justify-between p-1.5 bg-slate-900 rounded border border-slate-800 text-[11px]">
                                 <span class="text-slate-400">Jarak ke <strong class="text-cyan-400" x-text="activeHub === 'prigi' ? 'PPN Prigi' : 'PPS Cilacap'"></strong>:</span>
                                 <span class="text-white font-mono font-bold" x-text="getActiveHubDistance(selectedCell)"></span>
@@ -437,7 +441,7 @@
                     <div class="hidden md:block w-24 shrink-0"></div>
 
                     <!-- Seasonal Time-Slider Playback Bar -->
-                    <div class="pointer-events-auto w-full max-w-lg bg-slate-900/95 border border-slate-800/90 rounded-2xl p-2.5 shadow-2xl backdrop-blur-md text-xs select-none">
+                    <div class="pointer-events-auto w-full max-w-md xl:max-w-lg bg-slate-900/95 border border-slate-800/90 rounded-2xl p-2 sm:p-2.5 shadow-2xl backdrop-blur-md text-xs select-none">
                         <div class="flex items-center justify-between gap-2 mb-2 px-1">
                             <div class="flex items-center gap-2.5 min-w-0">
                                 <!-- Play / Pause Button -->
@@ -483,7 +487,7 @@
                     </div>
 
                     <!-- Floating Scientific Legend (Bottom-Right) -->
-                    <div class="pointer-events-auto w-full md:w-[232px] shrink-0 bg-slate-900/90 border border-slate-800 rounded-lg p-2.5 shadow-xl backdrop-blur-md text-xs space-y-1.5">
+                    <div class="pointer-events-auto hidden sm:block sm:w-52 xl:w-[232px] shrink-0 bg-slate-900/90 border border-slate-800 rounded-lg p-2.5 shadow-xl backdrop-blur-md text-xs space-y-1.5">
                         <div class="flex items-center justify-between border-b border-slate-800 pb-1">
                             <span class="font-semibold text-white uppercase tracking-wider text-[10px]" x-text="legendTitle"></span>
                             <span class="text-[10px] font-mono text-cyan-400">EPSG:4326</span>
@@ -568,7 +572,7 @@
                 activeHub: 'prigi',
                 hubCoords: {
                     prigi: { lat: -8.2833, lon: 111.7275, name: 'PPN Prigi (Jatim)' },
-                    cilacap: { lat: -7.7470, lon: 109.0067, name: 'PPS Cilacap (Jateng)' }
+                    cilacap: { lat: -7.7472, lon: 109.0069, name: 'PPS Cilacap (Jateng)' }
                 },
 
                 // Ocean Current Streamlines State (Default OFF to avoid visual clutter & CPU overhead)
@@ -608,6 +612,7 @@
                 ],
 
                 activeLayer: 'hsi',
+                oceanFeatures: [],
                 selectedSpecies: 'all',
                 minHsi: '0.0',
                 selectedDom: 'ALL',
@@ -911,7 +916,7 @@
 
                 calculateDistanceToActivePort(cellLat, cellLon) {
                     const hub = this.hubCoords[this.activeHub];
-                    const R_NM = 3440.065; // Nautical miles radius
+                    const R_NM = 3440.0695; // WGS84 mean radius (6371.0088 km) / 1.852 km (IHO/BIPM)
                     const dLat = (cellLat - hub.lat) * Math.PI / 180;
                     const dLon = (cellLon - hub.lon) * Math.PI / 180;
                     const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
@@ -1178,6 +1183,12 @@
                     return '/api/predictions?' + params.toString();
                 },
 
+                isValidOceanFeature(f) {
+                    const p = f?.properties || {};
+                    const depth = Number(p.depth_m ?? 0);
+                    return Number.isFinite(depth) && depth > 0;
+                },
+
                 loadPredictionsSource() {
                     this.loading = true;
                     const url = this.buildApiUrl();
@@ -1190,21 +1201,20 @@
                                 this.provenance = geojson.metadata.provenance;
                             }
                             const features = geojson.features || [];
-                            this.filteredCount = features.length;
-                            this.calculateHudStats(features);
+                            this.oceanFeatures = features.filter(f => this.isValidOceanFeature(f));
+                            this.filteredCount = this.oceanFeatures.length;
+                            this.calculateHudStats(this.oceanFeatures);
 
-                            // Remove existing geojson layer
                             if (this.geojsonLayer && this.map) {
                                 this.map.removeLayer(this.geojsonLayer);
                             }
 
-                            // Add new Leaflet GeoJSON layer
-                            this.geojsonLayer = L.geoJSON(geojson, {
+                            this.geojsonLayer = L.geoJSON({ type: 'FeatureCollection', features: this.oceanFeatures }, {
+                                renderer: this.canvasRenderer || (this.canvasRenderer = L.canvas({ padding: 0.5 })),
                                 style: (feature) => this.styleFeature(feature),
                                 onEachFeature: (feature, layer) => this.onEachFeature(feature, layer)
                             }).addTo(this.map);
 
-                            // Re-anchor homeport marker to stay on top
                             if (this.homeportMarker && typeof this.homeportMarker.setZIndexOffset === 'function') {
                                 this.homeportMarker.setZIndexOffset(1000);
                             }
@@ -1295,18 +1305,14 @@
                 onEachFeature(feature, layer) {
                     const p = feature.properties;
 
-                    // Hover effects
+                    // Hover effects (avoid bringToFront on 8k polygons for smooth responsiveness)
                     layer.on('mouseover', (e) => {
-                        const l = e.target;
-                        l.setStyle({
-                            weight: 2.5,
+                        e.target.setStyle({
+                            stroke: true,
+                            weight: 2,
                             color: '#22d3ee',
                             fillOpacity: 0.95
                         });
-                        l.bringToFront();
-                        if (this.homeportMarker && typeof this.homeportMarker.setZIndexOffset === 'function') {
-                            this.homeportMarker.setZIndexOffset(1000);
-                        }
                     });
 
                     layer.on('mouseout', (e) => {
@@ -1322,29 +1328,33 @@
                         const hsiVal = this.getSpeciesHsiValue(p).toFixed(3);
                         const waypointStr = p.waypoint_dms || `${Math.abs(p.center_lat).toFixed(4)}°S, ${p.center_lon.toFixed(4)}°E`;
                         const distActive = this.calculateDistanceToActivePort(p.center_lat, p.center_lon);
-                        const jalurStr = p.jalur_penangkapan || (parseFloat(distActive.distNm) <= 12 ? 'Jalur II (4-12 NM)' : 'Jalur III (>12 NM)');
+                        const distNmVal = parseFloat(distActive.distNm);
+                        const jalurStr = p.jalur_penangkapan || (distNmVal <= 4 ? 'Jalur I (0-4 NM)' : (distNmVal <= 12 ? 'Jalur II (4-12 NM)' : 'Jalur III (>12 NM / ZEE)'));
 
                         const popupHtml = `
-                            <div class="p-3.5 min-w-[260px] bg-slate-950 text-slate-200 rounded-xl border border-cyan-500/40 shadow-2xl font-sans">
-                                <div class="flex items-center justify-between border-b border-slate-800 pb-2 mb-2">
-                                    <div>
-                                        <span class="font-bold text-xs font-mono text-cyan-400 block">${p.cell_id}</span>
-                                        <span class="text-[10px] text-slate-400 font-mono">${waypointStr}</span>
+                            <div class="p-3.5 min-w-[270px] max-w-[320px] bg-slate-950 text-slate-200 rounded-xl border border-cyan-500/40 shadow-2xl font-sans">
+                                <div class="flex items-start justify-between gap-2 border-b border-slate-800 pb-2 mb-2">
+                                    <div class="min-w-0">
+                                        <span class="font-bold text-xs font-mono text-cyan-400 block truncate">${p.cell_id}</span>
+                                        <span class="text-[10px] text-slate-400 font-mono block">${waypointStr}</span>
                                     </div>
-                                    <span class="px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-cyan-950 border border-cyan-700/50 text-cyan-300">${jalurStr}</span>
+                                    <span title="Proxy berbasis jarak pelabuhan asal (bukan jarak garis pantai)" class="px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-cyan-950 border border-cyan-700/50 text-cyan-300 shrink-0 whitespace-nowrap">${jalurStr}</span>
                                 </div>
                                 <div class="grid grid-cols-2 gap-1.5 text-[11px] font-mono text-slate-300">
-                                    <div>Kedalaman: <span class="text-white">${p.depth_m} m</span></div>
+                                    <div>Kedalaman: <span class="text-white">${p.depth_m != null ? Number(p.depth_m).toFixed(1) : '-'} m</span></div>
                                     <div>Jarak ${distActive.hubName}: <span class="text-cyan-300 font-bold">${distActive.distNm} NM</span></div>
                                     <div>Suhu Laut: <span class="text-white">${p.sst_c} °C</span></div>
                                     <div>Klorofil-a: <span class="text-white">${p.chla_mg_m3} mg/m³</span></div>
                                 </div>
-                                <div class="mt-2.5 pt-2 border-t border-slate-800 flex items-center justify-between text-xs font-semibold">
+                                <div class="mt-2 pt-2 border-t border-slate-800 flex items-center justify-between text-xs font-semibold">
                                     <span class="text-slate-400">Skor HSI ${this.selectedSpecies.toUpperCase()}:</span>
                                     <span class="text-cyan-400 font-mono font-bold text-sm">${hsiVal}</span>
                                 </div>
-                                <a href="/dashboard/trip-planner?lat=${p.center_lat}&lon=${p.center_lon}&hsi=${hsiVal}&species=${this.selectedSpecies}&cell_id=${p.cell_id}" 
-                                   class="mt-3 w-full py-1.5 px-3 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs rounded-lg flex items-center justify-center gap-1.5 transition active:scale-95 shadow">
+                                <div class="mt-1 text-[10px] text-slate-500 font-mono">
+                                    Jarak &amp; jalur proxy dihitung dari pelabuhan asal aktif (1 NM = 1.852 km).
+                                </div>
+                                <a href="/dashboard/trip-planner?lat=${p.center_lat}&lon=${p.center_lon}&hsi=${hsiVal}&species=${this.selectedSpecies}&cell_id=${p.cell_id}"
+                                   class="seacast-popup-cta mt-3 w-full py-1.5 px-3 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs rounded-lg flex items-center justify-center gap-1.5 transition active:scale-95 shadow">
                                     <span>Rencanakan Melaut</span>
                                     <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
                                 </a>

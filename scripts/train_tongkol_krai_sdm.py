@@ -52,7 +52,7 @@ def haversine_np(lon1, lat1, lon2, lat2):
     dlon = lon2 - lon1
     dlat = lat2 - lat1
     a = np.sin(dlat / 2.0) ** 2 + np.cos(lat1) * np.cos(lat2) * np.sin(dlon / 2.0) ** 2
-    return 6371.0 * (2.0 * np.arcsin(np.sqrt(a)))
+    return 6371.0088 * (2.0 * np.arcsin(np.sqrt(a)))
 
 
 def gaussian_suitability(x, opt_min: float, opt_max: float, tol: float):

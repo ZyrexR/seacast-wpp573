@@ -24,12 +24,12 @@
     >
         <!-- Sidebar Brand -->
         <div class="h-16 px-4 border-b border-[#244456] flex items-center justify-between gap-2 shrink-0">
-            <a href="{{ route('home') }}" class="flex items-center gap-2.5 min-w-0 group focus:outline-none">
-                <x-ui.brand-logo variant="symbol" theme="dark" size="sm" :withLink="false" />
+            <a href="{{ route('home') }}" class="flex items-center justify-between gap-2 min-w-0 flex-1 group focus:outline-none">
                 <div class="flex flex-col leading-none min-w-0">
-                    <span class="font-black tracking-tight text-base text-white uppercase truncate">SEACAST</span>
-                    <span class="text-[10px] font-mono text-cyan-400/90 tracking-wider uppercase truncate mt-0.5">WPPNRI 573</span>
+                    <span class="font-black tracking-tight text-lg text-white uppercase group-hover:text-cyan-300 transition-colors truncate">SEACAST</span>
+                    <span class="text-[10px] font-mono text-slate-400 tracking-wider uppercase truncate mt-0.5">Ocean Intelligence</span>
                 </div>
+                <span class="px-1.5 py-0.5 rounded bg-[#12364A] border border-[#244456] text-[10px] font-mono font-bold text-cyan-300 tracking-wider uppercase shrink-0">WPP 573</span>
             </a>
             <button @click="mobileOpen = false" class="lg:hidden text-slate-400 hover:text-white p-1 shrink-0" aria-label="Tutup Menu">
                 <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>

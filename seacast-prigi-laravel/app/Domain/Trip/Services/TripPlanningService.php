@@ -4,6 +4,15 @@ namespace App\Domain\Trip\Services;
 
 class TripPlanningService
 {
+    /** WGS84 mean Earth radius used by the Haversine approximation. */
+    public const EARTH_RADIUS_KM = 6371.0088;
+
+    /** International nautical mile (IHO/BIPM): exactly 1,852 metres. */
+    public const KM_PER_NAUTICAL_MILE = 1.852;
+
+    /** Derived Haversine radius in nautical miles. */
+    public const EARTH_RADIUS_NM = 3440.0695;
+
     public const PORTS = [
         'PPN_PRIGI' => [
             'code' => 'PPN_PRIGI',
@@ -35,6 +44,9 @@ class TripPlanningService
         '< 10 GT' => [
             'speed_knots' => 7.5,
             'fuel_liters_per_nm' => 1.5,
+            'daily_provisions_cost_rp' => 150000,
+            'max_hold_capacity_kg' => 400,
+            'max_endurance_days' => 2,
             'max_legal_range_nm' => 12.0,
             'base_catch_kg' => 180,
             'gear_code' => 'LTL', // Pancing tonda
@@ -43,6 +55,9 @@ class TripPlanningService
         '10 - 20 GT' => [
             'speed_knots' => 9.0,
             'fuel_liters_per_nm' => 2.8,
+            'daily_provisions_cost_rp' => 350000,
+            'max_hold_capacity_kg' => 1500,
+            'max_endurance_days' => 5,
             'max_legal_range_nm' => 30.0,
             'base_catch_kg' => 450,
             'gear_code' => 'LHP-PUT', // Pancing ulur tuna
@@ -51,6 +66,9 @@ class TripPlanningService
         '20 - 30 GT' => [
             'speed_knots' => 11.0,
             'fuel_liters_per_nm' => 4.5,
+            'daily_provisions_cost_rp' => 650000,
+            'max_hold_capacity_kg' => 5000,
+            'max_endurance_days' => 10,
             'max_legal_range_nm' => 60.0,
             'base_catch_kg' => 1200,
             'gear_code' => 'PS1-B', // Purse seine pelagis besar
@@ -59,6 +77,9 @@ class TripPlanningService
         '> 30 GT' => [
             'speed_knots' => 12.5,
             'fuel_liters_per_nm' => 7.0,
+            'daily_provisions_cost_rp' => 1200000,
+            'max_hold_capacity_kg' => 15000,
+            'max_endurance_days' => 14,
             'max_legal_range_nm' => 200.0,
             'base_catch_kg' => 3500,
             'gear_code' => 'LLD-RT', // Rawai tuna
@@ -72,6 +93,17 @@ class TripPlanningService
         'tongkol' => 28000,
         'tuna_sirip_kuning' => 45000,
         'tongkol_krai' => 28000,
+    ];
+
+    public const MIN_EFFECTIVE_FISHING_HOURS = 8.0;
+    public const STANDARD_EFFECTIVE_FISHING_HOURS_PER_DAY = 16.0;
+    public const DAILY_OPERATIONAL_SEARCH_NM = 10.0;
+    public const DEFAULT_SOLAR_PRICE_PER_LITER = 6800.0;
+
+    public const READINESS_FACTORS = [
+        'OPTIMAL' => 1.0,
+        'CUKUP' => 0.85,
+        'TERBATAS' => 0.65,
     ];
 
     /**
@@ -92,7 +124,7 @@ class TripPlanningService
         $portLon = $port['lon'];
 
         // Great circle distance in km
-        $earthRadiusKm = 6371.0;
+        $earthRadiusKm = self::EARTH_RADIUS_KM;
         $dLat = deg2rad($targetLat - $portLat);
         $dLon = deg2rad($targetLon - $portLon);
 
@@ -101,7 +133,7 @@ class TripPlanningService
              sin($dLon / 2) * sin($dLon / 2);
         $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
         $distKm = $earthRadiusKm * $c;
-        $distNm = $distKm / 1.852;
+        $distNm = $distKm / self::KM_PER_NAUTICAL_MILE;
 
         // Initial compass bearing
         $y = sin($dLon) * cos(deg2rad($targetLat));
@@ -151,6 +183,82 @@ class TripPlanningService
             'subsidized_price_per_liter' => $solarPricePerLiter,
             'total_fuel_cost_rp' => $totalFuelCostRp,
         ];
+    }
+
+    private function normalizeTripDays(mixed $tripDays): int
+    {
+        $normalized = filter_var($tripDays, FILTER_VALIDATE_INT);
+
+        return $normalized !== false && $normalized >= 1 && $normalized <= 14
+            ? $normalized
+            : 1;
+    }
+
+    public function calculateTripDuration(float $travelTimeHours, int $tripDays): array
+    {
+        $availableHours = $tripDays * 24.0;
+        $effectiveFishingHours = max(0.0, round($availableHours - $travelTimeHours, 1));
+        $status = $effectiveFishingHours >= self::MIN_EFFECTIVE_FISHING_HOURS
+            ? 'LAYAK'
+            : 'PERLU_TAMBAH_HARI';
+
+        return [
+            'available_trip_hours' => round($availableHours, 1),
+            'effective_fishing_hours' => $effectiveFishingHours,
+            'duration_feasibility_status' => $status,
+            'duration_warning' => $status === 'LAYAK'
+                ? 'Durasi melaut menyediakan waktu tangkap efektif yang memadai.'
+                : sprintf(
+                    'Tambah hari: waktu tangkap efektif hanya %.1f jam; minimum operasional %.1f jam.',
+                    $effectiveFishingHours,
+                    self::MIN_EFFECTIVE_FISHING_HOURS
+                ),
+        ];
+    }
+
+    public function calculateOperationalEconomics(
+        array $fuel,
+        string $gtClass,
+        int $tripDays,
+        float $solarPricePerLiter = self::DEFAULT_SOLAR_PRICE_PER_LITER
+    ): array {
+        $spec = self::GT_SPECS[$gtClass] ?? self::GT_SPECS['< 10 GT'];
+        $dailyOpsFuelLiters = round(self::DAILY_OPERATIONAL_SEARCH_NM * $spec['fuel_liters_per_nm'], 1);
+        $totalOpsFuelLiters = round($dailyOpsFuelLiters * $tripDays, 1);
+        $operationalFuelCostRp = (int)round($totalOpsFuelLiters * $solarPricePerLiter);
+        $dailyProvisionsCostRp = $spec['daily_provisions_cost_rp'];
+        $provisionsCostRp = $tripDays * $dailyProvisionsCostRp;
+        $totalOperationalCostRp = (int)$fuel['total_fuel_cost_rp'] + $operationalFuelCostRp + $provisionsCostRp;
+
+        return [
+            'daily_ops_fuel_liters' => $dailyOpsFuelLiters,
+            'total_ops_fuel_liters' => $totalOpsFuelLiters,
+            'operational_fuel_cost_rp' => $operationalFuelCostRp,
+            'daily_provisions_cost_rp' => $dailyProvisionsCostRp,
+            'provisions_cost_rp' => $provisionsCostRp,
+            'total_operational_cost_rp' => $totalOperationalCostRp,
+        ];
+    }
+
+    private function applyDurationToCatchProjection(
+        array $catch,
+        array $duration,
+        int $tripDays
+    ): array {
+        $durationFactor = round(
+            min(
+                (float)$tripDays,
+                max(0.0, (float)$duration['effective_fishing_hours']) / self::STANDARD_EFFECTIVE_FISHING_HOURS_PER_DAY
+            ),
+            2
+        );
+        $catch['duration_factor'] = $durationFactor;
+        $catch['projected_kg'] = (int)round($catch['projected_kg'] * $durationFactor);
+        $catch['gross_revenue_rp'] = (int)round(
+            $catch['projected_kg'] * $catch['benchmark_price_per_kg']
+        );
+
+        return $catch;
     }
 
     public function validatePermenKpCompliance(string $gtClass, float $distanceNm): array
@@ -394,6 +502,12 @@ class TripPlanningService
         $port = self::PORTS[$portCode] ?? self::PORTS['PPN_PRIGI'];
         $gtClass = $params['gt_class'] ?? '< 10 GT';
         $spec = self::GT_SPECS[$gtClass] ?? self::GT_SPECS['< 10 GT'];
+        $tripDays = $this->normalizeTripDays($params['trip_days'] ?? 1);
+        $requestedReadiness = $params['vessel_readiness'] ?? null;
+        $vesselReadiness = is_string($requestedReadiness) && array_key_exists($requestedReadiness, self::READINESS_FACTORS)
+            ? $requestedReadiness
+            : 'OPTIMAL';
+        $readinessFactor = self::READINESS_FACTORS[$vesselReadiness];
         $cellId = isset($params['cell_id']) && $params['cell_id'] !== '' ? (string)$params['cell_id'] : null;
         $selectedCell = is_array($params['selected_cell'] ?? null) ? $params['selected_cell'] : null;
         $selectedCellLat = $selectedCell['lat'] ?? $selectedCell['center_lat'] ?? $selectedCell['lat_dec'] ?? null;
@@ -441,20 +555,61 @@ class TripPlanningService
 
         $nav = $this->calculateDistanceAndBearing($portCode, $targetLat, $targetLon);
         $fuel = $this->calculateFuelEconomics($nav['distance_nm'], $gtClass);
+        $duration = $this->calculateTripDuration($fuel['travel_time_hours'], $tripDays);
+        $operations = $this->calculateOperationalEconomics($fuel, $gtClass, $tripDays);
         $compliance = $this->validatePermenKpCompliance($gtClass, $nav['distance_nm']);
         $waveSafety = $this->evaluateWaveSafety($waveHeightM);
         $moon = $this->calculateMoonPhase($departureDate);
         $catch = $this->calculateCatchProjection($commodity, $gtClass, $hsiScore, $departureDate);
+        $catch = $this->applyDurationToCatchProjection($catch, $duration, $tripDays);
         if ($estimateSource === 'TEMPORAL_CPUE_CALIBRATED' && $temporalCorrectionFactor !== null) {
             $catch['projected_kg'] = (int)round($catch['projected_kg'] * $temporalCorrectionFactor);
             $catch['gross_revenue_rp'] = (int)round(
                 $catch['projected_kg'] * $catch['benchmark_price_per_kg']
             );
         }
+        $readinessAdjustedKg = (int)round($catch['projected_kg'] * $readinessFactor);
+        $isHoldCapped = $readinessAdjustedKg > $spec['max_hold_capacity_kg'];
+        $catch['projected_kg'] = min($readinessAdjustedKg, $spec['max_hold_capacity_kg']);
+        $catch['gross_revenue_rp'] = (int)round($catch['projected_kg'] * $catch['benchmark_price_per_kg']);
+        $catch['readiness_factor'] = $readinessFactor;
+        $catch['max_hold_capacity_kg'] = $spec['max_hold_capacity_kg'];
+        $catch['is_hold_capped'] = $isHoldCapped;
         $catch['estimate_source'] = $estimateSource;
         $catch['spatial_evidence_level'] = $spatialEvidenceLevel;
 
-        $netProfitRp = $catch['gross_revenue_rp'] - $fuel['total_fuel_cost_rp'];
+        $enduranceExceeded = $tripDays > $spec['max_endurance_days'];
+        $readinessNotes = [];
+        if (!$waveSafety['is_safe_to_sail']) {
+            $readinessNotes[] = 'Kondisi gelombang tidak aman untuk berlayar.';
+        }
+        if (!$compliance['is_compliant']) {
+            $readinessNotes[] = 'Rencana tidak memenuhi pemeriksaan jalur penangkapan dan kelas kapal.';
+        }
+        if ($enduranceExceeded) {
+            $readinessNotes[] = 'Lama melaut melebihi daya tahan kapal.';
+        }
+        if ($vesselReadiness === 'TERBATAS' && $tripDays > 1) {
+            $readinessNotes[] = 'Kapal dengan kesiapan terbatas tidak disarankan melaut lebih dari satu hari.';
+        }
+        if ($vesselReadiness !== 'OPTIMAL') {
+            $readinessNotes[] = 'Kesiapan kapal belum optimal.';
+        }
+        if ($duration['duration_feasibility_status'] !== 'LAYAK') {
+            $readinessNotes[] = $duration['duration_warning'];
+        }
+        if ($isHoldCapped) {
+            $readinessNotes[] = 'Proyeksi tangkapan dibatasi kapasitas palka.';
+        }
+        $notRecommended = !$waveSafety['is_safe_to_sail']
+            || !$compliance['is_compliant']
+            || $enduranceExceeded
+            || ($vesselReadiness === 'TERBATAS' && $tripDays > 1);
+        $readinessStatus = $notRecommended
+            ? 'TIDAK_DISARANKAN'
+            : ($readinessNotes !== [] ? 'SIAP_DENGAN_CATATAN' : 'SIAP_MELAUT');
+
+        $netProfitRp = $catch['gross_revenue_rp'] - $operations['total_operational_cost_rp'];
 
         // Generate official Reference Code
         $refSuffix = strtoupper(substr(md5(uniqid(mt_rand(), true)), 0, 4));
@@ -494,6 +649,15 @@ class TripPlanningService
             'vessel_name' => $params['vessel_name'] ?? 'KM Nelayan Bahari',
             'skipper_name' => $params['skipper_name'] ?? 'Nakhoda Sukirno',
             'gt_class' => $gtClass,
+            'trip_days' => $tripDays,
+            'vessel_readiness' => $vesselReadiness,
+            'readiness_factor' => $readinessFactor,
+            'readiness_status' => $readinessStatus,
+            'readiness_notes' => $readinessNotes,
+            'max_hold_capacity_kg' => $spec['max_hold_capacity_kg'],
+            'max_endurance_days' => $spec['max_endurance_days'],
+            'endurance_exceeded' => $enduranceExceeded,
+            'is_hold_capped' => $isHoldCapped,
             'gear_code' => $spec['gear_code'],
             'gear_name' => $spec['gear_name'],
             'departure_date' => $departureDate,
@@ -507,6 +671,13 @@ class TripPlanningService
             ],
             'navigation' => $nav,
             'fuel' => $fuel,
+            'effective_fishing_hours' => $duration['effective_fishing_hours'],
+            'duration_feasibility_status' => $duration['duration_feasibility_status'],
+            'duration_warning' => $duration['duration_warning'],
+            'daily_ops_fuel_liters' => $operations['daily_ops_fuel_liters'],
+            'daily_provisions_cost_rp' => $operations['daily_provisions_cost_rp'],
+            'provisions_cost_rp' => $operations['provisions_cost_rp'],
+            'total_operational_cost_rp' => $operations['total_operational_cost_rp'],
             'permen_kp' => $compliance,
             'wave_safety' => $waveSafety,
             'moon_phase' => $moon,
@@ -514,9 +685,14 @@ class TripPlanningService
             'economics' => [
                 'gross_revenue_rp' => $catch['gross_revenue_rp'],
                 'total_fuel_cost_rp' => $fuel['total_fuel_cost_rp'],
+                'daily_ops_fuel_liters' => $operations['daily_ops_fuel_liters'],
+                'operational_fuel_cost_rp' => $operations['operational_fuel_cost_rp'],
+                'daily_provisions_cost_rp' => $operations['daily_provisions_cost_rp'],
+                'provisions_cost_rp' => $operations['provisions_cost_rp'],
+                'total_operational_cost_rp' => $operations['total_operational_cost_rp'],
                 'net_profit_rp' => $netProfitRp,
-                'roi_pct' => $fuel['total_fuel_cost_rp'] > 0 
-                    ? round(($netProfitRp / $fuel['total_fuel_cost_rp']) * 100, 1) 
+                'roi_pct' => $operations['total_operational_cost_rp'] > 0
+                    ? round(($netProfitRp / $operations['total_operational_cost_rp']) * 100, 1)
                     : 100.0,
             ],
         ];

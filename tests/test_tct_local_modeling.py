@@ -9,6 +9,26 @@ sys.path.insert(0, str(Path(__file__).parents[1] / "scripts"))
 
 
 class TctLocalModelingTest(unittest.TestCase):
+    def test_haversine_nm_uses_wgs84_radius_for_both_operational_hubs(self):
+        from tct_local_modeling import (
+            EARTH_RADIUS_KM,
+            KM_PER_NAUTICAL_MILE,
+            haversine_nm,
+        )
+
+        self.assertEqual(EARTH_RADIUS_KM, 6371.0088)
+        self.assertEqual(KM_PER_NAUTICAL_MILE, 1.852)
+        self.assertAlmostEqual(
+            float(haversine_nm(111.7275, -8.6166, 111.7275, -8.2833)),
+            20.0115,
+            places=3,
+        )
+        self.assertAlmostEqual(
+            float(haversine_nm(109.0069, -8.08053, 109.0069, -7.7472)),
+            20.0133,
+            places=3,
+        )
+
     def test_select_radius_uses_port_distance_and_optional_active_cells(self):
         from tct_local_modeling import select_radius
 

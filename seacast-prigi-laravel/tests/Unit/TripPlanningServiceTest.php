@@ -29,6 +29,45 @@ class TripPlanningServiceTest extends TestCase
         $this->assertEquals('S', $result['compass_direction']);
     }
 
+    public function test_distance_contract_uses_wgs84_haversine_and_international_nautical_mile(): void
+    {
+        $this->assertSame(6371.0088, TripPlanningService::EARTH_RADIUS_KM);
+        $this->assertSame(1.852, TripPlanningService::KM_PER_NAUTICAL_MILE);
+        $this->assertSame(3440.0695, TripPlanningService::EARTH_RADIUS_NM);
+    }
+
+    public function test_distance_and_bearing_calculation_from_cilacap_port(): void
+    {
+        // PPS Cilacap (-7.7472, 109.0069) to a point approximately 20 NM due south.
+        $result = $this->planner->calculateDistanceAndBearing(
+            portCode: 'PPS_CILACAP',
+            targetLat: -8.08053,
+            targetLon: 109.0069
+        );
+
+        $this->assertSame('PPS_CILACAP', $result['port_code']);
+        $this->assertSame(-7.7472, $result['port_lat']);
+        $this->assertSame(109.0069, $result['port_lon']);
+        $this->assertEquals(20.0, round($result['distance_nm'], 1));
+        $this->assertEquals('S', $result['compass_direction']);
+    }
+
+    public function test_permen_kp_jalur_boundaries_are_consistent_for_both_hubs(): void
+    {
+        foreach (['PPN_PRIGI', 'PPS_CILACAP'] as $portCode) {
+            $this->assertSame($portCode, $this->planner->calculateDistanceAndBearing(
+                portCode: $portCode,
+                targetLat: TripPlanningService::PORTS[$portCode]['lat'],
+                targetLon: TripPlanningService::PORTS[$portCode]['lon']
+            )['port_code']);
+        }
+
+        $this->assertStringContainsString('Jalur I', $this->planner->validatePermenKpCompliance('10 - 20 GT', 4.0)['jalur_label']);
+        $this->assertStringContainsString('Jalur II', $this->planner->validatePermenKpCompliance('10 - 20 GT', 4.01)['jalur_label']);
+        $this->assertStringContainsString('Jalur II', $this->planner->validatePermenKpCompliance('10 - 20 GT', 12.0)['jalur_label']);
+        $this->assertStringContainsString('Jalur III', $this->planner->validatePermenKpCompliance('10 - 20 GT', 12.01)['jalur_label']);
+    }
+
     public function test_fuel_calculation_includes_mandatory_15_percent_safety_reserve(): void
     {
         // 10 NM one-way = 20 NM round trip.
@@ -107,6 +146,203 @@ class TripPlanningServiceTest extends TestCase
         $this->assertGreaterThan(0, $plan['catch_projection']['projected_kg']);
         $this->assertGreaterThan(0, $plan['catch_projection']['gross_revenue_rp']);
         $this->assertTrue($plan['wave_safety']['is_safe_to_sail']);
+    }
+
+    public function test_trip_days_defaults_to_one_without_changing_formula_source(): void
+    {
+        $plan = $this->planner->generateCompleteTripPlan([
+            'port_code' => 'PPN_PRIGI',
+            'gt_class' => '10 - 20 GT',
+            'target_commodity' => 'Cakalang',
+            'target_lat' => -8.75,
+            'target_lon' => 111.75,
+            'departure_date' => '2026-11-20',
+        ]);
+
+        $this->assertSame(1, $plan['trip_days']);
+        $this->assertArrayHasKey('effective_fishing_hours', $plan);
+        $this->assertArrayHasKey('duration_feasibility_status', $plan);
+        $this->assertArrayHasKey('duration_warning', $plan);
+        $this->assertSame('FORMULA_SCENARIO', $plan['estimate_source']);
+    }
+
+    public function test_three_trip_days_change_duration_operational_cost_and_net_profit(): void
+    {
+        $params = [
+            'port_code' => 'PPN_PRIGI',
+            'gt_class' => '10 - 20 GT',
+            'target_commodity' => 'Cakalang',
+            'target_lat' => -8.75,
+            'target_lon' => 111.75,
+            'departure_date' => '2026-11-20',
+            'hsi_score' => 0.82,
+        ];
+
+        $oneDay = $this->planner->generateCompleteTripPlan($params + ['trip_days' => 1]);
+        $threeDays = $this->planner->generateCompleteTripPlan($params + ['trip_days' => 3]);
+
+        $this->assertSame(3, $threeDays['trip_days']);
+        $this->assertGreaterThan($oneDay['effective_fishing_hours'], $threeDays['effective_fishing_hours']);
+        $this->assertGreaterThan($oneDay['provisions_cost_rp'], $threeDays['provisions_cost_rp']);
+        $this->assertGreaterThan($oneDay['total_operational_cost_rp'], $threeDays['total_operational_cost_rp']);
+        $this->assertNotSame($oneDay['economics']['net_profit_rp'], $threeDays['economics']['net_profit_rp']);
+        $this->assertGreaterThan($oneDay['catch_projection']['projected_kg'], $threeDays['catch_projection']['projected_kg']);
+    }
+
+    public function test_one_day_long_route_requires_additional_days(): void
+    {
+        $plan = $this->planner->generateCompleteTripPlan([
+            'port_code' => 'PPN_PRIGI',
+            'gt_class' => '10 - 20 GT',
+            'target_commodity' => 'Cakalang',
+            'target_lat' => -10.0,
+            'target_lon' => 111.7275,
+            'departure_date' => '2026-11-20',
+            'trip_days' => 1,
+        ]);
+
+        $this->assertSame('PERLU_TAMBAH_HARI', $plan['duration_feasibility_status']);
+        $this->assertStringContainsString('Tambah hari', $plan['duration_warning']);
+        $this->assertGreaterThanOrEqual(0, $plan['effective_fishing_hours']);
+    }
+
+    public function test_long_route_duration_factor_uses_sixteen_hour_daily_reference(): void
+    {
+        $plan = $this->planner->generateCompleteTripPlan([
+            'port_code' => 'PPN_PRIGI',
+            'gt_class' => '10 - 20 GT',
+            'target_commodity' => 'Cakalang',
+            'target_lat' => -10.0,
+            'target_lon' => 111.7275,
+            'departure_date' => '2026-11-20',
+            'trip_days' => 2,
+            'estimate_source' => 'TEMPORAL_CPUE_CALIBRATED',
+        ]);
+
+        $this->assertGreaterThanOrEqual(20.0, $plan['fuel']['travel_time_hours']);
+        $this->assertSame(16.0, TripPlanningService::STANDARD_EFFECTIVE_FISHING_HOURS_PER_DAY);
+        $this->assertSame(
+            round(min(2.0, max(0.0, (float)$plan['effective_fishing_hours']) / 16.0), 2),
+            $plan['catch_projection']['duration_factor']
+        );
+        $this->assertLessThanOrEqual(2.0, $plan['catch_projection']['duration_factor']);
+        $this->assertSame('FORMULA_SCENARIO', $plan['estimate_source']);
+    }
+
+    public function test_daily_provisions_follow_vessel_gt_class(): void
+    {
+        foreach ([
+            '< 10 GT' => 150000,
+            '10 - 20 GT' => 350000,
+            '20 - 30 GT' => 650000,
+            '> 30 GT' => 1200000,
+        ] as $gtClass => $dailyCost) {
+            $plan = $this->planner->generateCompleteTripPlan([
+                'port_code' => 'PPN_PRIGI',
+                'gt_class' => $gtClass,
+                'target_commodity' => 'Cakalang',
+                'target_lat' => -8.75,
+                'target_lon' => 111.75,
+                'trip_days' => 3,
+            ]);
+
+            $this->assertSame($dailyCost, $plan['daily_provisions_cost_rp']);
+            $this->assertSame($dailyCost, $plan['economics']['daily_provisions_cost_rp']);
+            $this->assertSame($dailyCost * 3, $plan['provisions_cost_rp']);
+            $this->assertSame($dailyCost * 3, $plan['economics']['provisions_cost_rp']);
+            $this->assertSame(
+                $plan['fuel']['total_fuel_cost_rp'] + $plan['economics']['operational_fuel_cost_rp'] + $dailyCost * 3,
+                $plan['economics']['total_operational_cost_rp']
+            );
+        }
+    }
+
+    public function test_default_readiness_keeps_optimal_factor_and_safe_trip_ready(): void
+    {
+        $plan = $this->planner->generateCompleteTripPlan([
+            'port_code' => 'PPN_PRIGI', 'gt_class' => '10 - 20 GT',
+            'target_commodity' => 'Cakalang', 'target_lat' => -8.35,
+            'target_lon' => 111.7275, 'trip_days' => 1,
+            'wave_height_m' => 1.0,
+        ]);
+
+        $this->assertSame('OPTIMAL', $plan['vessel_readiness']);
+        $this->assertSame(1.0, $plan['readiness_factor']);
+        $this->assertSame('SIAP_MELAUT', $plan['readiness_status']);
+        $this->assertSame([], $plan['readiness_notes']);
+        $this->assertFalse($plan['endurance_exceeded']);
+        $this->assertFalse($plan['is_hold_capped']);
+    }
+
+    public function test_invalid_direct_service_readiness_falls_back_to_optimal(): void
+    {
+        $plan = $this->planner->generateCompleteTripPlan(['vessel_readiness' => ['TERBATAS']]);
+
+        $this->assertSame('OPTIMAL', $plan['vessel_readiness']);
+        $this->assertSame(1.0, $plan['readiness_factor']);
+    }
+
+    public function test_limited_readiness_reduces_catch_and_warns_or_rejects_by_duration(): void
+    {
+        $params = [
+            'port_code' => 'PPN_PRIGI', 'gt_class' => '10 - 20 GT',
+            'target_commodity' => 'Cakalang', 'target_lat' => -8.35,
+            'target_lon' => 111.7275, 'wave_height_m' => 1.0,
+        ];
+        $optimal = $this->planner->generateCompleteTripPlan($params);
+        $limited = $this->planner->generateCompleteTripPlan($params + ['vessel_readiness' => 'TERBATAS']);
+        $limitedTwoDays = $this->planner->generateCompleteTripPlan($params + ['vessel_readiness' => 'TERBATAS', 'trip_days' => 2]);
+
+        $this->assertSame(0.65, $limited['readiness_factor']);
+        $this->assertSame((int)round($optimal['catch_projection']['projected_kg'] * 0.65), $limited['catch_projection']['projected_kg']);
+        $this->assertSame('SIAP_DENGAN_CATATAN', $limited['readiness_status']);
+        $this->assertSame('TIDAK_DISARANKAN', $limitedTwoDays['readiness_status']);
+        $this->assertSame(
+            $limited['catch_projection']['gross_revenue_rp'] - $limited['economics']['total_operational_cost_rp'],
+            $limited['economics']['net_profit_rp']
+        );
+    }
+
+    public function test_enough_readiness_has_085_factor_and_extreme_waves_take_priority(): void
+    {
+        $plan = $this->planner->generateCompleteTripPlan([
+            'port_code' => 'PPN_PRIGI', 'gt_class' => '10 - 20 GT',
+            'target_commodity' => 'Cakalang', 'target_lat' => -8.35,
+            'target_lon' => 111.7275, 'trip_days' => 1,
+            'vessel_readiness' => 'CUKUP', 'wave_height_m' => 3.2,
+        ]);
+
+        $this->assertSame(0.85, $plan['readiness_factor']);
+        $this->assertSame('TIDAK_DISARANKAN', $plan['readiness_status']);
+        $this->assertNotEmpty($plan['readiness_notes']);
+    }
+
+    public function test_hold_capacity_cuts_catch_and_endurance_limit_rejects_long_trip(): void
+    {
+        $params = [
+            'port_code' => 'PPN_PRIGI', 'gt_class' => '> 30 GT',
+            'target_commodity' => 'Tuna Sirip Kuning', 'target_lat' => -8.7,
+            'target_lon' => 111.7275, 'trip_days' => 14,
+            'wave_height_m' => 1.0,
+        ];
+        $capped = $this->planner->generateCompleteTripPlan($params);
+        $this->assertSame(15000, $capped['max_hold_capacity_kg']);
+        $this->assertSame(14, $capped['max_endurance_days']);
+        $this->assertTrue($capped['is_hold_capped']);
+        $this->assertSame(15000, $capped['catch_projection']['projected_kg']);
+        $this->assertSame(15000 * $capped['catch_projection']['price_per_kg_rp'], $capped['catch_projection']['gross_revenue_rp']);
+        $this->assertSame('SIAP_DENGAN_CATATAN', $capped['readiness_status']);
+
+        $tooLong = $this->planner->generateCompleteTripPlan([
+            'port_code' => 'PPN_PRIGI', 'gt_class' => '< 10 GT',
+            'target_commodity' => 'Cakalang', 'target_lat' => -8.35,
+            'target_lon' => 111.7275, 'trip_days' => 3,
+            'wave_height_m' => 1.0,
+        ]);
+        $this->assertSame(400, $tooLong['max_hold_capacity_kg']);
+        $this->assertSame(2, $tooLong['max_endurance_days']);
+        $this->assertTrue($tooLong['endurance_exceeded']);
+        $this->assertSame('TIDAK_DISARANKAN', $tooLong['readiness_status']);
     }
 
     public function test_selected_cell_overrides_defaults_and_is_returned_as_spatial_source(): void

@@ -11,7 +11,7 @@ import numpy as np
 import pandas as pd
 
 
-EARTH_RADIUS_KM = 6371.0
+EARTH_RADIUS_KM = 6371.0088
 KM_PER_NAUTICAL_MILE = 1.852
 VALID_SCOPES = {"full_grid", "operational_60nm"}
 

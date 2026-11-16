@@ -337,7 +337,7 @@ class DashboardController extends Controller
     {
         $ports = [
             'PPN_PRIGI' => ['name' => 'PPN Prigi (Jawa Timur)', 'lat' => -8.2833, 'lon' => 111.7275],
-            'PPS_CILACAP' => ['name' => 'PPS Cilacap (Jawa Tengah)', 'lat' => -7.7472, 'lon' => 109.0139],
+            'PPS_CILACAP' => ['name' => 'PPS Cilacap (Jawa Tengah)', 'lat' => -7.7472, 'lon' => 109.0069],
             'PPN_PALABUHANRATU' => ['name' => 'PPN Palabuhanratu (Jawa Barat)', 'lat' => -6.9856, 'lon' => 106.5414],
         ];
 

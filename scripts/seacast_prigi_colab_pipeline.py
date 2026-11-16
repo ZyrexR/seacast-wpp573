@@ -112,7 +112,7 @@ def main():
         dlat = lat2 - lat1
         a = np.sin(dlat/2.0)**2 + np.cos(lat1) * np.cos(lat2) * np.sin(dlon/2.0)**2
         c = 2 * np.arcsin(np.sqrt(a))
-        return 6371.0 * c
+        return 6371.0088 * c
 
     if 'dist_port_km' not in df_all.columns:
         df_all['dist_port_km'] = haversine_np(df_all['center_lon'], df_all['center_lat'], PRIGI_LON, PRIGI_LAT)
