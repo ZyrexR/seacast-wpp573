@@ -126,10 +126,12 @@ class TripPlannerWorkflowTest extends TestCase
 
     public function test_syahbandar_can_view_port_scoped_logbook(): void
     {
-        // Create 1 plan for Prigi, 1 for Cilacap
-        TripPlan::updateOrCreate(
-            ['reference_no' => 'DOC-PRG-TEST-001'],
+        // Recreate 1 plan for Prigi and 1 for Cilacap so they stay within the latest 100 logbook rows.
+        TripPlan::whereIn('reference_no', ['DOC-PRG-TEST-001', 'DOC-CLP-TEST-002'])->delete();
+
+        TripPlan::create(
             [
+                'reference_no' => 'DOC-PRG-TEST-001',
                 'user_id' => $this->nelayan->id,
                 'port_code' => 'PPN_PRIGI',
                 'port_name' => 'PPN Prigi',
@@ -160,9 +162,9 @@ class TripPlannerWorkflowTest extends TestCase
             ]
         );
 
-        TripPlan::updateOrCreate(
-            ['reference_no' => 'DOC-CLP-TEST-002'],
+        TripPlan::create(
             [
+                'reference_no' => 'DOC-CLP-TEST-002',
                 'user_id' => $this->nelayan->id,
                 'port_code' => 'PPS_CILACAP',
                 'port_name' => 'PPS Cilacap',
@@ -204,5 +206,31 @@ class TripPlannerWorkflowTest extends TestCase
         $responseAdmin->assertStatus(200);
         $responseAdmin->assertSee('KM Bahari Prigi');
         $responseAdmin->assertSee('KM Samudera Cilacap');
+        $responseAdmin->assertSee('Skenario Formula HSI');
+    }
+
+    public function test_saved_compliant_safe_trip_renders_patuh_and_aman_badges(): void
+    {
+        $payload = [
+            'port_code' => 'PPN_PRIGI',
+            'vessel_name' => 'KM Patuh Samudera',
+            'skipper_name' => 'Nakhoda Budi',
+            'gt_class' => '10 - 20 GT',
+            'target_commodity' => 'tuna_sirip_kuning',
+            'target_lat' => -8.65,
+            'target_lon' => 111.75,
+            'departure_date' => '2026-11-22',
+            'hsi_score' => 0.80,
+            'wave_height_m' => 1.1,
+        ];
+
+        $this->actingAs($this->nelayan)->post('/dashboard/trip-planner', $payload)
+            ->assertRedirect('/dashboard/trip-planner');
+
+        $response = $this->actingAs($this->admin)->get('/dashboard/trip-planner');
+        $response->assertStatus(200);
+        $response->assertSee('KM Patuh Samudera');
+        $response->assertSee('PATUH');
+        $response->assertSee('AMAN');
     }
 }

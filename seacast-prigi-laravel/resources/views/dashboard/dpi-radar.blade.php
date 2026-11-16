@@ -68,6 +68,12 @@
                             <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-mono bg-emerald-500/10 border border-emerald-500/30 text-emerald-400">
                                 Leaflet GIS
                             </span>
+                            <span
+                                class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-mono bg-amber-500/10 border border-amber-500/30 text-amber-300"
+                                :title="'Bukti spasial: ' + (provenance.validation_status || 'UNVERIFIED_NO_OCCURRENCE_AUDIT') + ' | Sumber: ' + (provenance.source_mode || 'DATABASE_SNAPSHOT_SOURCE_UNVERIFIED')"
+                                x-text="provenance.evidence_level || 'PROXY_HSI'">
+                                PROXY_HSI
+                            </span>
                         </div>
                         <p class="text-xs text-slate-400">8.129 Poligon PostGIS • Batimetri GEBCO • Komoditas TCT: Cakalang, Tuna Sirip Kuning & Tongkol Krai</p>
                     </div>
@@ -617,6 +623,11 @@
                 hotspotCount: 0,
                 meanHsi: 0.000,
                 safePct: 0.0,
+                provenance: {
+                    evidence_level: 'PROXY_HSI',
+                    source_mode: 'DATABASE_SNAPSHOT_SOURCE_UNVERIFIED',
+                    validation_status: 'UNVERIFIED_NO_OCCURRENCE_AUDIT'
+                },
 
                 selectedCell: null,
                 mobileFiltersOpen: false,
@@ -1176,6 +1187,9 @@
                         .then(res => res.json())
                         .then(geojson => {
                             this.loading = false;
+                            if (geojson.metadata && geojson.metadata.provenance) {
+                                this.provenance = geojson.metadata.provenance;
+                            }
                             const features = geojson.features || [];
                             this.filteredCount = features.length;
                             this.calculateHudStats(features);

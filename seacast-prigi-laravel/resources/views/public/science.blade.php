@@ -154,38 +154,38 @@
         </x-ui.card>
 
         <!-- Model Evaluation Summary Table -->
-        <x-ui.card title="Hasil Audit Evaluasi Performa Model (10-Fold Spatial Cross-Validation)">
-            <x-ui.table :headers="['Spesies Target', 'Bobot MaxEnt', 'Bobot Random Forest', 'Bobot GLM', 'Ensemble AUC', 'Ensemble TSS', 'Status Validasi']">
+        <x-ui.card title="Ringkasan Parameter & Evaluasi Proxy Model Spasial (Provisional)">
+            <x-ui.table :headers="['Spesies Target', 'Bobot MaxEnt', 'Bobot Random Forest', 'Bobot GLM', 'Proxy AUC', 'Proxy TSS', 'Status Ilmiah']">
                 <tr>
                     <td class="px-5 py-3.5 font-bold">Tongkol Krai (<em>Auxis thazard</em>)</td>
-                    <td class="px-5 py-3.5 font-mono">0.330</td>
-                    <td class="px-5 py-3.5 font-mono">0.370</td>
-                    <td class="px-5 py-3.5 font-mono">0.300</td>
-                    <td class="px-5 py-3.5 font-mono font-bold text-cyan-500">0.812</td>
-                    <td class="px-5 py-3.5 font-mono">0.655</td>
-                    <td class="px-5 py-3.5 text-xs text-emerald-600 dark:text-emerald-400 font-semibold">Tervalidasi (Akurat)</td>
+                    <td class="px-5 py-3.5 font-mono">0.332</td>
+                    <td class="px-5 py-3.5 font-mono">0.335</td>
+                    <td class="px-5 py-3.5 font-mono">0.333</td>
+                    <td class="px-5 py-3.5 font-mono font-bold text-cyan-500">0.892*</td>
+                    <td class="px-5 py-3.5 font-mono">0.752*</td>
+                    <td class="px-5 py-3.5 text-xs text-amber-600 dark:text-amber-400 font-semibold">Provisional Proxy (Belum Uji Blok Spasial)</td>
                 </tr>
                 <tr>
                     <td class="px-5 py-3.5 font-bold">Cakalang (<em>Katsuwonus pelamis</em>)</td>
                     <td class="px-5 py-3.5 font-mono">0.320</td>
                     <td class="px-5 py-3.5 font-mono">0.355</td>
                     <td class="px-5 py-3.5 font-mono">0.325</td>
-                    <td class="px-5 py-3.5 font-mono font-bold text-cyan-500">0.795</td>
-                    <td class="px-5 py-3.5 font-mono">0.630</td>
-                    <td class="px-5 py-3.5 text-xs text-emerald-600 dark:text-emerald-400 font-semibold">Tervalidasi (Akurat)</td>
+                    <td class="px-5 py-3.5 font-mono font-bold text-cyan-500">0.795*</td>
+                    <td class="px-5 py-3.5 font-mono">0.630*</td>
+                    <td class="px-5 py-3.5 text-xs text-amber-600 dark:text-amber-400 font-semibold">Provisional Proxy (Belum Uji Blok Spasial)</td>
                 </tr>
                 <tr>
                     <td class="px-5 py-3.5 font-bold">Tuna Sirip Kuning (<em>Thunnus albacares</em>)</td>
                     <td class="px-5 py-3.5 font-mono">0.295</td>
                     <td class="px-5 py-3.5 font-mono">0.365</td>
                     <td class="px-5 py-3.5 font-mono">0.340</td>
-                    <td class="px-5 py-3.5 font-mono font-bold text-cyan-500">0.784</td>
-                    <td class="px-5 py-3.5 font-mono">0.606</td>
-                    <td class="px-5 py-3.5 text-xs text-emerald-600 dark:text-emerald-400 font-semibold">Tervalidasi (Akurat)</td>
+                    <td class="px-5 py-3.5 font-mono font-bold text-cyan-500">0.784*</td>
+                    <td class="px-5 py-3.5 font-mono">0.606*</td>
+                    <td class="px-5 py-3.5 text-xs text-amber-600 dark:text-amber-400 font-semibold">Provisional Proxy (Belum Uji Blok Spasial)</td>
                 </tr>
             </x-ui.table>
             <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-3 leading-relaxed">
-                * Keterangan: Nilai AUC (<em>Area Under ROC Curve</em>) &ge; 0,78 menunjukkan diskriminasi model yang andal, dan TSS (<em>True Skill Statistic</em>) &ge; 0,60 membuktikan model memiliki kepekaan presisi tinggi melampaui distribusi probabilitas acak.
+                * Catatan Transparansi Ilmiah: Bobot ensemble Cakalang dan Tuna Sirip Kuning merupakan bobot provisional hasil seleksi analis dan dievaluasi terhadap titik proxy lingkungan deterministik (<code>PROXY_HSI</code>), bukan validasi blok spasial dari koordinat tangkapan operasional lapangan. Tongkol Krai menggunakan indeks kesesuaian neritik berbasis aturan biofisik tanpa skor AUC/TSS terlatih.
             </p>
         </x-ui.card>
 

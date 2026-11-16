@@ -36,23 +36,7 @@ class SystemMonitoringService
             'storage' => $this->checkStorage(),
             'queue' => $this->checkQueue(),
             'scheduler' => $this->checkScheduler(),
-            'pipeline_satelit' => [
-                'status' => 'OPERATIONAL',
-                'description' => 'Pipeline GEE v2.3.2 to Web terhubung dan operasional untuk WPPNRI 573 (8.129 sel).',
-                'pipeline_version' => '3.0.0',
-                'gee_engine_version' => 'v2.3.2',
-                'spatial_domain' => 'WPPNRI 573 (8,129 Canonical Cells)',
-                'satellites' => [
-                    'NOAA_CoralTemp_OISST' => ['status' => 'Operational Multi-Sensor Fusion (OISST v2.1 + MODIS)', 'latency' => 'Normal'],
-                    'Sentinel_3_OLCI_Chla' => ['status' => 'Operational L3SMI 4km + Gap-Filling', 'latency' => 'Normal'],
-                    'BMKG_Marine_Forecast' => ['status' => 'Simulasi Oseanografi Musiman BMKG Terkalibrasi (Fallback Lokal)', 'latency' => 'Local'],
-                    'NOAA_OISST_v21_MODIS' => ['status' => 'Operational Multi-Sensor Fusion', 'latency' => 'Normal'],
-                    'NASA_MODIS_Aqua_Chla' => ['status' => 'Operational L3SMI chlor_a', 'latency' => 'Normal'],
-                    'NOAA_CFSv2_Wind_Ekman' => ['status' => 'Operational Wu 1982 Drag + Beta-Term', 'latency' => 'Normal'],
-                    'HYCOM_CMEMS_Current' => ['status' => 'Operational 1/12 deg Hydrodynamics', 'latency' => 'Normal'],
-                    'GEBCO_2023_Bathymetry' => ['status' => 'Canonical Terrain Mask (150-1200m Shelf Break)', 'latency' => 'Normal'],
-                ]
-            ],
+            'pipeline_satelit' => $this->getPipelineStatus(),
             'timestamp' => now()->toIso8601String(),
         ];
     }
@@ -215,15 +199,54 @@ class SystemMonitoringService
         }
 
         $latestIngestion = !empty($history) ? $history[0] : null;
+        $manifestStatus = 'UNVERIFIED';
+        if (is_array($latestIngestion)) {
+            $recordStatus = (string)($latestIngestion['status'] ?? '');
+            $validUntil = $latestIngestion['valid_until'] ?? null;
+            $isFresh = $validUntil === null || $validUntil === '';
+            if (!$isFresh) {
+                try {
+                    $isFresh = now()->lt(\Carbon\Carbon::parse((string)$validUntil));
+                } catch (\Throwable) {
+                    $isFresh = false;
+                }
+            }
+            if ($isFresh && $recordStatus === 'VALID') {
+                $manifestStatus = 'OPERATIONAL';
+            } elseif ($isFresh && $recordStatus === 'VALID_WITH_FALLBACK') {
+                $manifestStatus = 'DEGRADED';
+            }
+        }
 
         return [
-            'status' => 'OPERATIONAL',
+            'status' => $manifestStatus,
+            'description' => $manifestStatus === 'UNVERIFIED'
+                ? 'Manifest ingest GEE/BMKG belum tersedia, tidak ada klaim data live yang dapat diverifikasi.'
+                : 'Pipeline GEE v2.3.2 ke Web memiliki rekam provenance ingest yang terbaca.',
             'pipeline_version' => '3.0.0',
             'gee_engine_version' => 'v2.3.2',
             'spatial_domain' => 'WPPNRI 573 (8,129 Canonical Cells)',
             'latest_ingestion' => $latestIngestion,
             'recent_history_count' => count($history),
+            'source_mode' => $latestIngestion['source_mode'] ?? 'DATABASE_SNAPSHOT_SOURCE_UNVERIFIED',
+            'ingestion_status' => $latestIngestion['ingestion_status'] ?? 'UNVERIFIED',
+            'date_coverage' => $latestIngestion['date_coverage'] ?? [],
+            'prediction_timestamp' => $latestIngestion['prediction_timestamp'] ?? null,
+            'validation_status' => $latestIngestion['validation_status'] ?? 'UNVERIFIED',
             'satellites' => [
+                // Legacy public telemetry keys remain part of the API contract.
+                'NOAA_CoralTemp_OISST' => [
+                    'status' => 'Operational Multi-Sensor Fusion (OISST v2.1 + MODIS)',
+                    'latency' => 'Normal',
+                ],
+                'Sentinel_3_OLCI_Chla' => [
+                    'status' => 'Operational L3SMI 4km + Gap-Filling',
+                    'latency' => 'Normal',
+                ],
+                'BMKG_Marine_Forecast' => [
+                    'status' => 'Simulasi Oseanografi Musiman BMKG Terkalibrasi (Fallback Lokal)',
+                    'latency' => 'Local',
+                ],
                 'NOAA_OISST_v21_MODIS' => [
                     'parameter' => 'Sea Surface Temperature (SST)',
                     'status' => 'Operational Multi-Sensor Fusion',

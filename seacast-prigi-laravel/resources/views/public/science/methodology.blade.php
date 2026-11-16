@@ -36,23 +36,23 @@
         </div>
 
         <!-- 10-Fold Spatial Cross Validation -->
-        <x-ui.card title="Validasi Silang Spasial (10-Fold Spatial Cross-Validation)">
+        <x-ui.card title="Kerangka Validasi Silang Spasial (10-Fold Spatial Cross-Validation)">
             <div class="space-y-4 text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
                 <p>
-                    Untuk menghindari autokorelasi spasial semu (*spatial autocorrelation*), data titik tangkapan dibagi ke dalam 10 blok spasial independen. Model dievaluasi menggunakan metrik diskriminasi area di bawah kurva ROC (*Area Under the Curve* / ROC-AUC) dan *True Skill Statistic* (TSS).
+                    Untuk mencegah bias autokorelasi spasial (*spatial autocorrelation*), rancangan evaluasi menargetkan pemisahan titik tangkapan berkoordinat ke dalam 10 blok spasial independen menggunakan metrik ROC-AUC, *True Skill Statistic* (TSS), dan ambang hotspot HSI (`&ge; 0.70`). <strong class="text-amber-600 dark:text-amber-400">Status saat ini: uji blok spasial lapangan belum dieksekusi</strong> karena data koordinat tangkapan operasional belum lengkap; angka di bawah merupakan evaluasi pada titik proxy lingkungan (<code>PROXY_HSI</code>) sesuai manifest model:
                 </p>
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2 font-mono">
                     <div class="p-3 rounded-xl bg-slate-50 dark:bg-[#071B2B] border border-slate-200 dark:border-slate-800">
-                        <span class="text-slate-500 block text-[11px]">Cakalang:</span>
-                        <span class="text-base font-bold text-cyan-600 dark:text-cyan-400">AUC 0.892 &bull; TSS 0.684</span>
+                        <span class="text-slate-500 block text-[11px]">Cakalang (Provisional Proxy):</span>
+                        <span class="text-base font-bold text-cyan-600 dark:text-cyan-400">AUC 0.795 &bull; TSS 0.630</span>
                     </div>
                     <div class="p-3 rounded-xl bg-slate-50 dark:bg-[#071B2B] border border-slate-200 dark:border-slate-800">
-                        <span class="text-slate-500 block text-[11px]">Tuna Sirip Kuning:</span>
-                        <span class="text-base font-bold text-emerald-600 dark:text-emerald-400">AUC 0.874 &bull; TSS 0.648</span>
+                        <span class="text-slate-500 block text-[11px]">Tuna Sirip Kuning (Provisional Proxy):</span>
+                        <span class="text-base font-bold text-emerald-600 dark:text-emerald-400">AUC 0.784 &bull; TSS 0.606</span>
                     </div>
                     <div class="p-3 rounded-xl bg-slate-50 dark:bg-[#071B2B] border border-slate-200 dark:border-slate-800">
-                        <span class="text-slate-500 block text-[11px]">Tongkol Krai:</span>
-                        <span class="text-base font-bold text-sky-600 dark:text-sky-400">AUC 0.908 &bull; TSS 0.712</span>
+                        <span class="text-slate-500 block text-[11px]">Tongkol Krai (Provisional Proxy):</span>
+                        <span class="text-base font-bold text-sky-600 dark:text-sky-400">AUC 0.892 &bull; TSS 0.752</span>
                     </div>
                 </div>
             </div>

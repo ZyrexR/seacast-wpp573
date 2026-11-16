@@ -202,7 +202,7 @@
 
     <!-- 1. Regulatory Compliance Banner (Permen KP 59/2020) -->
     <div style="margin-bottom: 8px;">
-        @if ($trip->permen_kp_status === 'COMPLIANT')
+        @if (in_array($trip->permen_kp_status, ['COMPLIANT', 'COMPLIANT_WITHIN_LEGAL_BOUNDS'], true))
             <div class="alert-compliant">
                 STATUS KEPATUHAN: PATUH TERHADAP PERMEN KP NO. 59/2020
                 <span style="float: right; font-weight: normal;">Jalur Penangkapan Ikan Sesuai Tonase Kapal</span>
@@ -326,8 +326,21 @@
                     <tr>
                         <td class="label">Status Gelombang:</td>
                         <td class="value">
-                            <span class="badge" style="{{ $trip->wave_status === 'AMAN' ? 'background: #DCFCE7; color: #166534;' : 'background: #FEE2E2; color: #991B1B;' }}">
-                                {{ $trip->wave_status }} ({{ $trip->wave_height_m }} m)
+                            @php
+                                $pdfWaveStyle = match($trip->wave_status) {
+                                    'AMAN', 'SAFE' => 'background: #DCFCE7; color: #166534;',
+                                    'WASPADA', 'CAUTION' => 'background: #FEF3C7; color: #92400E;',
+                                    default => 'background: #FEE2E2; color: #991B1B;',
+                                };
+                                $pdfWaveLabel = match($trip->wave_status) {
+                                    'AMAN', 'SAFE' => 'AMAN',
+                                    'WASPADA', 'CAUTION' => 'WASPADA',
+                                    'DANGER' => 'BAHAYA',
+                                    default => $trip->wave_status,
+                                };
+                            @endphp
+                            <span class="badge" style="{{ $pdfWaveStyle }}">
+                                {{ $pdfWaveLabel }} ({{ $trip->wave_height_m }} m)
                             </span>
                         </td>
                     </tr>
@@ -418,7 +431,7 @@
 
     <!-- Official Legal Footer -->
     <div class="footer-note">
-        <strong>Pemberitahuan Resmi:</strong> Dokumen ini dicetak secara otomatis dari Platform SEACAST (Integrated Fisheries Intelligence System WPPNRI 573). Rencana operasional ini mengacu pada ketentuan batas jalur penangkapan ikan Permen KP No. 59/PERMEN-KP/2020 dan rekomendasi keselamatan operasional BMKG/Syahbandar. Nahkoda wajib menjaga kelengkapan SPB (Surat Persetujuan Berlayar) resmi dan alat keselamatan pelayaran standar (life jacket, EPIRB, GPS).
+        <strong>Pemberitahuan Resmi:</strong> Dokumen ini dicetak secara otomatis dari Platform SEACAST (Integrated Fisheries Intelligence System WPPNRI 573). Proyeksi hasil tangkapan dan keekonomian menggunakan skenario formula (<code>FORMULA_SCENARIO</code>) berbasis skor kesesuaian habitat proxy (<code>PROXY_HSI</code>), bukan jaminan hasil tangkapan aktual. Rencana operasional ini mengacu pada ketentuan batas jalur penangkapan ikan Permen KP No. 59/PERMEN-KP/2020 dan rekomendasi keselamatan operasional BMKG/Syahbandar. Nahkoda wajib menjaga kelengkapan SPB (Surat Persetujuan Berlayar) resmi dan alat keselamatan pelayaran standar (life jacket, EPIRB, GPS).
     </div>
 
 </body>

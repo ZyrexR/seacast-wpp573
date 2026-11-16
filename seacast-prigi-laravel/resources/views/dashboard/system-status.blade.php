@@ -43,7 +43,7 @@
             <x-ui.stat-card
                 title="Pipeline Satelit Live"
                 value="{{ $diagnostics['pipeline_satelit']['status'] }}"
-                subtitle="Data Snapshot Terkalibrasi"
+                subtitle="Status Snapshot & Provenance Pipeline"
                 accent="amber"
             />
         </div>

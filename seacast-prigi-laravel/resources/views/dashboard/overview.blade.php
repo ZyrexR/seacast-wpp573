@@ -101,7 +101,7 @@
                 </div>
 
                 <div class="flex items-center justify-between text-floor text-slate-400 pt-1">
-                    <span>Pangkalan: PPN Prigi (Jatim) &bull; PPS Cilacap (Jateng) &bull; PPN Palabuhanratu (Jabar)</span>
+                    <span>Pangkalan: PPN Prigi (Jatim) &bull; PPS Cilacap (Jateng)</span>
                     <a href="{{ route('dashboard.dpi-radar') }}" class="text-cyan-400 hover:underline font-semibold">Buka Radar Penuh &rarr;</a>
                 </div>
             </div>
@@ -117,7 +117,7 @@
                                     'Z2_PFG_OFFSHORE' => 'z2',
                                     'Z3_FEEDING_CORE' => 'z3',
                                     'Z4_NURSERY_GROUND' => 'z4',
-                                    'Z5_BYCATCH_RISK' => 'z5',
+                                    'Z5_BYCATCH_SCREENING', 'Z5_BYCATCH_RISK' => 'z5',
                                     default => 'gen',
                                 };
                             @endphp
@@ -148,7 +148,7 @@
                     <a href="{{ route('dashboard.fleet-analytics') }}" class="flex items-center justify-between p-2.5 rounded-xl bg-[#071B2B] hover:bg-[#12364A] text-slate-200 hover:text-white transition group border border-[#244456]/60">
                         <span class="font-semibold flex items-center gap-2">
                             <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                            Analitik Armada 3 Pelabuhan
+                            Analitik Armada (Prigi &amp; Cilacap)
                         </span>
                         <span class="text-cyan-400 group-hover:translate-x-0.5 transition-transform">&rarr;</span>
                     </a>

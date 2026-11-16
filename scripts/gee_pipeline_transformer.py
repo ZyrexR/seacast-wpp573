@@ -17,6 +17,8 @@ import numpy as np
 import pandas as pd
 import joblib
 
+from ingestion_manifest import write_ingestion_manifest
+
 # Suppress sklearn unpickle warnings from polluting stdout
 warnings.filterwarnings("ignore")
 
@@ -32,7 +34,8 @@ os.makedirs(STORAGE_INGEST_DIR, exist_ok=True)
 # Locked scientific ensemble baseline weights
 LOCKED_ENSEMBLE_WEIGHTS = {
     "cakalang": {"maxent": 0.320, "rf": 0.355, "glm": 0.325},
-    "madidihang": {"maxent": 0.295, "rf": 0.365, "glm": 0.340}
+    "madidihang": {"maxent": 0.295, "rf": 0.365, "glm": 0.340},
+    "tongkol_krai": {"maxent": 0.332, "rf": 0.335, "glm": 0.333},
 }
 
 PRIGI_LON = 111.7275
@@ -267,7 +270,7 @@ def run_pipeline(input_csv, target_date=None, limit=0, dry_run=False, output_jso
     X_scaled = np.nan_to_num(X_scaled, nan=0.0)
 
     # 3. Model Inference (Locked Baseline Weights)
-    for sp in ["cakalang", "madidihang"]:
+    for sp in ["cakalang", "madidihang", "tongkol_krai"]:
         model_path = os.path.join(MODELS_DIR, f"{sp}_ensemble_model.joblib")
         if not os.path.exists(model_path):
             raise FileNotFoundError(f"Model artifact missing at {model_path}")
@@ -282,17 +285,8 @@ def run_pipeline(input_csv, target_date=None, limit=0, dry_run=False, output_jso
         raw_hsi = w["maxent"] * p_maxent + w["rf"] * p_rf + w["glm"] * p_glm
         min_v, max_v = raw_hsi.min(), raw_hsi.max()
         hsi_norm = (raw_hsi - min_v) / (max_v - min_v) if max_v > min_v else raw_hsi
-        df_std[f"hsi_{sp}"] = np.round(hsi_norm, 3)
-
-    # Tongkol Krai (Auxis thazard) Coastal/Neritic HSI
-    si_sst_tongkol = np.exp(-((df_std["sst"] - 28.75) / ((30.5 - 27.0) / 1.5)) ** 2)
-    si_chla_tongkol = np.exp(-((df_std["chla"] - 0.35) / ((0.50 - 0.20) / 1.5)) ** 2)
-    si_depth_tongkol = np.where(df_std["depth"] <= 150.0, 1.0, np.exp(-((df_std["depth"] - 150.0) / 150.0) ** 2))
-    df_std["hsi_tongkol"] = np.round(np.clip(
-        (0.45 * si_sst_tongkol) + (0.40 * si_chla_tongkol) + (0.15 * si_depth_tongkol),
-        0.0,
-        1.0,
-    ), 3)
+        target_col = "hsi_tongkol" if sp == "tongkol_krai" else f"hsi_{sp}"
+        df_std[target_col] = np.round(hsi_norm, 3)
 
     # Hotspot threshold
     df_std["is_hotspot"] = (df_std["hsi_cakalang"] >= 0.70) | (df_std["hsi_madidihang"] >= 0.70)
@@ -415,37 +409,48 @@ def run_pipeline(input_csv, target_date=None, limit=0, dry_run=False, output_jso
                 import psycopg2
                 conn = psycopg2.connect("host=127.0.0.1 dbname=seacast_prigi user=postgres password=postgres")
                 cur = conn.cursor()
-                
+
+                # Satisfy any un-defaulted NOT NULL numeric columns on legacy schemas cleanly
+                base_cols = [
+                    "prediction_date", "cell_id", "hsi_cakalang", "hsi_madidihang", "hsi_tongkol",
+                    "is_hotspot", "dom_zone", "bycatch_traffic_light", "sst_c", "chla_mg_m3",
+                    "current_velocity_ms", "wave_height_m", "wind_speed_ms", "safety_advisory",
+                ]
+                cur.execute(
+                    """
+                    SELECT column_name
+                    FROM information_schema.columns
+                    WHERE table_schema = 'public'
+                      AND table_name = 'daily_predictions'
+                      AND is_nullable = 'NO'
+                      AND column_default IS NULL
+                    """
+                )
+                extra_required_cols = [r[0] for r in cur.fetchall() if r[0] not in base_cols]
+                insert_cols = base_cols + extra_required_cols
+                placeholders = ", ".join(["%s"] * len(insert_cols)) + ", NOW()"
+                update_sets = ", ".join(
+                    [f"{col} = EXCLUDED.{col}" for col in insert_cols if col not in ("prediction_date", "cell_id")]
+                    + ["created_at = NOW()"]
+                )
+
                 # Upsert into daily_predictions
-                upsert_sql = """
+                upsert_sql = f"""
                     INSERT INTO daily_predictions (
-                        prediction_date, cell_id, hsi_cakalang, hsi_madidihang, hsi_tongkol,
-                        is_hotspot, dom_zone, bycatch_traffic_light, sst_c, chla_mg_m3,
-                        current_velocity_ms, wave_height_m, wind_speed_ms, safety_advisory, created_at
-                    ) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, NOW())
+                        {", ".join(insert_cols)}, created_at
+                    ) VALUES ({placeholders})
                     ON CONFLICT (prediction_date, cell_id) DO UPDATE SET
-                        hsi_cakalang = EXCLUDED.hsi_cakalang,
-                        hsi_madidihang = EXCLUDED.hsi_madidihang,
-                        hsi_tongkol = EXCLUDED.hsi_tongkol,
-                        is_hotspot = EXCLUDED.is_hotspot,
-                        dom_zone = EXCLUDED.dom_zone,
-                        bycatch_traffic_light = EXCLUDED.bycatch_traffic_light,
-                        sst_c = EXCLUDED.sst_c,
-                        chla_mg_m3 = EXCLUDED.chla_mg_m3,
-                        current_velocity_ms = EXCLUDED.current_velocity_ms,
-                        wave_height_m = EXCLUDED.wave_height_m,
-                        wind_speed_ms = EXCLUDED.wind_speed_ms,
-                        safety_advisory = EXCLUDED.safety_advisory,
-                        created_at = NOW();
+                        {update_sets};
                 """
                 db_rows = []
                 for _, r in df_std.iterrows():
-                    db_rows.append((
+                    row_vals = [
                         target_date, r["cell_id"], float(r["hsi_cakalang"]), float(r["hsi_madidihang"]), float(r["hsi_tongkol"]),
                         bool(r["is_hotspot"]), str(r["dom_zone"]), str(r["bycatch_traffic_light"]),
                         float(r["sst"]), float(r["chla"]), float(r["current_velocity"]), float(r["wave_height_m"]),
                         float(r["wind_speed"]), str(r["safety_advisory"])
-                    ))
+                    ] + [0.0] * len(extra_required_cols)
+                    db_rows.append(tuple(row_vals))
                 cur.executemany(upsert_sql, db_rows)
                 conn.commit()
                 cur.close()
@@ -453,6 +458,17 @@ def run_pipeline(input_csv, target_date=None, limit=0, dry_run=False, output_jso
                 output_payload["db_persisted"] = len(db_rows)
             except Exception as e:
                 output_payload["db_persist_warning"] = str(e)
+
+        write_ingestion_manifest(
+            manifest_path=os.path.join(STORAGE_INGEST_DIR, "ingestion_manifest.json"),
+            dataset=os.path.basename(input_csv),
+            target_date=target_date,
+            provenance=output_payload["provenance"],
+            total_cells=len(df_std),
+            hotspots_count=output_payload["hotspots_count"],
+            warnings=output_payload.get("warnings", [])
+            + ([output_payload["db_persist_warning"]] if output_payload.get("db_persist_warning") else []),
+        )
 
     return output_payload
 

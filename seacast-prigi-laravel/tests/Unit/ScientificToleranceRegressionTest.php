@@ -26,7 +26,7 @@ class ScientificToleranceRegressionTest extends TestCase
 
     public function test_ensemble_weights_sum_to_exact_unity_for_modelled_tct_species(): void
     {
-        $speciesList = ['cakalang', 'tuna_sirip_kuning'];
+        $speciesList = ['cakalang', 'tuna_sirip_kuning', 'tongkol_krai'];
 
         foreach ($speciesList as $sp) {
             $weights = $this->speciesService->getEnsembleWeights($sp);

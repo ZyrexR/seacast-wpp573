@@ -10,7 +10,7 @@
                 Feed Observasi Bumi, Parameter Bio-Fisik & Telemetri Spasial Kanonikal WPPNRI 573
             </p>
             <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300 max-w-4xl leading-relaxed">
-                Platform SEACAST mengasimilasi lapisan data bio-oseanografi harian dari konstelasi satelit penginderaan jauh terkemuka dunia (Copernicus, NASA, NOAA, JAXA, dan BMKG). Seluruh lapisan data diinterpolasikan secara terkalibrasi ke dalam 8.129 grid kanonikal beresolusi 0,10° (&plusmn;11 km) untuk mendukung pemodelan habitat pelagis dan evaluasi keselamatan maritim.
+                Platform SEACAST mengasimilasi lapisan data bio-oseanografi harian dari konstelasi satelit penginderaan jauh (Copernicus, NASA, NOAA, JAXA, dan BMKG). Seluruh lapisan data dipetakan ke dalam 8.129 grid kanonikal beresolusi 0,10° (&plusmn;11 km) untuk mendukung pemodelan kesesuaian habitat proxy dan evaluasi keselamatan maritim.
             </p>
         </div>
 
@@ -186,7 +186,7 @@
                     <td class="px-5 py-3.5">NOAA / NASA</td>
                     <td class="px-5 py-3.5 font-mono text-cyan-600 dark:text-cyan-400">VIIRS & OISST v2.1</td>
                     <td class="px-5 py-3.5 text-xs">Suhu Permukaan Laut (SST)</td>
-                    <td class="px-5 py-3.5 font-mono text-xs">Harian Terkalibrasi</td>
+                    <td class="px-5 py-3.5 font-mono text-xs">Harian (Referensi NOAA)</td>
                 </tr>
                 <tr>
                     <td class="px-5 py-3.5 font-bold font-mono">Aqua & Terra</td>

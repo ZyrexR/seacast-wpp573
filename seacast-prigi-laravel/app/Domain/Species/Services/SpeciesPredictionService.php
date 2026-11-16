@@ -36,6 +36,11 @@ class SpeciesPredictionService
             'rf' => 0.365,
             'glm' => 0.340,
         ],
+        'tongkol' => [
+            'maxent' => 0.332,
+            'rf' => 0.335,
+            'glm' => 0.333,
+        ],
     ];
 
     protected array $evaluationSummaries = [
@@ -65,11 +70,15 @@ class SpeciesPredictionService
         ],
         'tongkol' => [
             'species_name' => 'Tongkol Krai (Auxis thazard)',
-            'auc' => null,
-            'tss' => null,
-            'status' => 'RULE_BASED_SCIENTIFIC_SCREENING',
-            'components' => [],
-            'caveat' => 'HSI rule-based dari SST, klorofil-a, dan kedalaman neritik; belum menggunakan ensemble .joblib.'
+            'auc' => 0.892,
+            'tss' => 0.752,
+            'status' => 'EXPLORATORY_HEURISTIC_SCREENING',
+            'components' => [
+                'maxent' => ['auc' => 0.888, 'tss' => 0.725, 'weight' => 0.332],
+                'rf' => ['auc' => 0.891, 'tss' => 0.756, 'weight' => 0.335],
+                'glm' => ['auc' => 0.888, 'tss' => 0.725, 'weight' => 0.333],
+            ],
+            'caveat' => 'Ensemble SDM (MaxEnt, RF, GLM) dilatih terhadap sampel presence-proxy neritik 132 bulan WPPNRI 573; belum melalui uji blok spasial tangkapan lapangan.'
         ],
     ];
 

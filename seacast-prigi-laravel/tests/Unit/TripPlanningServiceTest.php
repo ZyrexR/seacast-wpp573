@@ -134,6 +134,11 @@ class TripPlanningServiceTest extends TestCase
         $this->assertSame('SELECTED_SPATIAL_CELL', $plan['data_source_mode']);
         $this->assertSame('SELECTED_SPATIAL_CELL', $plan['target_source']);
         $this->assertSame('PARTIAL_SPATIAL_VALIDATION', $plan['spatial_evidence_level']);
+        $this->assertSame(45000, $plan['catch_projection']['benchmark_price_per_kg']);
+        $this->assertSame(45000, $plan['catch_projection']['price_per_kg_rp']);
+        $this->assertSame('Tinggi', $plan['catch_projection']['hsi_category']);
+        $this->assertSame('PATUH', $plan['permen_kp']['status_label']);
+        $this->assertSame('WASPADA', $plan['wave_safety']['status_label']);
     }
 
     public function test_formula_fallbacks_are_explicitly_labeled(): void
@@ -162,6 +167,20 @@ class TripPlanningServiceTest extends TestCase
         ]);
 
         $this->assertSame('FORMULA_SCENARIO', $plan['estimate_source']);
+    }
+
+    public function test_temporal_calibration_is_blocked_when_scientific_gate_is_on_hold(): void
+    {
+        $this->assertFalse(TripPlanningService::temporalCalibrationIsReleased([
+            'status' => 'HOLD_FOR_SCIENTIFIC_REVIEW',
+            'web_integration_allowed' => false,
+            'species' => [
+                [
+                    'species' => 'tuna_sirip_kuning',
+                    'web_status' => 'HOLD',
+                ],
+            ],
+        ], 'tuna_sirip_kuning'));
     }
 
     public function test_palabuhanratu_remains_internal_legacy_port_but_not_public_port_list(): void

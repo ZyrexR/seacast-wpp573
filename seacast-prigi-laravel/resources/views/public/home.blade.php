@@ -112,7 +112,7 @@
                     Evaluasi SDM Ensemble & Habitat Pelagis WPP 573
                 </h2>
                 <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mt-2">
-                    Pemodelan multi-algoritma (MaxEnt, Random Forest, GLM) terkalibrasi berdasarkan data empiris pendaratan di PPN Prigi, PPS Cilacap, dan PPN Palabuhanratu.
+                    Pemodelan kesesuaian habitat spasial berbasis ensemble (MaxEnt, Random Forest, GLM) untuk ketiga komoditas TCT di WPP 573 — disajikan sebagai indeks proxy kesesuaian habitat (<em>PROXY_HSI</em>), bukan konfirmasi lokasi ikan aktual.
                 </p>
             </div>
 
@@ -121,7 +121,7 @@
                 <x-ui.card hoverable="true">
                     <div class="flex items-center justify-between mb-3">
                         <x-ui.badge variant="emerald" dot="true">Auxis thazard / Euthynnus</x-ui.badge>
-                        <span class="text-xs font-mono font-bold text-emerald-500">Pendaratan Utama</span>
+                        <span class="text-xs font-mono font-bold text-emerald-500">Proxy AUC 0.892*</span>
                     </div>
                     <h3 class="text-lg font-black text-slate-900 dark:text-white mb-1">Tongkol Krai</h3>
                     <p class="text-xs text-slate-600 dark:text-slate-400 mb-4 leading-relaxed">
@@ -143,15 +143,15 @@
                 <x-ui.card hoverable="true">
                     <div class="flex items-center justify-between mb-3">
                         <x-ui.badge variant="cyan" dot="true">Katsuwonus pelamis</x-ui.badge>
-                        <span class="text-xs font-mono font-bold text-slate-500">AUC 0.795</span>
+                        <span class="text-xs font-mono font-bold text-slate-500">Proxy AUC 0.795*</span>
                     </div>
                     <h3 class="text-lg font-black text-slate-900 dark:text-white mb-1">Cakalang (Skipjack)</h3>
                     <p class="text-xs text-slate-600 dark:text-slate-400 mb-4 leading-relaxed">
-                        Spesies pelagis perenang cepat permukaan. Sensitivitas dominan terhadap SST (38,5%) dan kelimpahan Klorofil-a (31,2%).
+                        Spesies pelagis perenang cepat permukaan. Sensitivitas dominan terhadap SST dan kelimpahan Klorofil-a pada koridor paparan selatan Jawa.
                     </p>
                     <div class="space-y-2 pt-3 border-t border-slate-100 dark:border-[#244456] text-xs">
                         <div class="flex justify-between text-slate-500">
-                            <span>Bobot MaxEnt / RF / GLM</span>
+                            <span>Bobot Provis. MaxEnt / RF / GLM</span>
                             <span class="font-mono font-bold text-slate-800 dark:text-slate-200">0.320 / 0.355 / 0.325</span>
                         </div>
                         <div class="flex justify-between text-slate-500">
@@ -165,15 +165,15 @@
                 <x-ui.card hoverable="true">
                     <div class="flex items-center justify-between mb-3">
                         <x-ui.badge variant="amber" dot="true">Thunnus albacares</x-ui.badge>
-                        <span class="text-xs font-mono font-bold text-slate-500">AUC 0.784</span>
+                        <span class="text-xs font-mono font-bold text-slate-500">Proxy AUC 0.784*</span>
                     </div>
                     <h3 class="text-lg font-black text-slate-900 dark:text-white mb-1">Tuna Sirip Kuning (Yellowfin)</h3>
                     <p class="text-xs text-slate-600 dark:text-slate-400 mb-4 leading-relaxed">
-                        Tuna epipelagis dan mesopelagis bernilai tinggi. Asosiasi kuat dengan thermal fronts (34,8%) dan koridor lereng benua paparan selatan Jawa.
+                        Tuna epipelagis dan mesopelagis bernilai tinggi. Asosiasi kuat dengan thermal fronts dan koridor lereng benua paparan selatan Jawa.
                     </p>
                     <div class="space-y-2 pt-3 border-t border-slate-100 dark:border-[#244456] text-xs">
                         <div class="flex justify-between text-slate-500">
-                            <span>Bobot MaxEnt / RF / GLM</span>
+                            <span>Bobot Provis. MaxEnt / RF / GLM</span>
                             <span class="font-mono font-bold text-slate-800 dark:text-slate-200">0.295 / 0.365 / 0.340</span>
                         </div>
                         <div class="flex justify-between text-slate-500">
@@ -183,6 +183,9 @@
                     </div>
                 </x-ui.card>
             </div>
+            <p class="text-[11px] text-center text-slate-500 dark:text-slate-400 mt-5">
+                * Catatan ilmiah: Bobot ensemble Cakalang &amp; Tuna Sirip Kuning bersifat provisional pada titik proxy (belum melalui validasi silang blok spasial dengan koordinat tangkapan operasional).
+            </p>
         </div>
     </section>
 

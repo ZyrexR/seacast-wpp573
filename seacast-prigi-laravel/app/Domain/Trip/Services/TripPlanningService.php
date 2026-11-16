@@ -160,18 +160,25 @@ class TripPlanningService
         if ($gtClass === '< 10 GT' && $distanceNm > 12.0) {
             return [
                 'status' => 'WARNING_OUT_OF_LEGAL_RANGE',
+                'status_label' => 'PERINGATAN (> 12 NM)',
                 'is_compliant' => false,
                 'jalur_target' => 'Jalur III (> 12 NM / ZEE)',
+                'jalur_label' => 'Jalur III (> 12 NM / ZEE)',
+                'jalur_desc' => 'Di luar batas legal < 10 GT',
                 'citation' => $citation,
                 'message' => "Kapal motor < 10 GT dilarang beroperasi melampaui Jalur II (> 12 NM) berdasar Permen KP No. 59/PERMEN-KP/2020 Pasal 3 & Lampiran. Wilayah operasi terbatas pada Jalur I (0–4 NM) dan Jalur II (4–12 NM).",
             ];
         }
 
         if ($gtClass === '> 30 GT' && $distanceNm <= 12.0) {
+            $inshoreJalur = $distanceNm <= 4.0 ? 'Jalur I (0–4 NM)' : 'Jalur II (4–12 NM)';
             return [
                 'status' => 'VIOLATION_RESTRICTED_INSHORE',
+                'status_label' => 'PELANGGARAN ZONA PESISIR',
                 'is_compliant' => false,
-                'jalur_target' => $distanceNm <= 4.0 ? 'Jalur I (0–4 NM)' : 'Jalur II (4–12 NM)',
+                'jalur_target' => $inshoreJalur,
+                'jalur_label' => $inshoreJalur,
+                'jalur_desc' => 'Terlarang untuk > 30 GT',
                 'citation' => $citation,
                 'message' => "Kapal motor > 30 GT dilarang beroperasi di Jalur I dan II (0–12 NM). Wajib beroperasi di Jalur III (> 12 NM / ZEE) atau Laut Lepas berdasar Permen KP No. 59/PERMEN-KP/2020.",
             ];
@@ -183,8 +190,11 @@ class TripPlanningService
 
         return [
             'status' => 'COMPLIANT_WITHIN_LEGAL_BOUNDS',
+            'status_label' => 'PATUH',
             'is_compliant' => true,
             'jalur_target' => $allocatedJalur,
+            'jalur_label' => $allocatedJalur,
+            'jalur_desc' => 'Sesuai kelas tonase armada',
             'citation' => $citation,
             'message' => "Rute pelayaran dan spesifikasi armada memenuhi alokasi {$allocatedJalur} sesuai Permen KP No. 59/PERMEN-KP/2020.",
         ];
@@ -196,9 +206,11 @@ class TripPlanningService
             return [
                 'advisory_code' => 'BAHAYA_GELOMBANG_EKSTREM',
                 'status' => 'DANGER',
+                'status_label' => 'BAHAYA GELOMBANG EKSTREM',
                 'wave_height_m' => $waveHeightM,
                 'is_safe_to_sail' => false,
                 'badge_color' => 'red',
+                'advice' => 'Tunda keberangkatan (> 2,5 m).',
                 'message' => "Gelombang ekstrem (> 2.5 m). BMKG Maritim / Syahbandar melarang persetujuan berlayar (SPB) bagi seluruh armada pelagis.",
             ];
         }
@@ -207,9 +219,11 @@ class TripPlanningService
             return [
                 'advisory_code' => 'WASPADA_GELOMBANG_SEDANG',
                 'status' => 'CAUTION',
+                'status_label' => 'WASPADA',
                 'wave_height_m' => $waveHeightM,
                 'is_safe_to_sail' => true,
                 'badge_color' => 'yellow',
+                'advice' => 'Waspada armada < 10 GT (1,5–2,5 m).',
                 'message' => "Gelombang laut sedang (1.5 – 2.5 m). Kapal < 10 GT wajib waspada, pastikan radio maritim dan life jacket aktif.",
             ];
         }
@@ -217,9 +231,11 @@ class TripPlanningService
         return [
             'advisory_code' => 'AMAN_MELAUT',
             'status' => 'SAFE',
+            'status_label' => 'AMAN',
             'wave_height_m' => $waveHeightM,
             'is_safe_to_sail' => true,
             'badge_color' => 'green',
+            'advice' => 'Perairan tenang (< 1,5 m).',
             'message' => "Kondisi perairan tenang (< 1.5 m). Rekomendasi operasional aman untuk seluruh kelas armada.",
         ];
     }
@@ -283,7 +299,7 @@ class TripPlanningService
     public function calculateCatchProjection(string $commodity, string $gtClass, float $hsiScore, ?string $date = null): array
     {
         $spec = self::GT_SPECS[$gtClass] ?? self::GT_SPECS['< 10 GT'];
-        $commKey = strtolower($commodity);
+        $commKey = str_replace([' ', '-'], '_', strtolower(trim($commodity)));
         $benchmarkPrice = self::COMMODITY_PRICES[$commKey] ?? 22000;
 
         // Seasonal factor based on month (July-October upwelling peak in WPPNRI 573)
@@ -293,20 +309,54 @@ class TripPlanningService
         $boundedHsi = max(0.15, min(1.0, $hsiScore));
         $projectedKg = (int)round($spec['base_catch_kg'] * $boundedHsi * $seasonalFactor);
         $grossRevenueRp = (int)round($projectedKg * $benchmarkPrice);
+        $hsiCategory = $boundedHsi >= 0.70 ? 'Tinggi' : ($boundedHsi >= 0.55 ? 'Sedang' : 'Rendah');
 
         return [
             'commodity' => ucfirst($commodity),
             'benchmark_price_per_kg' => $benchmarkPrice,
+            'price_per_kg_rp' => $benchmarkPrice,
             'base_capacity_kg' => $spec['base_catch_kg'],
             'hsi_score' => $hsiScore,
+            'hsi_category' => $hsiCategory,
             'seasonal_factor' => $seasonalFactor,
             'projected_kg' => $projectedKg,
             'gross_revenue_rp' => $grossRevenueRp,
         ];
     }
 
+    public static function temporalCalibrationIsReleased(array $gate, string $commodityKey): bool
+    {
+        if (($gate['status'] ?? null) === 'HOLD_FOR_SCIENTIFIC_REVIEW'
+            || ($gate['web_integration_allowed'] ?? false) !== true) {
+            return false;
+        }
+
+        foreach (($gate['species'] ?? []) as $species) {
+            if (!is_array($species) || ($species['species'] ?? null) !== $commodityKey) {
+                continue;
+            }
+
+            return in_array(($species['web_status'] ?? null), [
+                'APPROVED_FOR_RELEASE',
+                'CANDIDATE_HIGH_CONFIDENCE',
+            ], true);
+        }
+
+        return false;
+    }
+
     private function temporalCorrectionFactor(string $commodityKey): ?float
     {
+        $gatePath = base_path('../outputs/tct_hybrid_2015_2025/reports/tct_scientific_gate.json');
+        if (!is_file($gatePath)) {
+            return null;
+        }
+
+        $gate = json_decode((string)file_get_contents($gatePath), true);
+        if (!is_array($gate) || !self::temporalCalibrationIsReleased($gate, $commodityKey)) {
+            return null;
+        }
+
         $manifestPath = base_path('../outputs/tct_hybrid_2015_2025/reports/tct_hybrid_model_validation_2015_2025.json');
         if (!is_file($manifestPath)) {
             return null;

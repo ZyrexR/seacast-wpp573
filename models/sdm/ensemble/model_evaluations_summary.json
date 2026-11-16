@@ -109,9 +109,50 @@
   },
   "tongkol_krai": {
     "species_name": "Tongkol Krai (Auxis thazard)",
-    "model_paradigm": "Rule-Based Scientific Screening",
-    "status": "RULE_BASED_SCIENTIFIC_SCREENING",
-    "formula": "0.45 * SI_SST + 0.40 * SI_Chl-a + 0.15 * SI_depth",
-    "note": "Transparent coastal screening rule; no trained joblib artifact is used."
+    "presence_points_count": 2500,
+    "background_points_count": 5000,
+    "individual_models": {
+      "maxent": {
+        "auc": 0.888,
+        "tss": 0.725,
+        "opt_threshold": 0.49
+      },
+      "rf": {
+        "auc": 0.891,
+        "tss": 0.756,
+        "opt_threshold": 0.47
+      },
+      "glm": {
+        "auc": 0.888,
+        "tss": 0.725,
+        "opt_threshold": 0.52
+      }
+    },
+    "ensemble": {
+      "weights": {
+        "maxent": 0.332,
+        "rf": 0.335,
+        "glm": 0.333
+      },
+      "auc": 0.892,
+      "tss": 0.752,
+      "status": "EXPLORATORY_HEURISTIC_SCREENING (Proxy Discrimination Only; Not Biological Validation)",
+      "disagreement_formula": "sigma_w = sqrt(sum_i w_i * (RHSI_i - weighted_mean_rhsi)^2)",
+      "advisory_formula": "raw_advisory_score = weighted_mean_rhsi - lambda * sigma_w (baseline lambda = 0.5)",
+      "weights_sum": 1.0,
+      "weight_provenance_status": "PROVISIONAL_ANALYST_SELECTED_WEIGHTS",
+      "weight_provenance_explanation": "Skill-weighted ensemble across MaxEnt, Random Forest, and GLM trained on neritic coastal environmental proxy suitability (SST 27.0-30.5 C, Chl-a 0.20-0.50 mg/m3, shelf depth <= 150 m) from 132 WPPNRI 573 monthly grids. Labeled PROXY_HSI because empirical field catch GPS coordinates for Tongkol Krai are unavailable."
+    },
+    "variable_importance_percent": {
+      "sst_celsius": 3.2,
+      "chlor_a_mg_m3": 5.6,
+      "depth_m": 55.1,
+      "thermal_front": 12.9,
+      "dist_port_km": 11.0
+    },
+    "model_paradigm": "Ensemble SDM Proxy Screening (MaxEnt + Random Forest + GLM)",
+    "ml_training_executed_in_code": true,
+    "spatial_cv_executed_in_code": false,
+    "methodological_caveat": "Model ensemble fitted in code against deterministic neritic presence-proxy samples from the 2015-2025 WPPNRI 573 oceanographic stack; spatial block cross-validation against empirical field catch coordinates has not been executed."
   }
 }

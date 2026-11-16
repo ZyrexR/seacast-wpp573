@@ -12,6 +12,8 @@ class GeeDataPipelineTest extends TestCase
 {
     protected string $sampleGeeCsv;
     protected string $samplePilotCsv;
+    protected ?string $ingestionManifestBackup = null;
+    protected bool $ingestionManifestExisted = false;
 
     protected function setUp(): void
     {
@@ -20,6 +22,22 @@ class GeeDataPipelineTest extends TestCase
         $baseDir = dirname(base_path());
         $this->sampleGeeCsv = $baseDir . '/data/oceanographic/monthly_csv/SEACAST_PRIGI_GRID_8129_2015_01.csv';
         $this->samplePilotCsv = $baseDir . '/data/pilot_2024/PILOT_2024_WPP573_R010_M01.csv';
+
+        $manifestPath = storage_path('app/gee_ingestion/ingestion_manifest.json');
+        $this->ingestionManifestExisted = File::exists($manifestPath);
+        $this->ingestionManifestBackup = $this->ingestionManifestExisted ? File::get($manifestPath) : null;
+        File::delete($manifestPath);
+    }
+
+    protected function tearDown(): void
+    {
+        $manifestPath = storage_path('app/gee_ingestion/ingestion_manifest.json');
+        File::delete($manifestPath);
+        if ($this->ingestionManifestExisted && $this->ingestionManifestBackup !== null) {
+            File::put($manifestPath, $this->ingestionManifestBackup);
+        }
+
+        parent::tearDown();
     }
 
     /**
@@ -155,8 +173,47 @@ class GeeDataPipelineTest extends TestCase
         ->assertExitCode(Command::SUCCESS);
     }
 
+    public function test_ingestion_audit_writes_canonical_provenance_manifest(): void
+    {
+        /** @var GeeDataIngestionService $service */
+        $service = app(GeeDataIngestionService::class);
+        $method = new \ReflectionMethod($service, 'recordIngestionAudit');
+        $method->setAccessible(true);
+        $method->invoke($service, [
+            'status' => 'SUCCESS',
+            'dataset_name' => 'fixture_2025_01.csv',
+            'target_date' => '2025-01-01',
+            'provenance' => [
+                'source_mode' => 'GEE_INGESTED_WITH_LOCAL_FALLBACKS',
+                'evidence_level' => 'PROXY_HSI',
+                'model_version' => '2.3.2',
+                'prediction_timestamp' => '2025-01-01T00:00:00+00:00',
+                'validation_status' => 'UNVERIFIED_NO_OCCURRENCE_AUDIT',
+                'sources' => ['gee' => 'fixture'],
+            ],
+            'warnings' => ['BMKG fallback used'],
+            'total_cells' => 8129,
+            'hotspots_count' => 12,
+            'sha256' => str_repeat('a', 64),
+            'total_duration_ms' => 42,
+            'completed_at' => '2025-01-01T00:00:01+00:00',
+            'summary' => ['total_cells' => 8129],
+        ]);
+
+        $manifest = json_decode(File::get(storage_path('app/gee_ingestion/ingestion_manifest.json')), true);
+        $record = $manifest[0];
+        $this->assertSame('fixture_2025_01.csv', $record['dataset']);
+        $this->assertSame('VALID_WITH_FALLBACK', $record['status']);
+        $this->assertSame('GEE_INGESTED_WITH_LOCAL_FALLBACKS', $record['source_mode']);
+        $this->assertSame('PROXY_HSI', $record['evidence_level']);
+        $this->assertSame('2025-01-01', $record['date_coverage']['start']);
+        $this->assertSame('2025-01-01', $record['date_coverage']['end']);
+        $this->assertTrue($record['fallback_used']);
+        $this->assertNotEmpty($record['valid_until']);
+    }
+
     /**
-     * Test 6: API endpoint /api/monitoring/pipeline returns operational telemetry.
+     * Test 6: API endpoint /api/monitoring/pipeline reports unverified telemetry when no manifest exists.
      */
     public function test_api_monitoring_pipeline_endpoint(): void
     {
@@ -182,20 +239,23 @@ class GeeDataPipelineTest extends TestCase
         ]);
 
         $this->assertEquals('success', $response->json('status'));
-        $this->assertEquals('OPERATIONAL', $response->json('data.status'));
+        $this->assertEquals('UNVERIFIED', $response->json('data.status'));
+        $this->assertEquals('DATABASE_SNAPSHOT_SOURCE_UNVERIFIED', $response->json('data.source_mode'));
+        $this->assertEquals('UNVERIFIED', $response->json('data.ingestion_status'));
         $this->assertEquals('3.0.0', $response->json('data.pipeline_version'));
         $this->assertEquals('v2.3.2', $response->json('data.gee_engine_version'));
     }
 
     /**
-     * Test 7: Public /api/monitoring includes operational pipeline telemetry.
+     * Test 7: Public /api/monitoring includes truthful pipeline telemetry.
      */
     public function test_api_monitoring_includes_pipeline_telemetry(): void
     {
         $response = $this->getJson('/api/monitoring');
 
         $response->assertStatus(200);
-        $response->assertJsonPath('data.pipeline_satelit.status', 'OPERATIONAL');
+        $response->assertJsonPath('data.pipeline_satelit.status', 'UNVERIFIED');
+        $response->assertJsonPath('data.pipeline_satelit.source_mode', 'DATABASE_SNAPSHOT_SOURCE_UNVERIFIED');
         $response->assertJsonPath('data.pipeline_satelit.gee_engine_version', 'v2.3.2');
     }
 }

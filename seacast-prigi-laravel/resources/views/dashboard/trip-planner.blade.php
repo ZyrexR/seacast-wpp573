@@ -70,17 +70,17 @@
             <div class="p-4 rounded-xl border flex items-start gap-3 transition-colors"
                  :class="{
                      'bg-emerald-500/10 border-emerald-500/30 text-emerald-200': plan.permen_kp.is_compliant && plan.wave_safety.is_safe_to_sail,
-                     'bg-amber-500/10 border-amber-500/30 text-amber-200': !plan.permen_kp.is_compliant || !plan.wave_safety.is_safe_to_sail,
-                     'bg-rose-500/10 border-rose-500/30 text-rose-200': plan.wave_safety.status === 'BAHAYA GELOMBANG EKSTREM' || plan.permen_kp.status === 'VIOLATION_RESTRICTED_INSHORE'
+                     'bg-amber-500/10 border-amber-500/30 text-amber-200': (!plan.permen_kp.is_compliant || !plan.wave_safety.is_safe_to_sail) && plan.wave_safety.status !== 'DANGER' && plan.wave_safety.status !== 'BAHAYA GELOMBANG EKSTREM' && plan.permen_kp.status !== 'VIOLATION_RESTRICTED_INSHORE',
+                     'bg-rose-500/10 border-rose-500/30 text-rose-200': plan.wave_safety.status === 'DANGER' || plan.wave_safety.status === 'BAHAYA GELOMBANG EKSTREM' || plan.permen_kp.status === 'VIOLATION_RESTRICTED_INSHORE'
                  }">
                 <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 <div class="text-xs space-y-1">
                     <div class="font-bold flex items-center gap-2">
-                        <span x-text="plan.permen_kp.status_label"></span>
+                        <span x-text="plan.permen_kp.status_label || (plan.permen_kp.is_compliant ? 'PATUH' : 'PERLU TINJAUAN')"></span>
                         <span>•</span>
-                        <span x-text="plan.wave_safety.status"></span>
+                        <span x-text="plan.wave_safety.status_label || plan.wave_safety.status"></span>
                     </div>
                     <p x-text="plan.permen_kp.message"></p>
                     <p class="text-floor opacity-80" x-text="plan.permen_kp.citation"></p>
@@ -316,15 +316,15 @@
                                           'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40': plan.permen_kp.is_compliant,
                                           'bg-rose-500/20 text-rose-300 border border-rose-500/40': !plan.permen_kp.is_compliant
                                       }"
-                                      x-text="plan.permen_kp.status_label">
+                                      x-text="plan.permen_kp.status_label || (plan.permen_kp.is_compliant ? 'PATUH' : 'PERLU TINJAUAN')">
                                 </span>
                             </div>
 
                             <div class="p-3 rounded-xl bg-[#071B2B] border border-[#244456]/60 space-y-1">
                                 <div class="text-[10px] text-slate-400">Alokasi Jalur Penangkapan Ikan:</div>
                                 <div class="text-sm font-bold text-white flex items-center justify-between">
-                                    <span x-text="plan.permen_kp.jalur_label"></span>
-                                    <span class="text-xs font-mono text-cyan-400" x-text="plan.permen_kp.jalur_desc"></span>
+                                    <span x-text="plan.permen_kp.jalur_label || plan.permen_kp.jalur_target"></span>
+                                    <span class="text-xs font-mono text-cyan-400" x-text="plan.permen_kp.jalur_desc || (plan.permen_kp.is_compliant ? 'Sesuai kelas tonase' : 'Melebihi batas jalur')"></span>
                                 </div>
                             </div>
 
@@ -343,11 +343,11 @@
                                 </span>
                                 <span class="px-2 py-0.5 rounded-full text-floor font-bold uppercase tracking-wider"
                                       :class="{
-                                          'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40': plan.wave_safety.status === 'AMAN',
-                                          'bg-amber-500/20 text-amber-300 border border-amber-500/40': plan.wave_safety.status === 'WASPADA',
-                                          'bg-rose-500/20 text-rose-300 border border-rose-500/40': plan.wave_safety.status === 'BAHAYA GELOMBANG EKSTREM'
+                                          'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40': plan.wave_safety.status === 'SAFE' || plan.wave_safety.status === 'AMAN',
+                                          'bg-amber-500/20 text-amber-300 border border-amber-500/40': plan.wave_safety.status === 'CAUTION' || plan.wave_safety.status === 'WASPADA',
+                                          'bg-rose-500/20 text-rose-300 border border-rose-500/40': plan.wave_safety.status === 'DANGER' || plan.wave_safety.status === 'BAHAYA GELOMBANG EKSTREM'
                                       }"
-                                      x-text="plan.wave_safety.status">
+                                      x-text="plan.wave_safety.status_label || plan.wave_safety.status">
                                 </span>
                             </div>
 
@@ -358,7 +358,7 @@
                                         <span x-text="plan.wave_safety.wave_height_m"></span> <span class="text-xs text-slate-300 font-sans font-normal">meter</span>
                                     </div>
                                     <div class="text-[10px] text-slate-400 mt-0.5">
-                                        <span x-text="plan.wave_safety.advice"></span>
+                                        <span x-text="plan.wave_safety.advice || plan.wave_safety.message"></span>
                                     </div>
                                 </div>
                                 <div class="p-3 rounded-xl bg-[#071B2B] border border-[#244456]/60">
@@ -384,10 +384,11 @@
                                 <svg class="w-4 h-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
-                                Proyeksi Hasil Tangkapan & Margin Finansial (CPUE Calibrated)
+                                Proyeksi Hasil Tangkapan & Margin Finansial
+                                <span class="text-cyan-300 font-mono" x-text="plan.estimate_source === 'TEMPORAL_CPUE_CALIBRATED' ? '(CPUE Terkalibrasi)' : '(Skenario Formula HSI)'"></span>
                             </span>
                             <span class="text-floor font-mono text-cyan-300">
-                                HSI Score: <strong x-text="plan.catch_projection.hsi_score"></strong> (<span x-text="plan.catch_projection.hsi_category"></span>)
+                                HSI Score: <strong x-text="plan.catch_projection.hsi_score"></strong> (<span x-text="plan.catch_projection.hsi_category || (plan.catch_projection.hsi_score >= 0.7 ? 'Tinggi' : (plan.catch_projection.hsi_score >= 0.55 ? 'Sedang' : 'Rendah'))"></span>)
                             </span>
                         </div>
 
@@ -408,7 +409,7 @@
                                     <span x-text="formatRupiah(plan.catch_projection.gross_revenue_rp)"></span>
                                 </div>
                                 <div class="text-[10px] text-slate-400 mt-1 font-mono">
-                                    Harga acuan TPI: <span x-text="formatRupiah(plan.catch_projection.price_per_kg_rp)"></span>/kg
+                                    Harga acuan TPI: <span x-text="formatRupiah(plan.catch_projection.price_per_kg_rp ?? plan.catch_projection.benchmark_price_per_kg)"></span>/kg
                                 </div>
                             </div>
 
@@ -486,7 +487,7 @@
                                             Rp {{ number_format($trip->net_profit_rp, 0, ',', '.') }}
                                         </td>
                                         <td class="px-4 py-3">
-                                            @if ($trip->permen_kp_status === 'COMPLIANT')
+                                            @if (in_array($trip->permen_kp_status, ['COMPLIANT', 'COMPLIANT_WITHIN_LEGAL_BOUNDS'], true))
                                                 <span class="px-2 py-0.5 rounded-full text-floor font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">PATUH</span>
                                             @elseif ($trip->permen_kp_status === 'WARNING_OUT_OF_LEGAL_RANGE')
                                                 <span class="px-2 py-0.5 rounded-full text-floor font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">&gt;12 NM</span>
@@ -569,15 +570,28 @@
                                         <td class="px-4 py-3 font-mono text-[11px] text-slate-300">{{ $log->target_dms }}</td>
                                         <td class="px-4 py-3 font-mono">{{ $log->distance_nm }} NM</td>
                                         <td class="px-4 py-3">
-                                            @if ($log->permen_kp_status === 'COMPLIANT')
+                                            @if (in_array($log->permen_kp_status, ['COMPLIANT', 'COMPLIANT_WITHIN_LEGAL_BOUNDS'], true))
                                                 <span class="px-2 py-0.5 rounded-full text-floor font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">PATUH</span>
                                             @else
                                                 <span class="px-2 py-0.5 rounded-full text-floor font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30">PERLU TINJAUAN</span>
                                             @endif
                                         </td>
                                         <td class="px-4 py-3">
-                                            <span class="px-2 py-0.5 rounded-full text-floor font-bold {{ $log->wave_status === 'AMAN' ? 'bg-emerald-500/20 text-emerald-300' : 'bg-rose-500/20 text-rose-300' }}">
-                                                {{ $log->wave_status }}
+                                            @php
+                                                $waveBadgeClass = match($log->wave_status) {
+                                                    'AMAN', 'SAFE' => 'bg-emerald-500/20 text-emerald-300',
+                                                    'WASPADA', 'CAUTION' => 'bg-amber-500/20 text-amber-300',
+                                                    default => 'bg-rose-500/20 text-rose-300',
+                                                };
+                                                $waveBadgeText = match($log->wave_status) {
+                                                    'AMAN', 'SAFE' => 'AMAN',
+                                                    'WASPADA', 'CAUTION' => 'WASPADA',
+                                                    'DANGER' => 'BAHAYA',
+                                                    default => $log->wave_status,
+                                                };
+                                            @endphp
+                                            <span class="px-2 py-0.5 rounded-full text-floor font-bold {{ $waveBadgeClass }}">
+                                                {{ $waveBadgeText }}
                                             </span>
                                         </td>
                                         <td class="px-4 py-3 text-right">

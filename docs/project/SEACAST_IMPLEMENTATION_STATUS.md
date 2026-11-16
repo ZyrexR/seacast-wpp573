@@ -1,6 +1,6 @@
 # SEACAST — Implementation Status
 
-**Updated:** 14 November 2026
+**Updated:** 15 November 2026
 **Release posture:** `SCIENTIFIC REVIEW / CONTROLLED WEB INTEGRATION`
 **Domain:** WPPNRI 573; Tuna Sirip Kuning, Cakalang, Tongkol Krai.
 
@@ -10,14 +10,16 @@
 |---|---|---|
 | Canonical grid | IMPLEMENTED & VERIFIED | 8.129 polygon valid, EPSG:4326, PostGIS/GiST |
 | Spatial HSI/DOM output | IMPLEMENTED — PROXY | Tiga komoditas publik tersedia; HSI adalah kesesuaian relatif, bukan presence/biomassa |
-| Temporal TCT calibration | IMPLEMENTED — PER COMMODITY GATE | YFT `ENABLED`; Cakalang dan Tongkol Krai `BASELINE_ONLY` |
+| Temporal TCT calibration | HOLD / BASELINE_ONLY | Seluruh komoditas (YFT `REJECT`, Cakalang `REJECT`/baseline, Tongkol Krai `REJECT`/baseline) pada holdout 2025 (`tct_scientific_gate.json` = `HOLD_FOR_SCIENTIFIC_REVIEW`); Trip Planner tetap `FORMULA_SCENARIO` |
 | Occurrence audit full grid | IMPLEMENTED & VERIFIED | 31/31 match dalam 8 NM terhadap grid kanonikal |
 | Occurrence audit operational ≤60 NM | IMPLEMENTED — PARTIAL | 3/31 match; status `PARTIAL_SPATIAL_VALIDATION` |
 | MaxEnt production ensemble | NOT ENABLED | Memerlukan occurrence koordinat dan spatial-block CV; workflow dipisahkan |
 | Trip Planner | IMPLEMENTED — SCENARIO OUTPUT | `cell_id`, sumber estimasi, evidence, fallback, GT/biaya/cuaca tersedia |
 | Dual operational hubs | IMPLEMENTED | UI mengekspos PPN Prigi dan PPS Cilacap |
-| PPN Palabuhanratu | LEGACY COMPATIBILITY ONLY | Tetap di service internal; tidak ditampilkan pada UI dual-hub |
+| PPN Palabuhanratu | LEGACY COMPATIBILITY ONLY | Tetap di service internal dan kompatibilitas landing `/` |
 | WebGIS/API/export | IMPLEMENTED — CONTRACT COMPATIBLE | Alias TCT publik, provenance, MVT properties, cache key v2 |
+| Telemetry ingest manifest & monitoring | IMPLEMENTED & VERIFIED | `scripts/ingestion_manifest.py` menulis `ingestion_manifest.json` (provenance, cakupan tanggal, status fallback, TTL); Laravel memvalidasi masa berlaku & melaporkan status jujur (`UNVERIFIED` / `DEGRADED` / `OPERATIONAL`) |
+| UI & Single Source of Truth sync | IMPLEMENTED | Angka AUC/TSS/threshold (Cakalang 0.795/0.630, Tuna Sirip Kuning 0.784/0.606, Tongkol Krai 0.892/0.752 via `tongkol_krai_ensemble_model.joblib`, threshold `>= 0.70`), badge `PROXY_HSI` / `FORMULA_SCENARIO`, dan dokumentasi root (`README.md`, `AGENTS.md`) diselaraskan dengan manifest JSON |
 | Database provenance columns | DEFERRED | Metadata dirakit di service/API dari manifest ingest, model, dan `prediction_date`; belum ada migrasi `daily_predictions` |
 
 ## Kontrak keluaran

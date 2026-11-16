@@ -6,6 +6,7 @@ use Tests\TestCase;
 use App\Domain\ScientificData\Repositories\ScientificDataRepositoryInterface;
 use App\Domain\ScientificData\Repositories\PostGisScientificDataRepository;
 use App\Domain\ScientificData\Services\ScientificDataService;
+use Illuminate\Support\Facades\File;
 
 class ScientificDataAccessTest extends TestCase
 {
@@ -77,11 +78,37 @@ class ScientificDataAccessTest extends TestCase
                 'model_version',
                 'prediction_timestamp',
                 'validation_status',
+                'source',
+                'date_coverage',
+                'ingestion_status',
+                'fallback_used',
             ],
             array_keys($summary['provenance'])
         );
         $this->assertNotEmpty($summary['provenance']['model_version']);
         $this->assertNotEmpty($summary['provenance']['prediction_timestamp']);
+    }
+
+    public function test_service_does_not_claim_live_ingest_when_manifest_is_missing(): void
+    {
+        $manifestPath = storage_path('app/gee_ingestion/ingestion_manifest.json');
+        $existed = File::exists($manifestPath);
+        $backup = $existed ? File::get($manifestPath) : null;
+        File::delete($manifestPath);
+
+        try {
+            $provenance = $this->service->getSpatialProvenance('2026-11-03');
+
+            $this->assertSame('DATABASE_SNAPSHOT_SOURCE_UNVERIFIED', $provenance['source_mode']);
+            $this->assertSame('UNVERIFIED', $provenance['validation_status']);
+            $this->assertSame('UNVERIFIED', $provenance['ingestion_status']);
+            $this->assertFalse($provenance['fallback_used']);
+        } finally {
+            File::delete($manifestPath);
+            if ($existed && $backup !== null) {
+                File::put($manifestPath, $backup);
+            }
+        }
     }
 
     public function test_geojson_places_provenance_in_top_level_metadata(): void

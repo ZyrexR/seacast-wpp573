@@ -14,6 +14,8 @@ import numpy as np
 import pandas as pd
 import joblib
 
+from ingestion_manifest import write_ingestion_manifest
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MODELS_DIR = os.path.join(BASE_DIR, "models")
 GEOJSON_PATH = os.path.join(BASE_DIR, "data", "geojson", "canonical_grid_8129_cells.geojson")
@@ -115,28 +117,22 @@ def run_inference(target_date=None):
     X_scaled = scaler.transform(X_raw)
     X_scaled = np.nan_to_num(X_scaled, nan=0.0)
     
-    # 3. Model Predictions per Species
-    for sp in ["cakalang", "madidihang"]:
+    # 3. Model Predictions per Species (MaxEnt + Random Forest + GLM Ensemble)
+    for sp in ["cakalang", "madidihang", "tongkol_krai"]:
         model_path = os.path.join(MODELS_DIR, f"{sp}_ensemble_model.joblib")
         bundle = joblib.load(model_path)
         w = bundle["weights"]
-        
+
         p_maxent = bundle["maxent"].predict_proba(X_scaled)[:, 1]
         p_rf = bundle["rf"].predict_proba(X_scaled)[:, 1]
         p_glm = bundle["glm"].predict_proba(X_scaled)[:, 1]
-        
+
         raw_hsi = w["maxent"] * p_maxent + w["rf"] * p_rf + w["glm"] * p_glm
         # Scale HSI 0.000 to 1.000
         min_v, max_v = raw_hsi.min(), raw_hsi.max()
         hsi_norm = (raw_hsi - min_v) / (max_v - min_v) if max_v > min_v else raw_hsi
-        df_daily[f"hsi_{sp}"] = np.round(hsi_norm, 3)
-    
-    # Tongkol (Euthynnus spp. / Auxis thazard) Coastal/Neritic AMM Model
-    si_sst_tongkol = np.exp(-((df_daily['sst'] - 28.75) / ((30.5 - 27.0) / 1.5)) ** 2)
-    si_chla_tongkol = np.exp(-((df_daily['chla'] - 0.35) / ((0.50 - 0.20) / 1.5)) ** 2)
-    si_depth_tongkol = np.where(df_daily['depth'] <= 150.0, 1.0, np.exp(-((df_daily['depth'] - 150.0) / 150.0) ** 2))
-    hsi_tongkol = (0.45 * si_sst_tongkol) + (0.40 * si_chla_tongkol) + (0.15 * si_depth_tongkol)
-    df_daily['hsi_tongkol'] = np.round(np.clip(hsi_tongkol, 0.0, 1.0), 3)
+        target_col = "hsi_tongkol" if sp == "tongkol_krai" else f"hsi_{sp}"
+        df_daily[target_col] = np.round(hsi_norm, 3)
 
     # Public TCT aliases; legacy DB keys remain available for existing clients.
     df_daily['hsi_tuna_sirip_kuning'] = df_daily['hsi_madidihang']
@@ -219,6 +215,15 @@ def run_inference(target_date=None):
     dest_path = os.path.join(WEB_PUBLIC_DATA, "daily_latest.json")
     with open(dest_path, "w") as f:
         json.dump(output_json, f)
+
+    write_ingestion_manifest(
+        manifest_path=os.path.join(BASE_DIR, "seacast-prigi-laravel", "storage", "app", "gee_ingestion", "ingestion_manifest.json"),
+        dataset="daily_latest.json",
+        target_date=output_json["prediction_date"],
+        provenance=output_json["provenance"],
+        total_cells=output_json["total_cells"],
+        hotspots_count=output_json["hotspots_count"],
+    )
         
     print(f"✅ Inferensi harian sukses! Data tersimpan di: {dest_path}")
     print(f"   • Hotspot ditemukan : {output_json['hotspots_count']} sel")

@@ -70,8 +70,7 @@ class ScientificDataService
         $runManifest = $this->readJson($rootPath . '/outputs/tct_hybrid_2015_2025/reports/run_manifest.json');
 
         $ingestionRecord = collect($ingestionManifest)
-            ->first(fn (mixed $record): bool => is_array($record)
-                && str_starts_with((string)($record['target_date'] ?? ''), $date));
+            ->first(fn (mixed $record): bool => $this->isUsableIngestionRecord($record, $date));
 
         $occurrenceValidation = is_array($runManifest['occurrence_validation'] ?? null)
             ? $runManifest['occurrence_validation']
@@ -81,21 +80,23 @@ class ScientificDataService
             ?? $modelSummary['spatial_evidence_level']
             ?? 'PROXY_HSI');
 
-        $validationStatus = (string)($occurrenceValidation['status']
-            ?? 'UNVERIFIED_NO_OCCURRENCE_AUDIT');
+        $validationStatus = $ingestionRecord !== null
+            ? (string)($occurrenceValidation['status'] ?? 'UNVERIFIED_NO_OCCURRENCE_AUDIT')
+            : 'UNVERIFIED';
 
         $modelVersion = (string)($runManifest['model_version']
             ?? $modelSummary['model_version']
             ?? 'TCT_HYBRID_2015_2025');
 
-        $predictionTimestamp = (string)($ingestionRecord['completed_at']
+        $predictionTimestamp = (string)($ingestionRecord['prediction_timestamp']
+            ?? $ingestionRecord['completed_at']
             ?? $runManifest['generated_at']
             ?? Carbon::createFromFormat('Y-m-d', $date, 'Asia/Jakarta')
                 ->startOfDay()
                 ->toIso8601String());
 
         $sourceMode = $ingestionRecord !== null
-            ? 'GEE_INGESTED_WITH_LOCAL_FALLBACKS'
+            ? (string)($ingestionRecord['source_mode'] ?? 'UNKNOWN')
             : 'DATABASE_SNAPSHOT_SOURCE_UNVERIFIED';
 
         return [
@@ -104,7 +105,32 @@ class ScientificDataService
             'model_version' => $modelVersion,
             'prediction_timestamp' => $predictionTimestamp,
             'validation_status' => $validationStatus,
+            'source' => $ingestionRecord['source'] ?? 'unknown',
+            'date_coverage' => $ingestionRecord['date_coverage'] ?? [],
+            'ingestion_status' => $ingestionRecord['ingestion_status'] ?? 'UNVERIFIED',
+            'fallback_used' => (bool)($ingestionRecord['fallback_used'] ?? false),
         ];
+    }
+
+    private function isUsableIngestionRecord(mixed $record, string $date): bool
+    {
+        if (!is_array($record)
+            || !str_starts_with((string)($record['target_date'] ?? ''), $date)
+            || !in_array((string)($record['status'] ?? ''), ['VALID', 'VALID_WITH_FALLBACK'], true)
+        ) {
+            return false;
+        }
+
+        $validUntil = $record['valid_until'] ?? null;
+        if ($validUntil === null || $validUntil === '') {
+            return true;
+        }
+
+        try {
+            return !Carbon::parse((string)$validUntil)->isPast();
+        } catch (\Throwable) {
+            return false;
+        }
     }
 
     private function readJson(string $path): array

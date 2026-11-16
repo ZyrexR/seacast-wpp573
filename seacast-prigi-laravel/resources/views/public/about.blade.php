@@ -133,7 +133,7 @@
                     </div>
                     <h3 class="text-sm font-bold text-slate-900 dark:text-white">Monitoring Telemetri Satelit</h3>
                     <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                        Feed telemetri harian terkalibrasi dari satelit Copernicus Sentinel-3, NASA MODIS/VIIRS, NOAA OISST, dan model hidrodinamika arus laut global.
+                        Feed telemetri oseanografi harian yang dipetakan dari referensi satelit Copernicus Sentinel-3, NASA MODIS/VIIRS, NOAA OISST, dan model hidrodinamika arus laut global.
                     </p>
                 </div>
             </div>

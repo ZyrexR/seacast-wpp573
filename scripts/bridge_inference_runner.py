@@ -13,6 +13,7 @@ import datetime
 import warnings
 
 from species_contract import PUBLIC_SPECIES, PUBLIC_TO_INTERNAL, normalize_species
+from ingestion_manifest import write_ingestion_manifest
 
 # Suppress sklearn unpickle warnings from polluting stdout
 warnings.filterwarnings("ignore")
@@ -24,7 +25,8 @@ GEOJSON_PATH = os.path.join(BASE_DIR, "data", "geojson", "canonical_grid_8129_ce
 # Locked scientific baseline weights from model_evaluations_summary.json
 LOCKED_ENSEMBLE_WEIGHTS = {
     "cakalang": {"maxent": 0.320, "rf": 0.355, "glm": 0.325},
-    "madidihang": {"maxent": 0.295, "rf": 0.365, "glm": 0.340}
+    "madidihang": {"maxent": 0.295, "rf": 0.365, "glm": 0.340},
+    "tongkol_krai": {"maxent": 0.332, "rf": 0.335, "glm": 0.333},
 }
 
 PRIGI_LON = 111.7275
@@ -150,7 +152,7 @@ def main():
             if internal_key == internal_species
         ]
 
-    for sp in ["cakalang", "madidihang"]:
+    for sp in ["cakalang", "madidihang", "tongkol_krai"]:
         model_path = os.path.join(MODELS_DIR, f"{sp}_ensemble_model.joblib")
         bundle = joblib.load(model_path)
         # ENFORCE locked baseline weights!
@@ -163,17 +165,8 @@ def main():
         raw_hsi = w["maxent"] * p_maxent + w["rf"] * p_rf + w["glm"] * p_glm
         min_v, max_v = raw_hsi.min(), raw_hsi.max()
         hsi_norm = (raw_hsi - min_v) / (max_v - min_v) if max_v > min_v else raw_hsi
-        df_grid[f"hsi_{sp}"] = np.round(hsi_norm, 3)
-
-    # Tongkol Krai (Auxis thazard) Coastal/Neritic HSI
-    si_sst_tongkol = np.exp(-((df_grid['sst'] - 28.75) / ((30.5 - 27.0) / 1.5)) ** 2)
-    si_chla_tongkol = np.exp(-((df_grid['chla'] - 0.35) / ((0.50 - 0.20) / 1.5)) ** 2)
-    si_depth_tongkol = np.where(df_grid['depth'] <= 150.0, 1.0, np.exp(-((df_grid['depth'] - 150.0) / 150.0) ** 2))
-    df_grid['hsi_tongkol'] = np.round(np.clip(
-        (0.45 * si_sst_tongkol) + (0.40 * si_chla_tongkol) + (0.15 * si_depth_tongkol),
-        0.0,
-        1.0,
-    ), 3)
+        target_col = "hsi_tongkol" if sp == "tongkol_krai" else f"hsi_{sp}"
+        df_grid[target_col] = np.round(hsi_norm, 3)
 
     # Public TCT aliases; legacy DB keys remain the source of truth above.
     df_grid['hsi_tuna_sirip_kuning'] = df_grid['hsi_madidihang']
@@ -266,6 +259,15 @@ def main():
             }
         }
     }
+
+    write_ingestion_manifest(
+        manifest_path=os.path.join(BASE_DIR, "seacast-prigi-laravel", "storage", "app", "gee_ingestion", "ingestion_manifest.json"),
+        dataset="bridge_inference_runner.json",
+        target_date=args.date,
+        provenance=output_payload["provenance"],
+        total_cells=output_payload["total_cells"],
+        hotspots_count=output_payload["hotspots_count"],
+    )
 
     sys.stdout.write(json.dumps(output_payload))
     sys.exit(0)

@@ -261,23 +261,59 @@ class GeeDataIngestionService
             }
         }
 
-        // Keep last 100 ingestion records
-        array_unshift($manifest, [
+        $provenance = is_array($report['provenance'] ?? null) ? $report['provenance'] : [];
+        $warnings = array_values(array_filter(
+            array_map(static fn (mixed $warning): string => (string)$warning, $report['warnings'] ?? []),
+            static fn (string $warning): bool => $warning !== ''
+        ));
+        $sourceMode = (string)($provenance['source_mode'] ?? 'UNKNOWN');
+        $status = ($report['status'] ?? null) !== 'SUCCESS'
+            ? 'FAILED'
+            : ($warnings !== [] || str_contains(strtoupper($sourceMode), 'FALLBACK')
+                ? 'VALID_WITH_FALLBACK'
+                : 'VALID');
+        $completedAt = Carbon::parse((string)($report['completed_at'] ?? Carbon::now('UTC')->toIso8601String()));
+
+        $record = [
+            'manifest_version' => '1.0',
             'dataset' => $report['dataset_name'],
+            'source' => $provenance['sources'] ?? $provenance['satellite_sources'] ?? $provenance['source'] ?? $sourceMode,
+            'source_mode' => $sourceMode,
+            'evidence_level' => (string)($provenance['evidence_level'] ?? 'UNVERIFIED'),
+            'model_version' => (string)($provenance['model_version'] ?? 'unknown'),
+            'prediction_timestamp' => (string)($provenance['prediction_timestamp'] ?? $report['completed_at']),
+            'validation_status' => (string)($provenance['validation_status'] ?? 'UNVERIFIED'),
+            'status' => $status,
+            'ingestion_status' => $status,
+            'fallback_used' => $status === 'VALID_WITH_FALLBACK',
             'target_date' => $report['target_date'],
+            'date_coverage' => [
+                'start' => $report['target_date'],
+                'end' => $report['target_date'],
+            ],
             'total_cells' => $report['total_cells'],
             'hotspots_count' => $report['hotspots_count'],
             'sha256' => $report['sha256'],
             'duration_ms' => $report['total_duration_ms'],
-            'completed_at' => $report['completed_at'],
-            'summary' => $report['summary']
-        ]);
+            'completed_at' => $completedAt->toIso8601String(),
+            'valid_until' => $completedAt->copy()->addHours(48)->toIso8601String(),
+            'summary' => $report['summary'],
+            'warnings' => $warnings,
+        ];
+
+        // Keep one authoritative record per dataset/date and retain the last 100 records.
+        $manifest = array_values(array_filter($manifest, static fn (mixed $existing): bool => !(
+            is_array($existing)
+            && ($existing['dataset'] ?? null) === $record['dataset']
+            && ($existing['target_date'] ?? null) === $record['target_date']
+        )));
+        array_unshift($manifest, $record);
 
         if (count($manifest) > 100) {
             $manifest = array_slice($manifest, 0, 100);
         }
 
-        File::put($this->manifestPath, json_encode($manifest, JSON_PRETTY_PRINT));
+        File::put($this->manifestPath, json_encode($manifest, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
     }
 
     /**
