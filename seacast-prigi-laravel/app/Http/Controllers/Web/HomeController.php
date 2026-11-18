@@ -31,13 +31,12 @@ class HomeController extends Controller
             ")->first();
 
         // Multi-port fleet aggregation for WPPNRI 573:
-        // PPN Prigi (1.269) + PPS Cilacap (818) + PPN Palabuhanratu (363) = 2.450
+        // PPN Prigi (1.269) + PPS Cilacap (818) = 2.087
         $multiPortFleet = [
-            'total' => 2450,
+            'total' => 2087,
             'ports' => [
                 ['name' => 'PPN Prigi', 'province' => 'Jatim', 'vessels' => 1269],
                 ['name' => 'PPS Cilacap', 'province' => 'Jateng', 'vessels' => 818],
-                ['name' => 'PPN Palabuhanratu', 'province' => 'Jabar', 'vessels' => 363],
             ]
         ];
 

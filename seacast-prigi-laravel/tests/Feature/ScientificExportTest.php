@@ -2,14 +2,34 @@
 
 namespace Tests\Feature;
 
+use App\Services\LatestPredictionDateService;
+use App\Services\ScientificExportService;
+use Mockery\MockInterface;
 use Tests\TestCase;
 use ZipArchive;
 
 class ScientificExportTest extends TestCase
 {
+    public function test_geojson_export_without_date_uses_latest_observation(): void
+    {
+        $this->mock(LatestPredictionDateService::class, function (MockInterface $mock) {
+            $mock->shouldReceive('latest')->once()->andReturn('2026-11-14');
+        });
+        $this->mock(ScientificExportService::class, function (MockInterface $mock) {
+            $mock->shouldReceive('exportGeoJson')
+                ->once()
+                ->with('2026-11-14', ['limit' => 1])
+                ->andReturn('{"type":"FeatureCollection","features":[]}');
+        });
+
+        $this->get('/api/export/geojson?limit=1')
+            ->assertOk()
+            ->assertHeader('Content-Disposition', 'attachment; filename="seacast_prigi_predictions_2026-11-14.geojson"');
+    }
+
     public function test_geojson_export_returns_valid_attachment(): void
     {
-        $response = $this->get('/api/export/geojson?limit=5');
+        $response = $this->get('/api/export/geojson?date=2026-11-03&limit=5');
 
         $response->assertStatus(200);
         $this->assertStringContainsString('application/geo+json', (string)$response->headers->get('Content-Type'));
@@ -23,7 +43,7 @@ class ScientificExportTest extends TestCase
 
     public function test_csv_export_returns_valid_csv_with_bom_and_headers(): void
     {
-        $response = $this->get('/api/export/csv?limit=5');
+        $response = $this->get('/api/export/csv?date=2026-11-03&limit=5');
 
         $response->assertStatus(200);
         $this->assertStringContainsString('text/csv', (string)$response->headers->get('Content-Type'));
@@ -44,7 +64,7 @@ class ScientificExportTest extends TestCase
 
     public function test_gis_package_zip_export_contains_all_gis_components(): void
     {
-        $response = $this->get('/api/export/gis-package?limit=5');
+        $response = $this->get('/api/export/gis-package?date=2026-11-03&limit=5');
 
         $response->assertStatus(200);
         $this->assertEquals('application/zip', $response->headers->get('Content-Type'));

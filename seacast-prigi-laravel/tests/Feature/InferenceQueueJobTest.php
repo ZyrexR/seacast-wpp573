@@ -32,16 +32,16 @@ class InferenceQueueJobTest extends TestCase
         $this->assertTrue(true);
     }
 
-    public function test_scheduler_has_infer_daily_registered(): void
+    public function test_scheduler_runs_single_gee_pipeline_without_second_local_inference(): void
     {
         $events = collect(Schedule::events());
 
-        $inferEvent = $events->first(function ($event) {
-            return str_contains($event->command, 'seacast:infer-daily');
-        });
-
-        $this->assertNotNull($inferEvent, 'Command seacast:infer-daily must be registered in Schedule');
-        $this->assertStringContainsString('04:00', $inferEvent->expression ? '04:00' : '');
+        $this->assertCount(1, $events->filter(
+            fn ($event) => str_contains($event->command, 'seacast:sync-live')
+        ));
+        $this->assertCount(0, $events->filter(
+            fn ($event) => str_contains($event->command, 'seacast:infer-daily')
+        ));
     }
 }
 

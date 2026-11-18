@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\FleetApiController;
 use App\Http\Controllers\Api\ExportApiController;
 use App\Http\Controllers\Api\TimeMachineApiController;
 use App\Http\Controllers\Api\SimulationApiController;
+use App\Http\Controllers\Api\BmkgGridForecastController;
 
 /*
 |--------------------------------------------------------------------------
@@ -50,6 +51,7 @@ Route::middleware('throttle:60,1')->group(function () {
     Route::get('/monitoring', [MonitoringApiController::class, 'index'])->name('api.monitoring');
     Route::get('/monitoring/pipeline', [MonitoringApiController::class, 'pipeline'])->name('api.monitoring.pipeline');
     Route::get('/bmkg/live', [MonitoringApiController::class, 'bmkgLive'])->name('api.bmkg.live');
+    Route::get('/bmkg/grid-forecast', BmkgGridForecastController::class)->name('api.bmkg.grid_forecast');
 
     // Protected Diagnostic Endpoint (Requires auth session & admin role)
     Route::get('/monitoring/diagnostics', [MonitoringApiController::class, 'diagnostics'])->name('api.monitoring.diagnostics');

@@ -158,6 +158,16 @@ class FleetAnalyticsService
             ];
         }
 
+        if ($portCode !== 'PPN_PRIGI') {
+            return [
+                'port_code' => $portCode,
+                'overall_total_tons' => 0.0,
+                'overall_total_trips' => 0,
+                'total_months_recorded' => 0,
+                'years' => [],
+            ];
+        }
+
         // Fallback for PPN Prigi to prigi_port_landings table
         $raw = DB::connection('pgsql')
             ->table('prigi_port_landings')
@@ -233,6 +243,10 @@ class FleetAnalyticsService
             })->toArray();
         }
 
+        if ($portCode !== 'PPN_PRIGI') {
+            return [];
+        }
+
         $raw = DB::connection('pgsql')
             ->table('prigi_port_landings')
             ->selectRaw("
@@ -276,6 +290,10 @@ class FleetAnalyticsService
                 ->take($limit)
                 ->get()
                 ->toArray();
+        }
+
+        if ($portCode !== 'PPN_PRIGI') {
+            return [];
         }
 
         return PrigiPortLanding::orderBy('year_month', 'desc')

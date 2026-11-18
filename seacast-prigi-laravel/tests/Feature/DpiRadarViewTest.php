@@ -37,6 +37,8 @@ class DpiRadarViewTest extends TestCase
         // Assert Live BMKG Widget is present (Task 2.4)
         $response->assertSee('BMKG Live:');
         $response->assertSee('Buletin BMKG Maritim Live');
+        $response->assertSee('bmkg-grid-forecast');
+        $response->assertSee('/api/bmkg/grid-forecast?lat=', false);
 
         // Assert Ocean Current 60 FPS Toggle is present (Task 2.1)
         $response->assertSee('Arus Laut 60 FPS');

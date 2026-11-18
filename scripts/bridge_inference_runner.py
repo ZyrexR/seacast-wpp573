@@ -43,6 +43,7 @@ def main():
         import numpy as np
         import pandas as pd
         import joblib
+        from model_compat import positive_class_probability
     except ImportError as e:
         error_payload = {
             "status": "ERROR",
@@ -158,9 +159,9 @@ def main():
         # ENFORCE locked baseline weights!
         w = LOCKED_ENSEMBLE_WEIGHTS[sp]
 
-        p_maxent = bundle["maxent"].predict_proba(X_scaled)[:, 1]
-        p_rf = bundle["rf"].predict_proba(X_scaled)[:, 1]
-        p_glm = bundle["glm"].predict_proba(X_scaled)[:, 1]
+        p_maxent = positive_class_probability(bundle["maxent"], X_scaled)
+        p_rf = positive_class_probability(bundle["rf"], X_scaled)
+        p_glm = positive_class_probability(bundle["glm"], X_scaled)
 
         raw_hsi = w["maxent"] * p_maxent + w["rf"] * p_rf + w["glm"] * p_glm
         min_v, max_v = raw_hsi.min(), raw_hsi.max()

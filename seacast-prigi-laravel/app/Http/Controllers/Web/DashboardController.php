@@ -102,7 +102,6 @@ class DashboardController extends Controller
         $portBases = [
             'PPN_PRIGI' => ['name' => 'PPN Prigi', 'province' => 'Jawa Timur', 'lat' => -8.2833, 'lon' => 111.7275, 'fleet' => 1269],
             'PPS_CILACAP' => ['name' => 'PPS Cilacap', 'province' => 'Jawa Tengah', 'lat' => -7.7472, 'lon' => 109.0069, 'fleet' => 818],
-            'PPN_PALABUHANRATU' => ['name' => 'PPN Palabuhanratu', 'province' => 'Jawa Barat', 'lat' => -6.9856, 'lon' => 106.5414, 'fleet' => 363],
         ];
 
         return view('dashboard.overview', [
@@ -115,7 +114,7 @@ class DashboardController extends Controller
             'safeBycatchPct' => $safePct,
             'domBreakdown' => $domBreakdown,
             'totalCells' => CanonicalGrid::count() ?: 8129,
-            'totalFleet' => 2450,
+            'totalFleet' => 2087,
             'portBases' => $portBases,
         ]);
     }
@@ -338,7 +337,6 @@ class DashboardController extends Controller
         $ports = [
             'PPN_PRIGI' => ['name' => 'PPN Prigi (Jawa Timur)', 'lat' => -8.2833, 'lon' => 111.7275],
             'PPS_CILACAP' => ['name' => 'PPS Cilacap (Jawa Tengah)', 'lat' => -7.7472, 'lon' => 109.0069],
-            'PPN_PALABUHANRATU' => ['name' => 'PPN Palabuhanratu (Jawa Barat)', 'lat' => -6.9856, 'lon' => 106.5414],
         ];
 
         $latestDate = DailyPrediction::max('prediction_date') ?? '2026-11-03';

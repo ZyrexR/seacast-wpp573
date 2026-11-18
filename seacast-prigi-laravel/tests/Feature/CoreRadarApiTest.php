@@ -2,13 +2,44 @@
 
 namespace Tests\Feature;
 
+use App\Domain\ScientificData\Services\ScientificDataService;
+use App\Services\LatestPredictionDateService;
+use Mockery\MockInterface;
 use Tests\TestCase;
 
 class CoreRadarApiTest extends TestCase
 {
+    public function test_predictions_without_date_use_latest_observation(): void
+    {
+        $this->mock(LatestPredictionDateService::class, function (MockInterface $mock) {
+            $mock->shouldReceive('latest')->once()->andReturn('2026-11-14');
+        });
+        $this->mock(ScientificDataService::class, function (MockInterface $mock) {
+            $mock->shouldReceive('getDailySummary')
+                ->once()
+                ->with('2026-11-14')
+                ->andReturn(['date' => '2026-11-14', 'summary' => ['total_cells' => 8129]]);
+        });
+
+        $this->getJson('/api/predictions?summary_only=1')
+            ->assertOk()
+            ->assertJsonPath('date', '2026-11-14');
+    }
+
+    public function test_predictions_without_available_observation_return_honest_404(): void
+    {
+        $this->mock(LatestPredictionDateService::class, function (MockInterface $mock) {
+            $mock->shouldReceive('latest')->once()->andReturn(null);
+        });
+
+        $this->getJson('/api/predictions?summary_only=1')
+            ->assertNotFound()
+            ->assertJsonPath('status', 'ERROR');
+    }
+
     public function test_predictions_summary_endpoint_returns_correct_schema(): void
     {
-        $response = $this->getJson('/api/predictions?summary_only=true');
+        $response = $this->getJson('/api/predictions?summary_only=true&date=2026-11-03');
 
         $response->assertStatus(200);
         $response->assertHeader('Cache-Control');

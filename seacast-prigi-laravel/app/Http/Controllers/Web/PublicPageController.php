@@ -16,8 +16,8 @@ class PublicPageController extends Controller
         return view('public.about', [
             'totalCells' => $totalCells,
             'hotspotsCount' => $hotspotsCount,
-            'fleetCount' => '2.450+',
-            'portsCount' => 3,
+            'fleetCount' => '2.087+',
+            'portsCount' => 2,
         ]);
     }
 

@@ -14,6 +14,7 @@ import sys
 import time
 import json
 import argparse
+import socket
 from datetime import datetime, timezone, timedelta
 import ee
 import pandas as pd
@@ -22,8 +23,6 @@ import numpy as np
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CANONICAL_GEOJSON = os.path.join(BASE_DIR, "data", "geojson", "canonical_grid_8129_cells.geojson")
 EXPORTS_DIR = os.path.join(BASE_DIR, "data", "gee", "exports")
-os.makedirs(EXPORTS_DIR, exist_ok=True)
-
 GEE_PROJECT = "seca-513505"
 CANONICAL_GRID_ASSET = "projects/seca-513505/assets/GRID_010_REGIONAL_8129"
 
@@ -38,15 +37,67 @@ CLIMATOLOGICAL_MEDIANS = {
 }
 
 
-def init_earth_engine(project=GEE_PROJECT):
-    """Initializes Google Earth Engine with the designated GCP project"""
+def init_earth_engine(project=None):
+    """Initialize GEE using a service account on servers or local OAuth on dev machines."""
+    project = project or os.getenv("GEE_PROJECT") or GEE_PROJECT
+    key_path = os.getenv("GEE_SERVICE_ACCOUNT_KEY_PATH")
+    email = os.getenv("GEE_SERVICE_ACCOUNT_EMAIL")
     try:
-        ee.Initialize(project=project)
-        print(f"🛰️ Google Earth Engine initialized successfully (Project: {project})")
-    except Exception as e:
-        print(f"❌ Failed to initialize Earth Engine: {e}")
-        print("Please verify that ~/.config/earthengine/credentials exists and has proper permissions.")
-        sys.exit(1)
+        if key_path or email:
+            if not key_path or not email:
+                raise ValueError("Both service account environment variables are required")
+            credentials = ee.ServiceAccountCredentials(email, key_path)
+            retry_gee_operation(lambda: ee.Initialize(credentials, project=project))
+            mode = "service account"
+        else:
+            retry_gee_operation(lambda: ee.Initialize(project=project))
+            mode = "local OAuth"
+    except Exception:
+        raise RuntimeError(
+            "Earth Engine authentication failed. Check GEE_PROJECT and the configured "
+            "service account email/key path, or local OAuth credentials."
+        ) from None
+    print(f"Earth Engine authenticated via {mode} (project: {project}).")
+
+
+def retry_gee_operation(operation):
+    """Retry only transient GEE/network failures; never retry authorization failures."""
+    try:
+        max_retries = max(0, int(os.getenv("GEE_SYNC_MAX_RETRIES", "3")))
+    except ValueError:
+        raise ValueError("GEE_SYNC_MAX_RETRIES must be a non-negative integer") from None
+    for attempt in range(max_retries + 1):
+        try:
+            return operation()
+        except Exception as exc:
+            message = str(exc).lower()
+            auth_failure = any(term in message for term in (
+                "unauthorized", "unauthenticated", "permission denied", "invalid credential",
+                "authentication", "access denied", "403", "401",
+            ))
+            transient = isinstance(exc, (TimeoutError, ConnectionError, socket.timeout)) or any(
+                term in message for term in (
+                    "quota", "rate limit", "429", "503", "502", "504", "timeout",
+                    "timed out", "deadline", "temporarily unavailable", "connection reset",
+                )
+            )
+            if auth_failure or not transient or attempt >= max_retries:
+                raise
+            delay = min(2 ** attempt, 30)
+            print(f"Temporary Earth Engine error; retry {attempt + 1}/{max_retries} in {delay}s.")
+            time.sleep(delay)
+
+
+def resolve_oisst_observation_date(requested_date):
+    """Return the actual latest OISST frame on or before the requested day."""
+    next_date = (datetime.strptime(requested_date, "%Y-%m-%d") + timedelta(days=1)).strftime("%Y-%m-%d")
+    image = (ee.ImageCollection("NOAA/CDR/OISST/V2_1")
+             .filterDate("1981-01-01", next_date)
+             .sort("system:time_start", False).first())
+    timestamp_ms = image.get("system:time_start").getInfo()
+    if timestamp_ms is None:
+        raise RuntimeError("No OISST observation is available on or before the requested date")
+    return datetime.fromtimestamp(timestamp_ms / 1000.0, tz=timezone.utc).strftime("%Y-%m-%d")
 
 
 def detect_latest_oisst_date():
@@ -108,15 +159,7 @@ def build_daily_satellite_stack(target_date_str):
     if oisst_count > 0:
         sst = oisst_col.first().select("sst").multiply(0.01).rename("sst")
     else:
-        # If target date image not yet uploaded, fetch most recent available image
-        print(f"⚠️ Exact date {target_date_str} not yet ingested in OISST; fetching closest prior frame...")
-        sst = ee.ImageCollection("NOAA/CDR/OISST/V2_1") \
-            .filterDate("2024-01-01", next_date_str) \
-            .sort("system:time_start", False) \
-            .first() \
-            .select("sst") \
-            .multiply(0.01) \
-            .rename("sst")
+        raise RuntimeError(f"OISST observation is unavailable for {target_date_str}")
 
     # 2. Thermal gradient (Sobel operator, normalized to deg C / km)
     sst_smooth = sst.convolve(ee.Kernel.gaussian(3, 1, "pixels"))
@@ -290,6 +333,7 @@ def format_and_save_dataset(features, target_date_str):
     date_csv_path = os.path.join(EXPORTS_DIR, f"gee_daily_{target_date_str}.csv")
     latest_csv_path = os.path.join(EXPORTS_DIR, "gee_daily_latest.csv")
 
+    os.makedirs(EXPORTS_DIR, exist_ok=True)
     df.to_csv(date_csv_path, index=False)
     df.to_csv(latest_csv_path, index=False)
 
@@ -301,22 +345,32 @@ def format_and_save_dataset(features, target_date_str):
     return latest_csv_path
 
 
-def main():
+def main(argv=None):
     parser = argparse.ArgumentParser(description="SEACAST Dynamic GEE Daily Satellite Extractor")
     parser.add_argument("--date", type=str, default=None, help="Target date YYYY-MM-DD (defaults to latest NOAA OISST)")
     parser.add_argument("--run-inference", action="store_true", default=True, help="Automatically run ML inference after extraction")
     parser.add_argument("--persist-db", action="store_true", default=False, help="Persist predictions to PostgreSQL daily_predictions")
-    args = parser.parse_args()
+    parser.add_argument("--dry-run", action="store_true", help="Check GEE authentication only; do not query or write data")
+    parser.add_argument("--check-auth", action="store_true", help="Check GEE authentication only; do not query or write data")
+    args = parser.parse_args(argv)
 
     init_earth_engine()
+    if args.dry_run or args.check_auth:
+        print("Earth Engine authentication check passed; no data was written.")
+        return
 
     target_date = args.date
     if target_date is None:
-        target_date = detect_latest_oisst_date()
+        target_date = retry_gee_operation(detect_latest_oisst_date)
         print(f"🕒 Dynamically resolved latest satellite observation date: {target_date}")
 
-    stack = build_daily_satellite_stack(target_date)
-    features = extract_canonical_grid(stack, target_date)
+    requested_date = target_date
+    observation_date = retry_gee_operation(lambda: resolve_oisst_observation_date(target_date))
+    if observation_date != target_date:
+        print(f"Requested date {target_date} has no OISST frame; using observation {observation_date}.")
+    target_date = observation_date
+    stack = retry_gee_operation(lambda: build_daily_satellite_stack(target_date))
+    features = retry_gee_operation(lambda: extract_canonical_grid(stack, target_date))
     latest_csv = format_and_save_dataset(features, target_date)
 
     if args.run_inference:
@@ -325,8 +379,11 @@ def main():
         result = run_pipeline(
             input_csv=latest_csv,
             target_date=target_date,
-            persist_db=args.persist_db
+            persist_db=args.persist_db,
+            requested_date=requested_date,
         )
+        if args.persist_db and result.get("db_persist_warning"):
+            raise RuntimeError("Database persistence failed; ingestion manifest marked FAILED")
         print(f"🎯 ML Inference Complete! Total Cells: {result.get('total_cells')}, Hotspots: {result.get('hotspots_count')}")
         print(f"⚡ Duration: {result.get('execution_duration_ms')}ms")
 

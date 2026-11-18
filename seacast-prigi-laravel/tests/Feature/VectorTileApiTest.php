@@ -4,9 +4,29 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use App\Http\Controllers\Api\TileApiController;
+use App\Services\GeospatialCacheManager;
+use App\Services\LatestPredictionDateService;
+use Mockery\MockInterface;
 
 class VectorTileApiTest extends TestCase
 {
+    public function test_prediction_tile_without_date_uses_latest_observation_in_cache_key(): void
+    {
+        $this->mock(LatestPredictionDateService::class, function (MockInterface $mock) {
+            $mock->shouldReceive('latest')->once()->andReturn('2026-11-14');
+        });
+        $this->mock(GeospatialCacheManager::class, function (MockInterface $mock) {
+            $mock->shouldReceive('get')
+                ->once()
+                ->with(\Mockery::on(fn (string $key) => str_contains($key, ':2026-11-14:')))
+                ->andReturn(['data' => ['mvt' => base64_encode('tile-data')], 'etag' => '"test"']);
+        });
+
+        $this->get('/api/tiles/predictions/7/103/66.pbf')
+            ->assertOk()
+            ->assertSee('tile-data');
+    }
+
     public function test_rejects_unsupported_layer(): void
     {
         $response = $this->get('/api/tiles/unsupported_layer/7/103/66.pbf');

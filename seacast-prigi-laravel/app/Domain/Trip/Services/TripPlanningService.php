@@ -99,6 +99,22 @@ class TripPlanningService
     public const STANDARD_EFFECTIVE_FISHING_HOURS_PER_DAY = 16.0;
     public const DAILY_OPERATIONAL_SEARCH_NM = 10.0;
     public const DEFAULT_SOLAR_PRICE_PER_LITER = 6800.0;
+    public const NON_SUBSIDIZED_SOLAR_PRICE_PER_LITER = 15000.0;
+
+    public static function fuelTypeForGtClass(string $gtClass): string
+    {
+        return $gtClass === '> 30 GT' ? 'NON_SUBSIDIZED' : 'SUBSIDIZED';
+    }
+
+    private static function commodityDisplayName(string $commodity): string
+    {
+        return match (str_replace([' ', '-'], '_', strtolower(trim($commodity)))) {
+            'tuna_sirip_kuning', 'madidihang' => 'Tuna Sirip Kuning',
+            'tongkol', 'tongkol_krai' => 'Tongkol Krai',
+            'cakalang' => 'Cakalang',
+            default => ucfirst($commodity),
+        };
+    }
 
     public const READINESS_FACTORS = [
         'OPTIMAL' => 1.0,
@@ -180,7 +196,8 @@ class TripPlanningService
             'base_fuel_liters' => $baseFuelLiters,
             'safety_reserve_liters' => $safetyReserveLiters,
             'total_fuel_liters' => $totalFuelLiters,
-            'subsidized_price_per_liter' => $solarPricePerLiter,
+            'subsidized_price_per_liter' => self::DEFAULT_SOLAR_PRICE_PER_LITER,
+            'solar_price_per_liter' => $solarPricePerLiter,
             'total_fuel_cost_rp' => $totalFuelCostRp,
         ];
     }
@@ -420,7 +437,7 @@ class TripPlanningService
         $hsiCategory = $boundedHsi >= 0.70 ? 'Tinggi' : ($boundedHsi >= 0.55 ? 'Sedang' : 'Rendah');
 
         return [
-            'commodity' => ucfirst($commodity),
+            'commodity' => self::commodityDisplayName($commodity),
             'benchmark_price_per_kg' => $benchmarkPrice,
             'price_per_kg_rp' => $benchmarkPrice,
             'base_capacity_kg' => $spec['base_catch_kg'],
@@ -503,6 +520,16 @@ class TripPlanningService
         $gtClass = $params['gt_class'] ?? '< 10 GT';
         $spec = self::GT_SPECS[$gtClass] ?? self::GT_SPECS['< 10 GT'];
         $tripDays = $this->normalizeTripDays($params['trip_days'] ?? 1);
+        $fuelType = self::fuelTypeForGtClass($gtClass);
+        $subsidyEligibilityStatus = $fuelType === 'SUBSIDIZED'
+            ? 'UNVERIFIED'
+            : 'NOT_ELIGIBLE_BY_GT';
+        $fuelPriceNote = $fuelType === 'SUBSIDIZED'
+            ? 'Tarif subsidi hanya asumsi biaya; hak pembelian perlu surat rekomendasi dan dokumen kapal yang berlaku.'
+            : 'Tarif non-subsidi Rp15.000/L adalah asumsi skema harga khusus 2026 untuk kapal >30 sampai 200 GT; kelas ini dapat mencakup kapal >200 GT. Konfirmasi syarat dan harga aktual.';
+        $solarPrice = $fuelType === 'NON_SUBSIDIZED'
+            ? self::NON_SUBSIDIZED_SOLAR_PRICE_PER_LITER
+            : self::DEFAULT_SOLAR_PRICE_PER_LITER;
         $requestedReadiness = $params['vessel_readiness'] ?? null;
         $vesselReadiness = is_string($requestedReadiness) && array_key_exists($requestedReadiness, self::READINESS_FACTORS)
             ? $requestedReadiness
@@ -532,7 +559,7 @@ class TripPlanningService
                 break;
             }
         }
-        $hsiFallback = $selectedHsi === null && !array_key_exists('hsi_score', $params);
+        $hsiFallback = $selectedHsi === null && !is_numeric($params['hsi_score'] ?? null);
         $hsiScore = (float)($selectedHsi ?? $params['hsi_score'] ?? 0.75);
         $selectedWave = $selectedCell['wave_height_m'] ?? null;
         $waveFallback = $selectedWave === null && !array_key_exists('wave_height_m', $params);
@@ -554,9 +581,16 @@ class TripPlanningService
             : ($dataSourceMode === 'FALLBACK_DEFAULT' ? 'FALLBACK_DEFAULT' : 'PARAMETERS');
 
         $nav = $this->calculateDistanceAndBearing($portCode, $targetLat, $targetLon);
-        $fuel = $this->calculateFuelEconomics($nav['distance_nm'], $gtClass);
+        $fuel = $this->calculateFuelEconomics($nav['distance_nm'], $gtClass, $solarPrice);
+        $fuel['fuel_type'] = $fuelType;
+        $fuel['fuel_type_source'] = 'GT_CLASS_SCENARIO';
+        $fuel['subsidy_eligibility_status'] = $subsidyEligibilityStatus;
+        $fuel['price_assumption_note'] = $fuelPriceNote;
+        $fuel['price_basis'] = 'FORMULA_SCENARIO';
         $duration = $this->calculateTripDuration($fuel['travel_time_hours'], $tripDays);
-        $operations = $this->calculateOperationalEconomics($fuel, $gtClass, $tripDays);
+        $operations = $this->calculateOperationalEconomics($fuel, $gtClass, $tripDays, $solarPrice);
+        $fuel['total_trip_fuel_liters'] = round($fuel['total_fuel_liters'] + $operations['total_ops_fuel_liters'], 1);
+        $fuel['total_trip_fuel_cost_rp'] = $fuel['total_fuel_cost_rp'] + $operations['operational_fuel_cost_rp'];
         $compliance = $this->validatePermenKpCompliance($gtClass, $nav['distance_nm']);
         $waveSafety = $this->evaluateWaveSafety($waveHeightM);
         $moon = $this->calculateMoonPhase($departureDate);
@@ -601,6 +635,9 @@ class TripPlanningService
         if ($isHoldCapped) {
             $readinessNotes[] = 'Proyeksi tangkapan dibatasi kapasitas palka.';
         }
+        if (($params['wave_source'] ?? null) === 'UNVERIFIED_INPUT') {
+            $readinessNotes[] = 'Prakiraan gelombang BMKG untuk tanggal keberangkatan tidak tersedia; verifikasi cuaca sebelum berangkat.';
+        }
         $notRecommended = !$waveSafety['is_safe_to_sail']
             || !$compliance['is_compliant']
             || $enduranceExceeded
@@ -639,6 +676,8 @@ class TripPlanningService
             'estimate_source' => $estimateSource,
             'spatial_evidence_level' => $spatialEvidenceLevel,
             'data_source_mode' => $dataSourceMode,
+            'wave_source' => $params['wave_source'] ?? 'UNVERIFIED_INPUT',
+            'weather_forecast' => $params['weather_forecast'] ?? null,
             'target_source' => $targetSource,
             'fallbacks' => [
                 'coordinates' => $coordinatesFallback,
@@ -650,6 +689,11 @@ class TripPlanningService
             'skipper_name' => $params['skipper_name'] ?? 'Nakhoda Sukirno',
             'gt_class' => $gtClass,
             'trip_days' => $tripDays,
+            'fuel_type' => $fuelType,
+            'fuel_type_source' => 'GT_CLASS_SCENARIO',
+            'subsidy_eligibility_status' => $subsidyEligibilityStatus,
+            'fuel_price_assumption_note' => $fuelPriceNote,
+            'solar_price_per_liter' => $solarPrice,
             'vessel_readiness' => $vesselReadiness,
             'readiness_factor' => $readinessFactor,
             'readiness_status' => $readinessStatus,
@@ -661,7 +705,7 @@ class TripPlanningService
             'gear_code' => $spec['gear_code'],
             'gear_name' => $spec['gear_name'],
             'departure_date' => $departureDate,
-            'target_commodity' => ucfirst($commodity),
+            'target_commodity' => self::commodityDisplayName($commodity),
             'target_coordinates' => [
                 'lat_dec' => $targetLat,
                 'lon_dec' => $targetLon,
@@ -683,6 +727,8 @@ class TripPlanningService
             'moon_phase' => $moon,
             'catch_projection' => $catch,
             'economics' => [
+                'fuel_type' => $fuelType,
+                'solar_price_per_liter' => $solarPrice,
                 'gross_revenue_rp' => $catch['gross_revenue_rp'],
                 'total_fuel_cost_rp' => $fuel['total_fuel_cost_rp'],
                 'daily_ops_fuel_liters' => $operations['daily_ops_fuel_liters'],

@@ -183,7 +183,7 @@ class GeeDataPipelineTest extends TestCase
         $service = app(GeeDataIngestionService::class);
         $method = new \ReflectionMethod($service, 'recordIngestionAudit');
         $method->setAccessible(true);
-        $method->invoke($service, [
+        $report = [
             'status' => 'SUCCESS',
             'dataset_name' => 'fixture_2025_01.csv',
             'target_date' => '2025-01-01',
@@ -202,7 +202,8 @@ class GeeDataPipelineTest extends TestCase
             'total_duration_ms' => 42,
             'completed_at' => '2025-01-01T00:00:01+00:00',
             'summary' => ['total_cells' => 8129],
-        ]);
+        ];
+        $method->invoke($service, $report);
 
         $manifest = json_decode(File::get(storage_path('app/gee_ingestion/ingestion_manifest.json')), true);
         $record = $manifest[0];
@@ -214,6 +215,12 @@ class GeeDataPipelineTest extends TestCase
         $this->assertSame('2025-01-01', $record['date_coverage']['end']);
         $this->assertTrue($record['fallback_used']);
         $this->assertNotEmpty($record['valid_until']);
+
+        $report['provenance']['source_mode'] = 'LOCAL_SIMULATION_FALLBACK';
+        $method->invoke($service, $report);
+        $localRecord = json_decode(File::get(storage_path('app/gee_ingestion/ingestion_manifest.json')), true)[0];
+        $this->assertSame('DEGRADED', $localRecord['status']);
+        $this->assertNull($localRecord['valid_until']);
     }
 
     /**

@@ -15,7 +15,7 @@
                     Rencana Operasional Melaut
                 </h1>
                 <p class="text-xs text-slate-400 mt-1">
-                    Kalkulator Terpadu Efisiensi Bahan Bakar, Keselamatan Maritim & Kepatuhan Zonasi Permen KP 59/2020
+                    Skenario biaya, durasi, dan keselamatan untuk PPN Prigi atau PPS Cilacap. Verifikasi cuaca dan izin sebelum berangkat.
                 </p>
             </div>
             
@@ -69,21 +69,20 @@
             <!-- Regulatory & Advisory Banner -->
             <div class="p-4 rounded-xl border flex items-start gap-3 transition-colors"
                  :class="{
-                     'bg-emerald-500/10 border-emerald-500/30 text-emerald-200': plan.permen_kp.is_compliant && plan.wave_safety.is_safe_to_sail,
-                     'bg-amber-500/10 border-amber-500/30 text-amber-200': (!plan.permen_kp.is_compliant || !plan.wave_safety.is_safe_to_sail) && plan.wave_safety.status !== 'DANGER' && plan.wave_safety.status !== 'BAHAYA GELOMBANG EKSTREM' && plan.permen_kp.status !== 'VIOLATION_RESTRICTED_INSHORE',
-                     'bg-rose-500/10 border-rose-500/30 text-rose-200': plan.wave_safety.status === 'DANGER' || plan.wave_safety.status === 'BAHAYA GELOMBANG EKSTREM' || plan.permen_kp.status === 'VIOLATION_RESTRICTED_INSHORE'
+                     'bg-emerald-500/10 border-emerald-500/30 text-emerald-200': plan.readiness_status === 'SIAP_MELAUT',
+                     'bg-amber-500/10 border-amber-500/30 text-amber-200': plan.readiness_status === 'SIAP_DENGAN_CATATAN',
+                     'bg-rose-500/10 border-rose-500/30 text-rose-200': plan.readiness_status === 'TIDAK_DISARANKAN'
                  }">
                 <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 <div class="text-xs space-y-1">
                     <div class="font-bold flex items-center gap-2">
-                        <span x-text="plan.permen_kp.status_label || (plan.permen_kp.is_compliant ? 'PATUH' : 'PERLU TINJAUAN')"></span>
+                        <span x-text="plan.readiness_status.replaceAll('_', ' ')"></span>
                         <span>•</span>
                         <span x-text="plan.wave_safety.status_label || plan.wave_safety.status"></span>
                     </div>
-                    <p x-text="plan.permen_kp.message"></p>
-                    <p class="text-floor opacity-80" x-text="plan.permen_kp.citation"></p>
+                    <p>Penilaian awal berdasarkan jarak dari pelabuhan, spesifikasi kapal, dan tinggi gelombang. Status ini bukan persetujuan berlayar atau verifikasi jalur dari garis pantai.</p>
                 </div>
             </div>
 
@@ -158,11 +157,10 @@
                         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                             <div class="sm:col-span-2">
                                 <label class="block text-xs font-semibold text-slate-300 mb-1.5">Komoditas Sasaran</label>
-                                <select name="target_commodity" x-model="form.target_commodity" @change="recalculate()"
+                                <select name="target_commodity" x-model="form.target_commodity" @change="targetChanged()"
                                         class="w-full bg-[#071B2B] border border-[#244456] rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-400">
                                     <option value="Cakalang">Cakalang (Katsuwonus pelamis) — Rp 22.000/kg</option>
                                     <option value="tuna_sirip_kuning">Tuna Sirip Kuning (Thunnus albacares) — Rp 45.000/kg</option>
-                                    <option value="Tongkol">Tongkol Lisong / Krai (Auxis spp.) — Rp 28.000/kg</option>
                                     <option value="tongkol_krai">Tongkol Krai (Auxis thazard) — Rp 28.000/kg</option>
                                 </select>
                             </div>
@@ -192,14 +190,14 @@
                                 <div>
                                     <div class="relative">
                                         <span class="absolute inset-y-0 left-0 pl-2.5 flex items-center text-[10px] font-mono text-slate-400">Lat:</span>
-                                        <input type="number" step="0.0001" name="target_lat" x-model.number="form.target_lat" @input.debounce.400ms="recalculate()"
+                                        <input type="number" step="0.0001" name="target_lat" x-model.number="form.target_lat" @input.debounce.400ms="targetChanged()"
                                                class="w-full bg-[#071B2B] border border-[#244456] rounded-xl pl-10 pr-2 py-2 text-xs text-white font-mono focus:outline-none focus:border-cyan-400">
                                     </div>
                                 </div>
                                 <div>
                                     <div class="relative">
                                         <span class="absolute inset-y-0 left-0 pl-2.5 flex items-center text-[10px] font-mono text-slate-400">Lon:</span>
-                                        <input type="number" step="0.0001" name="target_lon" x-model.number="form.target_lon" @input.debounce.400ms="recalculate()"
+                                        <input type="number" step="0.0001" name="target_lon" x-model.number="form.target_lon" @input.debounce.400ms="targetChanged()"
                                                class="w-full bg-[#071B2B] border border-[#244456] rounded-xl pl-10 pr-2 py-2 text-xs text-white font-mono focus:outline-none focus:border-cyan-400">
                                     </div>
                                 </div>
@@ -221,13 +219,15 @@
                         <!-- Submit Buttons -->
                         <div class="pt-2 flex flex-col sm:flex-row gap-3">
                             <button type="submit"
-                                    class="flex-1 py-2.5 px-4 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black rounded-xl text-xs transition active:scale-95 shadow-md flex items-center justify-center gap-2">
+                                    :disabled="isLoading || !!errorMessage"
+                                    class="flex-1 py-2.5 px-4 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black rounded-xl text-xs transition active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed shadow-md flex items-center justify-center gap-2">
                                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
                                 </svg>
                                 Simpan Rencana Pelayaran
                             </button>
                         </div>
+                        <p x-show="errorMessage" x-text="errorMessage" role="alert" class="text-xs text-rose-300"></p>
                     </form>
                 </div>
 
@@ -271,7 +271,7 @@
                             </div>
                             
                             <div class="text-[11px] text-slate-400 flex items-center justify-between border-t border-[#244456]/60 pt-2">
-                                <span>Alat Tangkap Legal (KBLI/API):</span>
+                                <span>Asumsi alat tangkap kelas GT:</span>
                                 <span class="font-mono text-cyan-300 font-semibold" x-text="plan.gear_code"></span>
                             </div>
                         </div>
@@ -283,7 +283,7 @@
                                     <svg class="w-4 h-4 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                                     </svg>
-                                    Logistik Solar & Anggaran
+                                    Kebutuhan Solar & Anggaran
                                 </span>
                                 <span class="px-2 py-0.5 rounded-full text-[10px] font-mono bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">
                                     Cadangan Keselamatan +15%
@@ -292,29 +292,30 @@
 
                             <div class="grid grid-cols-2 gap-2 pt-1">
                                 <div class="p-3 rounded-xl bg-[#071B2B] border border-[#244456]/60">
-                                    <div class="text-[10px] text-slate-400">Total Kebutuhan Solar</div>
+                                    <div class="text-[10px] text-slate-400">Total Solar PP + Operasi</div>
                                     <div class="text-lg font-black text-amber-400 font-mono mt-0.5">
-                                        <span x-text="plan.fuel.total_fuel_liters"></span> <span class="text-xs text-slate-300 font-sans font-normal">Liter</span>
+                                        <span x-text="plan.fuel.total_trip_fuel_liters"></span> <span class="text-xs text-slate-300 font-sans font-normal">Liter</span>
                                     </div>
                                     <div class="text-[10px] text-slate-400 mt-0.5">
-                                        Termasuk +<span x-text="plan.fuel.safety_reserve_liters"></span> L safety
+                                        PP <span x-text="plan.fuel.total_fuel_liters"></span> L (termasuk cadangan <span x-text="plan.fuel.safety_reserve_liters"></span> L)
                                     </div>
                                 </div>
                                 <div class="p-3 rounded-xl bg-[#071B2B] border border-[#244456]/60">
-                                    <div class="text-[10px] text-slate-400">Estimasi Biaya Solar (Subsidi)</div>
+                                    <div class="text-[10px] text-slate-400" x-text="plan.fuel_type === 'SUBSIDIZED' ? 'Biaya solar subsidi (perkiraan)' : 'Biaya solar non subsidi (perkiraan)'"></div>
                                     <div class="text-base font-black text-white font-mono mt-0.5">
-                                        <span x-text="formatRupiah(plan.fuel.total_fuel_cost_rp)"></span>
+                                        <span x-text="formatRupiah(plan.fuel.total_trip_fuel_cost_rp)"></span>
                                     </div>
                                     <div class="text-[10px] text-slate-400 mt-0.5 font-mono">
-                                        @ Rp 6.800 / Liter
+                                        @ <span x-text="formatRupiah(plan.fuel.solar_price_per_liter)"></span> / liter
                                     </div>
                                 </div>
                             </div>
 
                             <div class="text-[11px] text-slate-400 flex flex-wrap items-center justify-between gap-2 border-t border-[#244456]/60 pt-2">
-                                <span>Basis PP: <strong class="font-mono text-slate-300" x-text="plan.fuel.base_fuel_liters + ' L'"></strong> &bull; Ops/Hari: <strong class="font-mono text-cyan-300" x-text="(plan.daily_ops_fuel_liters ?? 0) + ' L'"></strong></span>
+                                <span>Basis PP: <strong class="font-mono text-slate-300" x-text="plan.fuel.base_fuel_liters + ' L'"></strong> &bull; Operasi/hari: <strong class="font-mono text-cyan-300" x-text="(plan.daily_ops_fuel_liters ?? 0) + ' L'"></strong></span>
                                 <span>Logistik (<span x-text="plan.trip_days ?? 1"></span> hr): <strong class="font-mono text-amber-300" x-text="formatRupiah(plan.provisions_cost_rp ?? 0)"></strong></span>
                             </div>
+                            <p class="text-[10px] text-amber-200 leading-relaxed" x-text="plan.fuel_price_assumption_note"></p>
                         </div>
                     </div>
 
@@ -328,26 +329,26 @@
                                     <svg class="w-4 h-4 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                                     </svg>
-                                    Permen KP 59/2020 Zonasi
+                                    Screening Jalur Penangkapan
                                 </span>
                                 <span class="px-2 py-0.5 rounded-full text-floor font-bold uppercase tracking-wider"
                                       :class="{
                                           'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40': plan.permen_kp.is_compliant,
                                           'bg-rose-500/20 text-rose-300 border border-rose-500/40': !plan.permen_kp.is_compliant
                                       }"
-                                      x-text="plan.permen_kp.status_label || (plan.permen_kp.is_compliant ? 'PATUH' : 'PERLU TINJAUAN')">
+                                      x-text="plan.permen_kp.is_compliant ? 'TIDAK ADA KONFLIK AWAL' : 'PERLU TINJAUAN'">
                                 </span>
                             </div>
 
                             <div class="p-3 rounded-xl bg-[#071B2B] border border-[#244456]/60 space-y-1">
-                                <div class="text-[10px] text-slate-400">Alokasi Jalur Penangkapan Ikan:</div>
+                                <div class="text-[10px] text-slate-400">Perkiraan jalur dari jarak pelabuhan:</div>
                                 <div class="text-sm font-bold text-white flex items-center justify-between">
                                     <span x-text="plan.permen_kp.jalur_label || plan.permen_kp.jalur_target"></span>
-                                    <span class="text-xs font-mono text-cyan-400" x-text="plan.permen_kp.jalur_desc || (plan.permen_kp.is_compliant ? 'Sesuai kelas tonase' : 'Melebihi batas jalur')"></span>
+                                    <span class="text-xs font-mono text-cyan-400" x-text="plan.navigation.distance_nm + ' NM dari pelabuhan'"></span>
                                 </div>
                             </div>
 
-                            <p class="text-[11px] text-slate-300 leading-relaxed" x-text="plan.permen_kp.message"></p>
+                            <p class="text-[11px] text-slate-300 leading-relaxed">Jalur hukum diukur dari garis pantai. Pemeriksaan ini memakai jarak dari pelabuhan dan perlu verifikasi lokasi serta alat tangkap sebelum keberangkatan.</p>
                             <p class="text-[10px] font-mono text-slate-400 border-t border-[#244456]/60 pt-2" x-text="plan.permen_kp.citation"></p>
                         </div>
 
@@ -358,15 +359,15 @@
                                     <svg class="w-4 h-4 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
                                     </svg>
-                                    Oseanografi & Fase Bulan
+                                    Prakiraan Gelombang & Fase Bulan
                                 </span>
                                 <span class="px-2 py-0.5 rounded-full text-floor font-bold uppercase tracking-wider"
                                       :class="{
-                                          'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40': plan.wave_safety.status === 'SAFE' || plan.wave_safety.status === 'AMAN',
-                                          'bg-amber-500/20 text-amber-300 border border-amber-500/40': plan.wave_safety.status === 'CAUTION' || plan.wave_safety.status === 'WASPADA',
+                                          'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40': plan.wave_source === 'BMKG_INAWAVES_POINT_FORECAST' && (plan.wave_safety.status === 'SAFE' || plan.wave_safety.status === 'AMAN'),
+                                          'bg-amber-500/20 text-amber-300 border border-amber-500/40': (plan.wave_source !== 'BMKG_INAWAVES_POINT_FORECAST' || plan.wave_safety.status === 'CAUTION' || plan.wave_safety.status === 'WASPADA') && plan.wave_safety.status !== 'DANGER',
                                           'bg-rose-500/20 text-rose-300 border border-rose-500/40': plan.wave_safety.status === 'DANGER' || plan.wave_safety.status === 'BAHAYA GELOMBANG EKSTREM'
                                       }"
-                                      x-text="plan.wave_safety.status_label || plan.wave_safety.status">
+                                      x-text="plan.wave_safety.status === 'DANGER' ? 'BAHAYA: PERIKSA SUMBER' : (plan.wave_source === 'BMKG_INAWAVES_POINT_FORECAST' ? (plan.wave_safety.status_label || plan.wave_safety.status) : 'BELUM TERVERIFIKASI')">
                                 </span>
                             </div>
 
@@ -389,8 +390,21 @@
                                 </div>
                             </div>
 
+                            <div class="p-3 rounded-xl border text-[11px] leading-relaxed"
+                                 :class="plan.wave_source === 'BMKG_INAWAVES_POINT_FORECAST' ? 'bg-cyan-500/10 border-cyan-500/30 text-cyan-100' : 'bg-amber-500/10 border-amber-500/30 text-amber-100'">
+                                <template x-if="plan.wave_source === 'BMKG_INAWAVES_POINT_FORECAST' && plan.weather_forecast">
+                                    <div class="space-y-1">
+                                        <p class="font-bold">BMKG InaWaves: prakiraan titik model terdekat, bukan pengukuran langsung.</p>
+                                        <p>Valid <span x-text="formatForecastTime(plan.weather_forecast.forecast_at)"></span> WIB; titik model <span x-text="plan.weather_forecast.model_lat ?? '-'"></span>, <span x-text="plan.weather_forecast.model_lon ?? '-'"></span>.</p>
+                                        <p>Angin <span x-text="plan.weather_forecast.wind_speed_knots ?? '-'"></span> knot. Periksa prakiraan sepanjang rute dan selama hari melaut.</p>
+                                    </div>
+                                </template>
+                                <template x-if="plan.wave_source !== 'BMKG_INAWAVES_POINT_FORECAST'">
+                                    <p>Prakiraan BMKG untuk tanggal dan titik ini belum tersedia. Angka gelombang di atas adalah nilai cadangan untuk simulasi; verifikasi cuaca sebelum berangkat.</p>
+                                </template>
+                            </div>
                             <div class="text-[11px] text-slate-300 border-t border-[#244456]/60 pt-2">
-                                <span class="text-slate-400">Tips Memancing Malam:</span>
+                                <span class="text-slate-400">Catatan fase bulan (asumsi):</span>
                                 <span x-text="plan.moon_phase.fishing_advisory"></span>
                             </div>
                         </div>
@@ -466,7 +480,7 @@
                                 <svg class="w-4 h-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
-                                Proyeksi Hasil Tangkapan & Margin Finansial
+                                Proyeksi Tangkapan & Margin Operasional
                                 <span class="text-cyan-300 font-mono" x-text="plan.estimate_source === 'TEMPORAL_CPUE_CALIBRATED' ? '(CPUE Terkalibrasi)' : '(Skenario Formula HSI)'"></span>
                             </span>
                             <span class="text-floor font-mono text-cyan-300">
@@ -491,12 +505,12 @@
                                     <span x-text="formatRupiah(plan.catch_projection.gross_revenue_rp)"></span>
                                 </div>
                                 <div class="text-[10px] text-slate-400 mt-1 font-mono">
-                                    Harga acuan TPI: <span x-text="formatRupiah(plan.catch_projection.price_per_kg_rp ?? plan.catch_projection.benchmark_price_per_kg)"></span>/kg
+                                    Harga acuan skenario: <span x-text="formatRupiah(plan.catch_projection.price_per_kg_rp ?? plan.catch_projection.benchmark_price_per_kg)"></span>/kg
                                 </div>
                             </div>
 
                             <div class="p-3.5 rounded-xl bg-[#071B2B] border border-[#244456]">
-                                <div class="text-[10px] text-slate-400">Estimasi Margin Laba Bersih</div>
+                                <div class="text-[10px] text-slate-400">Margin Operasional Skenario</div>
                                 <div class="text-base font-black font-mono mt-0.5"
                                      :class="plan.economics.net_profit_rp >= 0 ? 'text-cyan-400' : 'text-rose-400'">
                                     <span x-text="formatRupiah(plan.economics.net_profit_rp)"></span>
@@ -523,11 +537,11 @@
                                         <span class="text-white" x-text="formatRupiah(plan.fuel.total_fuel_cost_rp)"></span>
                                     </div>
                                     <div class="flex justify-between">
-                                        <span>BBM Ops (<span x-text="plan.daily_ops_fuel_liters ?? 0"></span> L/hr &times; <span x-text="plan.trip_days ?? 1"></span> hr):</span>
+                                        <span>BBM Ops (<span x-text="plan.daily_ops_fuel_liters ?? 0"></span> L/hari &times; <span x-text="plan.trip_days ?? 1"></span> hari):</span>
                                         <span class="text-white" x-text="formatRupiah(plan.economics.operational_fuel_cost_rp ?? 0)"></span>
                                     </div>
                                     <div class="flex justify-between">
-                                        <span>Logistik (<span x-text="formatRupiah(plan.daily_provisions_cost_rp ?? plan.economics.daily_provisions_cost_rp ?? 150000)"></span>/hr &times; <span x-text="plan.trip_days ?? 1"></span> hr):</span>
+                                        <span>Logistik (<span x-text="formatRupiah(plan.daily_provisions_cost_rp ?? plan.economics.daily_provisions_cost_rp ?? 150000)"></span>/hari &times; <span x-text="plan.trip_days ?? 1"></span> hari):</span>
                                         <span class="text-amber-300" x-text="formatRupiah(plan.provisions_cost_rp ?? 0)"></span>
                                     </div>
                                     <div class="flex justify-between border-t border-[#244456]/60 pt-1 font-bold text-rose-300">
@@ -550,14 +564,15 @@
                                         <span class="text-emerald-400" x-text="formatRupiah(plan.catch_projection.gross_revenue_rp)"></span>
                                     </div>
                                     <div class="flex justify-between border-t border-[#244456]/60 pt-1 font-bold" :class="plan.economics.net_profit_rp >= 0 ? 'text-cyan-400' : 'text-rose-400'">
-                                        <span>Margin Bersih (Kotor &minus; Ops):</span>
+                                        <span>Margin skenario (Kotor &minus; Ops):</span>
                                         <span x-text="formatRupiah(plan.economics.net_profit_rp)"></span>
                                     </div>
                                 </div>
                             </div>
                             <p class="text-[10px] text-slate-400 font-sans pt-1">
-                                Catatan: Skenario formula bersifat simulasi perencanaan operasional, bukan jaminan hasil tangkapan aktual.
+                                Skenario formula bukan jaminan tangkapan. Biaya awak, perawatan, retribusi, dan risiko lain belum dihitung.
                             </p>
+                            <p x-show="plan.fallbacks?.hsi" class="text-[10px] text-amber-200">Skor HSI spesifik komoditas/titik belum tersedia; perhitungan memakai nilai default skenario. Pilih ulang sel di DPI Radar untuk skor yang sesuai.</p>
                         </div>
                     </div>
 
@@ -573,7 +588,8 @@
                 <div class="flex items-center justify-between border-b border-[#244456] pb-3">
                     <div>
                         <h2 class="text-base font-bold text-white">Riwayat Perencanaan Melaut Pribadi</h2>
-                        <p class="text-xs text-slate-400">Daftar dokumen pelayaran yang telah Anda simpan dan diverifikasi sistem.</p>
+                        <p class="text-xs text-slate-400">Daftar skenario rencana melaut yang Anda simpan. Pemeriksaan izin dan cuaca tetap diperlukan.</p>
+                        <p class="text-[11px] text-amber-200 mt-1">Tarif dan status gelombang pada dokumen lama adalah nilai saat disimpan; sumber prakiraan dan jumlah hari melaut belum tersimpan di basis data.</p>
                     </div>
                 </div>
 
@@ -594,7 +610,7 @@
                                     <th class="px-4 py-3">BBM (L)</th>
                                     <th class="px-4 py-3">Proyeksi Tangkap</th>
                                     <th class="px-4 py-3">Margin Bersih</th>
-                                    <th class="px-4 py-3">Status Permen KP</th>
+                                    <th class="px-4 py-3">Screening jalur</th>
                                     <th class="px-4 py-3 text-right">Aksi</th>
                                 </tr>
                             </thead>
@@ -616,11 +632,11 @@
                                         </td>
                                         <td class="px-4 py-3">
                                             @if (in_array($trip->permen_kp_status, ['COMPLIANT', 'COMPLIANT_WITHIN_LEGAL_BOUNDS'], true))
-                                                <span class="px-2 py-0.5 rounded-full text-floor font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">PATUH</span>
+                                                <span class="px-2 py-0.5 rounded-full text-floor font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">TANPA KONFLIK AWAL</span>
                                             @elseif ($trip->permen_kp_status === 'WARNING_OUT_OF_LEGAL_RANGE')
-                                                <span class="px-2 py-0.5 rounded-full text-floor font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">&gt;12 NM</span>
+                                                <span class="px-2 py-0.5 rounded-full text-floor font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">PERLU TINJAUAN</span>
                                             @else
-                                                <span class="px-2 py-0.5 rounded-full text-floor font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30">PELANGGARAN</span>
+                                                <span class="px-2 py-0.5 rounded-full text-floor font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30">PERLU TINJAUAN</span>
                                             @endif
                                         </td>
                                         <td class="px-4 py-3 text-right">
@@ -651,12 +667,13 @@
                     <div>
                         <h2 class="text-base font-bold text-white flex items-center gap-2">
                             <span class="w-2 h-2 rounded-full bg-amber-400"></span>
-                            Buku Log Keberangkatan Pelabuhan Terpadu
+                            Buku Log Rencana Melaut Pelabuhan
                         </h2>
                         <p class="text-xs text-slate-400">Khusus Otoritas Kesyahbandaran & Pengawas Perikanan Pelabuhan.</p>
+                        <p class="text-[11px] text-amber-200 mt-1">Ini adalah rencana tersimpan, bukan daftar kapal yang sudah mendapat persetujuan berlayar.</p>
                     </div>
                     <span class="text-xs font-mono text-amber-400 px-3 py-1 rounded-lg bg-amber-500/10 border border-amber-500/30">
-                        Otoritas Port-Scoped Active
+                        Tampilan menurut pelabuhan
                     </span>
                 </div>
 
@@ -676,9 +693,9 @@
                                     <th class="px-4 py-3">Tonase & Alat Tangkap</th>
                                     <th class="px-4 py-3">Titik Koordinat Sasaran</th>
                                     <th class="px-4 py-3">Jarak Nautika</th>
-                                    <th class="px-4 py-3">Kepatuhan Permen KP</th>
+                                    <th class="px-4 py-3">Screening jalur</th>
                                     <th class="px-4 py-3">Status Gelombang</th>
-                                    <th class="px-4 py-3 text-right">Verifikasi</th>
+                                    <th class="px-4 py-3 text-right">Dokumen</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-[#244456] text-slate-300">
@@ -699,7 +716,7 @@
                                         <td class="px-4 py-3 font-mono">{{ $log->distance_nm }} NM</td>
                                         <td class="px-4 py-3">
                                             @if (in_array($log->permen_kp_status, ['COMPLIANT', 'COMPLIANT_WITHIN_LEGAL_BOUNDS'], true))
-                                                <span class="px-2 py-0.5 rounded-full text-floor font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">PATUH</span>
+                                                <span class="px-2 py-0.5 rounded-full text-floor font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">TANPA KONFLIK AWAL</span>
                                             @else
                                                 <span class="px-2 py-0.5 rounded-full text-floor font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30">PERLU TINJAUAN</span>
                                             @endif
@@ -750,9 +767,19 @@
                 calcUrl: config.calcUrl,
                 csrf: config.csrf,
                 isLoading: false,
+                errorMessage: '',
+                requestSequence: 0,
+
+                targetChanged() {
+                    this.form.cell_id = null;
+                    this.form.hsi_score = null;
+                    this.recalculate();
+                },
 
                 async recalculate() {
+                    const sequence = ++this.requestSequence;
                     this.isLoading = true;
+                    this.errorMessage = '';
                     try {
                         const response = await fetch(this.calcUrl, {
                             method: 'POST',
@@ -764,15 +791,28 @@
                             body: JSON.stringify(this.form)
                         });
 
-                        if (response.ok) {
-                            const data = await response.json();
-                            this.plan = data;
+                        const data = await response.json();
+                        if (sequence !== this.requestSequence) return;
+                        if (!response.ok) {
+                            this.errorMessage = Object.values(data.errors ?? {}).flat().join(' ') || 'Perhitungan gagal. Periksa parameter lalu coba lagi.';
+                            return;
                         }
+                        this.plan = data;
                     } catch (err) {
                         console.error('Kalkulasi gagal:', err);
+                        if (sequence === this.requestSequence) this.errorMessage = 'Layanan perhitungan belum tersedia. Coba lagi sebelum menyimpan.';
                     } finally {
-                        this.isLoading = false;
+                        if (sequence === this.requestSequence) this.isLoading = false;
                     }
+                },
+
+                formatForecastTime(value) {
+                    if (!value) return '-';
+                    const date = new Date(value);
+                    return Number.isNaN(date.getTime()) ? '-' : date.toLocaleString('id-ID', {
+                        timeZone: 'Asia/Jakarta', day: '2-digit', month: 'short', year: 'numeric',
+                        hour: '2-digit', minute: '2-digit', hour12: false
+                    });
                 },
 
                 formatRupiah(num) {

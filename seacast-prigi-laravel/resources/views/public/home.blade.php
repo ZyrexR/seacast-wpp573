@@ -18,7 +18,7 @@
 
             <!-- Descriptive Subtitle with Multi-Port Coverage -->
             <p class="text-xs sm:text-sm lg:text-[15px] text-slate-200 font-medium leading-relaxed max-w-2xl mx-auto mb-5 sm:mb-6 drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">
-                Platform intelijen maritim terpadu untuk efisiensi bahan bakar nelayan, keselamatan pelayaran, dan kepatuhan zonasi Permen KP No. 59/2020 di <strong class="text-cyan-300 font-bold">PPN Prigi</strong>, <strong class="text-cyan-300 font-bold">PPS Cilacap</strong>, dan <strong class="text-cyan-300 font-bold">PPN Palabuhanratu</strong>.
+                Platform intelijen maritim terpadu untuk efisiensi bahan bakar nelayan, keselamatan pelayaran, dan kepatuhan zonasi Permen KP No. 59/2020 di <strong class="text-cyan-300 font-bold">PPN Prigi</strong> dan <strong class="text-cyan-300 font-bold">PPS Cilacap</strong>.
             </p>
 
             <!-- Dual CTA Action Buttons -->
@@ -46,14 +46,12 @@
                     <p class="text-[11px] text-slate-300 mt-0.5">Kesesuaian HSI &ge; 0,70</p>
                 </div>
                 <div class="p-3 sm:p-3.5 rounded-2xl bg-[#071B2B]/85 border border-[#244456] backdrop-blur-md shadow-xl text-center">
-                    <span class="block text-xl sm:text-2xl font-black font-mono text-cyan-300">2.450+ Kapal</span>
+                    <span class="block text-xl sm:text-2xl font-black font-mono text-cyan-300">2.087+ Kapal</span>
                     <span class="text-xs font-semibold text-slate-200">Armada WPP 573 Terintegrasi</span>
                     <div class="flex items-center justify-center gap-1.5 mt-1 text-[10px] font-mono text-slate-300">
                         <span class="px-1.5 py-0.5 rounded bg-[#12364A]/90 text-cyan-300 font-semibold">Prigi</span>
                         <span>&bull;</span>
                         <span class="px-1.5 py-0.5 rounded bg-[#12364A]/90 text-cyan-300 font-semibold">Cilacap</span>
-                        <span>&bull;</span>
-                        <span class="px-1.5 py-0.5 rounded bg-[#12364A]/90 text-cyan-300 font-semibold">Palabuhanratu</span>
                     </div>
                 </div>
             </div>
@@ -67,7 +65,7 @@
                 <x-ui.stat-card
                     title="Hotspot Tangkap"
                     value="{{ $hotspotsCount }} Sel"
-                    subtitle="Kriteria: HSI &ge; 0,70"
+                    subtitle="Kriteria: HSI ≥ 0,70"
                     delta="Terkini"
                     deltaType="positive"
                     accent="rose"

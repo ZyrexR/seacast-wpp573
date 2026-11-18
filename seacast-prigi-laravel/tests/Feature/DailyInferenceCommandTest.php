@@ -59,8 +59,9 @@ class DailyInferenceCommandTest extends TestCase
         $manifest = json_decode(File::get(storage_path('app/gee_ingestion/ingestion_manifest.json')), true);
         $this->assertIsArray($manifest);
         $this->assertSame('2026-11-03', $manifest[0]['target_date']);
-        $this->assertSame('VALID_WITH_FALLBACK', $manifest[0]['status']);
+        $this->assertSame('DEGRADED', $manifest[0]['status']);
         $this->assertSame('LOCAL_SIMULATION_FALLBACK', $manifest[0]['source_mode']);
+        $this->assertNull($manifest[0]['valid_until']);
         $this->assertSame('2026-11-03', $manifest[0]['date_coverage']['start']);
         $this->assertSame('2026-11-03', $manifest[0]['date_coverage']['end']);
     }

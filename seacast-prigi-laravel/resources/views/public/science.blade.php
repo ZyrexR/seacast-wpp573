@@ -185,7 +185,7 @@
                 </tr>
             </x-ui.table>
             <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-3 leading-relaxed">
-                * Catatan Transparansi Ilmiah: Bobot ensemble Cakalang dan Tuna Sirip Kuning merupakan bobot provisional hasil seleksi analis dan dievaluasi terhadap titik proxy lingkungan deterministik (<code>PROXY_HSI</code>), bukan validasi blok spasial dari koordinat tangkapan operasional lapangan. Tongkol Krai menggunakan indeks kesesuaian neritik berbasis aturan biofisik tanpa skor AUC/TSS terlatih.
+                * Catatan Transparansi Ilmiah: Bobot ensemble Cakalang dan Tuna Sirip Kuning merupakan bobot provisional hasil seleksi analis dan dievaluasi terhadap titik proxy lingkungan deterministik (<code>PROXY_HSI</code>), bukan validasi blok spasial dari koordinat tangkapan operasional lapangan. Tongkol Krai dilatih menggunakan ensemble provisional (MaxEnt, Random Forest, GLM) pada 2.500 sampel proxy neritik 132 bulan WPPNRI 573 (5-fold CV) dan tetap berstatus <code>PROXY_HSI</code> tanpa uji blok spasial lapangan.
             </p>
         </x-ui.card>
 

@@ -4,21 +4,21 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Services\ScientificExportService;
+use App\Services\LatestPredictionDateService;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class ExportApiController extends Controller
 {
-    public const DEFAULT_DATE = '2026-11-03';
-
     public function __construct(
-        protected ScientificExportService $exportService
+        protected ScientificExportService $exportService,
+        protected LatestPredictionDateService $latestDates
     ) {}
 
     public function geojson(Request $request): Response
     {
         $validated = $this->validateExportRequest($request);
-        $date = $validated['date'] ?? self::DEFAULT_DATE;
+        $date = $this->dateOrFail($validated);
         $filters = $this->extractFilters($validated);
 
         $content = $this->exportService->exportGeoJson($date, $filters);
@@ -34,7 +34,7 @@ class ExportApiController extends Controller
     public function csv(Request $request): Response
     {
         $validated = $this->validateExportRequest($request);
-        $date = $validated['date'] ?? self::DEFAULT_DATE;
+        $date = $this->dateOrFail($validated);
         $filters = $this->extractFilters($validated);
 
         $content = $this->exportService->exportCsv($date, $filters);
@@ -50,7 +50,7 @@ class ExportApiController extends Controller
     public function gisPackage(Request $request): Response
     {
         $validated = $this->validateExportRequest($request);
-        $date = $validated['date'] ?? self::DEFAULT_DATE;
+        $date = $this->dateOrFail($validated);
         $filters = $this->extractFilters($validated);
 
         $content = $this->exportService->exportGisPackage($date, $filters);
@@ -75,6 +75,16 @@ class ExportApiController extends Controller
             'hotspot_only' => 'nullable|in:true,false,1,0',
             'limit' => 'nullable|integer|min:1|max:10000',
         ]);
+    }
+
+    private function dateOrFail(array $validated): string
+    {
+        $date = $validated['date'] ?? $this->latestDates->latest();
+        if ($date === null) {
+            abort(404, 'Belum ada data prediksi harian.');
+        }
+
+        return $date;
     }
 
     protected function extractFilters(array $validated): array

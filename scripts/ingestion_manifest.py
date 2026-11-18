@@ -25,6 +25,10 @@ def _status_for(provenance: dict[str, Any], warnings: list[str], requested: str 
     if requested == "FAILED":
         return "FAILED"
     source_mode = str(provenance.get("source_mode", "")).upper()
+    if source_mode == "LOCAL_SIMULATION_FALLBACK":
+        return "DEGRADED"
+    if not source_mode.startswith("GEE_INGESTED"):
+        return "UNVERIFIED"
     return "VALID_WITH_FALLBACK" if warnings or "FALLBACK" in source_mode else "VALID"
 
 
@@ -76,14 +80,15 @@ def write_ingestion_manifest(
         "validation_status": provenance.get("validation_status", "UNVERIFIED"),
         "status": status,
         "ingestion_status": status,
-        "fallback_used": status == "VALID_WITH_FALLBACK",
+        "fallback_used": status in {"VALID_WITH_FALLBACK", "DEGRADED"},
         "target_date": target_date,
+        "requested_date": provenance.get("requested_date", target_date),
         "date_coverage": {
             "start": date_start or target_date,
             "end": date_end or target_date,
         },
         "completed_at": completed_iso,
-        "valid_until": _iso_timestamp(completed_at + timedelta(hours=48)),
+        "valid_until": _iso_timestamp(completed_at + timedelta(hours=48)) if status in {"VALID", "VALID_WITH_FALLBACK"} else None,
         "total_cells": total_cells,
         "hotspots_count": hotspots_count,
         "warnings": warnings,

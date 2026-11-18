@@ -60,6 +60,27 @@ class IngestionManifestTests(unittest.TestCase):
 
         self.assertEqual(len(saved), 1)
         self.assertEqual(saved[0]["total_cells"], 8129)
+        self.assertEqual(saved[0]["status"], "DEGRADED")
+        self.assertIsNone(saved[0]["valid_until"])
+        self.assertTrue(saved[0]["fallback_used"])
+
+    def test_failed_ingestion_is_not_marked_live(self):
+        from ingestion_manifest import write_ingestion_manifest
+
+        with tempfile.TemporaryDirectory() as tmp:
+            record = write_ingestion_manifest(
+                manifest_path=Path(tmp) / "ingestion_manifest.json",
+                dataset="gee_daily_2026-11-14.csv",
+                target_date="2026-11-14",
+                provenance={"source_mode": "UNVERIFIED", "requested_date": "2026-11-16"},
+                warnings=["database persistence failed"],
+                requested_status="FAILED",
+            )
+
+        self.assertEqual(record["status"], "FAILED")
+        self.assertEqual(record["requested_date"], "2026-11-16")
+        self.assertEqual(record["target_date"], "2026-11-14")
+        self.assertIsNone(record["valid_until"])
 
 
 if __name__ == "__main__":

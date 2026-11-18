@@ -18,6 +18,7 @@ import pandas as pd
 import joblib
 
 from ingestion_manifest import write_ingestion_manifest
+from model_compat import positive_class_probability
 
 # Suppress sklearn unpickle warnings from polluting stdout
 warnings.filterwarnings("ignore")
@@ -237,7 +238,7 @@ def parse_and_validate_gee_csv(csv_path, grid_map):
     return df_std
 
 
-def run_pipeline(input_csv, target_date=None, limit=0, dry_run=False, output_json=None, output_csv=None, persist_db=False):
+def run_pipeline(input_csv, target_date=None, limit=0, dry_run=False, output_json=None, output_csv=None, persist_db=False, requested_date=None):
     """Executes feature preparation, model inference, DOM classification, and persistence"""
     start_time = datetime.datetime.now()
 
@@ -278,9 +279,9 @@ def run_pipeline(input_csv, target_date=None, limit=0, dry_run=False, output_jso
         bundle = joblib.load(model_path)
         w = LOCKED_ENSEMBLE_WEIGHTS[sp]
 
-        p_maxent = bundle["maxent"].predict_proba(X_scaled)[:, 1]
-        p_rf = bundle["rf"].predict_proba(X_scaled)[:, 1]
-        p_glm = bundle["glm"].predict_proba(X_scaled)[:, 1]
+        p_maxent = positive_class_probability(bundle["maxent"], X_scaled)
+        p_rf = positive_class_probability(bundle["rf"], X_scaled)
+        p_glm = positive_class_probability(bundle["glm"], X_scaled)
 
         raw_hsi = w["maxent"] * p_maxent + w["rf"] * p_rf + w["glm"] * p_glm
         min_v, max_v = raw_hsi.min(), raw_hsi.max()
@@ -407,7 +408,19 @@ def run_pipeline(input_csv, target_date=None, limit=0, dry_run=False, output_jso
         if persist_db:
             try:
                 import psycopg2
-                conn = psycopg2.connect("host=127.0.0.1 dbname=seacast_prigi user=postgres password=postgres")
+                db_host = os.getenv("DB_HOST")
+                db_name = os.getenv("DB_DATABASE")
+                db_user = os.getenv("DB_USERNAME")
+                if not all((db_host, db_name, db_user)):
+                    raise RuntimeError("DB_HOST, DB_DATABASE, and DB_USERNAME must be configured")
+                conn = psycopg2.connect(
+                    host=db_host,
+                    port=os.getenv("DB_PORT", "5432"),
+                    dbname=db_name,
+                    user=db_user,
+                    password=os.getenv("DB_PASSWORD", ""),
+                    connect_timeout=15,
+                )
                 cur = conn.cursor()
 
                 # Satisfy any un-defaulted NOT NULL numeric columns on legacy schemas cleanly
@@ -457,17 +470,18 @@ def run_pipeline(input_csv, target_date=None, limit=0, dry_run=False, output_jso
                 conn.close()
                 output_payload["db_persisted"] = len(db_rows)
             except Exception as e:
-                output_payload["db_persist_warning"] = str(e)
+                output_payload["db_persist_warning"] = f"Database persistence failed ({type(e).__name__})"
 
         write_ingestion_manifest(
             manifest_path=os.path.join(STORAGE_INGEST_DIR, "ingestion_manifest.json"),
             dataset=os.path.basename(input_csv),
             target_date=target_date,
-            provenance=output_payload["provenance"],
+            provenance={**output_payload["provenance"], "requested_date": requested_date or target_date},
             total_cells=len(df_std),
             hotspots_count=output_payload["hotspots_count"],
             warnings=output_payload.get("warnings", [])
             + ([output_payload["db_persist_warning"]] if output_payload.get("db_persist_warning") else []),
+            requested_status="FAILED" if persist_db and output_payload.get("db_persist_warning") else None,
         )
 
     return output_payload

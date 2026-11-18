@@ -1,10 +1,56 @@
 # SEACAST — WPPNRI 573 Pelagic Habitat Suitability & Decision Support (Prigi & Cilacap)
 
-Platform intelijen spasial-oseanografi untuk komoditas **TCT** (**Tuna Sirip Kuning**, **Cakalang**, **Tongkol Krai**) di **WPPNRI 573** dengan dual hub operasional **PPN Prigi** dan **PPS Cilacap**.
+> **Judul Inovasi:** *“Pemodelan Spasial Daerah Penangkapan Ikan Presisi Berbasis Dinamika Oseanografi Satelit dan Ensemble Machine Learning di WPPNRI 573”*  
+> **Demo Produksi:** [https://www.seacast.my.id](https://www.seacast.my.id)
+
+Platform intelijen spasial-oseanografi untuk komoditas **TCT** (**Tuna Sirip Kuning**, **Cakalang**, **Tongkol Krai**) di **WPPNRI 573** dengan dual hub operasional **PPN Prigi** (Jawa Timur) dan **PPS Cilacap** (Jawa Tengah).
 
 > **Status Rilis Saat Ini:** `SCIENTIFIC REVIEW / CONTROLLED WEB INTEGRATION` (`HOLD_FOR_SCIENTIFIC_REVIEW`)
-> - **Spatial HSI / DOM:** berstatus **`PROXY_HSI`** (kesesuaian habitat berbasis skoring heuristik multi-kriteria & oseanografi satelit, bukan lokasi koordinat tangkapan terverifikasi).
-> - **Trip Planner:** berstatus **`FORMULA_SCENARIO`** (simulasi skenario biaya, jarak, cuaca, GT kapal, dan estimasi berbasis formula; kalibrasi temporal CPUE belum diaktifkan karena model holdout 2025 belum lolos target gate).
+> - **Spatial HSI / DOM:** berstatus **`PROXY_HSI`** (kesesuaian habitat berbasis skoring heuristik multi-kriteria & oseanografi satelit pada `8.129` sel grid kanonikal `0,10°`, bukan lokasi koordinat tangkapan lapangan terverifikasi).
+> - **Trip Planner:** berstatus **`FORMULA_SCENARIO`** (simulasi skenario biaya BBM, jarak mil laut `1 NM = 1,852 km`, durasi melaut `trip_days`, kapasitas palka & kesiapan kapal `vessel_readiness`, cuaca BMKG, serta kepatuhan jalur Permen KP No. 59/2020; kalibrasi temporal CPUE belum diaktifkan karena model holdout 2025 belum lolos target gate).
+
+---
+
+## Notebook Model (`.ipynb`), Skrip Pelatihan, & Evaluasi (AUC / TSS)
+
+### 1. Tautan Notebook & Artefak Model
+- **Notebook Utama Ensemble SDM Spasial (`MaxEnt + Random Forest + GLM`, 8.129 Sel, DOM 5-Zona):** [`notebooks/SEACAST_PRIGI_COLAB_SDM_PIPELINE.ipynb`](notebooks/SEACAST_PRIGI_COLAB_SDM_PIPELINE.ipynb)
+- **Notebook Eksperimen Kalibrasi Temporal TCT (2015–2025):** [`notebooks/SEACAST_TCT_HYBRID_MODELING_2015_2025.ipynb`](notebooks/SEACAST_TCT_HYBRID_MODELING_2015_2025.ipynb)
+- **Skrip Pelatihan 5-Fold CV Ensemble SDM Tongkol Krai:** [`scripts/train_tongkol_krai_sdm.py`](scripts/train_tongkol_krai_sdm.py)
+- **Artefak Model Terlatih (`.joblib`):** [`models/cakalang_ensemble_model.joblib`](models/cakalang_ensemble_model.joblib), [`models/madidihang_ensemble_model.joblib`](models/madidihang_ensemble_model.joblib), [`models/tongkol_krai_ensemble_model.joblib`](models/tongkol_krai_ensemble_model.joblib), [`models/scaler_oceanographic.joblib`](models/scaler_oceanographic.joblib)
+- **Manifest Evaluasi Resmi (SSOT):** [`models/sdm/ensemble/model_evaluations_summary.json`](models/sdm/ensemble/model_evaluations_summary.json)
+
+### 2. Tabel Evaluasi Model Spasial SDM (Metrik Proxy Lingkungan)
+
+| Algoritma | Komoditas | Proxy ROC-AUC | Proxy TSS | Bobot Ensemble |
+|---|---|---|---|---|
+| MaxEnt | Tongkol Krai (*Auxis thazard*) | `0.888` | `0.725` | `0.332` |
+| Random Forest | Tongkol Krai (*Auxis thazard*) | `0.891` | `0.756` | `0.335` |
+| GLM | Tongkol Krai (*Auxis thazard*) | `0.888` | `0.725` | `0.333` |
+| **Ensemble** | **Tongkol Krai (*Auxis thazard*)** | **`0.892`** | **`0.752`** | **`1.000`** |
+| MaxEnt | Cakalang (*Katsuwonus pelamis*) | `0.774` | `0.084` | `0.320` |
+| Random Forest | Cakalang (*Katsuwonus pelamis*) | `0.805` | `0.610` | `0.355` |
+| GLM | Cakalang (*Katsuwonus pelamis*) | `0.750` | `0.473` | `0.325` |
+| **Ensemble** | **Cakalang (*Katsuwonus pelamis*)** | **`0.795`** | **`0.630`** | **`1.000`** |
+| MaxEnt | Madidihang / Tuna Sirip Kuning (*Thunnus albacares*) | `0.722` | `0.000` | `0.295` |
+| Random Forest | Madidihang / Tuna Sirip Kuning (*Thunnus albacares*) | `0.804` | `0.586` | `0.365` |
+| GLM | Madidihang / Tuna Sirip Kuning (*Thunnus albacares*) | `0.755` | `0.422` | `0.340` |
+| **Ensemble** | **Madidihang / Tuna Sirip Kuning (*Thunnus albacares*)** | **`0.784`** | **`0.606`** | **`1.000`** |
+
+---
+
+## Dataset yang Digunakan di Repositori
+
+### A. Dataset Spasial & Oseanografi Satelit WPPNRI 573
+- **Grid Kanonikal 8.129 Sel (0,10° × 0,10°, EPSG:4326):** [`data/qa/phase_1_1/grid/GRID_010_REGIONAL_CELLS_QA.csv`](data/qa/phase_1_1/grid/GRID_010_REGIONAL_CELLS_QA.csv) & [`data/boundaries/wppnri_573_web.geojson`](data/boundaries/wppnri_573_web.geojson)
+- **Panel Oseanografi Satelit Bulanan (SST, Chl-a, Batimetri, Front Termal, Arus, Gelombang):** [`data/pilot_2024/PILOT_2024_WPP573_R010_12MONTHS.csv`](data/pilot_2024/PILOT_2024_WPP573_R010_12MONTHS.csv) & [`data/predictions/SEACAST_PRIGI_PREDICTIONS_2025_SAMPLE.csv`](data/predictions/SEACAST_PRIGI_PREDICTIONS_2025_SAMPLE.csv)
+- **Sampel Presensi Proxy & Background SDM:** [`data/sdm/presence/presence_proxy_cakalang.geojson`](data/sdm/presence/presence_proxy_cakalang.geojson), [`data/sdm/presence/presence_proxy_madidihang.geojson`](data/sdm/presence/presence_proxy_madidihang.geojson), [`data/sdm/background/target_group_background.geojson`](data/sdm/background/target_group_background.geojson)
+
+### B. Dataset Statistik Pendaratan, Armada, & Konservasi (PPN Prigi & PPS Cilacap)
+- **Statistik Pendaratan, Armada (814 unit), & Trip Bulanan PPS Cilacap (2016–2025, 120 bulan, 286.680 trip):** [`seacast-prigi-laravel/database/data/raw/pps_cilacap_statistics_2016_2025.csv`](seacast-prigi-laravel/database/data/raw/pps_cilacap_statistics_2016_2025.csv)
+- **Statistik Pendaratan & Oseanografi Bulanan PPN Prigi (2015–2025, 132 bulan):** [`data/master_prigi_all_inclusive.csv`](data/master_prigi_all_inclusive.csv)
+- **Profil Armada & Trip Melaut PPN Prigi:** [`data/prigi_fleet_by_gt_2015_2025.csv`](data/prigi_fleet_by_gt_2015_2025.csv) & [`data/prigi_fleet_trips_2012_2025.csv`](data/prigi_fleet_trips_2012_2025.csv)
+- **Rekam Indikator Bycatch Elasmobranchia & Parameter Ekologi Spesies:** [`data/prigi_elasmobranch_bycatch_records.csv`](data/prigi_elasmobranch_bycatch_records.csv) & [`data/species_traits.csv`](data/species_traits.csv)
 
 ---
 

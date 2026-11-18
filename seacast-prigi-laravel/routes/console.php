@@ -18,9 +18,3 @@ Schedule::command('seacast:sync-live')
     ->timezone('Asia/Jakarta')
     ->withoutOverlapping()
     ->appendOutputTo(storage_path('logs/seacast_sync_live.log'));
-
-Schedule::command('seacast:infer-daily')
-    ->dailyAt('04:30')
-    ->timezone('Asia/Jakarta')
-    ->withoutOverlapping()
-    ->appendOutputTo(storage_path('logs/daily_inference.log'));

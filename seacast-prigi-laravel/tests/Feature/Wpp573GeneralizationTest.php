@@ -35,7 +35,7 @@ class Wpp573GeneralizationTest extends TestCase
         $response->assertSee('WPP 573');
         $response->assertSee('PPN Prigi');
         $response->assertSee('PPS Cilacap');
-        $response->assertSee('PPN Palabuhanratu');
+        $response->assertDontSee('Palabuhanratu');
 
         // Species dossiers: Tongkol Krai, Cakalang, Tuna Sirip Kuning
         $response->assertSee('Tongkol');
@@ -43,7 +43,7 @@ class Wpp573GeneralizationTest extends TestCase
         $response->assertSee('Tuna Sirip Kuning');
 
         // Aggregated multi-port fleet
-        $response->assertSee('2.450');
+        $response->assertSee('2.087');
 
         // Preview map in hero should be removed
         $response->assertDontSee('Radar WPPNRI 573 (PPN Prigi)');
@@ -63,6 +63,7 @@ class Wpp573GeneralizationTest extends TestCase
         $response = $this->actingAs($this->adminUser)->get('/dashboard');
 
         $response->assertStatus(200);
+        $response->assertDontSee('Palabuhanratu');
 
         // Overview headers
         $response->assertSee('Ruang Kendali Eksekutif');
@@ -89,6 +90,7 @@ class Wpp573GeneralizationTest extends TestCase
         // Trip Planner
         $plannerResponse = $this->actingAs($this->adminUser)->get('/dashboard/trip-planner');
         $plannerResponse->assertStatus(200);
+        $plannerResponse->assertDontSee('Palabuhanratu');
         $plannerResponse->assertDontSee('SEACAST / WPPNRI 573 / Rencana Operasional Melaut');
     }
 }

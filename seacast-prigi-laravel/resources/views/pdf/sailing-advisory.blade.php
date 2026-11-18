@@ -182,6 +182,18 @@
     </style>
 </head>
 <body>
+    @php
+        $savedFuelPrice = $trip->total_fuel_liters > 0
+            ? (int) round($trip->total_fuel_cost_rp / $trip->total_fuel_liters)
+            : null;
+        $savedOperationalCost = $trip->gross_revenue_rp - $trip->net_profit_rp;
+        $savedOtherCosts = $savedOperationalCost - $trip->total_fuel_cost_rp;
+        $savedTariffLabel = match (true) {
+            $savedFuelPrice === 6800 && $trip->gt_class !== '> 30 GT' => 'Subsidi (asumsi, belum verifikasi izin)',
+            $savedFuelPrice === 15000 && $trip->gt_class === '> 30 GT' => 'Non subsidi (asumsi harga khusus 2026)',
+            default => 'Tarif rencana tersimpan',
+        };
+    @endphp
 
     <!-- Header Section -->
     <table class="header-table">
@@ -204,21 +216,19 @@
     <div style="margin-bottom: 8px;">
         @if (in_array($trip->permen_kp_status, ['COMPLIANT', 'COMPLIANT_WITHIN_LEGAL_BOUNDS'], true))
             <div class="alert-compliant">
-                STATUS KEPATUHAN: PATUH TERHADAP PERMEN KP NO. 59/2020
-                <span style="float: right; font-weight: normal;">Jalur Penangkapan Ikan Sesuai Tonase Kapal</span>
+                SCREENING AWAL: TIDAK ADA KONFLIK TONASE/JARAK YANG TERDETEKSI
             </div>
         @elseif ($trip->permen_kp_status === 'WARNING_OUT_OF_LEGAL_RANGE')
             <div class="alert-warning">
-                PERINGATAN ZONASI: MELEBIHI BATAS LEGAL TONASE (&gt; 12 NM) — PERMEN KP NO. 59/2020
-                <span style="float: right; font-weight: normal;">Kapal &lt; 10 GT wajib beroperasi di Jalur I (0–12 NM)</span>
+                SCREENING AWAL: PERLU TINJAUAN JALUR DAN TONASE
             </div>
         @else
             <div class="alert-danger">
-                PELANGGARAN ZONASI: KAPAL INDUSTRI DI WILAYAH PESISIR (&lt;= 12 NM) — PERMEN KP NO. 59/2020
-                <span style="float: right; font-weight: normal;">Kapal &gt; 30 GT dilarang menangkap di Jalur I & II</span>
+                SCREENING AWAL: POTENSI KONFLIK JALUR DAN TONASE; PERLU VERIFIKASI
             </div>
         @endif
     </div>
+    <div style="font-size: 7.5pt; color: #475569; margin-bottom: 8px;">Screening memakai jarak dari pelabuhan. Jalur resmi harus diverifikasi dari garis pantai; dokumen ini bukan persetujuan berlayar.</div>
 
     <!-- 2. Vessel Profile & Navigational Waypoints -->
     <table class="grid-2">
@@ -275,7 +285,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td class="label">Jarak Nautika:</td>
+                        <td class="label">Jarak dari Pelabuhan:</td>
                         <td class="value">{{ $trip->distance_nm }} NM (~{{ round($trip->distance_nm * 1.852, 1) }} km)</td>
                     </tr>
                     <tr>
@@ -307,16 +317,21 @@
                         <td class="value" style="color: #D97706;">+{{ number_format($trip->safety_reserve_liters, 1) }} Liter</td>
                     </tr>
                     <tr>
-                        <td class="label">Total Kuota Solar:</td>
+                        <td class="label">Solar PP + Cadangan:</td>
                         <td class="value" style="font-size: 10pt; color: #0284C7;">
                             {{ number_format($trip->total_fuel_liters, 1) }} Liter
                         </td>
                     </tr>
                     <tr>
-                        <td class="label">Estimasi Biaya Solar:</td>
-                        <td class="value">Rp {{ number_format($trip->total_fuel_cost_rp, 0, ',', '.') }} (@ Rp 6.800/L)</td>
+                        <td class="label">Biaya Solar PP:</td>
+                        <td class="value">Rp {{ number_format($trip->total_fuel_cost_rp, 0, ',', '.') }} (@ Rp {{ $savedFuelPrice === null ? '-' : number_format($savedFuelPrice, 0, ',', '.') }}/L)</td>
+                    </tr>
+                    <tr>
+                        <td class="label">Kategori tarif:</td>
+                        <td class="value">{{ $savedTariffLabel }}</td>
                     </tr>
                 </table>
+                <div style="font-size: 7pt; color: #92400E;">Tarif yang tercetak berasal dari biaya dan liter tersimpan. Tarif subsidi memerlukan rekomendasi; tarif non subsidi/harga khusus perlu konfirmasi di pelabuhan.</div>
             </td>
 
             <!-- Right: Oceanographic Safety & Lunar Cycle -->
@@ -352,17 +367,17 @@
                         <td class="label">Kondisi Operasional:</td>
                         <td class="value">
                             @if ($trip->wave_height_m > 2.5)
-                                Bahaya gelombang tinggi ekstrem; tunda pelayaran.
+                                Tinggi gelombang melewati ambang skenario; tunda dan periksa peringatan resmi.
                             @elseif ($trip->wave_height_m > 1.5)
-                                Waspada gelombang sedang; perhatikan manuver jaring/pancing.
+                                Waspada gelombang menurut ambang skenario; periksa prakiraan terbaru.
                             @else
-                                Kondisi laut tenang bersahabat untuk penangkapan optimal.
+                                Gelombang berada di bawah ambang skenario; keselamatan tetap perlu diverifikasi.
                             @endif
                         </td>
                     </tr>
                     <tr>
                         <td class="label">Atraktor Cahaya:</td>
-                        <td class="value">Optimal untuk penangkapan malam hari pelagis besar.</td>
+                        <td class="value">Faktor fase bulan dalam skenario; bukan jaminan hasil tangkapan.</td>
                     </tr>
                 </table>
             </td>
@@ -381,7 +396,7 @@
             <td style="width: 25%; text-align: center; background: #F8FAFC; padding: 6px;">
                 <div style="font-size: 7.5pt; color: #64748B;">ESTIMASI PENERIMAAN</div>
                 <div style="font-size: 11pt; font-weight: 800; color: #059669;">Rp {{ number_format($trip->gross_revenue_rp, 0, ',', '.') }}</div>
-                <div style="font-size: 7pt; color: #475569;">Nilai Pasar TPI Acuan</div>
+                <div style="font-size: 7pt; color: #475569;">Harga acuan skenario</div>
             </td>
             <td style="width: 25%; text-align: center; background: #F8FAFC; padding: 6px;">
                 <div style="font-size: 7.5pt; color: #64748B;">BIAYA BAHAN BAKAR</div>
@@ -389,13 +404,15 @@
                 <div style="font-size: 7pt; color: #475569;">Termasuk 15% Cadangan</div>
             </td>
             <td style="width: 25%; text-align: center; background: #F0FDF4; padding: 6px; border: 1px solid #BBF7D0;">
-                <div style="font-size: 7.5pt; color: #166534; font-weight: bold;">ESTIMASI MARGIN BERSIH</div>
+                <div style="font-size: 7.5pt; color: #166534; font-weight: bold;">MARGIN OPERASIONAL SKENARIO</div>
                 <div style="font-size: 12pt; font-weight: 900; color: #15803D;">Rp {{ number_format($trip->net_profit_rp, 0, ',', '.') }}</div>
-                <div style="font-size: 7pt; color: #166534;">Margin Operasional Bersih</div>
+                <div style="font-size: 7pt; color: #166534;">Penerimaan dikurangi biaya tersimpan</div>
             </td>
         </tr>
     </table>
 
+    <div style="font-size: 7.5pt; color: #475569; margin: 6px 0;">Total biaya operasional tersimpan: <strong>Rp {{ number_format($savedOperationalCost, 0, ',', '.') }}</strong> (solar PP Rp {{ number_format($trip->total_fuel_cost_rp, 0, ',', '.') }}; biaya operasi dan logistik gabungan Rp {{ number_format($savedOtherCosts, 0, ',', '.') }}).</div>
+    <div style="font-size: 7pt; color: #64748B;">Jumlah hari melaut dan rincian biaya tidak tersimpan di dokumen ini. Biaya awak, perawatan, dan retribusi belum dihitung.</div>
     @if ($trip->notes)
         <div style="font-size: 7.5pt; color: #475569; margin-top: 4px; padding: 4px 8px; background: #F8FAFC; border-left: 2px solid #94A3B8;">
             <strong>Catatan Operasional:</strong> {{ $trip->notes }}
@@ -413,7 +430,7 @@
                 <div style="font-size: 7pt; color: #64748B;">{{ $trip->vessel_name }}</div>
             </td>
             <td>
-                <div>Diverifikasi & Disahkan,</div>
+                <div>Untuk pemeriksaan petugas,</div>
                 <div style="font-weight: 600;">Petugas Syahbandar Pelabuhan</div>
                 <div class="sign-space"></div>
                 <div class="sign-name">( ............................................ )</div>
@@ -425,13 +442,13 @@
     <!-- Security Verification Token Box -->
     <div style="text-align: center; margin-top: 15px;">
         <div class="token-box">
-            TOKEN VERIFIKASI SEACAST: <strong>{{ strtoupper(hash('sha256', $trip->reference_no . $trip->created_at)) }}</strong>
+            KODE DOKUMEN SEACAST: <strong>{{ strtoupper(hash('sha256', $trip->reference_no . $trip->created_at)) }}</strong>
         </div>
     </div>
 
     <!-- Official Legal Footer -->
     <div class="footer-note">
-        <strong>Pemberitahuan Resmi:</strong> Dokumen ini dicetak secara otomatis dari Platform SEACAST (Integrated Fisheries Intelligence System WPPNRI 573). Proyeksi hasil tangkapan dan keekonomian menggunakan skenario formula (<code>FORMULA_SCENARIO</code>) berbasis skor kesesuaian habitat proxy (<code>PROXY_HSI</code>), bukan jaminan hasil tangkapan aktual. Rencana operasional ini mengacu pada ketentuan batas jalur penangkapan ikan Permen KP No. 59/PERMEN-KP/2020 dan rekomendasi keselamatan operasional BMKG/Syahbandar. Nahkoda wajib menjaga kelengkapan SPB (Surat Persetujuan Berlayar) resmi dan alat keselamatan pelayaran standar (life jacket, EPIRB, GPS).
+        <strong>Catatan simulasi:</strong> Dokumen ini dicetak otomatis dari SEACAST. Proyeksi tangkapan dan keekonomian memakai skenario formula (<code>FORMULA_SCENARIO</code>) dan skor habitat proxy (<code>PROXY_HSI</code>), bukan jaminan hasil. Status gelombang adalah penilaian saat rencana disimpan; sumber serta waktu prakiraan tidak tersimpan. Periksa prakiraan BMKG terbaru, jarak jalur dari garis pantai, rekomendasi BBM, dan SPB resmi sebelum berangkat.
     </div>
 
 </body>

@@ -215,6 +215,8 @@ class SystemMonitoringService
                 $manifestStatus = 'OPERATIONAL';
             } elseif ($isFresh && $recordStatus === 'VALID_WITH_FALLBACK') {
                 $manifestStatus = 'DEGRADED';
+            } elseif ($recordStatus === 'DEGRADED') {
+                $manifestStatus = 'DEGRADED';
             }
         }
 

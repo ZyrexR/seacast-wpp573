@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Domain\Trip\Services\TripPlanningService;
+use App\Services\BmkgGridForecastService;
 use App\Models\TripPlan;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
@@ -14,7 +15,8 @@ use Illuminate\View\View;
 class TripPlannerController extends Controller
 {
     public function __construct(
-        protected TripPlanningService $plannerService
+        protected TripPlanningService $plannerService,
+        protected BmkgGridForecastService $gridForecast
     ) {}
 
     public function index(Request $request): View
@@ -28,7 +30,7 @@ class TripPlannerController extends Controller
             'vessel_name' => $request->query('vessel_name', $user->name ? "KM {$user->name}" : 'KM Nelayan Bahari'),
             'skipper_name' => $request->query('skipper_name', $user->name ?? 'Nakhoda Sukirno'),
             'gt_class' => $request->query('gt_class', '< 10 GT'),
-            'target_commodity' => ucfirst($request->query('species', 'Cakalang')),
+            'target_commodity' => $this->canonicalCommodity((string)$request->query('species', 'Cakalang')),
             'target_lat' => (float)$request->query('lat', -8.4500),
             'target_lon' => (float)$request->query('lon', 111.7500),
             'departure_date' => $request->query('date', date('Y-m-d')),
@@ -36,10 +38,11 @@ class TripPlannerController extends Controller
             'wave_height_m' => (float)$request->query('wave', 1.3),
             'trip_days' => max(1, min(14, (int)$request->query('trip_days', 1))),
             'vessel_readiness' => $request->query('vessel_readiness', 'OPTIMAL'),
+            'fuel_type' => TripPlanningService::fuelTypeForGtClass($request->query('gt_class', '< 10 GT')),
         ];
 
         // Initial calculation
-        $initialPlan = $this->plannerService->generateCompleteTripPlan($initialTarget);
+        $initialPlan = $this->plannerService->generateCompleteTripPlan($this->withDepartureForecast($initialTarget));
 
         // User's own trip history
         $myTrips = TripPlan::where('user_id', $user->id)
@@ -87,11 +90,12 @@ class TripPlannerController extends Controller
             'wave_height_m' => 'nullable|numeric|min:0',
             'trip_days' => 'sometimes|integer|between:1,14',
             'vessel_readiness' => 'sometimes|in:OPTIMAL,CUKUP,TERBATAS',
+            'fuel_type' => 'sometimes|in:SUBSIDIZED,NON_SUBSIDIZED',
             'vessel_name' => 'nullable|string',
             'skipper_name' => 'nullable|string',
         ]);
 
-        $plan = $this->plannerService->generateCompleteTripPlan($validated);
+        $plan = $this->plannerService->generateCompleteTripPlan($this->withDepartureForecast($validated));
 
         return response()->json($plan);
     }
@@ -112,10 +116,11 @@ class TripPlannerController extends Controller
             'wave_height_m' => 'nullable|numeric|min:0',
             'trip_days' => 'sometimes|integer|between:1,14',
             'vessel_readiness' => 'sometimes|in:OPTIMAL,CUKUP,TERBATAS',
+            'fuel_type' => 'sometimes|in:SUBSIDIZED,NON_SUBSIDIZED',
             'notes' => 'nullable|string|max:500',
         ]);
 
-        $calculated = $this->plannerService->generateCompleteTripPlan($validated);
+        $calculated = $this->plannerService->generateCompleteTripPlan($this->withDepartureForecast($validated));
 
         $trip = TripPlan::create([
             'user_id' => $request->user()?->id,
@@ -168,5 +173,46 @@ class TripPlannerController extends Controller
         $filename = "Sailing-Advisory-{$trip->reference_no}.pdf";
 
         return $pdf->stream($filename);
+    }
+
+    private function withDepartureForecast(array $params): array
+    {
+        try {
+            $date = \Carbon\Carbon::parse($params['departure_date'], 'Asia/Jakarta')->startOfDay();
+            $today = now('Asia/Jakarta')->startOfDay();
+            if ($date->lessThan($today) || $date->greaterThan($today->copy()->addDays(7))) {
+                $params['wave_source'] = 'UNVERIFIED_INPUT';
+                return $params;
+            }
+
+            $departure = $date->copy()->setTime(7, 0)->utc();
+            if ($date->isSameDay($today) && $departure->lessThan(now('UTC'))) {
+                $departure = now('UTC');
+            }
+            $forecast = $this->gridForecast->forecast(
+                (float)$params['target_lat'], (float)$params['target_lon'], $departure
+            );
+            if ($forecast !== null && isset($forecast['wave_height_m'], $forecast['forecast_at']) &&
+                \Carbon\Carbon::parse($forecast['forecast_at'])->setTimezone('Asia/Jakarta')->isSameDay($date)) {
+                $params['wave_height_m'] = (float)$forecast['wave_height_m'];
+                $params['wave_source'] = 'BMKG_INAWAVES_POINT_FORECAST';
+                $params['weather_forecast'] = $forecast;
+                return $params;
+            }
+        } catch (\Throwable $exception) {
+            report($exception);
+        }
+
+        $params['wave_source'] = 'UNVERIFIED_INPUT';
+        return $params;
+    }
+
+    private function canonicalCommodity(string $species): string
+    {
+        return match (str_replace([' ', '-'], '_', strtolower(trim($species)))) {
+            'tuna_sirip_kuning', 'madidihang' => 'tuna_sirip_kuning',
+            'tongkol', 'tongkol_krai', 'tongkol_lisong' => 'tongkol_krai',
+            default => 'Cakalang',
+        };
     }
 }

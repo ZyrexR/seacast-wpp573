@@ -8,15 +8,15 @@ use Illuminate\Http\JsonResponse;
 use App\Domain\ScientificData\Repositories\ScientificDataRepositoryInterface;
 use App\Domain\ScientificData\Services\ScientificDataService;
 use App\Services\GeospatialCacheManager;
+use App\Services\LatestPredictionDateService;
 
 class PredictionApiController extends Controller
 {
-    public const DEFAULT_PREDICTION_DATE = '2026-11-03';
-
     public function __construct(
         protected ScientificDataRepositoryInterface $repository,
         protected ScientificDataService $service,
-        protected GeospatialCacheManager $cacheManager
+        protected GeospatialCacheManager $cacheManager,
+        protected LatestPredictionDateService $latestDates
     ) {}
 
     public function index(Request $request): JsonResponse
@@ -35,7 +35,13 @@ class PredictionApiController extends Controller
             'limit' => 'nullable|integer|min:1|max:10000',
         ]);
 
-        $date = $validated['date'] ?? self::DEFAULT_PREDICTION_DATE;
+        $date = $validated['date'] ?? $this->latestDates->latest();
+        if ($date === null) {
+            return response()->json([
+                'status' => 'ERROR',
+                'message' => 'Belum ada data prediksi harian.',
+            ], 404);
+        }
         $isSummary = ($request->boolean('summary_only') || ($validated['format'] ?? '') === 'summary');
 
         if ($isSummary) {

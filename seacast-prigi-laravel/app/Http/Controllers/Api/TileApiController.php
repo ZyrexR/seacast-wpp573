@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use App\Services\GeospatialCacheManager;
+use App\Services\LatestPredictionDateService;
 
 /**
  * Class TileApiController
@@ -17,14 +18,14 @@ use App\Services\GeospatialCacheManager;
  */
 class TileApiController extends Controller
 {
-    public const DEFAULT_DATE = '2026-11-03';
     public const ALLOWED_LAYERS = ['predictions', 'canonical_grids', 'hotspots'];
     public const MIN_ZOOM = 4;
     public const MAX_ZOOM = 16;
     public const CACHE_VERSION = 'v2';
 
     public function __construct(
-        protected GeospatialCacheManager $cacheManager
+        protected GeospatialCacheManager $cacheManager,
+        protected LatestPredictionDateService $latestDates
     ) {}
 
     public function getTile(Request $request, string $layer, int $z, int $x, int $y): Response
@@ -47,9 +48,15 @@ class TileApiController extends Controller
                 ->header('Content-Type', 'text/plain');
         }
 
-        $date = $request->query('date', self::DEFAULT_DATE);
-        if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $date)) {
-            $date = self::DEFAULT_DATE;
+        $date = $request->query('date');
+        if (!is_string($date) || !preg_match('/^\d{4}-\d{2}-\d{2}$/', $date)) {
+            $date = $this->latestDates->latest();
+        }
+        if ($date === null) {
+            if ($layer !== 'canonical_grids') {
+                return response('', 204)->header('Cache-Control', 'no-store');
+            }
+            $date = 'undated';
         }
 
         // 3. Cache lookup

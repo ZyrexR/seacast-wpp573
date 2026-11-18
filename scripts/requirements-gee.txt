@@ -1,0 +1,6 @@
+earthengine-api
+scikit-learn==1.6.1
+joblib
+pandas
+numpy
+psycopg2-binary

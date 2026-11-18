@@ -356,7 +356,7 @@
                             <div><span class="text-slate-500 block">Kedalaman:</span><span class="text-slate-200" x-text="selectedCell?.depth_m != null ? Number(selectedCell.depth_m).toFixed(1) + ' m' : '-'"></span></div>
                             <div><span class="text-slate-500 block">Suhu (SST):</span><span class="text-slate-200" x-text="selectedCell?.sst_c != null ? Number(selectedCell.sst_c).toFixed(2) + ' °C' : '-'"></span></div>
                             <div><span class="text-slate-500 block">Klorofil-a:</span><span class="text-slate-200" x-text="selectedCell?.chla_mg_m3 != null ? Number(selectedCell.chla_mg_m3).toFixed(2) + ' mg/m³' : '-'"></span></div>
-                            <div><span class="text-slate-500 block">Gelombang:</span><span class="text-slate-200" x-text="selectedCell?.wave_height_m != null ? Number(selectedCell.wave_height_m).toFixed(1) + ' m' : '-'"></span></div>
+                            <div><span class="text-slate-500 block">Gelombang proxy sel:</span><span class="text-slate-200" x-text="selectedCell?.wave_height_m != null ? Number(selectedCell.wave_height_m).toFixed(1) + ' m' : '-'"></span></div>
                             <div class="col-span-2 flex items-center justify-between p-1.5 bg-slate-900 rounded border border-slate-800 text-[11px]">
                                 <span class="text-slate-400">Jarak ke <strong class="text-cyan-400" x-text="activeHub === 'prigi' ? 'PPN Prigi' : 'PPS Cilacap'"></strong>:</span>
                                 <span class="text-white font-mono font-bold" x-text="getActiveHubDistance(selectedCell)"></span>
@@ -1353,6 +1353,7 @@
                                 <div class="mt-1 text-[10px] text-slate-500 font-mono">
                                     Jarak &amp; jalur proxy dihitung dari pelabuhan asal aktif (1 NM = 1.852 km).
                                 </div>
+                                <div class="bmkg-grid-forecast mt-2 pt-2 border-t border-slate-800 text-[11px] text-slate-300" aria-live="polite">Memuat prakiraan model BMKG untuk grid...</div>
                                 <a href="/dashboard/trip-planner?lat=${p.center_lat}&lon=${p.center_lon}&hsi=${hsiVal}&species=${this.selectedSpecies}&cell_id=${p.cell_id}"
                                    class="seacast-popup-cta mt-3 w-full py-1.5 px-3 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs rounded-lg flex items-center justify-center gap-1.5 transition active:scale-95 shadow">
                                     <span>Rencanakan Melaut</span>
@@ -1361,6 +1362,22 @@
                             </div>
                         `;
                         layer.bindPopup(popupHtml, { className: 'mapcn-dark-popup custom-leaflet-popup' }).openPopup();
+                        const weatherBox = layer.getPopup()?.getElement()?.querySelector('.bmkg-grid-forecast');
+                        if (weatherBox) {
+                            const weatherUrl = `/api/bmkg/grid-forecast?lat=${encodeURIComponent(p.center_lat)}&lon=${encodeURIComponent(p.center_lon)}`;
+                            fetch(weatherUrl).then(response => response.json()).then(payload => {
+                                if (!weatherBox.isConnected) return;
+                                if (payload.status !== 'AVAILABLE') {
+                                    weatherBox.textContent = 'Prakiraan model BMKG untuk grid ini belum tersedia.';
+                                    return;
+                                }
+                                const date = new Date(payload.forecast_at);
+                                const forecastTime = Number.isNaN(date.getTime()) ? '-' : date.toLocaleString('id-ID', { timeZone: 'Asia/Jakarta', dateStyle: 'medium', timeStyle: 'short' }) + ' WIB';
+                                weatherBox.textContent = `BMKG InaWaves · Titik model terdekat ${payload.model_lat}°, ${payload.model_lon}° · ${forecastTime} · Gelombang ${payload.wave_height_m} m · Angin ${payload.wind_speed_knots} knot dari ${payload.wind_from_degrees}°`;
+                            }).catch(() => {
+                                if (weatherBox.isConnected) weatherBox.textContent = 'Prakiraan model BMKG sementara tidak tersedia.';
+                            });
+                        }
                     });
                 },
 

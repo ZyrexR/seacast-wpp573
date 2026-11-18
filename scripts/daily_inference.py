@@ -15,6 +15,7 @@ import pandas as pd
 import joblib
 
 from ingestion_manifest import write_ingestion_manifest
+from model_compat import positive_class_probability
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MODELS_DIR = os.path.join(BASE_DIR, "models")
@@ -123,9 +124,9 @@ def run_inference(target_date=None):
         bundle = joblib.load(model_path)
         w = bundle["weights"]
 
-        p_maxent = bundle["maxent"].predict_proba(X_scaled)[:, 1]
-        p_rf = bundle["rf"].predict_proba(X_scaled)[:, 1]
-        p_glm = bundle["glm"].predict_proba(X_scaled)[:, 1]
+        p_maxent = positive_class_probability(bundle["maxent"], X_scaled)
+        p_rf = positive_class_probability(bundle["rf"], X_scaled)
+        p_glm = positive_class_probability(bundle["glm"], X_scaled)
 
         raw_hsi = w["maxent"] * p_maxent + w["rf"] * p_rf + w["glm"] * p_glm
         # Scale HSI 0.000 to 1.000

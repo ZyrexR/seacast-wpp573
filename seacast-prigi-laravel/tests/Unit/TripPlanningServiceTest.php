@@ -86,6 +86,57 @@ class TripPlanningServiceTest extends TestCase
         $this->assertEquals(234600, $fuel['total_fuel_cost_rp']);
     }
 
+    public function test_solar_tariff_is_derived_from_gt_class_even_if_request_asks_for_another_tariff(): void
+    {
+        $params = [
+            'port_code' => 'PPN_PRIGI', 'gt_class' => '< 10 GT',
+            'target_commodity' => 'Cakalang', 'target_lat' => -8.45,
+            'target_lon' => 111.75, 'departure_date' => '2026-11-20',
+            'wave_height_m' => 1.0, 'trip_days' => 2,
+        ];
+        foreach (['< 10 GT', '10 - 20 GT', '20 - 30 GT'] as $gtClass) {
+            $plan = $this->planner->generateCompleteTripPlan(array_merge($params, [
+                'gt_class' => $gtClass, 'fuel_type' => 'NON_SUBSIDIZED',
+            ]));
+            $this->assertSame('SUBSIDIZED', $plan['fuel_type']);
+            $this->assertSame(6800.0, $plan['solar_price_per_liter']);
+            $this->assertSame('GT_CLASS_SCENARIO', $plan['fuel_type_source']);
+            $this->assertSame('UNVERIFIED', $plan['subsidy_eligibility_status']);
+        }
+
+        $large = $this->planner->generateCompleteTripPlan(array_merge($params, [
+            'gt_class' => '> 30 GT', 'fuel_type' => 'SUBSIDIZED',
+        ]));
+        $this->assertSame('NON_SUBSIDIZED', $large['fuel_type']);
+        $this->assertSame(15000.0, $large['solar_price_per_liter']);
+        $this->assertSame('GT_CLASS_SCENARIO', $large['fuel_type_source']);
+        $this->assertSame('NOT_ELIGIBLE_BY_GT', $large['subsidy_eligibility_status']);
+        $this->assertSame((int)round($large['fuel']['total_fuel_liters'] * 15000), $large['fuel']['total_fuel_cost_rp']);
+        $this->assertSame((int)round($large['daily_ops_fuel_liters'] * $large['trip_days'] * 15000), $large['economics']['operational_fuel_cost_rp']);
+        $this->assertSame(
+            round($large['fuel']['total_fuel_liters'] + $large['daily_ops_fuel_liters'] * $large['trip_days'], 1),
+            $large['fuel']['total_trip_fuel_liters']
+        );
+        $this->assertSame(
+            $large['fuel']['total_fuel_cost_rp'] + $large['economics']['operational_fuel_cost_rp'] + $large['economics']['provisions_cost_rp'],
+            $large['economics']['total_operational_cost_rp']
+        );
+        $this->assertSame('FORMULA_SCENARIO', $large['estimate_source']);
+    }
+
+    public function test_missing_species_score_uses_labeled_fallback_and_canonical_commodity_name(): void
+    {
+        $plan = $this->planner->generateCompleteTripPlan([
+            'port_code' => 'PPN_PRIGI', 'gt_class' => '10 - 20 GT',
+            'target_commodity' => 'tuna_sirip_kuning', 'target_lat' => -8.45,
+            'target_lon' => 111.75, 'departure_date' => '2026-11-20',
+            'hsi_score' => null, 'wave_height_m' => 1.3,
+        ]);
+        $this->assertTrue($plan['fallbacks']['hsi']);
+        $this->assertSame('Tuna Sirip Kuning', $plan['target_commodity']);
+        $this->assertSame('Tuna Sirip Kuning', $plan['catch_projection']['commodity']);
+    }
+
     public function test_permen_kp_59_2020_warns_small_vessel_beyond_12_nm(): void
     {
         // Review Focus 1: Vessel < 10 GT attempting to sail beyond 12 NM
