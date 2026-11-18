@@ -1,6 +1,16 @@
 seacast-prigi-laravel/vendor/
 seacast-prigi-laravel/node_modules/
-.superpowers/sdd/
+.agent/
+.agents/
+.gemini/
+.impeccable/
+.opencode/
+.superpowers/
+.ruff_cache/
+Microsoft/
+AGENTS.md
+CLAUDE.md
+skills-lock.json
 *.pyc
 __pycache__/
 .venv-tct/

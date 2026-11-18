@@ -60,9 +60,8 @@ Repositori ini berisi **tiga modul terpisah** agar riset model tidak bercampur d
 
 | Modul | Lokasi Utama | Peran & Status |
 |---|---|---|
-| **1. Aplikasi WebGIS Produksi** | `seacast-prigi-laravel/`, `scripts/bridge_inference_runner.py`, `scripts/gee_daily_extractor.py` | **Aktif (Deploy Target)** — Laravel 11 + PostgreSQL/PostGIS (`8.129` grid kanonikal `0.10°`), DPI Radar, DOM Zones, Trip Planner, Ekspor PDF/GeoJSON/MVT. |
+| **1. Aplikasi WebGIS Produksi** | `seacast-prigi-laravel/`, `scripts/bridge_inference_runner.py`, `scripts/gee_daily_extractor.py` | **Aktif (Deploy Target)** — Laravel + PostgreSQL/PostGIS (`8.129` grid kanonikal `0.10°`), DPI Radar, DOM Zones, Trip Planner, Ekspor PDF/GeoJSON/MVT. |
 | **2. Pipeline & Riset Temporal/Spasial TCT** | `scripts/tct_local_modeling.py`, `scripts/evaluate_tct_scientific_gate.py`, `scripts/validate_spatial_occurrences.py`, `notebooks/SEACAST_TCT_HYBRID_MODELING_2015_2025.ipynb`, `outputs/tct_hybrid_2015_2025/` | **Riset & Audit Ilmiah** — Evaluasi temporal CPUE (`HOLD_FOR_SCIENTIFIC_REVIEW`) dan audit validasi spasial (`PARTIAL_SPATIAL_VALIDATION`, `3/31` pada zona operasional ≤ 60 NM). Terpisah dari ensemble WebGIS produksi. |
-| **3. Prototipe Awal (Legacy Streamlit)** | `app.py`, `utils.py`, `pages/` | **Arsip / Prototipe Awal** — Kerangka awal Streamlit sebelum migrasi ke arsitektur Laravel + PostGIS. Tidak dipakai di produksi. |
 
 ---
 
@@ -81,8 +80,7 @@ Seluruh angka evaluasi model, gate ilmiah, dan provenance di web harus mengacu p
    - `outputs/tct_hybrid_2015_2025/reports/tct_spatial_validation.json` (`31/31` full-grid, `3/31` dalam radius operasional `<= 60 NM`)
 4. **Status Implementasi & Arsitektur Sistem:**
    - [SEACAST_IMPLEMENTATION_STATUS.md](docs/project/SEACAST_IMPLEMENTATION_STATUS.md)
-   - [AGENTS.md](AGENTS.md) (panduan koordinasi Antigravity + Codex)
-   - [seacast-prigi-laravel/AGENTS.md](seacast-prigi-laravel/AGENTS.md) (panduan Laravel Boost)
+   - [GEE_DAILY_AUTOMATION_RUNBOOK.md](docs/project/GEE_DAILY_AUTOMATION_RUNBOOK.md)
 
 ---
 
