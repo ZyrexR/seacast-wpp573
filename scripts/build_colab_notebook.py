@@ -47,7 +47,7 @@ def create_notebook():
 Notebook ini menjalankan seluruh alur analitik kecerdasan buatan (*AI/ML*) perikanan tangkap:
 1. **Ingestion 11 Tahun Data Satelit GEE:** Memuat 132 berkas CSV bulanan (1.073.028 sel) langsung dari Google Drive.
 2. **Koreksi Bias Armada (*Effort Bias Surface*):** Membatasi jangkauan kapal Prigi (<10 GT $\\le 12$ NM, 20-30 GT $\\le 60$ NM).
-3. **Pelatihan Model Ensemble SDM:** Melatih 3 algoritma (*MaxEnt, Random Forest, GLM*) untuk **Cakalang dan Tuna Sirip Kuning**, serta screening ilmiah Tongkol Krai.
+3. **Pelatihan Model Ensemble SDM:** Melatih 3 algoritma (*MaxEnt, Random Forest, GLM*) untuk **Cakalang, Tuna Sirip Kuning, dan Tongkol Krai**.
 4. **Validasi Spasial Ketat:** *Spatial 5-Fold Cross Validation*, AUC-ROC, TSS, dan kurva respons ekologis.
 5. **Batch Inference 1 Juta Sel:** Menghitung skor kesesuaian habitat (HSI `0.00 - 1.00`) untuk seluruh sel 2015–2025.
 6. **Dynamic Ocean Management (5 Zona):** Klasifikasi Z1 (Inshore), Z2 (Offshore), Z3 (Feeding), Z4 (Nursery), dan Z5 (123 Poligon Skrining Bycatch).
@@ -261,6 +261,15 @@ suit_curr_madidihang = np.clip(df_all['current_velocity'] / 0.45, 0.0, 1.0)
 raw_prob_madidihang = (0.35 * suit_sst_madidihang + 0.30 * suit_chla_madidihang + 0.35 * suit_curr_madidihang) * (df_all['depth'] > 200.0)
 proxy_prob_madidihang = np.nan_to_num(np.power(raw_prob_madidihang, 2.5), nan=0.0)
 
+# TONGKOL KRAI (Auxis thazard): Neritik pesisir & paparan benua (<= 150 m)
+suit_sst_tongkol = gaussian_suitability(df_all['sst'], 27.0, 30.5, 0.45)
+suit_chla_tongkol = gaussian_suitability(df_all['chla'], 0.20, 0.50, 0.12)
+suit_depth_tongkol = np.where(df_all['depth'] <= 150.0, 1.0, np.exp(-0.5 * ((df_all['depth'] - 150.0) / 180.0) ** 2))
+suit_front_tongkol = np.clip(df_all['grad_sst'] / 0.035, 0.0, 1.0)
+shelf_affinity_tongkol = np.where(df_all['depth'] <= 600.0, 1.0, 0.25)
+raw_prob_tongkol = ((0.40 * suit_sst_tongkol) + (0.35 * suit_chla_tongkol) + (0.15 * suit_depth_tongkol) + (0.10 * suit_front_tongkol)) * shelf_affinity_tongkol
+proxy_prob_tongkol_krai = np.nan_to_num(np.power(raw_prob_tongkol, 2.5), nan=0.0)
+
 # 2. Sampling Controlled Presence-Proxy & Background Sampling (Protokol Baku MaxEnt Phillips & Elith)
 np.random.seed(42)
 N_SAMPLES = 2500
@@ -315,7 +324,8 @@ print("✅ Data sampling terkalibrasi siap untuk pelatihan 3 spesies (100% bebas
 Melatih 3 algoritma (*MaxEnt, Random Forest, GLM*) untuk masing-masing spesies dan mengkalkulasi metrik AUC-ROC serta TSS.""")
     add_code("""species_list = [
     {"name": "cakalang", "display": "Cakalang (Skipjack Tuna)", "probs": proxy_prob_cakalang},
-    {"name": "madidihang", "display": "Tuna Sirip Kuning (Yellowfin Tuna)", "probs": proxy_prob_madidihang}
+    {"name": "madidihang", "display": "Tuna Sirip Kuning (Yellowfin Tuna)", "probs": proxy_prob_madidihang},
+    {"name": "tongkol_krai", "display": "Tongkol Krai (Frigate Tuna)", "probs": proxy_prob_tongkol_krai}
 ]
 
 models_dict = {}
@@ -565,7 +575,7 @@ print("\\n" + "="*70)
 print("🎉 SELURUH PIPELINE PEMODELAN SEACAST PRIGI v2.3.2 SELESAI DENGAN SEMPURNA!")
 print("="*70)
 print(f"📦 Berkas luaran lengkap tersimpan di Google Drive: {OUTPUT_DIR}")
-print("1. Model ML: cakalang, madidihang (.joblib) + Tongkol Krai rule-based HSI")
+print("1. Model ML Ensemble SDM (.joblib): cakalang, madidihang, tongkol_krai")
 print("2. Master Data Prediksi: SEACAST_PRIGI_PREDICTIONS_2015_2025_FULL.parquet (1.073.028 baris)")
 print("3. Lapisan Spasial: canonical_grid_8129_cells.geojson")
 print("4. Metrik & Grafik: sdm_evaluation_metrics.json & cpue_vs_hsi_validation_plot.png")
