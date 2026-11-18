@@ -160,9 +160,16 @@ class TripPlannerController extends Controller
 
     public function downloadPdf(string $id)
     {
-        $trip = TripPlan::where('reference_no', $id)
-            ->orWhere('id', $id)
-            ->firstOrFail();
+        $query = TripPlan::where('reference_no', $id);
+        if (ctype_digit($id)) {
+            $query->orWhere('id', (int) $id);
+        }
+        $trip = $query->firstOrFail();
+
+        $fontDir = storage_path('fonts');
+        if (!is_dir($fontDir)) {
+            @mkdir($fontDir, 0775, true);
+        }
 
         $pdf = Pdf::loadView('pdf.sailing-advisory', [
             'trip' => $trip,
