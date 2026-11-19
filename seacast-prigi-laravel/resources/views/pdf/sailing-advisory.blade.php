@@ -2,17 +2,17 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Sailing Advisory — {{ $trip->reference_no }}</title>
+    <title>Slip Rencana Operasional Melaut — {{ $trip->reference_no }}</title>
     <style>
         @page {
-            margin: 1.2cm 1.4cm;
+            margin: 1.0cm 1.2cm;
             size: A4 portrait;
         }
         body {
-            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            font-size: 9pt;
+            font-family: 'DejaVu Sans', sans-serif;
+            font-size: 8.5pt;
             line-height: 1.35;
-            color: #0F172A;
+            color: #1E293B;
             background: #FFFFFF;
             margin: 0;
             padding: 0;
@@ -21,130 +21,231 @@
             width: 100%;
             border-collapse: collapse;
         }
-        .header-table td {
+        .mono {
+            font-family: 'DejaVu Sans Mono', monospace;
+        }
+
+        /* Kop Surat Resmi */
+        .kop-table td {
             vertical-align: middle;
         }
-        .logo-box {
-            font-size: 18pt;
-            font-weight: 900;
-            letter-spacing: -0.5px;
-            color: #0369A1;
+        .kop-logo {
+            height: 46px;
+            width: auto;
         }
-        .logo-sub {
-            font-size: 7.5pt;
-            color: #64748B;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-top: 2px;
-        }
-        .doc-title-box {
-            text-align: right;
-        }
-        .doc-title {
-            font-size: 11pt;
-            font-weight: 800;
-            color: #0F172A;
-            text-transform: uppercase;
+        .kop-fallback {
+            font-size: 16pt;
+            font-weight: bold;
+            color: #0B2545;
             letter-spacing: 0.5px;
         }
-        .doc-ref {
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 10pt;
-            font-weight: bold;
-            color: #0284C7;
+        .kop-sub {
+            font-size: 7pt;
+            color: #475569;
             margin-top: 2px;
         }
-        .divider {
-            border-bottom: 2px solid #0284C7;
-            margin: 8px 0 12px 0;
+        .doc-meta {
+            text-align: right;
         }
-        .section-title {
-            font-size: 8.5pt;
-            font-weight: 800;
+        .doc-kicker {
+            font-size: 7pt;
+            font-weight: bold;
             text-transform: uppercase;
-            letter-spacing: 0.8px;
-            color: #0369A1;
-            padding: 4px 8px;
-            background-color: #F0F9FF;
-            border-left: 3px solid #0284C7;
-            margin-bottom: 6px;
-            margin-top: 10px;
-        }
-        .data-table {
-            width: 100%;
-            margin-bottom: 8px;
-        }
-        .data-table td {
-            padding: 4px 6px;
-            border-bottom: 1px solid #E2E8F0;
-            font-size: 8.5pt;
-        }
-        .data-table td.label {
-            width: 28%;
+            letter-spacing: 1px;
             color: #475569;
-            font-weight: 600;
         }
-        .data-table td.value {
-            width: 72%;
-            color: #0F172A;
-            font-weight: 700;
+        .doc-title {
+            font-size: 11.5pt;
+            font-weight: bold;
+            color: #0B2545;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            margin-top: 1px;
         }
-        .highlight-box {
-            background-color: #F8FAFC;
+        .doc-ref {
+            font-family: 'DejaVu Sans Mono', monospace;
+            font-size: 9.5pt;
+            font-weight: bold;
+            color: #0B2545;
+            margin-top: 2px;
+        }
+        .doc-date {
+            font-size: 7pt;
+            color: #64748B;
+            margin-top: 2px;
+        }
+        .kop-rule-thick {
+            border-top: 2px solid #0B2545;
+            margin-top: 7px;
+        }
+        .kop-rule-thin {
+            border-top: 0.5px solid #94A3B8;
+            margin-top: 2px;
+            margin-bottom: 9px;
+        }
+
+        /* Screening Status Strip */
+        .status-strip {
             border: 1px solid #CBD5E1;
-            border-radius: 4px;
-            padding: 8px;
+            border-left: 4px solid #0B2545;
+            background-color: #F8FAFC;
+            padding: 6px 9px;
+            margin-bottom: 4px;
+        }
+        .status-strip.ok {
+            border-color: #94A3B8;
+            border-left-color: #0F766E;
+        }
+        .status-strip.warn {
+            border-color: #D97706;
+            border-left-color: #B45309;
+            background-color: #FFFDF7;
+        }
+        .status-strip.danger {
+            border-color: #DC2626;
+            border-left-color: #B91C1C;
+            background-color: #FEF9F9;
+        }
+        .status-heading {
+            font-size: 8pt;
+            font-weight: bold;
+            color: #0F172A;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        .status-note {
+            font-size: 7pt;
+            color: #475569;
             margin-bottom: 8px;
         }
-        .alert-compliant {
-            background-color: #ECFDF5;
-            border: 1px solid #10B981;
-            color: #065F46;
-            padding: 6px 10px;
-            border-radius: 4px;
+
+        /* Section Headings */
+        .sec-head {
             font-size: 8pt;
             font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: #0B2545;
+            border-bottom: 1.5px solid #0B2545;
+            padding-bottom: 2px;
+            margin-top: 7px;
+            margin-bottom: 4px;
         }
-        .alert-warning {
-            background-color: #FFFBEB;
-            border: 1px solid #F59E0B;
-            color: #92400E;
-            padding: 6px 10px;
-            border-radius: 4px;
-            font-size: 8pt;
-            font-weight: bold;
-        }
-        .alert-danger {
-            background-color: #FEF2F2;
-            border: 1px solid #EF4444;
-            color: #991B1B;
-            padding: 6px 10px;
-            border-radius: 4px;
-            font-size: 8pt;
-            font-weight: bold;
-        }
-        .badge {
-            display: inline-block;
-            padding: 2px 6px;
-            border-radius: 3px;
-            font-size: 7.5pt;
-            font-weight: bold;
-            font-family: 'Courier New', Courier, monospace;
-        }
-        .badge-cyan {
-            background-color: #E0F2FE;
-            color: #0369A1;
-        }
-        .grid-2 {
+
+        /* Layout 2 Kolom */
+        .col-wrap {
             width: 100%;
+            margin-bottom: 4px;
         }
-        .grid-2 td {
+        .col-wrap > tbody > tr > td {
             width: 50%;
             vertical-align: top;
-            padding: 0 4px;
         }
+        .col-left {
+            padding-right: 9px;
+        }
+        .col-right {
+            padding-left: 9px;
+        }
+
+        /* Tabel Data */
+        .kv-table td {
+            padding: 3.5px 4px;
+            border-bottom: 0.5px solid #E2E8F0;
+            font-size: 8pt;
+            vertical-align: top;
+        }
+        .kv-table td.k {
+            width: 38%;
+            color: #475569;
+        }
+        .kv-table td.v {
+            width: 62%;
+            color: #0F172A;
+            font-weight: bold;
+        }
+
+        /* Badge Ringkas */
+        .pill {
+            display: inline-block;
+            padding: 1px 5px;
+            border: 0.75px solid #94A3B8;
+            font-family: 'DejaVu Sans Mono', monospace;
+            font-size: 7.5pt;
+            font-weight: bold;
+            color: #0B2545;
+            background-color: #F8FAFC;
+        }
+        .pill-ok {
+            border-color: #0F766E;
+            color: #0F766E;
+        }
+        .pill-warn {
+            border-color: #B45309;
+            color: #B45309;
+        }
+        .pill-danger {
+            border-color: #B91C1C;
+            color: #B91C1C;
+        }
+
+        /* Tabel Ringkasan Ekonomi */
+        .econ-table {
+            border: 1px solid #94A3B8;
+            margin-top: 4px;
+            margin-bottom: 6px;
+        }
+        .econ-table th {
+            background-color: #F1F5F9;
+            color: #334155;
+            font-size: 7pt;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            padding: 4px 6px;
+            border-bottom: 1px solid #94A3B8;
+            border-right: 0.5px solid #CBD5E1;
+            text-align: center;
+        }
+        .econ-table th:last-child,
+        .econ-table td:last-child {
+            border-right: none;
+        }
+        .econ-table td {
+            padding: 6px 6px;
+            text-align: center;
+            border-right: 0.5px solid #CBD5E1;
+            vertical-align: middle;
+        }
+        .econ-val {
+            font-size: 10.5pt;
+            font-weight: bold;
+            color: #0B2545;
+        }
+        .econ-sub {
+            font-size: 6.8pt;
+            color: #64748B;
+            margin-top: 1px;
+        }
+
+        .sub-note {
+            font-size: 7pt;
+            color: #475569;
+            margin-top: 2px;
+            line-height: 1.3;
+        }
+        .notes-box {
+            margin-top: 5px;
+            padding: 4px 7px;
+            border: 0.75px solid #CBD5E1;
+            background-color: #F8FAFC;
+            font-size: 7.5pt;
+            color: #334155;
+        }
+
+        /* Tanda Tangan & Token */
         .sign-table {
-            margin-top: 25px;
+            margin-top: 16px;
             width: 100%;
         }
         .sign-table td {
@@ -152,37 +253,53 @@
             text-align: center;
             vertical-align: top;
             font-size: 8pt;
+            color: #1E293B;
         }
         .sign-space {
-            height: 55px;
+            height: 44px;
         }
         .sign-name {
             font-weight: bold;
             text-decoration: underline;
         }
-        .footer-note {
-            margin-top: 15px;
-            border-top: 1px dashed #CBD5E1;
-            padding-top: 6px;
+        .sign-sub {
             font-size: 7pt;
             color: #64748B;
-            text-align: justify;
+            margin-top: 1px;
+        }
+
+        .token-row {
+            margin-top: 10px;
+            text-align: center;
         }
         .token-box {
-            border: 1px solid #94A3B8;
-            padding: 4px 8px;
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 7.5pt;
-            color: #334155;
-            background: #F1F5F9;
-            text-align: center;
             display: inline-block;
-            margin-top: 4px;
+            border: 0.75px solid #94A3B8;
+            background-color: #F8FAFC;
+            padding: 3px 8px;
+            font-family: 'DejaVu Sans Mono', monospace;
+            font-size: 7pt;
+            color: #334155;
+        }
+
+        .footer-note {
+            margin-top: 8px;
+            border-top: 0.75px solid #CBD5E1;
+            padding-top: 5px;
+            font-size: 6.8pt;
+            color: #475569;
+            text-align: justify;
+            line-height: 1.3;
         }
     </style>
 </head>
 <body>
     @php
+        $logoPath = public_path('images/brand/logo-full.png');
+        $logoDataUri = is_file($logoPath)
+            ? 'data:image/png;base64,' . base64_encode((string) file_get_contents($logoPath))
+            : null;
+
         $savedFuelPrice = $trip->total_fuel_liters > 0
             ? (int) round($trip->total_fuel_cost_rp / $trip->total_fuel_liters)
             : null;
@@ -193,264 +310,264 @@
             $savedFuelPrice === 15000 && $trip->gt_class === '> 30 GT' => 'Non subsidi (asumsi harga khusus 2026)',
             default => 'Tarif rencana tersimpan',
         };
+
+        $screeningClass = 'danger';
+        $screeningText = 'SCREENING AWAL: POTENSI KONFLIK JALUR DAN TONASE; PERLU VERIFIKASI';
+        if (in_array($trip->permen_kp_status, ['COMPLIANT', 'COMPLIANT_WITHIN_LEGAL_BOUNDS'], true)) {
+            $screeningClass = 'ok';
+            $screeningText = 'SCREENING AWAL: TIDAK ADA KONFLIK TONASE / JARAK YANG TERDETEKSI';
+        } elseif ($trip->permen_kp_status === 'WARNING_OUT_OF_LEGAL_RANGE') {
+            $screeningClass = 'warn';
+            $screeningText = 'SCREENING AWAL: PERLU TINJAUAN JALUR DAN TONASE';
+        }
+
+        $waveClass = match ($trip->wave_status) {
+            'AMAN', 'SAFE' => 'pill-ok',
+            'WASPADA', 'CAUTION' => 'pill-warn',
+            default => 'pill-danger',
+        };
+        $waveLabel = match ($trip->wave_status) {
+            'AMAN', 'SAFE' => 'AMAN',
+            'WASPADA', 'CAUTION' => 'WASPADA',
+            'DANGER' => 'BAHAYA',
+            default => $trip->wave_status,
+        };
     @endphp
 
-    <!-- Header Section -->
-    <table class="header-table">
+    <!-- Kop Surat Resmi -->
+    <table class="kop-table">
         <tr>
-            <td style="width: 50%;">
-                <div class="logo-box">SEACAST</div>
-                <div class="logo-sub">Platform Keputusan Melaut & Intelijen Oseanografi WPPNRI 573</div>
+            <td style="width: 48%;">
+                @if ($logoDataUri)
+                    <img src="{{ $logoDataUri }}" alt="SEACAST" class="kop-logo">
+                @else
+                    <div class="kop-fallback">SEACAST</div>
+                    <div class="kop-sub">Platform Keputusan Melaut &amp; Intelijen Oseanografi WPPNRI 573</div>
+                @endif
             </td>
-            <td class="doc-title-box" style="width: 50%;">
-                <div class="doc-title">Rencana Operasional Melaut</div>
+            <td class="doc-meta" style="width: 52%;">
+                <div class="doc-kicker">WPPNRI 573 &bull; Samudera Hindia Selatan Jawa</div>
+                <div class="doc-title">Slip Rencana Operasional Melaut</div>
                 <div class="doc-ref">{{ $trip->reference_no }}</div>
-                <div style="font-size: 7.5pt; color: #64748B;">Diterbitkan: {{ date('d F Y, H:i') }} WIB</div>
+                <div class="doc-date">Dicetak: {{ now()->timezone('Asia/Jakarta')->format('d M Y, H:i') }} WIB</div>
             </td>
         </tr>
     </table>
+    <div class="kop-rule-thick"></div>
+    <div class="kop-rule-thin"></div>
 
-    <div class="divider"></div>
-
-    <!-- 1. Regulatory Compliance Banner (Permen KP 59/2020) -->
-    <div style="margin-bottom: 8px;">
-        @if (in_array($trip->permen_kp_status, ['COMPLIANT', 'COMPLIANT_WITHIN_LEGAL_BOUNDS'], true))
-            <div class="alert-compliant">
-                SCREENING AWAL: TIDAK ADA KONFLIK TONASE/JARAK YANG TERDETEKSI
-            </div>
-        @elseif ($trip->permen_kp_status === 'WARNING_OUT_OF_LEGAL_RANGE')
-            <div class="alert-warning">
-                SCREENING AWAL: PERLU TINJAUAN JALUR DAN TONASE
-            </div>
-        @else
-            <div class="alert-danger">
-                SCREENING AWAL: POTENSI KONFLIK JALUR DAN TONASE; PERLU VERIFIKASI
-            </div>
-        @endif
+    <!-- Screening Status -->
+    <div class="status-strip {{ $screeningClass }}">
+        <div class="status-heading">{{ $screeningText }}</div>
     </div>
-    <div style="font-size: 7.5pt; color: #475569; margin-bottom: 8px;">Screening memakai jarak dari pelabuhan. Jalur resmi harus diverifikasi dari garis pantai; dokumen ini bukan persetujuan berlayar.</div>
+    <div class="status-note">
+        Screening dihitung dari jarak pelabuhan asal. Jalur resmi tetap wajib diverifikasi dari garis pantai; dokumen ini bukan persetujuan berlayar (SPB).
+    </div>
 
-    <!-- 2. Vessel Profile & Navigational Waypoints -->
-    <table class="grid-2">
+    <!-- Bagian I & II -->
+    <table class="col-wrap">
         <tr>
-            <!-- Left Column: Vessel Profile -->
-            <td>
-                <div class="section-title">1. Profil Armada & Nakhoda</div>
-                <table class="data-table">
+            <td class="col-left">
+                <div class="sec-head">I. Profil Armada &amp; Nakhoda</div>
+                <table class="kv-table">
                     <tr>
-                        <td class="label">Nama Kapal:</td>
-                        <td class="value">{{ $trip->vessel_name }}</td>
+                        <td class="k">Nama Kapal</td>
+                        <td class="v">{{ $trip->vessel_name }}</td>
                     </tr>
                     <tr>
-                        <td class="label">Nama Nakhoda:</td>
-                        <td class="value">{{ $trip->skipper_name }}</td>
+                        <td class="k">Nama Nakhoda</td>
+                        <td class="v">{{ $trip->skipper_name }}</td>
                     </tr>
                     <tr>
-                        <td class="label">Pangkalan / Asal:</td>
-                        <td class="value">{{ $trip->port_name }} ({{ $trip->port_code }})</td>
+                        <td class="k">Pelabuhan Pangkalan</td>
+                        <td class="v">{{ $trip->port_name }} ({{ $trip->port_code }})</td>
                     </tr>
                     <tr>
-                        <td class="label">Kelas Tonase:</td>
-                        <td class="value"><span class="badge badge-cyan">{{ $trip->gt_class }}</span></td>
+                        <td class="k">Kelas Tonase</td>
+                        <td class="v"><span class="pill">{{ $trip->gt_class }}</span></td>
                     </tr>
                     <tr>
-                        <td class="label">Alat Tangkap API:</td>
-                        <td class="value">{{ $trip->gear_name }} ({{ $trip->gear_code }})</td>
+                        <td class="k">Alat Tangkap</td>
+                        <td class="v">{{ $trip->gear_name }} ({{ $trip->gear_code }})</td>
                     </tr>
                     <tr>
-                        <td class="label">Tanggal Tolak:</td>
-                        <td class="value" style="color: #0284C7;">{{ $trip->departure_date->format('d F Y') }}</td>
+                        <td class="k">Tanggal Berangkat</td>
+                        <td class="v">{{ $trip->departure_date->format('d F Y') }}</td>
                     </tr>
                 </table>
             </td>
-
-            <!-- Right Column: Navigational Coordinates -->
-            <td>
-                <div class="section-title">2. Koordinat Sasaran & Navigasi</div>
-                <table class="data-table">
+            <td class="col-right">
+                <div class="sec-head">II. Koordinat Sasaran &amp; Navigasi</div>
+                <table class="kv-table">
                     <tr>
-                        <td class="label">Komoditas Utama:</td>
-                        <td class="value">{{ $trip->target_commodity }}</td>
+                        <td class="k">Komoditas Sasaran</td>
+                        <td class="v">{{ $trip->target_commodity }}</td>
                     </tr>
                     <tr>
-                        <td class="label">Titik Koordinat:</td>
-                        <td class="value" style="font-family: 'Courier New', Courier, monospace; color: #0284C7;">
-                            {{ $trip->target_dms }}
-                        </td>
+                        <td class="k">Koordinat (DMS)</td>
+                        <td class="v mono">{{ $trip->target_dms }}</td>
                     </tr>
                     <tr>
-                        <td class="label">Koordinat Desimal:</td>
-                        <td class="value" style="font-family: 'Courier New', Courier, monospace;">
-                            {{ number_format($trip->target_lat, 4) }}°, {{ number_format($trip->target_lon, 4) }}°
-                        </td>
+                        <td class="k">Koordinat Desimal</td>
+                        <td class="v mono">{{ number_format($trip->target_lat, 4) }}°, {{ number_format($trip->target_lon, 4) }}°</td>
                     </tr>
                     <tr>
-                        <td class="label">Jarak dari Pelabuhan:</td>
-                        <td class="value">{{ $trip->distance_nm }} NM (~{{ round($trip->distance_nm * 1.852, 1) }} km)</td>
+                        <td class="k">Jarak dari Pangkalan</td>
+                        <td class="v">{{ $trip->distance_nm }} NM (~{{ round($trip->distance_nm * 1.852, 1) }} km)</td>
                     </tr>
                     <tr>
-                        <td class="label">Sudut Haluan:</td>
-                        <td class="value">{{ $trip->bearing_degrees }}° (Haluan {{ $trip->compass_direction }})</td>
+                        <td class="k">Haluan Kompas</td>
+                        <td class="v">{{ $trip->bearing_degrees }}° ({{ $trip->compass_direction }})</td>
                     </tr>
                     <tr>
-                        <td class="label">Wilayah Pengelolaan:</td>
-                        <td class="value">WPPNRI 573 (Samudera Hindia Selatan Jawa)</td>
+                        <td class="k">Wilayah Pengelolaan</td>
+                        <td class="v">WPPNRI 573 (Selatan Jawa)</td>
                     </tr>
                 </table>
             </td>
         </tr>
     </table>
 
-    <!-- 3. Fuel Logistics with +15% Safety Reserve & Maritime Safety -->
-    <table class="grid-2">
+    <!-- Bagian III & IV -->
+    <table class="col-wrap" style="margin-top: 4px;">
         <tr>
-            <!-- Left: Fuel Logistics -->
-            <td>
-                <div class="section-title">3. Logistik Bahan Bakar (+15% Safety)</div>
-                <table class="data-table">
+            <td class="col-left">
+                <div class="sec-head">III. Logistik Bahan Bakar (+15% Cadangan)</div>
+                <table class="kv-table">
                     <tr>
-                        <td class="label">Konsumsi PP Basis:</td>
-                        <td class="value">{{ number_format($trip->base_fuel_liters, 1) }} Liter</td>
+                        <td class="k">Konsumsi PP Basis</td>
+                        <td class="v">{{ number_format($trip->base_fuel_liters, 1) }} Liter</td>
                     </tr>
                     <tr>
-                        <td class="label">Cadangan Wajib (+15%):</td>
-                        <td class="value" style="color: #D97706;">+{{ number_format($trip->safety_reserve_liters, 1) }} Liter</td>
+                        <td class="k">Cadangan Wajib (+15%)</td>
+                        <td class="v">+{{ number_format($trip->safety_reserve_liters, 1) }} Liter</td>
                     </tr>
                     <tr>
-                        <td class="label">Solar PP + Cadangan:</td>
-                        <td class="value" style="font-size: 10pt; color: #0284C7;">
-                            {{ number_format($trip->total_fuel_liters, 1) }} Liter
-                        </td>
+                        <td class="k">Total Solar PP</td>
+                        <td class="v">{{ number_format($trip->total_fuel_liters, 1) }} Liter</td>
                     </tr>
                     <tr>
-                        <td class="label">Biaya Solar PP:</td>
-                        <td class="value">Rp {{ number_format($trip->total_fuel_cost_rp, 0, ',', '.') }} (@ Rp {{ $savedFuelPrice === null ? '-' : number_format($savedFuelPrice, 0, ',', '.') }}/L)</td>
+                        <td class="k">Biaya Solar PP</td>
+                        <td class="v">Rp {{ number_format($trip->total_fuel_cost_rp, 0, ',', '.') }} (@ Rp {{ $savedFuelPrice === null ? '-' : number_format($savedFuelPrice, 0, ',', '.') }}/L)</td>
                     </tr>
                     <tr>
-                        <td class="label">Kategori tarif:</td>
-                        <td class="value">{{ $savedTariffLabel }}</td>
+                        <td class="k">Kategori Tarif</td>
+                        <td class="v">{{ $savedTariffLabel }}</td>
                     </tr>
                 </table>
-                <div style="font-size: 7pt; color: #92400E;">Tarif yang tercetak berasal dari biaya dan liter tersimpan. Tarif subsidi memerlukan rekomendasi; tarif non subsidi/harga khusus perlu konfirmasi di pelabuhan.</div>
+                <div class="sub-note">
+                    Tarif berasal dari biaya &amp; liter tersimpan. Tarif subsidi memerlukan rekomendasi resmi; tarif non-subsidi dikonfirmasi di pelabuhan.
+                </div>
             </td>
-
-            <!-- Right: Oceanographic Safety & Lunar Cycle -->
-            <td>
-                <div class="section-title">4. Keselamatan Oseanografi & Lunar</div>
-                <table class="data-table">
+            <td class="col-right">
+                <div class="sec-head">IV. Keselamatan Oseanografi &amp; Lunar</div>
+                <table class="kv-table">
                     <tr>
-                        <td class="label">Status Gelombang:</td>
-                        <td class="value">
-                            @php
-                                $pdfWaveStyle = match($trip->wave_status) {
-                                    'AMAN', 'SAFE' => 'background: #DCFCE7; color: #166534;',
-                                    'WASPADA', 'CAUTION' => 'background: #FEF3C7; color: #92400E;',
-                                    default => 'background: #FEE2E2; color: #991B1B;',
-                                };
-                                $pdfWaveLabel = match($trip->wave_status) {
-                                    'AMAN', 'SAFE' => 'AMAN',
-                                    'WASPADA', 'CAUTION' => 'WASPADA',
-                                    'DANGER' => 'BAHAYA',
-                                    default => $trip->wave_status,
-                                };
-                            @endphp
-                            <span class="badge" style="{{ $pdfWaveStyle }}">
-                                {{ $pdfWaveLabel }} ({{ $trip->wave_height_m }} m)
-                            </span>
+                        <td class="k">Status Gelombang</td>
+                        <td class="v">
+                            <span class="pill {{ $waveClass }}">{{ $waveLabel }} ({{ $trip->wave_height_m }} m)</span>
                         </td>
                     </tr>
                     <tr>
-                        <td class="label">Fase Bulan:</td>
-                        <td class="value">{{ $trip->moon_phase_name }}</td>
+                        <td class="k">Fase Bulan</td>
+                        <td class="v">{{ $trip->moon_phase_name }}</td>
                     </tr>
                     <tr>
-                        <td class="label">Kondisi Operasional:</td>
-                        <td class="value">
+                        <td class="k">Penilaian Gelombang</td>
+                        <td class="v">
                             @if ($trip->wave_height_m > 2.5)
-                                Tinggi gelombang melewati ambang skenario; tunda dan periksa peringatan resmi.
+                                Melewati ambang skenario; tunda &amp; cek peringatan resmi BMKG.
                             @elseif ($trip->wave_height_m > 1.5)
-                                Waspada gelombang menurut ambang skenario; periksa prakiraan terbaru.
+                                Waspada gelombang; periksa prakiraan terbaru sebelum bertolak.
                             @else
-                                Gelombang berada di bawah ambang skenario; keselamatan tetap perlu diverifikasi.
+                                Di bawah ambang skenario; tetap pantau prakiraan maritim resmi.
                             @endif
                         </td>
                     </tr>
                     <tr>
-                        <td class="label">Atraktor Cahaya:</td>
-                        <td class="value">Faktor fase bulan dalam skenario; bukan jaminan hasil tangkapan.</td>
+                        <td class="k">Faktor Lunar</td>
+                        <td class="v">Parameter skenario; bukan jaminan hasil tangkapan.</td>
                     </tr>
                 </table>
             </td>
         </tr>
     </table>
 
-    <!-- 4. Catch Projections & Economic Valuation -->
-    <div class="section-title">5. Proyeksi Hasil Tangkapan & Analisis Keekonomian</div>
-    <table class="data-table">
-        <tr>
-            <td style="width: 25%; text-align: center; background: #F8FAFC; padding: 6px;">
-                <div style="font-size: 7.5pt; color: #64748B;">PROYEKSI TANGKAPAN</div>
-                <div style="font-size: 13pt; font-weight: 900; color: #0369A1;">{{ number_format($trip->projected_catch_kg, 0, ',', '.') }} kg</div>
-                <div style="font-size: 7pt; color: #475569;">{{ $trip->target_commodity }}</div>
-            </td>
-            <td style="width: 25%; text-align: center; background: #F8FAFC; padding: 6px;">
-                <div style="font-size: 7.5pt; color: #64748B;">ESTIMASI PENERIMAAN</div>
-                <div style="font-size: 11pt; font-weight: 800; color: #059669;">Rp {{ number_format($trip->gross_revenue_rp, 0, ',', '.') }}</div>
-                <div style="font-size: 7pt; color: #475569;">Harga acuan skenario</div>
-            </td>
-            <td style="width: 25%; text-align: center; background: #F8FAFC; padding: 6px;">
-                <div style="font-size: 7.5pt; color: #64748B;">BIAYA BAHAN BAKAR</div>
-                <div style="font-size: 11pt; font-weight: 800; color: #DC2626;">Rp {{ number_format($trip->total_fuel_cost_rp, 0, ',', '.') }}</div>
-                <div style="font-size: 7pt; color: #475569;">Termasuk 15% Cadangan</div>
-            </td>
-            <td style="width: 25%; text-align: center; background: #F0FDF4; padding: 6px; border: 1px solid #BBF7D0;">
-                <div style="font-size: 7.5pt; color: #166534; font-weight: bold;">MARGIN OPERASIONAL SKENARIO</div>
-                <div style="font-size: 12pt; font-weight: 900; color: #15803D;">Rp {{ number_format($trip->net_profit_rp, 0, ',', '.') }}</div>
-                <div style="font-size: 7pt; color: #166534;">Penerimaan dikurangi biaya tersimpan</div>
-            </td>
-        </tr>
+    <!-- Bagian V -->
+    <div class="sec-head" style="margin-top: 8px;">V. Proyeksi Hasil Tangkapan &amp; Analisis Keekonomian</div>
+    <table class="econ-table">
+        <thead>
+            <tr>
+                <th style="width: 24%;">Proyeksi Tangkapan</th>
+                <th style="width: 25%;">Estimasi Penerimaan</th>
+                <th style="width: 25%;">Biaya Bahan Bakar</th>
+                <th style="width: 26%;">Margin Operasional Skenario</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <div class="econ-val">{{ number_format($trip->projected_catch_kg, 0, ',', '.') }} kg</div>
+                    <div class="econ-sub">{{ $trip->target_commodity }}</div>
+                </td>
+                <td>
+                    <div class="econ-val">Rp {{ number_format($trip->gross_revenue_rp, 0, ',', '.') }}</div>
+                    <div class="econ-sub">Harga acuan skenario</div>
+                </td>
+                <td>
+                    <div class="econ-val">Rp {{ number_format($trip->total_fuel_cost_rp, 0, ',', '.') }}</div>
+                    <div class="econ-sub">Termasuk +15% cadangan</div>
+                </td>
+                <td style="background-color: #F8FAFC;">
+                    <div class="econ-val">Rp {{ number_format($trip->net_profit_rp, 0, ',', '.') }}</div>
+                    <div class="econ-sub">Penerimaan dikurangi biaya tersimpan</div>
+                </td>
+            </tr>
+        </tbody>
     </table>
 
-    <div style="font-size: 7.5pt; color: #475569; margin: 6px 0;">Total biaya operasional tersimpan: <strong>Rp {{ number_format($savedOperationalCost, 0, ',', '.') }}</strong> (solar PP Rp {{ number_format($trip->total_fuel_cost_rp, 0, ',', '.') }}; biaya operasi dan logistik gabungan Rp {{ number_format($savedOtherCosts, 0, ',', '.') }}).</div>
-    <div style="font-size: 7pt; color: #64748B;">Jumlah hari melaut dan rincian biaya tidak tersimpan di dokumen ini. Biaya awak, perawatan, dan retribusi belum dihitung.</div>
+    <div class="sub-note">
+        Total biaya operasional tersimpan: <strong>Rp {{ number_format($savedOperationalCost, 0, ',', '.') }}</strong>
+        (solar PP Rp {{ number_format($trip->total_fuel_cost_rp, 0, ',', '.') }}; biaya operasi &amp; logistik gabungan Rp {{ number_format($savedOtherCosts, 0, ',', '.') }}).
+        Biaya awak, perawatan kapal, dan retribusi pelabuhan belum diperhitungkan.
+    </div>
+
     @if ($trip->notes)
-        <div style="font-size: 7.5pt; color: #475569; margin-top: 4px; padding: 4px 8px; background: #F8FAFC; border-left: 2px solid #94A3B8;">
+        <div class="notes-box">
             <strong>Catatan Operasional:</strong> {{ $trip->notes }}
         </div>
     @endif
 
-    <!-- 5. Signature and Approval Blocks -->
+    <!-- Blok Tanda Tangan -->
     <table class="sign-table">
         <tr>
             <td>
                 <div>Mengetahui,</div>
-                <div style="font-weight: 600;">Nakhoda Kapal Penangkap Ikan</div>
+                <div style="font-weight: bold;">Nakhoda Kapal Penangkap Ikan</div>
                 <div class="sign-space"></div>
                 <div class="sign-name">( {{ $trip->skipper_name }} )</div>
-                <div style="font-size: 7pt; color: #64748B;">{{ $trip->vessel_name }}</div>
+                <div class="sign-sub">{{ $trip->vessel_name }}</div>
             </td>
             <td>
                 <div>Untuk pemeriksaan petugas,</div>
-                <div style="font-weight: 600;">Petugas Syahbandar Pelabuhan</div>
+                <div style="font-weight: bold;">Petugas Syahbandar Pelabuhan</div>
                 <div class="sign-space"></div>
                 <div class="sign-name">( ............................................ )</div>
-                <div style="font-size: 7pt; color: #64748B;">{{ $trip->port_name }} • Kesyahbandaran</div>
+                <div class="sign-sub">{{ $trip->port_name }} &bull; Kesyahbandaran</div>
             </td>
         </tr>
     </table>
 
-    <!-- Security Verification Token Box -->
-    <div style="text-align: center; margin-top: 15px;">
+    <!-- Verifikasi -->
+    <div class="token-row">
         <div class="token-box">
             KODE DOKUMEN SEACAST: <strong>{{ strtoupper(hash('sha256', $trip->reference_no . $trip->created_at)) }}</strong>
         </div>
     </div>
 
-    <!-- Official Legal Footer -->
+    <!-- Catatan Hukum & Simulasi -->
     <div class="footer-note">
-        <strong>Catatan simulasi:</strong> Dokumen ini dicetak otomatis dari SEACAST. Proyeksi tangkapan dan keekonomian memakai skenario formula (<code>FORMULA_SCENARIO</code>) dan skor habitat proxy (<code>PROXY_HSI</code>), bukan jaminan hasil. Status gelombang adalah penilaian saat rencana disimpan; sumber serta waktu prakiraan tidak tersimpan. Periksa prakiraan BMKG terbaru, jarak jalur dari garis pantai, rekomendasi BBM, dan SPB resmi sebelum berangkat.
+        <strong>Catatan Simulasi:</strong> Dokumen ini dicetak otomatis oleh sistem SEACAST. Proyeksi tangkapan dan keekonomian menggunakan skenario formula (<span class="mono">FORMULA_SCENARIO</span>) serta skor habitat proxy (<span class="mono">PROXY_HSI</span>), dan bukan merupakan jaminan hasil tangkapan. Status gelombang mencerminkan penilaian saat rencana disimpan. Verifikasi ulang prakiraan BMKG terbaru, jarak jalur resmi dari garis pantai, rekomendasi BBM, serta Surat Persetujuan Berlayar (SPB) sebelum berlayar.
     </div>
-
 </body>
 </html>
-
