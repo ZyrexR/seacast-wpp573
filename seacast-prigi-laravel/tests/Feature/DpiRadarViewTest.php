@@ -47,9 +47,14 @@ class DpiRadarViewTest extends TestCase
         $response->assertDontSee('Playback Musiman');
         $response->assertDontSee('toggleSeasonalPlayback');
 
-        // Assert DOM and Bycatch filters remain intact
+        // Assert DOM and Bycatch filters remain intact with clear Indonesian labels
         $response->assertSee('Zonasi DOM (Dynamic Ocean Management)');
+        $response->assertSee('Zona 1 — Perairan Pesisir');
+        $response->assertSee('Zona 5 — Rawan Tangkapan Sampingan');
         $response->assertSee('Tingkat Risiko Bycatch');
         $response->assertSee('Ambang Batas HSI Minimum');
+        $response->assertSee('getDomZoneInfo');
+        $response->assertSee('getBycatchInfo');
+        $response->assertSee('getHsiPotentialInfo');
     }
 }

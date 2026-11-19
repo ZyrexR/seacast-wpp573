@@ -343,11 +343,11 @@
                             </div>
                         </div>
                         <div class="grid grid-cols-5 gap-1 text-center text-[9px] text-slate-300">
-                            <div class="py-0.5 rounded bg-slate-900 border border-slate-800" title="Z1 Inshore">Z1:<strong class="text-cyan-300 ml-0.5" x-text="domCounts.Z1">0</strong></div>
-                            <div class="py-0.5 rounded bg-slate-900 border border-slate-800" title="Z2 Offshore">Z2:<strong class="text-sky-300 ml-0.5" x-text="domCounts.Z2">0</strong></div>
-                            <div class="py-0.5 rounded bg-slate-900 border border-slate-800" title="Z3 Feeding">Z3:<strong class="text-emerald-300 ml-0.5" x-text="domCounts.Z3">0</strong></div>
-                            <div class="py-0.5 rounded bg-slate-900 border border-slate-800" title="Z4 Nursery">Z4:<strong class="text-amber-300 ml-0.5" x-text="domCounts.Z4">0</strong></div>
-                            <div class="py-0.5 rounded bg-slate-900 border border-slate-800" title="Z5 Bycatch">Z5:<strong class="text-rose-300 ml-0.5" x-text="domCounts.Z5">0</strong></div>
+                            <div class="py-0.5 rounded bg-slate-900 border border-slate-800" title="Zona 1: Perairan Pesisir (≤12 NM)">Zona 1:<strong class="text-cyan-300 ml-0.5" x-text="domCounts.Z1">0</strong></div>
+                            <div class="py-0.5 rounded bg-slate-900 border border-slate-800" title="Zona 2: Lepas Pantai (12–60 NM)">Zona 2:<strong class="text-sky-300 ml-0.5" x-text="domCounts.Z2">0</strong></div>
+                            <div class="py-0.5 rounded bg-slate-900 border border-slate-800" title="Zona 3: Inti Daerah Makan Ikan">Zona 3:<strong class="text-emerald-300 ml-0.5" x-text="domCounts.Z3">0</strong></div>
+                            <div class="py-0.5 rounded bg-slate-900 border border-slate-800" title="Zona 4: Daerah Asuhan Ikan (≤150m)">Zona 4:<strong class="text-amber-300 ml-0.5" x-text="domCounts.Z4">0</strong></div>
+                            <div class="py-0.5 rounded bg-slate-900 border border-slate-800" title="Zona 5: Rawan Tangkapan Sampingan (Bycatch)">Zona 5:<strong class="text-rose-300 ml-0.5" x-text="domCounts.Z5">0</strong></div>
                         </div>
                     </div>
 
@@ -402,19 +402,16 @@
                                 <span class="text-slate-400">Jarak ke <strong class="text-cyan-400" x-text="activeHub === 'prigi' ? 'PPN Prigi' : 'PPS Cilacap'"></strong>:</span>
                                 <span class="text-white font-mono font-bold" x-text="getActiveHubDistance(selectedCell)"></span>
                             </div>
-                            <div class="col-span-2 flex items-center justify-between text-[11px]">
-                                <span class="text-slate-500">Bycatch Status:</span>
-                                <span :class="{
-                                    'text-emerald-400': selectedCell?.bycatch_traffic_light === 'GREEN',
-                                    'text-amber-400': selectedCell?.bycatch_traffic_light === 'YELLOW',
-                                    'text-rose-400': selectedCell?.bycatch_traffic_light === 'RED'
-                                }" x-text="selectedCell?.bycatch_traffic_light" class="font-semibold"></span>
-                            </div>
                         </div>
 
-                        <!-- TCT commodity HSI breakdown -->
-                        <div class="pt-1.5 border-t border-slate-800/80 space-y-1">
-                            <span class="text-[10px] text-slate-400 font-semibold uppercase block">Skor Kesesuaian Habitat (HSI)</span>
+                        <!-- Mode HSI: Potensi Habitat (HSI) -->
+                        <div x-show="activeLayer === 'hsi' || activeLayer === 'bathymetry'" class="pt-1.5 border-t border-slate-800/80 space-y-1.5">
+                            <div class="flex items-center justify-between">
+                                <span class="text-[10px] text-slate-400 font-semibold uppercase">Potensi Habitat (HSI)</span>
+                                <span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-slate-900 border border-slate-700"
+                                      :class="selectedCell ? getHsiPotentialInfo(getSpeciesHsiValue(selectedCell)).textClass : 'text-slate-300'"
+                                      x-text="selectedCell ? getHsiPotentialInfo(getSpeciesHsiValue(selectedCell)).label : '-'"></span>
+                            </div>
                             <div class="flex items-center justify-between text-xs">
                                 <span class="text-slate-300">Cakalang:</span>
                                 <span class="font-mono font-bold text-cyan-400" x-text="selectedCell?.hsi_cakalang"></span>
@@ -429,10 +426,26 @@
                             </div>
                         </div>
 
-                        <!-- DOM Zone Badge -->
-                        <div class="pt-1.5 border-t border-slate-800/80">
-                            <span class="text-[10px] text-slate-400 font-semibold uppercase block">Zonasi Dinamis (DOM)</span>
-                            <span class="inline-block px-2 py-0.5 rounded text-[11px] font-mono font-medium bg-slate-800 text-cyan-300 border border-slate-700" x-text="selectedCell?.dom_zone"></span>
+                        <!-- Mode DOM / Bycatch: Risiko Bycatch & Potensi Zona 1 - 5 -->
+                        <div x-show="activeLayer === 'dom' || activeLayer === 'bycatch'" class="pt-1.5 border-t border-slate-800/80 space-y-2">
+                            <div class="space-y-1">
+                                <span class="text-[10px] text-slate-400 font-semibold uppercase block">Risiko Tangkapan Sampingan (Bycatch)</span>
+                                <div class="flex items-center justify-between text-[11px]">
+                                    <span class="px-2 py-0.5 rounded font-semibold border"
+                                          :class="selectedCell ? getBycatchInfo(selectedCell.bycatch_traffic_light).badgeClass : ''"
+                                          x-text="selectedCell ? getBycatchInfo(selectedCell.bycatch_traffic_light).label : '-'"></span>
+                                </div>
+                                <p class="text-[11px] text-slate-300 leading-snug"
+                                   x-text="selectedCell ? getBycatchInfo(selectedCell.bycatch_traffic_light).desc : ''"></p>
+                            </div>
+                            <div class="pt-1.5 border-t border-slate-800/80 space-y-1">
+                                <span class="text-[10px] text-slate-400 font-semibold uppercase block">Potensi Zona (DOM)</span>
+                                <span class="inline-block px-2 py-0.5 rounded text-[11px] font-semibold border"
+                                      :class="selectedCell ? getDomZoneInfo(selectedCell.dom_zone).badgeClass : ''"
+                                      x-text="selectedCell ? getDomZoneInfo(selectedCell.dom_zone).label : '-'"></span>
+                                <p class="text-[11px] text-slate-300 leading-snug"
+                                   x-text="selectedCell ? getDomZoneInfo(selectedCell.dom_zone).potential : ''"></p>
+                            </div>
                         </div>
                     </div>
 
@@ -516,11 +529,11 @@
 
                         <template x-if="activeLayer === 'dom'">
                             <div class="space-y-1 text-[11px]">
-                                <div class="flex items-center justify-between"><span class="text-slate-300">Z1: PFG Inshore (&le; 12 NM)</span><span class="w-3 h-3 rounded bg-cyan-400"></span></div>
-                                <div class="flex items-center justify-between"><span class="text-slate-300">Z2: PFG Offshore (12-60 NM)</span><span class="w-3 h-3 rounded bg-blue-500"></span></div>
-                                <div class="flex items-center justify-between"><span class="text-slate-300">Z3: Feeding Core Area</span><span class="w-3 h-3 rounded bg-emerald-500"></span></div>
-                                <div class="flex items-center justify-between"><span class="text-slate-300">Z4: Nursery Ground</span><span class="w-3 h-3 rounded bg-teal-500"></span></div>
-                                <div class="flex items-center justify-between"><span class="text-slate-300">Z5: Bycatch Screening</span><span class="w-3 h-3 rounded bg-amber-500"></span></div>
+                                <div class="flex items-center justify-between"><span class="text-slate-300">Zona 1: Perairan Pesisir (&le;12 NM)</span><span class="w-3 h-3 rounded bg-cyan-400"></span></div>
+                                <div class="flex items-center justify-between"><span class="text-slate-300">Zona 2: Lepas Pantai (12-60 NM)</span><span class="w-3 h-3 rounded bg-blue-500"></span></div>
+                                <div class="flex items-center justify-between"><span class="text-slate-300">Zona 3: Inti Daerah Makan Ikan</span><span class="w-3 h-3 rounded bg-emerald-500"></span></div>
+                                <div class="flex items-center justify-between"><span class="text-slate-300">Zona 4: Daerah Asuhan Ikan</span><span class="w-3 h-3 rounded bg-teal-500"></span></div>
+                                <div class="flex items-center justify-between"><span class="text-slate-300">Zona 5: Rawan Bycatch</span><span class="w-3 h-3 rounded bg-amber-500"></span></div>
                             </div>
                         </template>
 
@@ -1188,6 +1201,45 @@
                     return (cakalang + madidihang + tongkol) / 3;
                 },
 
+                getHsiPotentialInfo(val) {
+                    const v = Number(val ?? 0);
+                    if (v >= 0.70) return { label: 'Hotspot Tinggi', desc: 'Sangat direkomendasikan untuk penangkapan target TCT.', textClass: 'text-rose-400', badgeClass: 'bg-rose-500/15 text-rose-300 border-rose-500/40' };
+                    if (v >= 0.55) return { label: 'Potensial', desc: 'Kondisi habitat baik dan layak untuk operasi penangkapan.', textClass: 'text-amber-400', badgeClass: 'bg-amber-500/15 text-amber-300 border-amber-500/40' };
+                    if (v >= 0.40) return { label: 'Potensi Sedang', desc: 'Kesesuaian habitat cukup; perlu cek pergerakan arus & suhu.', textClass: 'text-cyan-400', badgeClass: 'bg-cyan-500/15 text-cyan-300 border-cyan-500/40' };
+                    if (v >= 0.25) return { label: 'Potensi Rendah', desc: 'Agregasi ikan cenderung jarang di grid ini.', textClass: 'text-teal-400', badgeClass: 'bg-teal-500/15 text-teal-300 border-teal-500/40' };
+                    return { label: 'Non-Habitat', desc: 'Kurang sesuai untuk target tuna, cakalang, dan tongkol.', textClass: 'text-slate-400', badgeClass: 'bg-slate-800 text-slate-300 border-slate-700' };
+                },
+
+                getDomZoneInfo(zoneKey) {
+                    switch (zoneKey) {
+                        case 'Z1_PFG_INSHORE':
+                            return { label: 'Zona 1 — Perairan Pesisir', potential: 'Potensi tangkap dekat pantai (≤12 NM), cocok untuk armada kecil & sedang.', badgeClass: 'bg-cyan-500/15 text-cyan-300 border-cyan-500/40' };
+                        case 'Z2_PFG_OFFSHORE':
+                            return { label: 'Zona 2 — Lepas Pantai', potential: 'Potensi tuna & cakalang di jalur lepas pantai (12–60 NM).', badgeClass: 'bg-blue-500/15 text-blue-300 border-blue-500/40' };
+                        case 'Z3_FEEDING_CORE':
+                            return { label: 'Zona 3 — Inti Daerah Makan Ikan', potential: 'Potensi sangat tinggi: kaya klorofil-a dan menjadi pusat berkumpulnya ikan.', badgeClass: 'bg-emerald-500/15 text-emerald-300 border-emerald-500/40' };
+                        case 'Z4_NURSERY_GROUND':
+                            return { label: 'Zona 4 — Daerah Asuhan Ikan', potential: 'Perairan dangkal (≤150 m) tempat tumbuh ikan muda; gunakan alat tangkap selektif.', badgeClass: 'bg-teal-500/15 text-teal-300 border-teal-500/40' };
+                        case 'Z5_BYCATCH_SCREENING':
+                            return { label: 'Zona 5 — Rawan Tangkapan Sampingan', potential: 'Area lereng benua yang rawan tangkapan sampingan (bycatch); perlu kehati-hatian ekstra.', badgeClass: 'bg-amber-500/15 text-amber-300 border-amber-500/40' };
+                        default:
+                            return { label: 'Zona Umum — Samudera Terbuka', potential: 'Perairan laut dalam di luar zona prioritas utama.', badgeClass: 'bg-slate-800 text-slate-300 border-slate-700' };
+                    }
+                },
+
+                getBycatchInfo(light) {
+                    switch (light) {
+                        case 'GREEN':
+                            return { label: 'Aman (Hijau)', desc: 'Risiko tangkapan sampingan rendah; aman untuk operasi penangkapan.', badgeClass: 'bg-emerald-500/15 text-emerald-300 border-emerald-500/40' };
+                        case 'YELLOW':
+                            return { label: 'Waspada (Kuning)', desc: 'Risiko sedang di area lereng benua; pantau alat tangkap.', badgeClass: 'bg-amber-500/15 text-amber-300 border-amber-500/40' };
+                        case 'RED':
+                            return { label: 'Rawan / Risiko Tinggi (Merah)', desc: 'Risiko tangkapan sampingan tinggi; hindari atau gunakan alat tangkap selektif.', badgeClass: 'bg-rose-500/15 text-rose-300 border-rose-500/40' };
+                        default:
+                            return { label: 'Belum Terklasifikasi', desc: 'Status risiko bycatch belum tersedia.', badgeClass: 'bg-slate-800 text-slate-300 border-slate-700' };
+                    }
+                },
+
                 getFeatureColor(p) {
                     if (this.activeLayer === 'dom') {
                         switch (p.dom_zone) {
@@ -1266,11 +1318,56 @@
                     layer.on('click', (e) => {
                         this.selectedCell = p;
 
-                        const hsiVal = this.getSpeciesHsiValue(p).toFixed(3);
+                        const hsiNum = this.getSpeciesHsiValue(p);
+                        const hsiVal = hsiNum.toFixed(3);
+                        const hsiInfo = this.getHsiPotentialInfo(hsiNum);
+                        const domInfo = this.getDomZoneInfo(p.dom_zone);
+                        const bycatchInfo = this.getBycatchInfo(p.bycatch_traffic_light);
+                        const isDomMode = this.activeLayer === 'dom' || this.activeLayer === 'bycatch';
+
                         const waypointStr = p.waypoint_dms || `${Math.abs(p.center_lat).toFixed(4)}°S, ${p.center_lon.toFixed(4)}°E`;
                         const distActive = this.calculateDistanceToActivePort(p.center_lat, p.center_lon);
                         const distNmVal = parseFloat(distActive.distNm);
                         const jalurStr = p.jalur_penangkapan || (distNmVal <= 4 ? 'Jalur I (0-4 NM)' : (distNmVal <= 12 ? 'Jalur II (4-12 NM)' : 'Jalur III (>12 NM / ZEE)'));
+
+                        const speciesTitleMap = {
+                            all: 'Rata-rata TCT',
+                            cakalang: 'Cakalang',
+                            tuna_sirip_kuning: 'Tuna Sirip Kuning',
+                            madidihang: 'Tuna Sirip Kuning',
+                            tongkol_krai: 'Tongkol Krai',
+                            tongkol: 'Tongkol Krai',
+                        };
+                        const speciesTitle = speciesTitleMap[this.selectedSpecies] || this.selectedSpecies.toUpperCase();
+
+                        const layerSectionHtml = isDomMode
+                            ? `
+                                <div class="mt-2 pt-2 border-t border-slate-800 space-y-2 text-[11px]">
+                                    <div>
+                                        <span class="text-[10px] text-slate-400 uppercase font-semibold block mb-1">Risiko Bycatch</span>
+                                        <span class="inline-block px-2 py-0.5 rounded font-semibold border ${bycatchInfo.badgeClass}">${bycatchInfo.label}</span>
+                                        <p class="text-slate-300 mt-1 leading-snug">${bycatchInfo.desc}</p>
+                                    </div>
+                                    <div class="pt-1.5 border-t border-slate-800/70">
+                                        <span class="text-[10px] text-slate-400 uppercase font-semibold block mb-1">Potensi Zona (DOM)</span>
+                                        <span class="inline-block px-2 py-0.5 rounded font-semibold border ${domInfo.badgeClass}">${domInfo.label}</span>
+                                        <p class="text-slate-300 mt-1 leading-snug">${domInfo.potential}</p>
+                                    </div>
+                                </div>
+                            `
+                            : `
+                                <div class="mt-2 pt-2 border-t border-slate-800 space-y-1.5">
+                                    <div class="flex items-center justify-between text-xs font-semibold">
+                                        <span class="text-slate-400">Potensi HSI (${speciesTitle}):</span>
+                                        <span class="text-cyan-400 font-mono font-bold text-sm">${hsiVal}</span>
+                                    </div>
+                                    <div class="flex items-center justify-between text-[11px]">
+                                        <span class="inline-block px-2 py-0.5 rounded font-semibold border ${hsiInfo.badgeClass}">${hsiInfo.label}</span>
+                                        <span class="text-[10px] text-slate-400 font-mono">Skala 0.00 – 1.00</span>
+                                    </div>
+                                    <p class="text-[11px] text-slate-300 leading-snug">${hsiInfo.desc}</p>
+                                </div>
+                            `;
 
                         const popupHtml = `
                             <div class="p-3.5 min-w-[270px] max-w-[320px] bg-slate-950 text-slate-200 rounded-xl border border-cyan-500/40 shadow-2xl font-sans">
@@ -1287,11 +1384,8 @@
                                     <div>Suhu Laut: <span class="text-white">${p.sst_c} °C</span></div>
                                     <div>Klorofil-a: <span class="text-white">${p.chla_mg_m3} mg/m³</span></div>
                                 </div>
-                                <div class="mt-2 pt-2 border-t border-slate-800 flex items-center justify-between text-xs font-semibold">
-                                    <span class="text-slate-400">Skor HSI ${this.selectedSpecies.toUpperCase()}:</span>
-                                    <span class="text-cyan-400 font-mono font-bold text-sm">${hsiVal}</span>
-                                </div>
-                                <div class="mt-1 text-[10px] text-slate-500 font-mono">
+                                ${layerSectionHtml}
+                                <div class="mt-1.5 text-[10px] text-slate-500 font-mono">
                                     Jarak &amp; jalur proxy dihitung dari pelabuhan asal aktif (1 NM = 1.852 km).
                                 </div>
                                 <div class="bmkg-grid-forecast mt-2 pt-2 border-t border-slate-800 text-[11px] text-slate-300" aria-live="polite">Memuat prakiraan model BMKG untuk grid...</div>
