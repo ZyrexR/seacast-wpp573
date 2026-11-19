@@ -30,7 +30,7 @@
             vertical-align: middle;
         }
         .kop-logo {
-            height: 46px;
+            height: 82px;
             width: auto;
         }
         .kop-fallback {
@@ -245,7 +245,7 @@
 
         /* Tanda Tangan & Token */
         .sign-table {
-            margin-top: 16px;
+            margin-top: 10px;
             width: 100%;
         }
         .sign-table td {
