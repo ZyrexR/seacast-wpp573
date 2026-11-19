@@ -228,22 +228,48 @@
                         </div>
                     </div>
 
-                    <!-- 1. Layer Mode Selector (Sidebar Mobile / Fallback) -->
-                    <div class="space-y-1.5 lg:hidden">
-                        <label class="text-xs font-semibold uppercase tracking-wider text-slate-300 block">Mode Visualisasi Layer</label>
+                    <!-- 1. Layer Mode Selector (Always Visible on Desktop & Mobile) -->
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-semibold uppercase tracking-wider text-slate-300 block">Mode Peta (HSI / DOM / Bycatch)</label>
                         <div class="grid grid-cols-2 gap-1.5 p-1 bg-slate-950 rounded-lg border border-slate-800">
-                            <button @click="setLayerMode('hsi')" :class="activeLayer === 'hsi' ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40' : 'text-slate-400 hover:text-white'" class="py-1.5 px-2 rounded text-xs font-medium border border-transparent transition text-center">
+                            <button type="button" @click="setLayerMode('hsi')" :class="activeLayer === 'hsi' ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40 font-bold' : 'text-slate-400 hover:text-white'" class="py-1.5 px-2 rounded text-[11px] font-medium border border-transparent transition text-center">
                                 HSI Habitat Tuna
                             </button>
-                            <button @click="setLayerMode('dom')" :class="activeLayer === 'dom' ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40' : 'text-slate-400 hover:text-white'" class="py-1.5 px-2 rounded text-xs font-medium border border-transparent transition text-center">
+                            <button type="button" @click="setLayerMode('dom')" :class="activeLayer === 'dom' ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40 font-bold' : 'text-slate-400 hover:text-white'" class="py-1.5 px-2 rounded text-[11px] font-medium border border-transparent transition text-center">
                                 Zonasi DOM (Z1-Z5)
                             </button>
-                            <button @click="setLayerMode('bycatch')" :class="activeLayer === 'bycatch' ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40' : 'text-slate-400 hover:text-white'" class="py-1.5 px-2 rounded text-xs font-medium border border-transparent transition text-center">
+                            <button type="button" @click="setLayerMode('bycatch')" :class="activeLayer === 'bycatch' ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40 font-bold' : 'text-slate-400 hover:text-white'" class="py-1.5 px-2 rounded text-[11px] font-medium border border-transparent transition text-center">
                                 Risiko Bycatch IOTC
                             </button>
-                            <button @click="setLayerMode('bathymetry')" :class="activeLayer === 'bathymetry' ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40' : 'text-slate-400 hover:text-white'" class="py-1.5 px-2 rounded text-xs font-medium border border-transparent transition text-center">
+                            <button type="button" @click="setLayerMode('bathymetry')" :class="activeLayer === 'bathymetry' ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40 font-bold' : 'text-slate-400 hover:text-white'" class="py-1.5 px-2 rounded text-[11px] font-medium border border-transparent transition text-center">
                                 Batimetri GEBCO
                             </button>
+                        </div>
+                    </div>
+
+                    <!-- Live DOM & Bycatch Distribution Summary -->
+                    <div class="bg-slate-950/60 p-2.5 rounded-lg border border-slate-800 space-y-2 text-[10px] font-mono">
+                        <div class="flex items-center justify-between text-slate-400 uppercase font-semibold">
+                            <span>Rekap DOM &amp; Bycatch</span>
+                            <span class="text-cyan-400" x-text="filteredCount + ' sel'"></span>
+                        </div>
+                        <div class="grid grid-cols-3 gap-1 text-center">
+                            <div class="px-1.5 py-1 rounded bg-emerald-500/10 border border-emerald-500/30 text-emerald-300">
+                                Hijau: <strong x-text="bycatchCounts.GREEN">0</strong>
+                            </div>
+                            <div class="px-1.5 py-1 rounded bg-amber-500/10 border border-amber-500/30 text-amber-300">
+                                Kuning: <strong x-text="bycatchCounts.YELLOW">0</strong>
+                            </div>
+                            <div class="px-1.5 py-1 rounded bg-rose-500/10 border border-rose-500/30 text-rose-300">
+                                Merah: <strong x-text="bycatchCounts.RED">0</strong>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-5 gap-1 text-center text-[9px] text-slate-300">
+                            <div class="py-0.5 rounded bg-slate-900 border border-slate-800" title="Z1 Inshore">Z1:<strong class="text-cyan-300 ml-0.5" x-text="domCounts.Z1">0</strong></div>
+                            <div class="py-0.5 rounded bg-slate-900 border border-slate-800" title="Z2 Offshore">Z2:<strong class="text-sky-300 ml-0.5" x-text="domCounts.Z2">0</strong></div>
+                            <div class="py-0.5 rounded bg-slate-900 border border-slate-800" title="Z3 Feeding">Z3:<strong class="text-emerald-300 ml-0.5" x-text="domCounts.Z3">0</strong></div>
+                            <div class="py-0.5 rounded bg-slate-900 border border-slate-800" title="Z4 Nursery">Z4:<strong class="text-amber-300 ml-0.5" x-text="domCounts.Z4">0</strong></div>
+                            <div class="py-0.5 rounded bg-slate-900 border border-slate-800" title="Z5 Bycatch">Z5:<strong class="text-rose-300 ml-0.5" x-text="domCounts.Z5">0</strong></div>
                         </div>
                     </div>
 
@@ -625,6 +651,8 @@
                 hotspotCount: 0,
                 meanHsi: 0.000,
                 safePct: 0.0,
+                bycatchCounts: { GREEN: 0, YELLOW: 0, RED: 0 },
+                domCounts: { Z1: 0, Z2: 0, Z3: 0, Z4: 0, Z5: 0 },
                 provenance: {
                     evidence_level: 'PROXY_HSI',
                     source_mode: 'DATABASE_SNAPSHOT_SOURCE_UNVERIFIED',
@@ -656,6 +684,11 @@
 
                     const container = this.$refs.mapContainer;
                     if (!container) return;
+
+                    const urlLayer = new URLSearchParams(window.location.search).get('layer');
+                    if (['hsi', 'dom', 'bycatch', 'bathymetry'].includes(urlLayer)) {
+                        this.activeLayer = urlLayer;
+                    }
 
                     // 1. Initialize Leaflet Map
                     this.map = L.map(container, {
@@ -1396,23 +1429,33 @@
                         this.hotspotCount = 0;
                         this.meanHsi = 0;
                         this.safePct = 0;
+                        this.bycatchCounts = { GREEN: 0, YELLOW: 0, RED: 0 };
+                        this.domCounts = { Z1: 0, Z2: 0, Z3: 0, Z4: 0, Z5: 0 };
                         return;
                     }
 
                     let hotspots = 0;
                     let sumHsi = 0;
                     let safeCount = 0;
+                    const bc = { GREEN: 0, YELLOW: 0, RED: 0 };
+                    const dc = { Z1: 0, Z2: 0, Z3: 0, Z4: 0, Z5: 0 };
 
                     features.forEach(f => {
                         const p = f.properties;
                         if (p.is_hotspot) hotspots++;
                         if (p.safety_advisory === 'AMAN_MELAUT') safeCount++;
                         sumHsi += this.getSpeciesHsiValue(p);
+                        const b = p.bycatch_traffic_light;
+                        if (b && bc[b] !== undefined) bc[b]++;
+                        const z = (p.dom_zone || '').split('_')[0];
+                        if (dc[z] !== undefined) dc[z]++;
                     });
 
                     this.hotspotCount = hotspots;
                     this.meanHsi = (sumHsi / features.length).toFixed(3);
                     this.safePct = ((safeCount / features.length) * 100).toFixed(1);
+                    this.bycatchCounts = bc;
+                    this.domCounts = dc;
                 },
 
                 setLayerMode(mode) {

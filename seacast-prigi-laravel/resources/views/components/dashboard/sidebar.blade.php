@@ -46,9 +46,17 @@
                         <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
                         <span>Ringkasan Eksekutif</span>
                     </a>
-                    <a href="{{ route('dashboard.dpi-radar') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-colors {{ request()->routeIs('dashboard.dpi-radar') ? 'bg-[#12364A] text-[#13B8C8] font-bold shadow-sm' : 'text-slate-300 hover:bg-[#0D2B3E] hover:text-white' }}">
+                    <a href="{{ route('dashboard.dpi-radar') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-colors {{ request()->routeIs('dashboard.dpi-radar') && !in_array(request()->query('layer'), ['dom', 'bycatch']) ? 'bg-[#12364A] text-[#13B8C8] font-bold shadow-sm' : 'text-slate-300 hover:bg-[#0D2B3E] hover:text-white' }}">
                         <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><circle cx="12" cy="12" r="9" stroke-width="2"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v9l6 3"/></svg>
                         <span>DPI Radar Spasial</span>
+                    </a>
+                    <a href="{{ route('dashboard.dpi-radar', ['layer' => 'dom']) }}" class="flex items-center gap-3 pl-7 pr-3 py-2 rounded-xl text-[11px] font-semibold transition-colors {{ request()->routeIs('dashboard.dpi-radar') && request()->query('layer') === 'dom' ? 'bg-[#12364A] text-[#13B8C8] font-bold shadow-sm' : 'text-slate-400 hover:bg-[#0D2B3E] hover:text-white' }}">
+                        <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 shrink-0"></span>
+                        <span>Zonasi DOM (Z1–Z5)</span>
+                    </a>
+                    <a href="{{ route('dashboard.dpi-radar', ['layer' => 'bycatch']) }}" class="flex items-center gap-3 pl-7 pr-3 py-2 rounded-xl text-[11px] font-semibold transition-colors {{ request()->routeIs('dashboard.dpi-radar') && request()->query('layer') === 'bycatch' ? 'bg-[#12364A] text-[#13B8C8] font-bold shadow-sm' : 'text-slate-400 hover:bg-[#0D2B3E] hover:text-white' }}">
+                        <span class="w-1.5 h-1.5 rounded-full bg-amber-400 shrink-0"></span>
+                        <span>Risiko Bycatch IOTC</span>
                     </a>
                     <a href="{{ route('dashboard.trip-planner') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-colors {{ request()->routeIs('dashboard.trip-planner*') ? 'bg-[#12364A] text-[#13B8C8] font-bold shadow-sm' : 'text-slate-300 hover:bg-[#0D2B3E] hover:text-white' }}">
                         <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
