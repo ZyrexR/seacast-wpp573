@@ -203,20 +203,6 @@
                 </div>
 
                 <div class="p-3.5 space-y-4">
-                    <!-- Compact Panel Section Switcher (Declutters Sidebar) -->
-                    <div class="grid grid-cols-2 gap-1 p-1 bg-slate-950 rounded-xl border border-slate-800 text-[11px] font-semibold">
-                        <button type="button" @click="panelTab = 'layer'"
-                                :class="panelTab === 'layer' ? 'bg-[#12364A] text-cyan-300 shadow' : 'text-slate-400 hover:text-white'"
-                                class="py-1.5 px-2 rounded-lg transition text-center">
-                            Peta &amp; Spesies
-                        </button>
-                        <button type="button" @click="panelTab = 'dom'"
-                                :class="panelTab === 'dom' ? 'bg-[#12364A] text-cyan-300 shadow' : 'text-slate-400 hover:text-white'"
-                                class="py-1.5 px-2 rounded-lg transition text-center">
-                            DOM &amp; Bycatch
-                        </button>
-                    </div>
-
                     <!-- Compact KPI Summary Strip -->
                     <div class="grid grid-cols-2 gap-1.5 bg-slate-950/60 p-2 rounded-lg border border-slate-800 text-[11px]">
                         <div class="px-2 py-1.5 bg-slate-900/80 rounded border border-slate-800/80 flex items-center justify-between">
@@ -237,9 +223,7 @@
                         </div>
                     </div>
 
-                    <!-- TAB 1: Mode Peta, Spesies, HSI & Opasitas -->
-                    <div x-show="panelTab === 'layer'" class="space-y-4">
-                    <!-- 1. Layer Mode Selector (Always Visible on Desktop & Mobile) -->
+                    <!-- 1. Layer Mode Selector (Always Visible at Top) -->
                     <div class="space-y-1.5">
                         <label class="text-xs font-semibold uppercase tracking-wider text-slate-300 block">Mode Peta (HSI / DOM / Bycatch)</label>
                         <div class="grid grid-cols-2 gap-1.5 p-1 bg-slate-950 rounded-lg border border-slate-800">
@@ -247,7 +231,7 @@
                                 HSI Habitat Tuna
                             </button>
                             <button type="button" @click="setLayerMode('dom')" :class="activeLayer === 'dom' ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40 font-bold' : 'text-slate-400 hover:text-white'" class="py-1.5 px-2 rounded text-[11px] font-medium border border-transparent transition text-center">
-                                Zonasi DOM (Z1-Z5)
+                                Zonasi DOM (Zona 1–5)
                             </button>
                             <button type="button" @click="setLayerMode('bycatch')" :class="activeLayer === 'bycatch' ? 'bg-cyan-500/20 text-cyan-300 border-cyan-500/40 font-bold' : 'text-slate-400 hover:text-white'" class="py-1.5 px-2 rounded text-[11px] font-medium border border-transparent transition text-center">
                                 Risiko Bycatch IOTC
@@ -258,130 +242,133 @@
                         </div>
                     </div>
 
-                    <!-- 2. Species Filter -->
-                    <div class="space-y-1.5">
-                        <label class="text-xs font-semibold uppercase tracking-wider text-slate-300 block">Spesies Target</label>
-                        <select x-model="selectedSpecies" @change="applyFilters()" class="w-full bg-slate-950 border border-slate-700/80 rounded-md px-3 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-cyan-500">
-                            @foreach ($speciesList as $k => $label)
-                                <option value="{{ $k }}">{{ $label }}</option>
-                            @endforeach
-                        </select>
-                    </div>
+                    <!-- MODE HSI: Filter Spesies, Ambang Batas HSI & Hotspot -->
+                    <div x-show="activeLayer === 'hsi'" class="space-y-4">
+                        <!-- 2. Species Filter -->
+                        <div class="space-y-1.5">
+                            <label class="text-xs font-semibold uppercase tracking-wider text-slate-300 block">Spesies Target</label>
+                            <select x-model="selectedSpecies" @change="applyFilters()" class="w-full bg-slate-950 border border-slate-700/80 rounded-md px-3 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-cyan-500">
+                                @foreach ($speciesList as $k => $label)
+                                    <option value="{{ $k }}">{{ $label }}</option>
+                                @endforeach
+                            </select>
+                        </div>
 
-                    <!-- 3. Minimum HSI Slider -->
-                    <div class="space-y-1.5">
-                        <div class="flex items-center justify-between text-xs">
-                            <span class="font-semibold uppercase tracking-wider text-slate-300">Ambang Batas HSI Minimum</span>
-                            <span class="font-mono text-cyan-400 font-bold" x-text="minHsi"></span>
-                        </div>
-                        <input
-                            type="range"
-                            min="0.0"
-                            max="0.9"
-                            step="0.05"
-                            x-model="minHsi"
-                            @input="debounceApplyFilters()"
-                            class="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-cyan-400"
-                        />
-                        <div class="flex justify-between text-[10px] font-mono text-slate-500">
-                            <span>0.0 (Semua)</span>
-                            <span>0.55 (Potensial)</span>
-                            <span>0.70 (Hotspot)</span>
-                        </div>
-                    </div>
-
-                    <!-- 7. Hotspot Tuna Only Toggle -->
-                    <div class="flex items-center justify-between p-2.5 bg-slate-950/60 rounded-lg border border-slate-800">
-                        <div>
-                            <span class="text-xs font-medium text-slate-200 block">Hanya Hotspot Tuna</span>
-                            <span class="text-[11px] text-slate-400">Sel dengan HSI &ge; 0.70</span>
-                        </div>
-                        <button type="button" @click="hotspotsOnly = !hotspotsOnly; applyFilters()" :class="hotspotsOnly ? 'bg-cyan-500' : 'bg-slate-800'" class="relative inline-flex h-5 w-9 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out">
-                            <span :class="hotspotsOnly ? 'translate-x-4' : 'translate-x-0'" class="pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"></span>
-                        </button>
-                    </div>
-
-                    <!-- 8. Layer Opacity Slider (Optimal for Satellite Imagery) -->
-                    <div class="space-y-1.5 p-2.5 bg-slate-950/60 rounded-lg border border-slate-800">
-                        <div class="flex items-center justify-between text-xs">
-                            <span class="font-medium text-slate-300">Opasitas Layer Poligon</span>
-                            <span class="font-mono text-cyan-400 font-bold" x-text="Math.round(layerOpacity * 100) + '%'"></span>
-                        </div>
-                        <input
-                            type="range"
-                            min="0.15"
-                            max="1.0"
-                            step="0.05"
-                            x-model.number="layerOpacity"
-                            @input="updateLayerStyle()"
-                            class="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-cyan-400"
-                        />
-                        <div class="flex justify-between text-[10px] font-mono text-slate-500">
-                            <span>Transparan (Citra Satelit)</span>
-                            <span>Pekat</span>
-                        </div>
-                    </div>
-                    </div><!-- end TAB 1 -->
-
-                    <!-- TAB 2: DOM, Bycatch & Sektor -->
-                    <div x-show="panelTab === 'dom'" class="space-y-4">
-                    <!-- Live DOM & Bycatch Distribution Summary -->
-                    <div class="bg-slate-950/60 p-2.5 rounded-lg border border-slate-800 space-y-2 text-[10px] font-mono">
-                        <div class="flex items-center justify-between text-slate-400 uppercase font-semibold">
-                            <span>Rekap DOM &amp; Bycatch</span>
-                            <span class="text-cyan-400" x-text="filteredCount + ' sel'"></span>
-                        </div>
-                        <div class="grid grid-cols-3 gap-1 text-center">
-                            <div class="px-1.5 py-1 rounded bg-emerald-500/10 border border-emerald-500/30 text-emerald-300">
-                                Hijau: <strong x-text="bycatchCounts.GREEN">0</strong>
+                        <!-- 3. Minimum HSI Slider -->
+                        <div class="space-y-1.5">
+                            <div class="flex items-center justify-between text-xs">
+                                <span class="font-semibold uppercase tracking-wider text-slate-300">Ambang Batas HSI Minimum</span>
+                                <span class="font-mono text-cyan-400 font-bold" x-text="minHsi"></span>
                             </div>
-                            <div class="px-1.5 py-1 rounded bg-amber-500/10 border border-amber-500/30 text-amber-300">
-                                Kuning: <strong x-text="bycatchCounts.YELLOW">0</strong>
-                            </div>
-                            <div class="px-1.5 py-1 rounded bg-rose-500/10 border border-rose-500/30 text-rose-300">
-                                Merah: <strong x-text="bycatchCounts.RED">0</strong>
+                            <input
+                                type="range"
+                                min="0.0"
+                                max="0.9"
+                                step="0.05"
+                                x-model="minHsi"
+                                @input="debounceApplyFilters()"
+                                class="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-cyan-400"
+                            />
+                            <div class="flex justify-between text-[10px] font-mono text-slate-500">
+                                <span>0.0 (Semua)</span>
+                                <span>0.55 (Potensial)</span>
+                                <span>0.70 (Hotspot)</span>
                             </div>
                         </div>
-                        <div class="grid grid-cols-5 gap-1 text-center text-[9px] text-slate-300">
-                            <div class="py-0.5 rounded bg-slate-900 border border-slate-800" title="Zona 1: Perairan Pesisir (≤12 NM)">Zona 1:<strong class="text-cyan-300 ml-0.5" x-text="domCounts.Z1">0</strong></div>
-                            <div class="py-0.5 rounded bg-slate-900 border border-slate-800" title="Zona 2: Lepas Pantai (12–60 NM)">Zona 2:<strong class="text-sky-300 ml-0.5" x-text="domCounts.Z2">0</strong></div>
-                            <div class="py-0.5 rounded bg-slate-900 border border-slate-800" title="Zona 3: Inti Daerah Makan Ikan">Zona 3:<strong class="text-emerald-300 ml-0.5" x-text="domCounts.Z3">0</strong></div>
-                            <div class="py-0.5 rounded bg-slate-900 border border-slate-800" title="Zona 4: Daerah Asuhan Ikan (≤150m)">Zona 4:<strong class="text-amber-300 ml-0.5" x-text="domCounts.Z4">0</strong></div>
-                            <div class="py-0.5 rounded bg-slate-900 border border-slate-800" title="Zona 5: Rawan Tangkapan Sampingan (Bycatch)">Zona 5:<strong class="text-rose-300 ml-0.5" x-text="domCounts.Z5">0</strong></div>
+
+                        <!-- 4. Hotspot Tuna Only Toggle -->
+                        <div class="flex items-center justify-between p-2.5 bg-slate-950/60 rounded-lg border border-slate-800">
+                            <div>
+                                <span class="text-xs font-medium text-slate-200 block">Hanya Hotspot Tuna</span>
+                                <span class="text-[11px] text-slate-400">Sel dengan HSI &ge; 0.70</span>
+                            </div>
+                            <button type="button" @click="hotspotsOnly = !hotspotsOnly; applyFilters()" :class="hotspotsOnly ? 'bg-cyan-500' : 'bg-slate-800'" class="relative inline-flex h-5 w-9 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out">
+                                <span :class="hotspotsOnly ? 'translate-x-4' : 'translate-x-0'" class="pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"></span>
+                            </button>
                         </div>
                     </div>
 
-                    <!-- 4. DOM Zone Filter -->
-                    <div class="space-y-1.5">
-                        <label class="text-xs font-semibold uppercase tracking-wider text-slate-300 block">Zonasi DOM (Dynamic Ocean Management)</label>
-                        <select x-model="selectedDom" @change="applyFilters()" class="w-full bg-slate-950 border border-slate-700/80 rounded-md px-3 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-cyan-500">
-                            @foreach ($domZones as $k => $label)
-                                <option value="{{ $k }}">{{ $label }}</option>
-                            @endforeach
-                        </select>
-                    </div>
+                    <!-- MODE DOM & BYCATCH: Rekap, Zonasi DOM & Risiko Bycatch -->
+                    <div x-show="activeLayer === 'dom' || activeLayer === 'bycatch'" class="space-y-4">
+                        <!-- Live DOM & Bycatch Distribution Summary -->
+                        <div class="bg-slate-950/60 p-2.5 rounded-lg border border-slate-800 space-y-2 text-[10px] font-mono">
+                            <div class="flex items-center justify-between text-slate-400 uppercase font-semibold">
+                                <span>Rekap DOM &amp; Bycatch</span>
+                                <span class="text-cyan-400" x-text="filteredCount + ' sel'"></span>
+                            </div>
+                            <div class="grid grid-cols-3 gap-1 text-center">
+                                <div class="px-1.5 py-1 rounded bg-emerald-500/10 border border-emerald-500/30 text-emerald-300">
+                                    Hijau: <strong x-text="bycatchCounts.GREEN">0</strong>
+                                </div>
+                                <div class="px-1.5 py-1 rounded bg-amber-500/10 border border-amber-500/30 text-amber-300">
+                                    Kuning: <strong x-text="bycatchCounts.YELLOW">0</strong>
+                                </div>
+                                <div class="px-1.5 py-1 rounded bg-rose-500/10 border border-rose-500/30 text-rose-300">
+                                    Merah: <strong x-text="bycatchCounts.RED">0</strong>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-5 gap-1 text-center text-[9px] text-slate-300">
+                                <div class="py-0.5 rounded bg-slate-900 border border-slate-800" title="Zona 1: Perairan Pesisir (≤12 NM)">Zona 1:<strong class="text-cyan-300 ml-0.5" x-text="domCounts.Z1">0</strong></div>
+                                <div class="py-0.5 rounded bg-slate-900 border border-slate-800" title="Zona 2: Lepas Pantai (12–60 NM)">Zona 2:<strong class="text-sky-300 ml-0.5" x-text="domCounts.Z2">0</strong></div>
+                                <div class="py-0.5 rounded bg-slate-900 border border-slate-800" title="Zona 3: Inti Daerah Makan Ikan">Zona 3:<strong class="text-emerald-300 ml-0.5" x-text="domCounts.Z3">0</strong></div>
+                                <div class="py-0.5 rounded bg-slate-900 border border-slate-800" title="Zona 4: Daerah Asuhan Ikan (≤150m)">Zona 4:<strong class="text-amber-300 ml-0.5" x-text="domCounts.Z4">0</strong></div>
+                                <div class="py-0.5 rounded bg-slate-900 border border-slate-800" title="Zona 5: Rawan Tangkapan Sampingan (Bycatch)">Zona 5:<strong class="text-rose-300 ml-0.5" x-text="domCounts.Z5">0</strong></div>
+                            </div>
+                        </div>
 
-                    <!-- 5. Bycatch Risk Filter -->
-                    <div class="space-y-1.5">
-                        <label class="text-xs font-semibold uppercase tracking-wider text-slate-300 block">Tingkat Risiko Bycatch</label>
-                        <div class="grid grid-cols-4 gap-1 p-1 bg-slate-950 rounded-md border border-slate-800">
-                            <button @click="setBycatch('ALL')" :class="selectedBycatch === 'ALL' ? 'bg-slate-800 text-white' : 'text-slate-400'" class="py-1 text-[11px] font-medium rounded transition">Semua</button>
-                            <button @click="setBycatch('GREEN')" :class="selectedBycatch === 'GREEN' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40' : 'text-slate-400'" class="py-1 text-[11px] font-medium rounded transition">Hijau</button>
-                            <button @click="setBycatch('YELLOW')" :class="selectedBycatch === 'YELLOW' ? 'bg-amber-500/20 text-amber-400 border border-amber-500/40' : 'text-slate-400'" class="py-1 text-[11px] font-medium rounded transition">Kuning</button>
-                            <button @click="setBycatch('RED')" :class="selectedBycatch === 'RED' ? 'bg-rose-500/20 text-rose-400 border border-rose-500/40' : 'text-slate-400'" class="py-1 text-[11px] font-medium rounded transition">Merah</button>
+                        <!-- DOM Zone Filter -->
+                        <div class="space-y-1.5">
+                            <label class="text-xs font-semibold uppercase tracking-wider text-slate-300 block">Zonasi DOM (Dynamic Ocean Management)</label>
+                            <select x-model="selectedDom" @change="applyFilters()" class="w-full bg-slate-950 border border-slate-700/80 rounded-md px-3 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-cyan-500">
+                                @foreach ($domZones as $k => $label)
+                                    <option value="{{ $k }}">{{ $label }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <!-- Bycatch Risk Filter -->
+                        <div class="space-y-1.5">
+                            <label class="text-xs font-semibold uppercase tracking-wider text-slate-300 block">Tingkat Risiko Bycatch</label>
+                            <div class="grid grid-cols-4 gap-1 p-1 bg-slate-950 rounded-md border border-slate-800">
+                                <button @click="setBycatch('ALL')" :class="selectedBycatch === 'ALL' ? 'bg-slate-800 text-white' : 'text-slate-400'" class="py-1 text-[11px] font-medium rounded transition">Semua</button>
+                                <button @click="setBycatch('GREEN')" :class="selectedBycatch === 'GREEN' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40' : 'text-slate-400'" class="py-1 text-[11px] font-medium rounded transition">Hijau</button>
+                                <button @click="setBycatch('YELLOW')" :class="selectedBycatch === 'YELLOW' ? 'bg-amber-500/20 text-amber-400 border border-amber-500/40' : 'text-slate-400'" class="py-1 text-[11px] font-medium rounded transition">Kuning</button>
+                                <button @click="setBycatch('RED')" :class="selectedBycatch === 'RED' ? 'bg-rose-500/20 text-rose-400 border border-rose-500/40' : 'text-slate-400'" class="py-1 text-[11px] font-medium rounded transition">Merah</button>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- 6. Sector Filter -->
-                    <div class="space-y-1.5">
-                        <label class="text-xs font-semibold uppercase tracking-wider text-slate-300 block">Sektor Perairan WPPNRI 573</label>
-                        <select x-model="selectedSector" @change="applyFilters()" class="w-full bg-slate-950 border border-slate-700/80 rounded-md px-3 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-cyan-500">
-                            @foreach ($sectors as $k => $label)
-                                <option value="{{ $k }}">{{ $label }}</option>
-                            @endforeach
-                        </select>
+                    <!-- KONTROL UMUM: Sektor Perairan & Opasitas (Berlaku untuk Semua Mode) -->
+                    <div class="space-y-3 pt-2 border-t border-slate-800/80">
+                        <div class="space-y-1.5">
+                            <label class="text-xs font-semibold uppercase tracking-wider text-slate-300 block">Sektor Perairan WPPNRI 573</label>
+                            <select x-model="selectedSector" @change="applyFilters()" class="w-full bg-slate-950 border border-slate-700/80 rounded-md px-3 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-cyan-500">
+                                @foreach ($sectors as $k => $label)
+                                    <option value="{{ $k }}">{{ $label }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="space-y-1.5 p-2.5 bg-slate-950/60 rounded-lg border border-slate-800">
+                            <div class="flex items-center justify-between text-xs">
+                                <span class="font-medium text-slate-300">Opasitas Layer Poligon</span>
+                                <span class="font-mono text-cyan-400 font-bold" x-text="Math.round(layerOpacity * 100) + '%'"></span>
+                            </div>
+                            <input
+                                type="range"
+                                min="0.15"
+                                max="1.0"
+                                step="0.05"
+                                x-model.number="layerOpacity"
+                                @input="updateLayerStyle()"
+                                class="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-cyan-400"
+                            />
+                            <div class="flex justify-between text-[10px] font-mono text-slate-500">
+                                <span>Transparan (Citra Satelit)</span>
+                                <span>Pekat</span>
+                            </div>
+                        </div>
                     </div>
-                    </div><!-- end TAB 2 -->
 
                     <!-- Selected Cell Detail Inspector Card -->
                     <div x-show="selectedCell" x-transition class="p-3 bg-slate-950 rounded-lg border border-cyan-500/40 space-y-2">
@@ -614,7 +601,6 @@
                 },
 
                 selectedCell: null,
-                panelTab: 'layer',
                 mobileFiltersOpen: false,
                 isFullscreen: false,
                 mapBearing: 0,
@@ -643,9 +629,6 @@
                     const urlLayer = new URLSearchParams(window.location.search).get('layer');
                     if (['hsi', 'dom', 'bycatch', 'bathymetry'].includes(urlLayer)) {
                         this.activeLayer = urlLayer;
-                        if (urlLayer === 'dom' || urlLayer === 'bycatch') {
-                            this.panelTab = 'dom';
-                        }
                     }
 
                     // 1. Initialize Leaflet Map
@@ -1122,27 +1105,28 @@
                         date: '{{ $latestDate }}'
                     });
 
-                    if (this.selectedSpecies !== 'all') {
-                        params.append('species', this.selectedSpecies);
+                    // Isolate filters per active map mode
+                    if (this.activeLayer === 'hsi') {
+                        if (this.selectedSpecies !== 'all') {
+                            params.append('species', this.selectedSpecies);
+                        }
                         if (parseFloat(this.minHsi) > 0) {
                             params.append('min_hsi', this.minHsi);
                         }
-                    }
-
-                    if (this.selectedDom !== 'ALL') {
-                        params.append('dom_zone', this.selectedDom);
-                    }
-
-                    if (this.selectedBycatch !== 'ALL') {
-                        params.append('bycatch', this.selectedBycatch);
+                        if (this.hotspotsOnly) {
+                            params.append('hotspot_only', 'true');
+                        }
+                    } else if (this.activeLayer === 'dom' || this.activeLayer === 'bycatch') {
+                        if (this.selectedDom !== 'ALL') {
+                            params.append('dom_zone', this.selectedDom);
+                        }
+                        if (this.selectedBycatch !== 'ALL') {
+                            params.append('bycatch', this.selectedBycatch);
+                        }
                     }
 
                     if (this.selectedSector !== 'ALL') {
                         params.append('sector', this.selectedSector);
-                    }
-
-                    if (this.hotspotsOnly) {
-                        params.append('hotspot_only', 'true');
                     }
 
                     return '/api/predictions?' + params.toString();
@@ -1462,9 +1446,22 @@
                     this.domCounts = dc;
                 },
 
+                getLayerFilterGroup(layer) {
+                    if (layer === 'hsi') return 'hsi';
+                    if (layer === 'dom' || layer === 'bycatch') return 'dom';
+                    return 'bathymetry';
+                },
+
                 setLayerMode(mode) {
+                    const prevGroup = this.getLayerFilterGroup(this.activeLayer);
+                    const nextGroup = this.getLayerFilterGroup(mode);
                     this.activeLayer = mode;
-                    this.updateLayerStyle();
+                    this.map?.closePopup();
+                    if (prevGroup !== nextGroup) {
+                        this.applyFilters();
+                    } else {
+                        this.updateLayerStyle();
+                    }
                 },
 
                 setBycatch(val) {
