@@ -475,57 +475,11 @@
                 <!-- Leaflet Map Container -->
                 <div x-ref="mapContainer" class="w-full h-full"></div>
 
-                <!-- Bottom HUD Row: Scale Clearance + Seasonal Time-Slider Playback Bar (Task 2.2) + Scientific Legend -->
+                <!-- Bottom HUD Row: Scale Clearance + Scientific Legend -->
                 <div class="pointer-events-none absolute inset-x-3 bottom-3 z-[1000] flex flex-col-reverse md:flex-row items-center md:items-end justify-between gap-2.5">
                     
                     <!-- Spacer to keep Leaflet Bottom-Left Scale Control unobstructed -->
                     <div class="hidden md:block w-24 shrink-0"></div>
-
-                    <!-- Seasonal Time-Slider Playback Bar -->
-                    <div class="pointer-events-auto w-full max-w-md xl:max-w-lg bg-slate-900/95 border border-slate-800/90 rounded-2xl p-2 sm:p-2.5 shadow-2xl backdrop-blur-md text-xs select-none">
-                        <div class="flex items-center justify-between gap-2 mb-2 px-1">
-                            <div class="flex items-center gap-2.5 min-w-0">
-                                <!-- Play / Pause Button -->
-                                <button 
-                                    type="button" 
-                                    @click="toggleSeasonalPlayback()" 
-                                    :class="isPlayingSeason ? 'bg-amber-400 text-slate-950' : 'bg-cyan-500 text-slate-950 hover:bg-cyan-400'"
-                                    class="w-7 h-7 rounded-lg font-bold flex items-center justify-center transition active:scale-95 shadow shrink-0"
-                                    :title="isPlayingSeason ? 'Jeda Playback' : 'Putar Siklus Musiman WPP 573'">
-                                    <template x-if="!isPlayingSeason">
-                                        <svg class="w-3.5 h-3.5 ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                                    </template>
-                                    <template x-if="isPlayingSeason">
-                                        <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
-                                    </template>
-                                </button>
-                                <div class="min-w-0 truncate">
-                                    <div class="flex items-center gap-1.5 truncate">
-                                        <span class="text-[11px] font-bold text-white uppercase tracking-wider shrink-0">Playback Musiman</span>
-                                        <span class="px-1.5 py-0.5 rounded text-[10px] font-mono bg-cyan-500/10 text-cyan-300 border border-cyan-500/30 font-semibold truncate" x-text="seasonLabels[selectedMonth]"></span>
-                                    </div>
-                                    <span class="text-[10px] text-slate-400 truncate block mt-0.5" x-text="seasonDescriptions[selectedMonth]"></span>
-                                </div>
-                            </div>
-                            <div class="hidden sm:flex items-center gap-1.5 shrink-0">
-                                <span class="w-1.5 h-1.5 rounded-full" :class="isPlayingSeason ? 'bg-emerald-400 animate-ping' : 'bg-slate-600'"></span>
-                                <span class="text-[10px] font-mono text-slate-400" x-text="isPlayingSeason ? 'Berjalan (1.4s)' : 'Pause'"></span>
-                            </div>
-                        </div>
-
-                        <!-- 13-Month Scrubber Buttons (Guaranteed Horizontal Grid) -->
-                        <div class="grid gap-1" style="display: grid; grid-template-columns: repeat(13, minmax(0, 1fr));">
-                            <template x-for="(mLabel, mIdx) in monthButtons" :key="mIdx">
-                                <button 
-                                    type="button" 
-                                    @click="selectSeasonMonth(mIdx)" 
-                                    :class="selectedMonth === mIdx ? 'bg-cyan-500 text-slate-950 font-bold shadow ring-1 ring-cyan-300' : 'bg-slate-950/70 text-slate-400 hover:text-white hover:bg-slate-800'"
-                                    class="py-1 px-0.5 rounded text-[10px] font-mono transition text-center select-none truncate"
-                                    x-text="mLabel">
-                                </button>
-                            </template>
-                        </div>
-                    </div>
 
                     <!-- Floating Scientific Legend (Bottom-Right) -->
                     <div class="pointer-events-auto hidden sm:block sm:w-52 xl:w-[232px] shrink-0 bg-slate-900/90 border border-slate-800 rounded-lg p-2.5 shadow-xl backdrop-blur-md text-xs space-y-1.5">
@@ -623,34 +577,6 @@
                 particles: [],
                 numParticles: 90,
                 animFrameId: null,
-
-                // Seasonal Time-Slider Playback State (Task 2.2)
-                isPlayingSeason: false,
-                playbackInterval: null,
-                selectedMonth: 10, // November default
-                monthButtons: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des', 'IOD+'],
-                seasonLabels: [
-                    'Januari (Musim Barat)', 'Februari (Musim Barat)', 'Maret (Peralihan I)',
-                    'April (Peralihan I)', 'Mei (Awal Musim Timur)', 'Juni (Musim Timur)',
-                    'Juli (Upwelling Menguat)', 'Agustus (Puncak Upwelling)', 'September (Upwelling Kuat)',
-                    'Oktober (Peralihan II)', 'November (Musim Peralihan II)', 'Desember (Awal Musim Barat)',
-                    'Super IOD Positif 2019 (Upwelling Ekstrem)'
-                ],
-                seasonDescriptions: [
-                    'SST Hangat (29.5°C) • Klorofil Rendah (0.12 mg/m³) • Angin Barat Laut',
-                    'SST Hangat (29.2°C) • Kondisi Oseanis Normal • Daerah Tangkapan Lepas Pantai',
-                    'Transisi Angin Muson • Termoklin Mulai Bergerak Naik',
-                    'Awal Pembentukan Front Termal di Sepanjang Paparan Selatan Jawa',
-                    'Awal Angin Muson Tenggara • Mulai Penurunan SST Pesisir',
-                    'Upwelling Berkembang • SST Turun ke 26.5°C • Klorofil Meningkat',
-                    'Upwelling Kuat • SST 24.8°C • Blooming Klorofil Shelf Break (>0.8 mg/m³)',
-                    'Puncak Upwelling Tahunan • HSI Cakalang & Tuna Sirip Kuning Mencapai Titik Tertinggi',
-                    'Upwelling Berkelanjutan • Front Termal Kuat • Agregasi Pelagis Besar',
-                    'Akhir Musim Upwelling • SST Berangsur Menghangat (27.5°C)',
-                    'Kondisi Oseanografi Transisi • Snapshot Data Satelit GEE Terkini',
-                    'Musim Barat Dimulai • SST Hangat (29.0°C) • Gelombang Samudera Tinggi',
-                    'Skenario Ekstrem 2019: Anomali Dipole Mode Positif • Upwelling Terkuat Dekade Ini (SST < 22°C)'
-                ],
 
                 activeLayer: 'hsi',
                 oceanFeatures: [],
@@ -1177,32 +1103,6 @@
                     }
                 },
 
-                // --- Seasonal Time-Slider Playback Methods (Task 2.2) ---
-                toggleSeasonalPlayback() {
-                    this.isPlayingSeason = !this.isPlayingSeason;
-                    if (this.isPlayingSeason) {
-                        this.playbackInterval = setInterval(() => {
-                            this.selectedMonth = (this.selectedMonth + 1) % 13;
-                            this.onSeasonMonthChanged();
-                        }, 1400);
-                    } else {
-                        if (this.playbackInterval) {
-                            clearInterval(this.playbackInterval);
-                            this.playbackInterval = null;
-                        }
-                    }
-                },
-
-                selectSeasonMonth(idx) {
-                    this.selectedMonth = idx;
-                    this.onSeasonMonthChanged();
-                },
-
-                onSeasonMonthChanged() {
-                    // Instantly update polygon layer styles to visualize seasonal thermal/HSI shift (<50ms)
-                    this.updateLayerStyle();
-                },
-
                 buildApiUrl() {
                     const params = new URLSearchParams({
                         format: 'geojson',
@@ -1288,18 +1188,7 @@
                     return (cakalang + madidihang + tongkol) / 3;
                 },
 
-                getSeasonalModulation() {
-                    if (this.selectedMonth === 12) return 0.28; // Super IOD 2019 Extreme Upwelling
-                    if (this.selectedMonth >= 6 && this.selectedMonth <= 8) {
-                        return (this.selectedMonth === 7 ? 0.22 : 0.15); // Peak East Monsoon
-                    }
-                    if (this.selectedMonth <= 1 || this.selectedMonth === 11) return -0.08; // West Monsoon
-                    return 0.0;
-                },
-
                 getFeatureColor(p) {
-                    const seasonalFactor = this.getSeasonalModulation();
-
                     if (this.activeLayer === 'dom') {
                         switch (p.dom_zone) {
                             case 'Z4_NURSERY_GROUND': return '#14b8a6'; // Teal
@@ -1322,7 +1211,7 @@
                         if (d <= 1200) return '#0284c7';
                         return '#1e3a8a';
                     } else {
-                        let v = this.getSpeciesHsiValue(p) + seasonalFactor;
+                        let v = this.getSpeciesHsiValue(p);
                         v = Math.max(0.0, Math.min(1.0, v));
 
                         if (v >= 0.70) return '#ef4444'; // Hotspot Red
@@ -1340,7 +1229,7 @@
                     let fillOp = op;
 
                     if (this.activeLayer === 'hsi') {
-                        const v = Math.max(0.0, Math.min(1.0, this.getSpeciesHsiValue(p) + this.getSeasonalModulation()));
+                        const v = Math.max(0.0, Math.min(1.0, this.getSpeciesHsiValue(p)));
                         if (v < 0.25) fillOp = Math.min(op, op * 0.28);
                     }
 

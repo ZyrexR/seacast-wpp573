@@ -43,10 +43,9 @@ class DpiRadarViewTest extends TestCase
         // Assert Ocean Current 60 FPS Toggle is present (Task 2.1)
         $response->assertSee('Arus Laut 60 FPS');
 
-        // Assert Seasonal Time-Slider Playback Bar is present (Task 2.2)
-        $response->assertSee('Playback Musiman');
-        $response->assertSee('toggleSeasonalPlayback');
-        $response->assertSee('selectSeasonMonth');
+        // Assert Seasonal Playback bar is removed
+        $response->assertDontSee('Playback Musiman');
+        $response->assertDontSee('toggleSeasonalPlayback');
 
         // Assert DOM and Bycatch filters remain intact
         $response->assertSee('Zonasi DOM (Dynamic Ocean Management)');
