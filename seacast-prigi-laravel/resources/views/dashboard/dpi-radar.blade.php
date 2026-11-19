@@ -202,32 +202,43 @@
                     </button>
                 </div>
 
-                <div class="p-4 space-y-5">
-                    
-                    <!-- KPI Counter Mini Grid -->
-                    <div class="grid grid-cols-2 gap-2 bg-slate-950/60 p-2.5 rounded-lg border border-slate-800">
-                        <div class="p-2 bg-slate-900/80 rounded border border-slate-800/80">
-                            <span class="text-[11px] font-mono uppercase text-slate-400 block">Sel Terfilter</span>
-                            <span class="text-base font-semibold font-mono text-cyan-400" x-text="filteredCount">...</span>
-                            <span class="text-[10px] text-slate-500 block">dari 8.129 sel</span>
+                <div class="p-3.5 space-y-4">
+                    <!-- Compact Panel Section Switcher (Declutters Sidebar) -->
+                    <div class="grid grid-cols-2 gap-1 p-1 bg-slate-950 rounded-xl border border-slate-800 text-[11px] font-semibold">
+                        <button type="button" @click="panelTab = 'layer'"
+                                :class="panelTab === 'layer' ? 'bg-[#12364A] text-cyan-300 shadow' : 'text-slate-400 hover:text-white'"
+                                class="py-1.5 px-2 rounded-lg transition text-center">
+                            Peta &amp; Spesies
+                        </button>
+                        <button type="button" @click="panelTab = 'dom'"
+                                :class="panelTab === 'dom' ? 'bg-[#12364A] text-cyan-300 shadow' : 'text-slate-400 hover:text-white'"
+                                class="py-1.5 px-2 rounded-lg transition text-center">
+                            DOM &amp; Bycatch
+                        </button>
+                    </div>
+
+                    <!-- Compact KPI Summary Strip -->
+                    <div class="grid grid-cols-2 gap-1.5 bg-slate-950/60 p-2 rounded-lg border border-slate-800 text-[11px]">
+                        <div class="px-2 py-1.5 bg-slate-900/80 rounded border border-slate-800/80 flex items-center justify-between">
+                            <span class="text-slate-400 font-mono">Sel</span>
+                            <span class="font-bold font-mono text-cyan-400" x-text="filteredCount">...</span>
                         </div>
-                        <div class="p-2 bg-slate-900/80 rounded border border-slate-800/80">
-                            <span class="text-[11px] font-mono uppercase text-slate-400 block">Hotspot Tuna</span>
-                            <span class="text-base font-semibold font-mono text-amber-400" x-text="hotspotCount">...</span>
-                            <span class="text-[10px] text-slate-500 block">HSI &ge; 0.70</span>
+                        <div class="px-2 py-1.5 bg-slate-900/80 rounded border border-slate-800/80 flex items-center justify-between">
+                            <span class="text-slate-400 font-mono">Hotspot</span>
+                            <span class="font-bold font-mono text-amber-400" x-text="hotspotCount">...</span>
                         </div>
-                        <div class="p-2 bg-slate-900/80 rounded border border-slate-800/80">
-                            <span class="text-[11px] font-mono uppercase text-slate-400 block">Rata-rata HSI</span>
-                            <span class="text-base font-semibold font-mono text-emerald-400" x-text="meanHsi">...</span>
-                            <span class="text-[10px] text-slate-500 block">Skala 0.000 - 1.000</span>
+                        <div class="px-2 py-1.5 bg-slate-900/80 rounded border border-slate-800/80 flex items-center justify-between">
+                            <span class="text-slate-400 font-mono">Mean HSI</span>
+                            <span class="font-bold font-mono text-emerald-400" x-text="meanHsi">...</span>
                         </div>
-                        <div class="p-2 bg-slate-900/80 rounded border border-slate-800/80">
-                            <span class="text-[11px] font-mono uppercase text-slate-400 block">Aman Melaut</span>
-                            <span class="text-base font-semibold font-mono text-blue-400" x-text="safePct + '%'">...</span>
-                            <span class="text-[10px] text-slate-500 block">BMKG Safe Advisory</span>
+                        <div class="px-2 py-1.5 bg-slate-900/80 rounded border border-slate-800/80 flex items-center justify-between">
+                            <span class="text-slate-400 font-mono">Aman</span>
+                            <span class="font-bold font-mono text-blue-400" x-text="safePct + '%'">...</span>
                         </div>
                     </div>
 
+                    <!-- TAB 1: Mode Peta, Spesies, HSI & Opasitas -->
+                    <div x-show="panelTab === 'layer'" class="space-y-4">
                     <!-- 1. Layer Mode Selector (Always Visible on Desktop & Mobile) -->
                     <div class="space-y-1.5">
                         <label class="text-xs font-semibold uppercase tracking-wider text-slate-300 block">Mode Peta (HSI / DOM / Bycatch)</label>
@@ -247,6 +258,73 @@
                         </div>
                     </div>
 
+                    <!-- 2. Species Filter -->
+                    <div class="space-y-1.5">
+                        <label class="text-xs font-semibold uppercase tracking-wider text-slate-300 block">Spesies Target</label>
+                        <select x-model="selectedSpecies" @change="applyFilters()" class="w-full bg-slate-950 border border-slate-700/80 rounded-md px-3 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-cyan-500">
+                            @foreach ($speciesList as $k => $label)
+                                <option value="{{ $k }}">{{ $label }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <!-- 3. Minimum HSI Slider -->
+                    <div class="space-y-1.5">
+                        <div class="flex items-center justify-between text-xs">
+                            <span class="font-semibold uppercase tracking-wider text-slate-300">Ambang Batas HSI Minimum</span>
+                            <span class="font-mono text-cyan-400 font-bold" x-text="minHsi"></span>
+                        </div>
+                        <input
+                            type="range"
+                            min="0.0"
+                            max="0.9"
+                            step="0.05"
+                            x-model="minHsi"
+                            @input="debounceApplyFilters()"
+                            class="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-cyan-400"
+                        />
+                        <div class="flex justify-between text-[10px] font-mono text-slate-500">
+                            <span>0.0 (Semua)</span>
+                            <span>0.55 (Potensial)</span>
+                            <span>0.70 (Hotspot)</span>
+                        </div>
+                    </div>
+
+                    <!-- 7. Hotspot Tuna Only Toggle -->
+                    <div class="flex items-center justify-between p-2.5 bg-slate-950/60 rounded-lg border border-slate-800">
+                        <div>
+                            <span class="text-xs font-medium text-slate-200 block">Hanya Hotspot Tuna</span>
+                            <span class="text-[11px] text-slate-400">Sel dengan HSI &ge; 0.70</span>
+                        </div>
+                        <button type="button" @click="hotspotsOnly = !hotspotsOnly; applyFilters()" :class="hotspotsOnly ? 'bg-cyan-500' : 'bg-slate-800'" class="relative inline-flex h-5 w-9 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out">
+                            <span :class="hotspotsOnly ? 'translate-x-4' : 'translate-x-0'" class="pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"></span>
+                        </button>
+                    </div>
+
+                    <!-- 8. Layer Opacity Slider (Optimal for Satellite Imagery) -->
+                    <div class="space-y-1.5 p-2.5 bg-slate-950/60 rounded-lg border border-slate-800">
+                        <div class="flex items-center justify-between text-xs">
+                            <span class="font-medium text-slate-300">Opasitas Layer Poligon</span>
+                            <span class="font-mono text-cyan-400 font-bold" x-text="Math.round(layerOpacity * 100) + '%'"></span>
+                        </div>
+                        <input
+                            type="range"
+                            min="0.15"
+                            max="1.0"
+                            step="0.05"
+                            x-model.number="layerOpacity"
+                            @input="updateLayerStyle()"
+                            class="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-cyan-400"
+                        />
+                        <div class="flex justify-between text-[10px] font-mono text-slate-500">
+                            <span>Transparan (Citra Satelit)</span>
+                            <span>Pekat</span>
+                        </div>
+                    </div>
+                    </div><!-- end TAB 1 -->
+
+                    <!-- TAB 2: DOM, Bycatch & Sektor -->
+                    <div x-show="panelTab === 'dom'" class="space-y-4">
                     <!-- Live DOM & Bycatch Distribution Summary -->
                     <div class="bg-slate-950/60 p-2.5 rounded-lg border border-slate-800 space-y-2 text-[10px] font-mono">
                         <div class="flex items-center justify-between text-slate-400 uppercase font-semibold">
@@ -270,38 +348,6 @@
                             <div class="py-0.5 rounded bg-slate-900 border border-slate-800" title="Z3 Feeding">Z3:<strong class="text-emerald-300 ml-0.5" x-text="domCounts.Z3">0</strong></div>
                             <div class="py-0.5 rounded bg-slate-900 border border-slate-800" title="Z4 Nursery">Z4:<strong class="text-amber-300 ml-0.5" x-text="domCounts.Z4">0</strong></div>
                             <div class="py-0.5 rounded bg-slate-900 border border-slate-800" title="Z5 Bycatch">Z5:<strong class="text-rose-300 ml-0.5" x-text="domCounts.Z5">0</strong></div>
-                        </div>
-                    </div>
-
-                    <!-- 2. Species Filter -->
-                    <div class="space-y-1.5">
-                        <label class="text-xs font-semibold uppercase tracking-wider text-slate-300 block">Spesies Target</label>
-                        <select x-model="selectedSpecies" @change="applyFilters()" class="w-full bg-slate-950 border border-slate-700/80 rounded-md px-3 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-cyan-500">
-                            @foreach ($speciesList as $k => $label)
-                                <option value="{{ $k }}">{{ $label }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <!-- 3. Minimum HSI Slider -->
-                    <div class="space-y-1.5">
-                        <div class="flex items-center justify-between text-xs">
-                            <span class="font-semibold uppercase tracking-wider text-slate-300">Ambang Batas HSI Minimum</span>
-                            <span class="font-mono text-cyan-400 font-bold" x-text="minHsi"></span>
-                        </div>
-                        <input 
-                            type="range" 
-                            min="0.0" 
-                            max="0.9" 
-                            step="0.05" 
-                            x-model="minHsi" 
-                            @input="debounceApplyFilters()"
-                            class="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-cyan-400"
-                        />
-                        <div class="flex justify-between text-[10px] font-mono text-slate-500">
-                            <span>0.0 (Semua)</span>
-                            <span>0.55 (Potensial)</span>
-                            <span>0.70 (Hotspot)</span>
                         </div>
                     </div>
 
@@ -335,38 +381,7 @@
                             @endforeach
                         </select>
                     </div>
-
-                    <!-- 7. Hotspot Tuna Only Toggle -->
-                    <div class="flex items-center justify-between p-2.5 bg-slate-950/60 rounded-lg border border-slate-800">
-                        <div>
-                            <span class="text-xs font-medium text-slate-200 block">Hanya Hotspot Tuna</span>
-                            <span class="text-[11px] text-slate-400">Sel dengan HSI &ge; 0.70</span>
-                        </div>
-                        <button type="button" @click="hotspotsOnly = !hotspotsOnly; applyFilters()" :class="hotspotsOnly ? 'bg-cyan-500' : 'bg-slate-800'" class="relative inline-flex h-5 w-9 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out">
-                            <span :class="hotspotsOnly ? 'translate-x-4' : 'translate-x-0'" class="pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"></span>
-                        </button>
-                    </div>
-
-                    <!-- 8. Layer Opacity Slider (Optimal for Satellite Imagery) -->
-                    <div class="space-y-1.5 p-2.5 bg-slate-950/60 rounded-lg border border-slate-800">
-                        <div class="flex items-center justify-between text-xs">
-                            <span class="font-medium text-slate-300">Opasitas Layer Poligon</span>
-                            <span class="font-mono text-cyan-400 font-bold" x-text="Math.round(layerOpacity * 100) + '%'"></span>
-                        </div>
-                        <input 
-                            type="range" 
-                            min="0.15" 
-                            max="1.0" 
-                            step="0.05" 
-                            x-model.number="layerOpacity" 
-                            @input="updateLayerStyle()"
-                            class="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-cyan-400"
-                        />
-                        <div class="flex justify-between text-[10px] font-mono text-slate-500">
-                            <span>Transparan (Citra Satelit)</span>
-                            <span>Pekat</span>
-                        </div>
-                    </div>
+                    </div><!-- end TAB 2 -->
 
                     <!-- Selected Cell Detail Inspector Card -->
                     <div x-show="selectedCell" x-transition class="p-3 bg-slate-950 rounded-lg border border-cyan-500/40 space-y-2">
@@ -660,6 +675,7 @@
                 },
 
                 selectedCell: null,
+                panelTab: 'layer',
                 mobileFiltersOpen: false,
                 isFullscreen: false,
                 mapBearing: 0,
@@ -688,6 +704,9 @@
                     const urlLayer = new URLSearchParams(window.location.search).get('layer');
                     if (['hsi', 'dom', 'bycatch', 'bathymetry'].includes(urlLayer)) {
                         this.activeLayer = urlLayer;
+                        if (urlLayer === 'dom' || urlLayer === 'bycatch') {
+                            this.panelTab = 'dom';
+                        }
                     }
 
                     // 1. Initialize Leaflet Map
