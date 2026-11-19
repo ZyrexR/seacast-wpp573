@@ -64,29 +64,41 @@
         </div>
 
         <!-- ========================================== -->
-        <!-- TAB 1: KALKULATOR RENCANA BARU             -->
+        <!-- TAB 1: KALKULATOR RENCANA BARU (2-SLIDE)   -->
         <!-- ========================================== -->
-        <div x-show="activeTab === 'planner'" class="space-y-6">
+        <div x-show="activeTab === 'planner'" class="space-y-5">
 
-            <!-- Regulatory & Advisory Banner -->
-            <div class="p-4 rounded-xl border flex items-start gap-3 transition-colors"
-                 :class="{
-                     'bg-emerald-500/10 border-emerald-500/30 text-emerald-200': plan.readiness_status === 'SIAP_MELAUT',
-                     'bg-amber-500/10 border-amber-500/30 text-amber-200': plan.readiness_status === 'SIAP_DENGAN_CATATAN',
-                     'bg-rose-500/10 border-rose-500/30 text-rose-200': plan.readiness_status === 'TIDAK_DISARANKAN'
-                 }">
-                <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <div class="text-xs space-y-1">
-                    <div class="font-bold flex items-center gap-2">
-                        <span x-text="plan.readiness_status.replaceAll('_', ' ')"></span>
-                        <span>•</span>
-                        <span x-text="plan.wave_safety.status_label || plan.wave_safety.status"></span>
+            <!-- 2-Step Wizard Progress Header -->
+            <div class="bg-[#091F30] border border-[#244456] rounded-2xl p-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+                <button type="button" @click="plannerStep = 1"
+                        :class="plannerStep === 1 ? 'bg-cyan-500/20 border-cyan-400/60 text-white' : 'bg-[#071B2B]/60 border-transparent text-slate-400 hover:text-slate-200'"
+                        class="flex-1 flex items-center gap-3 px-4 py-2.5 rounded-xl border transition text-left cursor-pointer">
+                    <span :class="plannerStep === 1 ? 'bg-cyan-500 text-slate-950' : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'"
+                          class="w-7 h-7 rounded-full font-mono font-black text-xs flex items-center justify-center shrink-0">1</span>
+                    <div class="min-w-0">
+                        <div class="text-xs font-bold truncate">Isi Form &amp; Pilih Titik Tangkap</div>
+                        <div class="text-[10px] text-slate-400 truncate">Pelabuhan, kapal, komoditas &amp; Auto-Optimizer Top-5</div>
                     </div>
-                    <p>Penilaian awal berdasarkan jarak dari pelabuhan, spesifikasi kapal, dan tinggi gelombang. Status ini bukan persetujuan berlayar atau verifikasi jalur dari garis pantai.</p>
+                </button>
+
+                <div class="hidden sm:flex items-center text-slate-600 px-1">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
                 </div>
+
+                <button type="button" @click="goToPreview()"
+                        :class="plannerStep === 2 ? 'bg-cyan-500/20 border-cyan-400/60 text-white' : 'bg-[#071B2B]/60 border-transparent text-slate-400 hover:text-slate-200'"
+                        class="flex-1 flex items-center gap-3 px-4 py-2.5 rounded-xl border transition text-left cursor-pointer">
+                    <span :class="plannerStep === 2 ? 'bg-cyan-500 text-slate-950' : 'bg-slate-800 text-slate-400'"
+                          class="w-7 h-7 rounded-full font-mono font-black text-xs flex items-center justify-center shrink-0">2</span>
+                    <div class="min-w-0">
+                        <div class="text-xs font-bold truncate">Preview Hasil, Cuaca &amp; Simpan</div>
+                        <div class="text-[10px] text-slate-400 truncate">Estimasi BBM, profit, kepatuhan jalur &amp; cetak PDF</div>
+                    </div>
+                </button>
             </div>
+
+            <!-- SLIDE 1: AUTO-OPTIMIZER + FORM INPUT -->
+            <div x-show="plannerStep === 1" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 translate-y-1" x-transition:enter-end="opacity-100 translate-y-0" class="space-y-5">
 
             <!-- Auto-Optimizer: Top-5 Best Fishing Waypoints + GPX GPS Export -->
             <div class="bg-[#091F30] border border-cyan-500/30 rounded-2xl p-4 sm:p-5 space-y-3">
@@ -148,22 +160,20 @@
                 </template>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-
-                <!-- Left Column: Parameter Form (5 Cols) -->
-                <div class="lg:col-span-5 bg-[#091F30] border border-[#244456] rounded-2xl p-5 space-y-5">
+            <!-- Full-Width Parameter Form (Slide 1) -->
+            <div class="bg-[#091F30] border border-[#244456] rounded-2xl p-5 sm:p-6 space-y-5">
                     <div class="flex items-center justify-between border-b border-[#244456] pb-3">
                         <h2 class="text-sm font-bold text-white flex items-center gap-2">
                             <svg class="w-4 h-4 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                             </svg>
-                            Parameter Pelayaran & Kapal
+                            Parameter Pelayaran &amp; Kapal
                         </h2>
                         <span class="text-floor font-mono text-cyan-400" x-text="plan.reference_no"></span>
                     </div>
 
-                    <form action="{{ route('dashboard.trip-planner.store') }}" method="POST" class="space-y-4">
+                    <form id="tripPlannerForm" action="{{ route('dashboard.trip-planner.store') }}" method="POST" class="space-y-4">
                         @csrf
                         <input type="hidden" name="cell_id" :value="form.cell_id || plan.cell_id || ''">
                         <input type="hidden" name="hsi_score" :value="form.hsi_score">
@@ -278,23 +288,78 @@
                                       placeholder="Catatan tambahan perlengkapan pancing, es curah, atau kru kapal..."></textarea>
                         </div>
 
-                        <!-- Submit Buttons -->
-                        <div class="pt-2 flex flex-col sm:flex-row gap-3">
-                            <button type="submit"
+                        <!-- Next Step Button -> Slide 2 Preview -->
+                        <div class="pt-3 border-t border-[#244456]/60 flex flex-col sm:flex-row items-center justify-between gap-3">
+                            <p class="text-[11px] text-slate-400">Setelah form diisi, lanjutkan untuk meninjau estimasi BBM, cuaca BMKG, dan proyeksi hasil sebelum menyimpan.</p>
+                            <button type="button" @click="goToPreview()"
                                     :disabled="isLoading || !!errorMessage"
-                                    class="flex-1 py-2.5 px-4 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black rounded-xl text-xs transition active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed shadow-md flex items-center justify-center gap-2">
+                                    class="w-full sm:w-auto py-2.5 px-6 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black rounded-xl text-xs transition active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed shadow-md flex items-center justify-center gap-2 shrink-0 cursor-pointer">
+                                <span>Lihat Preview Rencana</span>
                                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                                 </svg>
-                                Simpan Rencana Pelayaran
                             </button>
                         </div>
                         <p x-show="errorMessage" x-text="errorMessage" role="alert" class="text-xs text-rose-300"></p>
                     </form>
+            </div>
+            </div><!-- end SLIDE 1 -->
+
+            <!-- SLIDE 2: PREVIEW LENGKAP & SIMPAN -->
+            <div x-show="plannerStep === 2" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 translate-y-1" x-transition:enter-end="opacity-100 translate-y-0" class="space-y-5" style="display: none;">
+
+                <!-- Slide 2 Top Action Bar -->
+                <div class="bg-[#091F30] border border-[#244456] rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                    <div class="flex items-center gap-3">
+                        <button type="button" @click="plannerStep = 1"
+                                class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[#071B2B] hover:bg-[#12364A] border border-[#244456] text-slate-200 text-xs font-bold transition cursor-pointer">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
+                            <span>Ubah Form</span>
+                        </button>
+                        <div class="text-xs">
+                            <div class="font-bold text-white" x-text="(form.vessel_name || 'Kapal') + ' • ' + form.gt_class + ' • ' + form.target_commodity"></div>
+                            <div class="text-[11px] font-mono text-cyan-300" x-text="(plan.target_coordinates?.dms || '') + ' • ' + (form.departure_date || '')"></div>
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-2">
+                        <a :href="gpxExportUrl()"
+                           class="inline-flex items-center gap-1.5 px-3 py-2 bg-[#071B2B] hover:bg-[#12364A] text-cyan-300 border border-[#244456] font-semibold text-xs rounded-xl transition">
+                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+                            <span>Download GPX</span>
+                        </a>
+                        <button type="submit" form="tripPlannerForm"
+                                :disabled="isLoading || !!errorMessage"
+                                class="py-2 px-4 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-black rounded-xl text-xs transition active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed shadow-md flex items-center justify-center gap-2 cursor-pointer">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+                            </svg>
+                            <span>Simpan Rencana Pelayaran</span>
+                        </button>
+                    </div>
                 </div>
 
-                <!-- Right Column: Decision Support Cockpit (7 Cols) -->
-                <div class="lg:col-span-7 space-y-5">
+                <!-- Regulatory & Advisory Banner -->
+                <div class="p-4 rounded-xl border flex items-start gap-3 transition-colors"
+                     :class="{
+                         'bg-emerald-500/10 border-emerald-500/30 text-emerald-200': plan.readiness_status === 'SIAP_MELAUT',
+                         'bg-amber-500/10 border-amber-500/30 text-amber-200': plan.readiness_status === 'SIAP_DENGAN_CATATAN',
+                         'bg-rose-500/10 border-rose-500/30 text-rose-200': plan.readiness_status === 'TIDAK_DISARANKAN'
+                     }">
+                    <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <div class="text-xs space-y-1">
+                        <div class="font-bold flex items-center gap-2">
+                            <span x-text="plan.readiness_status.replaceAll('_', ' ')"></span>
+                            <span>•</span>
+                            <span x-text="plan.wave_safety.status_label || plan.wave_safety.status"></span>
+                        </div>
+                        <p>Penilaian awal berdasarkan jarak dari pelabuhan, spesifikasi kapal, dan tinggi gelombang. Status ini bukan persetujuan berlayar atau verifikasi jalur dari garis pantai.</p>
+                    </div>
+                </div>
+
+                <!-- Full-Width Decision Support Cockpit -->
+                <div class="space-y-5">
 
                     <!-- Metric Row 1: Navigasi & Bahan Bakar (+15% Safety Reserve) -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -639,7 +704,7 @@
                     </div>
 
                 </div>
-            </div>
+            </div><!-- end SLIDE 2 -->
         </div>
 
         <!-- ========================================== -->
@@ -824,6 +889,7 @@
         function tripPlanner(config) {
             return {
                 activeTab: 'planner',
+                plannerStep: 1,
                 form: { trip_days: 1, vessel_readiness: 'OPTIMAL', ...config.initialTarget },
                 plan: { ...config.initialPlan },
                 calcUrl: config.calcUrl,
@@ -837,6 +903,14 @@
                 recDate: null,
                 recLoading: false,
                 recLoaded: false,
+
+                async goToPreview() {
+                    await this.recalculate();
+                    if (!this.errorMessage) {
+                        this.plannerStep = 2;
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }
+                },
 
                 async fetchRecommendations() {
                     this.recLoading = true;
