@@ -1342,61 +1342,63 @@
 
                         const layerSectionHtml = isDomMode
                             ? `
-                                <div class="mt-2 pt-2 border-t border-slate-800 space-y-2 text-[11px]">
-                                    <div>
-                                        <span class="text-[10px] text-slate-400 uppercase font-semibold block mb-1">Risiko Bycatch</span>
-                                        <span class="inline-block px-2 py-0.5 rounded font-semibold border ${bycatchInfo.badgeClass}">${bycatchInfo.label}</span>
-                                        <p class="text-slate-300 mt-1 leading-snug">${bycatchInfo.desc}</p>
+                                <div class="mt-1.5 pt-1.5 border-t border-slate-800 space-y-1.5 text-[11px]">
+                                    <div class="flex items-center justify-between gap-2">
+                                        <span class="text-[10px] text-slate-400 uppercase font-semibold shrink-0">Bycatch</span>
+                                        <span class="px-1.5 py-0.5 rounded text-[10px] font-semibold border ${bycatchInfo.badgeClass}">${bycatchInfo.label}</span>
                                     </div>
-                                    <div class="pt-1.5 border-t border-slate-800/70">
-                                        <span class="text-[10px] text-slate-400 uppercase font-semibold block mb-1">Potensi Zona (DOM)</span>
-                                        <span class="inline-block px-2 py-0.5 rounded font-semibold border ${domInfo.badgeClass}">${domInfo.label}</span>
-                                        <p class="text-slate-300 mt-1 leading-snug">${domInfo.potential}</p>
+                                    <div class="space-y-0.5">
+                                        <div class="flex items-center justify-between gap-2">
+                                            <span class="text-[10px] text-slate-400 uppercase font-semibold shrink-0">Zona DOM</span>
+                                            <span class="px-1.5 py-0.5 rounded text-[10px] font-semibold border truncate ${domInfo.badgeClass}">${domInfo.label}</span>
+                                        </div>
+                                        <p class="text-[10px] text-slate-400 leading-tight line-clamp-2">${domInfo.potential}</p>
                                     </div>
                                 </div>
                             `
                             : `
-                                <div class="mt-2 pt-2 border-t border-slate-800 space-y-1.5">
-                                    <div class="flex items-center justify-between text-xs font-semibold">
-                                        <span class="text-slate-400">Potensi HSI (${speciesTitle}):</span>
-                                        <span class="text-cyan-400 font-mono font-bold text-sm">${hsiVal}</span>
+                                <div class="mt-1.5 pt-1.5 border-t border-slate-800 space-y-1">
+                                    <div class="flex items-center justify-between text-[11px] font-semibold">
+                                        <span class="text-slate-400">HSI ${speciesTitle}:</span>
+                                        <div class="flex items-center gap-1.5">
+                                            <span class="px-1.5 py-0.5 rounded text-[10px] font-semibold border ${hsiInfo.badgeClass}">${hsiInfo.label}</span>
+                                            <span class="text-cyan-400 font-mono font-bold text-xs">${hsiVal}</span>
+                                        </div>
                                     </div>
-                                    <div class="flex items-center justify-between text-[11px]">
-                                        <span class="inline-block px-2 py-0.5 rounded font-semibold border ${hsiInfo.badgeClass}">${hsiInfo.label}</span>
-                                        <span class="text-[10px] text-slate-400 font-mono">Skala 0.00 – 1.00</span>
-                                    </div>
-                                    <p class="text-[11px] text-slate-300 leading-snug">${hsiInfo.desc}</p>
+                                    <p class="text-[10px] text-slate-400 leading-tight">${hsiInfo.desc}</p>
                                 </div>
                             `;
 
                         const popupHtml = `
-                            <div class="p-3.5 min-w-[270px] max-w-[320px] bg-slate-950 text-slate-200 rounded-xl border border-cyan-500/40 shadow-2xl font-sans">
-                                <div class="flex items-start justify-between gap-2 border-b border-slate-800 pb-2 mb-2">
+                            <div class="p-2.5 w-[248px] bg-slate-950 text-slate-200 rounded-xl border border-cyan-500/40 shadow-2xl font-sans">
+                                <div class="flex items-start justify-between gap-1.5 border-b border-slate-800 pb-1.5 mb-1.5">
                                     <div class="min-w-0">
-                                        <span class="font-bold text-xs font-mono text-cyan-400 block truncate">${p.cell_id}</span>
+                                        <span class="font-bold text-[11px] font-mono text-cyan-400 block truncate">${p.cell_id}</span>
                                         <span class="text-[10px] text-slate-400 font-mono block">${waypointStr}</span>
                                     </div>
-                                    <span title="Proxy berbasis jarak pelabuhan asal (bukan jarak garis pantai)" class="px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-cyan-950 border border-cyan-700/50 text-cyan-300 shrink-0 whitespace-nowrap">${jalurStr}</span>
+                                    <span title="Proxy jarak pelabuhan asal aktif (1 NM = 1.852 km)" class="px-1.5 py-0.5 rounded text-[9px] font-mono font-semibold bg-cyan-950 border border-cyan-700/50 text-cyan-300 shrink-0 whitespace-nowrap">${jalurStr}</span>
                                 </div>
-                                <div class="grid grid-cols-2 gap-1.5 text-[11px] font-mono text-slate-300">
-                                    <div>Kedalaman: <span class="text-white">${p.depth_m != null ? Number(p.depth_m).toFixed(1) : '-'} m</span></div>
-                                    <div>Jarak ${distActive.hubName}: <span class="text-cyan-300 font-bold">${distActive.distNm} NM</span></div>
-                                    <div>Suhu Laut: <span class="text-white">${p.sst_c} °C</span></div>
-                                    <div>Klorofil-a: <span class="text-white">${p.chla_mg_m3} mg/m³</span></div>
+                                <div class="grid grid-cols-2 gap-x-2 gap-y-0.5 text-[10px] font-mono text-slate-300">
+                                    <div>Dalam: <span class="text-white">${p.depth_m != null ? Number(p.depth_m).toFixed(0) : '-'} m</span></div>
+                                    <div>${distActive.hubName}: <span class="text-cyan-300 font-bold">${distActive.distNm} NM</span></div>
+                                    <div>SST: <span class="text-white">${p.sst_c} °C</span></div>
+                                    <div>Chl-a: <span class="text-white">${p.chla_mg_m3} mg/m³</span></div>
                                 </div>
                                 ${layerSectionHtml}
-                                <div class="mt-1.5 text-[10px] text-slate-500 font-mono">
-                                    Jarak &amp; jalur proxy dihitung dari pelabuhan asal aktif (1 NM = 1.852 km).
-                                </div>
-                                <div class="bmkg-grid-forecast mt-2 pt-2 border-t border-slate-800 text-[11px] text-slate-300" aria-live="polite">Memuat prakiraan model BMKG untuk grid...</div>
+                                <div class="bmkg-grid-forecast mt-1.5 pt-1.5 border-t border-slate-800 text-[10px] leading-tight text-slate-400" aria-live="polite">Memuat prakiraan model BMKG untuk grid...</div>
                                 <a href="/dashboard/trip-planner?lat=${p.center_lat}&lon=${p.center_lon}&hsi=${hsiVal}&species=${this.selectedSpecies}&cell_id=${p.cell_id}"
-                                   class="seacast-popup-cta mt-3 w-full py-1.5 px-3 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs rounded-lg flex items-center justify-center gap-1.5 transition active:scale-95 shadow">
+                                   class="seacast-popup-cta mt-2 w-full py-1 px-2.5 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-[11px] rounded-lg flex items-center justify-center gap-1 transition active:scale-95 shadow">
                                     <span>Rencanakan Melaut</span>
-                                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                                    <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
                                 </a>
                             </div>
                         `;
-                        layer.bindPopup(popupHtml, { className: 'mapcn-dark-popup custom-leaflet-popup' }).openPopup();
+                        layer.bindPopup(popupHtml, {
+                            className: 'mapcn-dark-popup custom-leaflet-popup',
+                            maxWidth: 265,
+                            autoPanPaddingTopLeft: L.point(16, 76),
+                            autoPanPaddingBottomRight: L.point(16, 24),
+                        }).openPopup();
                         const weatherBox = layer.getPopup()?.getElement()?.querySelector('.bmkg-grid-forecast');
                         if (weatherBox) {
                             const weatherUrl = `/api/bmkg/grid-forecast?lat=${encodeURIComponent(p.center_lat)}&lon=${encodeURIComponent(p.center_lon)}`;
