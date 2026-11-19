@@ -743,5 +743,159 @@ class TripPlanningService
             ],
         ];
     }
+
+    /**
+     * Rank candidate ocean cells by net profit, compliance, wave safety, and suitability.
+     *
+     * @param  iterable<int, array<string, mixed>|object>  $candidateCells
+     * @return array<int, array<string, mixed>>
+     */
+    public function recommendTopCells(array $params, iterable $candidateCells, int $limit = 5): array
+    {
+        $commodity = (string) ($params['target_commodity'] ?? 'Cakalang');
+        $commodityKey = str_replace([' ', '-'], '_', strtolower($commodity));
+        $hsiKeys = [
+            'tuna_sirip_kuning' => ['hsi_tuna_sirip_kuning', 'hsi_madidihang'],
+            'madidihang' => ['hsi_madidihang', 'hsi_tuna_sirip_kuning'],
+            'cakalang' => ['hsi_cakalang'],
+            'tongkol' => ['hsi_tongkol', 'hsi_tongkol_krai'],
+            'tongkol_krai' => ['hsi_tongkol_krai', 'hsi_tongkol'],
+        ][$commodityKey] ?? ['hsi_cakalang'];
+
+        $ranked = [];
+        foreach ($candidateCells as $rawCell) {
+            $cell = is_array($rawCell) ? $rawCell : (array) $rawCell;
+            $depth = (float) ($cell['depth_m'] ?? 0);
+            if ($depth <= 0.0) {
+                continue;
+            }
+
+            $lat = $cell['center_lat'] ?? $cell['lat'] ?? null;
+            $lon = $cell['center_lon'] ?? $cell['lon'] ?? null;
+            if ($lat === null || $lon === null) {
+                continue;
+            }
+
+            $hsiScore = null;
+            foreach ($hsiKeys as $key) {
+                if (isset($cell[$key]) && is_numeric($cell[$key])) {
+                    $hsiScore = (float) $cell[$key];
+                    break;
+                }
+            }
+            $hsiScore = $hsiScore ?? (float) ($cell['hsi_score'] ?? 0.0);
+            $waveHeight = (float) ($cell['wave_height_m'] ?? 1.3);
+            $bycatch = strtoupper((string) ($cell['bycatch_traffic_light'] ?? 'GREEN'));
+
+            $plan = $this->generateCompleteTripPlan(array_merge($params, [
+                'cell_id' => $cell['cell_id'] ?? null,
+                'selected_cell' => [
+                    'cell_id' => $cell['cell_id'] ?? null,
+                    'center_lat' => (float) $lat,
+                    'center_lon' => (float) $lon,
+                    'wave_height_m' => $waveHeight,
+                    'hsi_score' => $hsiScore,
+                    $hsiKeys[0] => $hsiScore,
+                ],
+                'hsi_score' => $hsiScore,
+                'wave_height_m' => $waveHeight,
+            ]));
+
+            if (!($plan['wave_safety']['is_safe_to_sail'] ?? false)) {
+                continue;
+            }
+            if (!($plan['permen_kp']['is_compliant'] ?? false)) {
+                continue;
+            }
+            if ($bycatch === 'RED') {
+                continue;
+            }
+
+            $ranked[] = [
+                'cell_id' => (string) ($cell['cell_id'] ?? ''),
+                'lat' => round((float) $lat, 4),
+                'lon' => round((float) $lon, 4),
+                'dms' => $plan['target_coordinates']['dms'],
+                'depth_m' => round($depth, 1),
+                'hsi_score' => round($hsiScore, 3),
+                'wave_height_m' => round($waveHeight, 2),
+                'bycatch_traffic_light' => $bycatch,
+                'distance_nm' => $plan['navigation']['distance_nm'],
+                'bearing_degrees' => $plan['navigation']['bearing_degrees'],
+                'compass_direction' => $plan['navigation']['compass_direction'],
+                'projected_kg' => $plan['catch_projection']['projected_kg'],
+                'total_operational_cost_rp' => $plan['total_operational_cost_rp'],
+                'net_profit_rp' => $plan['economics']['net_profit_rp'],
+                'roi_pct' => $plan['economics']['roi_pct'],
+                'readiness_status' => $plan['readiness_status'],
+                'duration_feasibility_status' => $plan['duration_feasibility_status'],
+                'estimate_source' => $plan['estimate_source'],
+                'spatial_evidence_level' => $plan['spatial_evidence_level'],
+            ];
+        }
+
+        usort($ranked, static function (array $a, array $b): int {
+            $feasibleA = $a['duration_feasibility_status'] === 'LAYAK' ? 1 : 0;
+            $feasibleB = $b['duration_feasibility_status'] === 'LAYAK' ? 1 : 0;
+            if ($feasibleA !== $feasibleB) {
+                return $feasibleB <=> $feasibleA;
+            }
+            if ($a['net_profit_rp'] !== $b['net_profit_rp']) {
+                return $b['net_profit_rp'] <=> $a['net_profit_rp'];
+            }
+            if ($a['hsi_score'] !== $b['hsi_score']) {
+                return $b['hsi_score'] <=> $a['hsi_score'];
+            }
+
+            return $a['distance_nm'] <=> $b['distance_nm'];
+        });
+
+        return array_values(array_slice($ranked, 0, max(1, $limit)));
+    }
+
+    /**
+     * Build standard GPX 1.1 XML waypoints for marine GPS plotters.
+     *
+     * @param  array<int, array<string, mixed>>  $recommendations
+     */
+    public function exportWaypointsGpx(array $recommendations, array $meta = []): string
+    {
+        $title = htmlspecialchars((string) ($meta['title'] ?? 'SEACAST Top-5 Waypoints WPPNRI 573'), ENT_XML1);
+        $date = htmlspecialchars((string) ($meta['date'] ?? date('Y-m-d')), ENT_XML1);
+        $lines = [
+            '<?xml version="1.0" encoding="UTF-8"?>',
+            '<gpx version="1.1" creator="SEACAST WPPNRI 573" xmlns="http://www.topografix.com/GPX/1/1">',
+            '  <metadata>',
+            "    <name>{$title}</name>",
+            "    <desc>Generated {$date} | Mode: FORMULA_SCENARIO | Evidence: PROXY_HSI</desc>",
+            '  </metadata>',
+        ];
+
+        foreach ($recommendations as $idx => $rec) {
+            $rank = $idx + 1;
+            $lat = number_format((float) ($rec['lat'] ?? 0), 5, '.', '');
+            $lon = number_format((float) ($rec['lon'] ?? 0), 5, '.', '');
+            $name = htmlspecialchars(sprintf('#%d %s', $rank, (string) ($rec['cell_id'] ?? "WPT-{$rank}")), ENT_XML1);
+            $desc = htmlspecialchars(sprintf(
+                'HSI %.3f | Dist %.1f NM %s | Wave %.1fm | Est %d kg | Margin Rp %s (FORMULA_SCENARIO / PROXY_HSI)',
+                (float) ($rec['hsi_score'] ?? 0),
+                (float) ($rec['distance_nm'] ?? 0),
+                (string) ($rec['compass_direction'] ?? ''),
+                (float) ($rec['wave_height_m'] ?? 0),
+                (int) ($rec['projected_kg'] ?? 0),
+                number_format((int) ($rec['net_profit_rp'] ?? 0), 0, ',', '.')
+            ), ENT_XML1);
+
+            $lines[] = "  <wpt lat=\"{$lat}\" lon=\"{$lon}\">";
+            $lines[] = "    <name>{$name}</name>";
+            $lines[] = "    <desc>{$desc}</desc>";
+            $lines[] = '    <sym>Fishing</sym>';
+            $lines[] = '  </wpt>';
+        }
+
+        $lines[] = '</gpx>';
+
+        return implode("\n", $lines) . "\n";
+    }
 }
 

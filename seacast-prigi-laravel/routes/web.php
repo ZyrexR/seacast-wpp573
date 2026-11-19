@@ -49,6 +49,8 @@ Route::middleware('auth')->prefix('dashboard')->name('dashboard')->group(functio
     // 2. Rencana Melaut & Trip Planner
     Route::get('/trip-planner', [TripPlannerController::class, 'index'])->name('.trip-planner');
     Route::post('/trip-planner/calculate', [TripPlannerController::class, 'calculate'])->name('.trip-planner.calculate');
+    Route::post('/trip-planner/recommendations', [TripPlannerController::class, 'recommendations'])->name('.trip-planner.recommendations');
+    Route::get('/trip-planner/recommendations/gpx', [TripPlannerController::class, 'exportRecommendationsGpx'])->name('.trip-planner.recommendations.gpx');
     Route::post('/trip-planner', [TripPlannerController::class, 'store'])->name('.trip-planner.store');
     Route::get('/trip-planner/{id}/pdf', [TripPlannerController::class, 'downloadPdf'])->name('.trip-planner.pdf');
 

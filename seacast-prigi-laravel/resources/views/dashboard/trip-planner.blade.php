@@ -4,6 +4,8 @@
         initialTarget: {{ Js::from($initialTarget) }},
         initialPlan: {{ Js::from($initialPlan) }},
         calcUrl: '{{ route('dashboard.trip-planner.calculate') }}',
+        recommendUrl: '{{ route('dashboard.trip-planner.recommendations') }}',
+        gpxBaseUrl: '{{ route('dashboard.trip-planner.recommendations.gpx') }}',
         csrf: '{{ csrf_token() }}'
     })">
 
@@ -84,6 +86,66 @@
                     </div>
                     <p>Penilaian awal berdasarkan jarak dari pelabuhan, spesifikasi kapal, dan tinggi gelombang. Status ini bukan persetujuan berlayar atau verifikasi jalur dari garis pantai.</p>
                 </div>
+            </div>
+
+            <!-- Auto-Optimizer: Top-5 Best Fishing Waypoints + GPX GPS Export -->
+            <div class="bg-[#091F30] border border-cyan-500/30 rounded-2xl p-4 sm:p-5 space-y-3">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                    <div>
+                        <h2 class="text-sm font-bold text-white flex items-center gap-2">
+                            <span class="px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 font-mono text-[10px] border border-cyan-500/30">AUTO-OPTIMIZER</span>
+                            Rekomendasi Top-5 Titik Tangkap Terbaik Hari Ini
+                        </h2>
+                        <p class="text-[11px] text-slate-400 mt-0.5">
+                            Memindai sel laut untuk pelabuhan, GT, komoditas, durasi, &amp; kesiapan kapal yang sedang dipilih (patuh jalur, gelombang aman, margin bersih tertinggi).
+                        </p>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-2 shrink-0">
+                        <button type="button" @click="fetchRecommendations()" :disabled="recLoading"
+                                class="inline-flex items-center gap-1.5 px-3 py-2 bg-cyan-500 hover:bg-cyan-400 disabled:opacity-60 text-slate-950 font-bold text-xs rounded-xl transition cursor-pointer">
+                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                            <span x-text="recLoading ? 'Memindai 8.129 Sel...' : 'Cari Top-5 Titik Optimal'"></span>
+                        </button>
+                        <a :href="gpxExportUrl()"
+                           class="inline-flex items-center gap-1.5 px-3 py-2 bg-[#071B2B] hover:bg-[#12364A] text-cyan-300 border border-[#244456] font-semibold text-xs rounded-xl transition">
+                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                            </svg>
+                            <span>Download GPX (GPS Kapal)</span>
+                        </a>
+                    </div>
+                </div>
+
+                <template x-if="recLoaded && recommendations.length === 0">
+                    <div class="p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 text-xs text-amber-200">
+                        Tidak ditemukan sel laut yang memenuhi seluruh kriteria keselamatan gelombang &amp; batas jalur untuk kombinasi parameter saat ini. Coba ubah kelas GT atau tanggal melaut.
+                    </div>
+                </template>
+
+                <template x-if="recommendations.length > 0">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 pt-1">
+                        <template x-for="(rec, idx) in recommendations" :key="rec.cell_id + '-' + idx">
+                            <div class="p-3 rounded-xl bg-[#071B2B] border border-[#244456] hover:border-cyan-400/60 transition flex flex-col justify-between space-y-2.5">
+                                <div class="space-y-1">
+                                    <div class="flex items-center justify-between gap-1">
+                                        <span class="px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 font-mono font-bold text-[10px]" x-text="'#' + (idx + 1)"></span>
+                                        <span class="font-mono text-[10px] text-emerald-400 font-bold" x-text="'HSI ' + Number(rec.hsi_score).toFixed(3)"></span>
+                                    </div>
+                                    <div class="font-mono text-[11px] font-bold text-white truncate" x-text="rec.cell_id"></div>
+                                    <div class="font-mono text-[10px] text-slate-400" x-text="rec.distance_nm + ' NM (' + rec.compass_direction + ') • ' + rec.wave_height_m + 'm'"></div>
+                                    <div class="font-mono text-xs font-black text-emerald-400 pt-0.5" x-text="formatRupiah(rec.net_profit_rp)"></div>
+                                    <div class="text-[10px] text-slate-400 font-mono" x-text="'Est. ' + rec.projected_kg + ' kg • ROI ' + rec.roi_pct + '%'"></div>
+                                </div>
+                                <button type="button" @click="applyRecommendation(rec)"
+                                        class="w-full py-1.5 px-2 bg-[#12364A] hover:bg-cyan-500 hover:text-slate-950 text-cyan-300 font-bold text-[11px] rounded-lg transition cursor-pointer">
+                                    Pakai Titik Ini
+                                </button>
+                            </div>
+                        </template>
+                    </div>
+                </template>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
@@ -765,10 +827,70 @@
                 form: { trip_days: 1, vessel_readiness: 'OPTIMAL', ...config.initialTarget },
                 plan: { ...config.initialPlan },
                 calcUrl: config.calcUrl,
+                recommendUrl: config.recommendUrl,
+                gpxBaseUrl: config.gpxBaseUrl,
                 csrf: config.csrf,
                 isLoading: false,
                 errorMessage: '',
                 requestSequence: 0,
+                recommendations: [],
+                recDate: null,
+                recLoading: false,
+                recLoaded: false,
+
+                async fetchRecommendations() {
+                    this.recLoading = true;
+                    try {
+                        const response = await fetch(this.recommendUrl, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': this.csrf,
+                                'Accept': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                port_code: this.form.port_code,
+                                gt_class: this.form.gt_class,
+                                target_commodity: this.form.target_commodity,
+                                departure_date: this.form.departure_date,
+                                trip_days: this.form.trip_days,
+                                vessel_readiness: this.form.vessel_readiness,
+                                fuel_type: this.form.fuel_type,
+                            })
+                        });
+                        if (response.ok) {
+                            const data = await response.json();
+                            this.recommendations = data.recommendations || [];
+                            this.recDate = data.prediction_date || null;
+                            this.recLoaded = true;
+                        }
+                    } catch (err) {
+                        console.error('Gagal mengambil rekomendasi Top-5:', err);
+                    } finally {
+                        this.recLoading = false;
+                    }
+                },
+
+                applyRecommendation(rec) {
+                    this.form.target_lat = rec.lat;
+                    this.form.target_lon = rec.lon;
+                    this.form.cell_id = rec.cell_id;
+                    this.form.hsi_score = rec.hsi_score;
+                    this.recalculate();
+                },
+
+                gpxExportUrl() {
+                    const params = new URLSearchParams({
+                        port_code: this.form.port_code || 'PPN_PRIGI',
+                        gt_class: this.form.gt_class || '< 10 GT',
+                        target_commodity: this.form.target_commodity || 'Cakalang',
+                        departure_date: this.form.departure_date || '',
+                        trip_days: String(this.form.trip_days || 1),
+                        vessel_readiness: this.form.vessel_readiness || 'OPTIMAL',
+                        fuel_type: this.form.fuel_type || 'SUBSIDIZED',
+                    });
+                    return this.gpxBaseUrl + '?' + params.toString();
+                },
 
                 targetChanged() {
                     this.form.cell_id = null;

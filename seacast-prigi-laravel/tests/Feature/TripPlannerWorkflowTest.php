@@ -462,4 +462,26 @@ class TripPlannerWorkflowTest extends TestCase
         $response->assertSee('TANPA KONFLIK AWAL');
         $response->assertSee('AMAN');
     }
+
+    public function test_recommendations_and_gpx_endpoints_work_for_authenticated_user(): void
+    {
+        $recResp = $this->actingAs($this->nelayan)->postJson('/dashboard/trip-planner/recommendations', [
+            'port_code' => 'PPN_PRIGI',
+            'gt_class' => '10 - 20 GT',
+            'target_commodity' => 'Cakalang',
+            'departure_date' => '2026-11-22',
+            'trip_days' => 2,
+            'vessel_readiness' => 'OPTIMAL',
+        ]);
+
+        $recResp->assertStatus(200);
+        $recResp->assertJsonPath('estimate_source', 'FORMULA_SCENARIO');
+        $recResp->assertJsonPath('spatial_evidence_level', 'PROXY_HSI');
+        $this->assertIsArray($recResp->json('recommendations'));
+
+        $gpxResp = $this->actingAs($this->nelayan)->get('/dashboard/trip-planner/recommendations/gpx?port_code=PPN_PRIGI&gt_class=10+-+20+GT&target_commodity=Cakalang');
+        $gpxResp->assertStatus(200);
+        $this->assertStringContainsString('application/gpx+xml', (string) $gpxResp->headers->get('Content-Type'));
+        $this->assertStringContainsString('<gpx version="1.1"', $gpxResp->getContent());
+    }
 }

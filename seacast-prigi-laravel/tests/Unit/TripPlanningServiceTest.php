@@ -482,5 +482,43 @@ class TripPlanningServiceTest extends TestCase
         $this->assertArrayHasKey('PPN_PALABUHANRATU', TripPlanningService::PORTS);
         $this->assertArrayNotHasKey('PPN_PALABUHANRATU', TripPlanningService::availablePorts());
     }
+
+    public function test_recommend_top_cells_filters_land_unsafe_and_non_compliant_and_ranks_by_profit(): void
+    {
+        $candidates = [
+            // Land cell (depth <= 0) must be excluded
+            ['cell_id' => 'LAND_01', 'center_lat' => -8.30, 'center_lon' => 111.73, 'depth_m' => 0, 'hsi_cakalang' => 0.99, 'wave_height_m' => 0.5, 'bycatch_traffic_light' => 'GREEN'],
+            // Extreme wave (> 2.5 m) must be excluded
+            ['cell_id' => 'WAVE_BAD', 'center_lat' => -8.35, 'center_lon' => 111.73, 'depth_m' => 120, 'hsi_cakalang' => 0.95, 'wave_height_m' => 3.1, 'bycatch_traffic_light' => 'GREEN'],
+            // RED bycatch must be excluded
+            ['cell_id' => 'RED_BYCATCH', 'center_lat' => -8.36, 'center_lon' => 111.73, 'depth_m' => 120, 'hsi_cakalang' => 0.94, 'wave_height_m' => 1.0, 'bycatch_traffic_light' => 'RED'],
+            // > 12 NM for < 10 GT must be excluded
+            ['cell_id' => 'TOO_FAR_LT10', 'center_lat' => -8.90, 'center_lon' => 111.73, 'depth_m' => 450, 'hsi_cakalang' => 0.98, 'wave_height_m' => 1.1, 'bycatch_traffic_light' => 'GREEN'],
+            // Valid inshore cell #2 (lower HSI)
+            ['cell_id' => 'VALID_MID', 'center_lat' => -8.35, 'center_lon' => 111.73, 'depth_m' => 80, 'hsi_cakalang' => 0.62, 'wave_height_m' => 1.0, 'bycatch_traffic_light' => 'GREEN'],
+            // Valid inshore cell #1 (higher HSI -> higher profit)
+            ['cell_id' => 'VALID_TOP', 'center_lat' => -8.36, 'center_lon' => 111.73, 'depth_m' => 95, 'hsi_cakalang' => 0.88, 'wave_height_m' => 1.0, 'bycatch_traffic_light' => 'GREEN'],
+        ];
+
+        $top = $this->planner->recommendTopCells([
+            'port_code' => 'PPN_PRIGI',
+            'gt_class' => '< 10 GT',
+            'target_commodity' => 'Cakalang',
+            'departure_date' => '2026-11-20',
+            'trip_days' => 1,
+        ], $candidates, 5);
+
+        $this->assertCount(2, $top);
+        $this->assertSame('VALID_TOP', $top[0]['cell_id']);
+        $this->assertSame('VALID_MID', $top[1]['cell_id']);
+        $this->assertSame('FORMULA_SCENARIO', $top[0]['estimate_source']);
+        $this->assertSame('PROXY_HSI', $top[0]['spatial_evidence_level']);
+        $this->assertGreaterThan($top[1]['net_profit_rp'], $top[0]['net_profit_rp']);
+
+        $gpx = $this->planner->exportWaypointsGpx($top, ['title' => 'Test GPX', 'date' => '2026-11-20']);
+        $this->assertStringContainsString('<gpx version="1.1"', $gpx);
+        $this->assertStringContainsString('<wpt lat="-8.36000" lon="111.73000">', $gpx);
+        $this->assertStringContainsString('#1 VALID_TOP', $gpx);
+    }
 }
 

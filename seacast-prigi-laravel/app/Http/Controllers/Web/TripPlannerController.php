@@ -5,11 +5,15 @@ namespace App\Http\Controllers\Web;
 use App\Http\Controllers\Controller;
 use App\Domain\Trip\Services\TripPlanningService;
 use App\Services\BmkgGridForecastService;
+use App\Models\DailyPrediction;
 use App\Models\TripPlan;
+use App\Services\LatestPredictionDateService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class TripPlannerController extends Controller
@@ -98,6 +102,55 @@ class TripPlannerController extends Controller
         $plan = $this->plannerService->generateCompleteTripPlan($this->withDepartureForecast($validated));
 
         return response()->json($plan);
+    }
+
+    public function recommendations(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'port_code' => 'sometimes|string',
+            'gt_class' => 'sometimes|string',
+            'target_commodity' => 'sometimes|string',
+            'departure_date' => 'sometimes|date',
+            'trip_days' => 'sometimes|integer|between:1,14',
+            'vessel_readiness' => 'sometimes|in:OPTIMAL,CUKUP,TERBATAS',
+            'fuel_type' => 'sometimes|in:SUBSIDIZED,NON_SUBSIDIZED',
+        ]);
+
+        [$date, $recommendations] = $this->computeTopRecommendations($validated);
+
+        return response()->json([
+            'prediction_date' => $date,
+            'count' => count($recommendations),
+            'estimate_source' => 'FORMULA_SCENARIO',
+            'spatial_evidence_level' => 'PROXY_HSI',
+            'recommendations' => $recommendations,
+        ]);
+    }
+
+    public function exportRecommendationsGpx(Request $request): Response
+    {
+        $validated = $request->validate([
+            'port_code' => 'sometimes|string',
+            'gt_class' => 'sometimes|string',
+            'target_commodity' => 'sometimes|string',
+            'departure_date' => 'sometimes|date',
+            'trip_days' => 'sometimes|integer|between:1,14',
+            'vessel_readiness' => 'sometimes|in:OPTIMAL,CUKUP,TERBATAS',
+            'fuel_type' => 'sometimes|in:SUBSIDIZED,NON_SUBSIDIZED',
+        ]);
+
+        [$date, $recommendations] = $this->computeTopRecommendations($validated);
+        $gpx = $this->plannerService->exportWaypointsGpx($recommendations, [
+            'title' => 'SEACAST Top-5 Waypoints (' . ($validated['port_code'] ?? 'PPN_PRIGI') . ')',
+            'date' => $date ?? date('Y-m-d'),
+        ]);
+
+        $filename = 'seacast-top5-waypoints-' . ($date ?? date('Y-m-d')) . '.gpx';
+
+        return response($gpx, 200, [
+            'Content-Type' => 'application/gpx+xml; charset=UTF-8',
+            'Content-Disposition' => "attachment; filename=\"{$filename}\"",
+        ]);
     }
 
     public function store(Request $request): RedirectResponse
@@ -212,6 +265,50 @@ class TripPlannerController extends Controller
 
         $params['wave_source'] = 'UNVERIFIED_INPUT';
         return $params;
+    }
+
+    private function computeTopRecommendations(array $params): array
+    {
+        $latestDate = null;
+        $candidates = [];
+
+        try {
+            $latestDate = app(LatestPredictionDateService::class)->latest();
+            if ($latestDate !== null) {
+                $commKey = str_replace([' ', '-'], '_', strtolower((string) ($params['target_commodity'] ?? 'Cakalang')));
+                $orderCol = match ($commKey) {
+                    'tuna_sirip_kuning', 'madidihang' => 'dp.hsi_madidihang',
+                    'tongkol', 'tongkol_krai', 'tongkol_lisong' => 'dp.hsi_tongkol',
+                    default => 'dp.hsi_cakalang',
+                };
+
+                $candidates = DB::connection('pgsql')
+                    ->table('daily_predictions as dp')
+                    ->join('canonical_grids as cg', 'dp.cell_id', '=', 'cg.cell_id')
+                    ->where('dp.prediction_date', $latestDate)
+                    ->where('cg.depth_m', '>', 0)
+                    ->orderByDesc($orderCol)
+                    ->limit(250)
+                    ->get([
+                        'dp.cell_id',
+                        'cg.center_lat',
+                        'cg.center_lon',
+                        'cg.depth_m',
+                        'dp.hsi_cakalang',
+                        'dp.hsi_madidihang',
+                        'dp.hsi_tongkol',
+                        'dp.wave_height_m',
+                        'dp.bycatch_traffic_light',
+                    ])
+                    ->all();
+            }
+        } catch (\Throwable $e) {
+            report($e);
+        }
+
+        $recommendations = $this->plannerService->recommendTopCells($params, $candidates, 5);
+
+        return [$latestDate, $recommendations];
     }
 
     private function canonicalCommodity(string $species): string
